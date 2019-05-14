@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import Sample from './screens/Sample';
+import { Sample } from './screens';
 
 
 type Props = {};
