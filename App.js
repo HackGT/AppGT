@@ -8,14 +8,21 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import { Sample } from './screens';
+import { Sample, Workshops, Schedule } from './screens';
+import { createStackNavigator, createAppContainer} from 'react-navigation';
 
+const MainNavigator = createStackNavigator({
+    Home: {screen: Schedule},
+    Workshops: {screen: Workshops},
+});
+
+const AppContainer = createAppContainer(MainNavigator);
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <Sample />
+      <AppContainer />
     );
   }
 }
