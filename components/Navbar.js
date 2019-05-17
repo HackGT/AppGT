@@ -3,20 +3,24 @@ import {StyleSheet, View, Button} from 'react-native';
 
 export default class Navbar extends Component<Props> {
   render() {
-      const { navigation: navigate } = this.props;
-      const buttonProps = [{title: 'Schedule', navTo: 'Home'}, {title: 'Workshops', navTo: 'Workshops'}];
-      return (
-          <View style={styles.bottom}>
-            buttonProps.map(props =>
-              <View style={styles.buttonView}>
-                <Button
-                  title={props.title}
-                  styles={styles.button}
-                  onPress={() => navigate('Home')}
-                />
-            );
-          </View>
-      );
+    const { navigate } = this.props.navigation;
+    const buttonProps = [{title: 'Schedule', navTo: 'Home'}, {title: 'Workshops', navTo: 'Workshops'}];
+    return (
+      <View style={styles.bottom}>
+        {
+          buttonProps.map((props, i) =>
+            <View style={styles.buttonView} key={i}>
+              <Button
+                title={props.title}
+                styles={styles.button}
+                key = {i}
+                onPress={() => navigate(props.navTo)}
+              />
+            </View>
+          )
+        }
+      </View>
+    )
   }
 }
 

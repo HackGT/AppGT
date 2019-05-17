@@ -9,10 +9,10 @@ export default class Schedule extends Component<Props> {
     };
     render() {
         return (
-            <DefaultScreen>
+            <DefaultScreen navigation={this.props.navigation}>
                 <Text>Workshops Page</Text>
             </DefaultScreen>
-        );
+        )
     }
 }
 

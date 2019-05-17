@@ -11,7 +11,7 @@ export default class DefaultScreen extends Component<Props> {
           navigation={this.props.navigation}
         />
       </View>
-    );
+    )
   }
 }
 
