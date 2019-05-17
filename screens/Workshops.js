@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import { Navbar } from './../components';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { DefaultScreen } from './';
 
 export default class Schedule extends Component<Props> {
     static navigationOptions = {
@@ -9,10 +9,9 @@ export default class Schedule extends Component<Props> {
     };
     render() {
         return (
-            <View style={styles.container}>
+            <DefaultScreen>
                 <Text>Workshops Page</Text>
-                <Navbar navigation={this.props.navigation}/>
-            </View>
+            </DefaultScreen>
         );
     }
 }

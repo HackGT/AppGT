@@ -7,8 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import { Sample, Workshops, Schedule } from './screens';
+import { Workshops, Schedule } from './screens';
 import { createStackNavigator, createAppContainer} from 'react-navigation';
 
 const MainNavigator = createStackNavigator({
