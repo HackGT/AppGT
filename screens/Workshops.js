@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SectionList } from 'react-native';
 import { DefaultScreen } from './';
 
 export default class Schedule extends Component<Props> {
