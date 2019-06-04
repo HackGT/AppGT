@@ -8,52 +8,35 @@ export default class Home extends Component<Props> {
     headerLeft: null
   };
   render() {
+    const headerProps = [{header: 'Contact Information'}, {header: 'Important! Links'}, {header: 'Social Media'}];
+
+    const contactProps = [[{title: 'HackGT Staff: ', tag: '678-870-4225'}, {title: 'Campus Police: ', tag: '404-894-2500'}],
+      [{title: 'Slack: ', tag: 'hellohackgt.slack.come'}, {title: 'Live Site: ', tag: 'info.hack.gt'}, {title: 'Devpost: ', tag: 'hackgt.devpost.com'}],
+      [{title: 'Facebook: ', tag: 'TheHackGT'}, {title: 'Instagram: ', tag: '@thehackgt'}, {title: 'Twitter: ', tag: '@thehackgt'}, {title: 'Github: ', tag: '@hackgt'}]];
+
     return (
       <DefaultScreen navigation={this.props.navigation}>
-        <View style={styles.titleView}>
-          <Text>Contact Information</Text>
-        </View>
-        <View style={styles.card}>
-          <Text>
-            <Text style={styles.title}>HackGT Staff: </Text> <Text>678-870-4225</Text>
-          </Text>
-          <Text>
-            <Text style={styles.title}>Campus Police: </Text> <Text>404-894-2500</Text>
-          </Text>
-        </View>
-
-        <View style={styles.titleView}>
-          <Text>Important! Links</Text>
-        </View>
-        <View style={styles.card}>
-          <Text>
-            <Text style={styles.title}>Slack: </Text> <Text>hellohackgt.slack.com</Text>
-          </Text>
-          <Text>
-            <Text style={styles.title}>Live Site: </Text> <Text>info.hack.gt</Text>
-          </Text>
-          <Text>
-            <Text style={styles.title}>Devpost: </Text> <Text>hackgt.devpost.com</Text>
-          </Text>
-        </View>
-
-        <View style={styles.titleView}>
-          <Text>Social Media</Text>
-        </View>
-        <View style={styles.card}>
-          <Text>
-            <Text style={styles.title}>Facebook: </Text> <Text>TheHackGT</Text>
-          </Text>
-          <Text>
-            <Text style={styles.title}>Instagram: </Text> <Text>@thehackgt</Text>
-          </Text>
-          <Text>
-            <Text style={styles.title}>Twitter: </Text> <Text>@thehackgt</Text>
-          </Text>
-          <Text>
-            <Text style={styles.title}>GitHub: </Text> <Text>@hackgt</Text>
-          </Text>
-        </View>
+          <View>
+            {
+              headerProps.map((props, i) =>
+                <View key={i}>
+                  <View style={styles.titleView}>
+                    <Text>{props.header}</Text>
+                  </View>
+                  <View style={styles.card}>
+                  {
+                    contactProps.map((desProps, k) =>
+                          <Text key={k}>
+                            <Text style={styles.title}>{desProps[k].title}</Text>
+                            <Text>{desProps[k].tag}</Text>
+                          </Text>
+                    )
+                  }
+                  </View>
+                </View>
+              )
+            }
+          </View>
       </DefaultScreen>
     )
   }
