@@ -3,11 +3,27 @@ import { StyleSheet, Text, View, SectionList, Button, TouchableOpacity } from 'r
 import { DefaultScreen } from './';
 import ScheduleCard from "../components/ScheduleCard";
 import ButtonControl from "../components/ButtonControl";
-import { tsImportEqualsDeclaration } from '@babel/types';
+import { SearchBar } from 'react-native-elements';
+
+const makeEvent = (title, description) => {
+    return { title: title, desc: description };
+}
+
+const eventProps = [
+    makeEvent("Event 1", "Really cool event."),
+    makeEvent("Event 2", "Even cooler event."),
+    makeEvent("Event 3", "This event will blow your socks off.")]
+
 
 export default class Schedule extends Component<Props> {
 
     state = {
+        search: {
+            isSearching: false,
+            text: '',
+            filtered: []
+        },
+        
         selectedDayIndex: 0,
         selectedScheduleIndex: 0
     };
@@ -17,20 +33,24 @@ export default class Schedule extends Component<Props> {
         headerLeft: null
     };
 
-    makeEvent(title, description) {
-        return { title: title, desc: description };
+    onSelectSchedule = (newIndex) => {
+
     }
 
-    onSelectSchedule(newIndex) {
-        
+    onSelectDay = (newIndex) => {
+
     }
 
-    onSelectDay(newIndex) {
-        
+    updateSearch = (text) => {
+        if (text === '') {
+            this.setState({ search: { text: text, isSearching: false, filtered: [] } })
+        } else {
+            this.setState({ search: { text: text, isSearching: true, filtered: eventProps.filter(item => item.title.includes(text)) } })
+        }
     }
 
     render() {
-
+        const { text } = this.state.search;
         const vSpace = <View style={{ height: 10 }}></View>
 
         const scheduleType = () => (
@@ -45,27 +65,32 @@ export default class Schedule extends Component<Props> {
         )
 
         const cardEvent = ({ item, index, section: { title, data } }) => (
-            <View>
+            <View key={1}>
                 <ScheduleCard title={item.title}>{item.desc}</ScheduleCard>
                 {vSpace}
             </View>
         )
 
-        const eventProps = [
-            this.makeEvent("Event 1", "Really cool event."),
-            this.makeEvent("Event 2", "Even cooler event."),
-            this.makeEvent("Event 3", "This event will blow your socks off.")]
+        const searchBar = ({ item, index, section: { title, data } }) => (
+            <SearchBar
+                platform="android"
+                placeholder="Type Here..."
+                onChangeText={this.updateSearch}
+                value={text}
+            />
+        )
 
+        const data = this.state.search.isSearching ? this.state.search.filtered : eventProps
+        
         return (
             <DefaultScreen navigation={this.props.navigation}>
-                {vSpace}
-
                 <SectionList
                     renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
                     sections={[
+                        { title: '', data: [''], renderItem: searchBar },
                         { title: '', data: [''], renderItem: scheduleType },
                         { title: '', data: [''], renderItem: dayFilter },
-                        { title: 'Events', data: eventProps, renderItem: cardEvent },
+                        { title: 'Events', data: data, renderItem: cardEvent },
                     ]}
                 />
             </DefaultScreen>
