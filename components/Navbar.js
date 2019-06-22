@@ -4,7 +4,7 @@ import {StyleSheet, View, Button} from 'react-native';
 export default class Navbar extends Component<Props> {
   render() {
     const { navigate } = this.props.navigation;
-    const buttonProps = [{title: 'Schedule', navTo: 'Home'}, {title: 'Workshops', navTo: 'Workshops'}];
+    const buttonProps = [{title: 'Home', navTo: 'Home'}, {title: 'Schedule', navTo: 'Schedule'}, {title: 'Workshops', navTo: 'Workshops'}];
     return (
       <View style={styles.bottom}>
         {

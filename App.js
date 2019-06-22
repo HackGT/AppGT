@@ -7,11 +7,12 @@
  */
 
 import React, {Component} from 'react';
-import { Workshops, Schedule } from './screens';
+import { Workshops, Schedule, Home } from './screens';
 import { createStackNavigator, createAppContainer} from 'react-navigation';
 
 const MainNavigator = createStackNavigator({
-    Home: {screen: Schedule},
+    Home: {screen: Home},
+    Schedule: {screen: Schedule},
     Workshops: {screen: Workshops},
 });
 
