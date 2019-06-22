@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
 
 export default class ScheduleCard extends Component<Props> {
 
@@ -15,10 +17,20 @@ export default class ScheduleCard extends Component<Props> {
     }
 
     return (
-        <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.onClick}>
-          <View>{title}
-          <Text style={styles.text}>{this.props.children}</Text></View>
-        </TouchableHighlight>
+      <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.onClick}>
+        <View>
+
+          <View style={{
+            position: "absolute", alignSelf: "flex-end",
+            flex: 1, padding: 8
+          }}>
+            {/* <FontAwesomeIcon color="#75BACF" size="20" icon={faStar} /> */}
+          </View>
+
+          {title}
+          <Text style={styles.text}>{this.props.children}</Text>
+        </View>
+      </TouchableHighlight>
     )
   }
 }
@@ -37,7 +49,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: 'grey',
     borderRadius: 10,
-    // padding: 25,
     marginLeft: 25,
     marginRight: 25,
   }

@@ -46,7 +46,7 @@ export default class Schedule extends Component<Props> {
 
         const cardEvent = ({ item, index, section: { title, data } }) => (
             <View>
-                <ScheduleCard title={item.title}><Text>{item.desc}</Text></ScheduleCard>
+                <ScheduleCard title={item.title}>{item.desc}</ScheduleCard>
                 {vSpace}
             </View>
         )
