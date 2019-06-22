@@ -2,8 +2,16 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, SectionList, Button, TouchableOpacity } from 'react-native';
 import { DefaultScreen } from './';
 import ScheduleCard from "../components/ScheduleCard";
+import ButtonControl from "../components/ButtonControl";
+import { tsImportEqualsDeclaration } from '@babel/types';
 
 export default class Schedule extends Component<Props> {
+
+    state = {
+        selectedDayIndex: 0,
+        selectedScheduleIndex: 0
+    };
+
     static navigationOptions = {
         title: 'Schedule',
         headerLeft: null
@@ -13,43 +21,25 @@ export default class Schedule extends Component<Props> {
         return { title: title, desc: description };
     }
 
+    onSelectSchedule(newIndex) {
+        
+    }
+
+    onSelectDay(newIndex) {
+        
+    }
+
     render() {
 
-        const vSpace = <View style={{ height: 20 }}></View>
-        const hSpace = <View style={{ width: 20 }}></View>;
+        const vSpace = <View style={{ height: 10 }}></View>
 
-        const scheduleType = ({ item, index, section: { title, data } }) => (
-            <View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.selectedButton} onPress={0}>
-                        <Button color="white" title="Schedule"></Button>
-                    </TouchableOpacity>
-                    <View style={{ width: 20 }}></View>
-                    <TouchableOpacity style={styles.button}>
-                        <Button color="#8A8A8A" onPress={0} title={"Favorites"} ></Button>
-                    </TouchableOpacity>
-                </View>
-                {vSpace}
-            </View>
+        const scheduleType = () => (
+            <ButtonControl height={40} onChangeIndex={this.onSelectSchedule} buttons={["Schedule", "Favorites"]} />
         )
 
-        const dayFilter = ({ item, index, section: { title, data } }) => (
+        const dayFilter = () => (
             <View>
-                <View style={styles.dayButtonContainer}>
-
-                    <TouchableOpacity style={styles.dayButton} onPress={0}>
-                        <Button color="#8A8A8A" title="Friday"></Button>
-                    </TouchableOpacity>
-                    {hSpace}
-                    <TouchableOpacity style={styles.dayButton}>
-                        <Button color="#8A8A8A" onPress={0} title={"Saturday"} ></Button>
-                    </TouchableOpacity>
-                    {hSpace}
-                    <TouchableOpacity style={styles.dayButton}>
-                        <Button color="#8A8A8A" onPress={0} title={"Sunday"} ></Button>
-                    </TouchableOpacity>
-                </View>
-
+                <ButtonControl height={30} onChangeIndex={this.onSelectDay} buttons={["Friday", "Saturday", "Sunday"]} />
                 {vSpace}
             </View>
         )
@@ -73,8 +63,8 @@ export default class Schedule extends Component<Props> {
                 <SectionList
                     renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
                     sections={[
-                        { title: '', data: ['item1'], renderItem: scheduleType },
-                        { title: '', data: ['item1'], renderItem: dayFilter },
+                        { title: '', data: [''], renderItem: scheduleType },
+                        { title: '', data: [''], renderItem: dayFilter },
                         { title: 'Events', data: eventProps, renderItem: cardEvent },
                     ]}
                 />
@@ -82,47 +72,3 @@ export default class Schedule extends Component<Props> {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-
-    buttonContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-
-    button: {
-        borderRadius: 20,
-        borderColor: '#75BACF',
-        borderWidth: 3,
-        width: '40%'
-    },
-
-    selectedButton: {
-        borderRadius: 20,
-        borderColor: '#75BACF',
-        borderWidth: 3,
-        width: '40%',
-
-        backgroundColor: "#75BACF",
-        color: "#000000"
-    },
-
-    dayButtonContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        height: 50
-    },
-
-    dayButton: {
-        borderRadius: 10,
-        borderColor: '#75BACF',
-        borderWidth: 3,
-        width: '25%',
-    },
-
-});
