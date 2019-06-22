@@ -11,16 +11,14 @@ export default class ScheduleCard extends Component<Props> {
     let title = null;
 
     if (this.props.title) {
-      title = <Text style={styles.title}>{this.props.title}</Text> 
+      title = <Text style={styles.title}>{this.props.title}</Text>
     }
 
     return (
-      <TouchableHighlight onPress={this.onClick}>
-        <View style={styles.card}>
-          {title}
-          <Text style={styles.text}>{this.props.children}</Text>
-        </View>
-      </TouchableHighlight>
+        <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.onClick}>
+          <View>{title}
+          <Text style={styles.text}>{this.props.children}</Text></View>
+        </TouchableHighlight>
     )
   }
 }
