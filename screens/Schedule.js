@@ -4,6 +4,8 @@ import { DefaultScreen } from './';
 import ScheduleCard from "../components/ScheduleCard";
 import ButtonControl from "../components/ButtonControl";
 import { SearchBar } from 'react-native-elements';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faPlusCircle, faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const makeEvent = (title, description) => {
     return { title: title, desc: description };
@@ -73,6 +75,7 @@ export default class Schedule extends Component<Props> {
 
         const searchBar = ({ item, index, section: { title, data } }) => (
             <SearchBar
+            // searchIcon={<FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>}
                 platform="android"
                 placeholder="Type Here..."
                 onChangeText={this.updateSearch}
