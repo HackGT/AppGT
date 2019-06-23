@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import { DefaultScreen } from './';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
 
 export default class Home extends Component<Props> {
   static navigationOptions = {
@@ -8,36 +7,34 @@ export default class Home extends Component<Props> {
     headerLeft: null
   };
   render() {
-    const headerProps = [{header: 'Contact Information'}, {header: 'Important! Links'}, {header: 'Social Media'}];
+    const headerProps = [{ header: 'Contact Information' }, { header: 'Important! Links' }, { header: 'Social Media' }];
 
-    const contactProps = [[{title: 'HackGT Staff: ', tag: '678-870-4225'}, {title: 'Campus Police: ', tag: '404-894-2500'}],
-      [{title: 'Slack: ', tag: 'hellohackgt.slack.come'}, {title: 'Live Site: ', tag: 'info.hack.gt'}, {title: 'Devpost: ', tag: 'hackgt.devpost.com'}],
-      [{title: 'Facebook: ', tag: 'TheHackGT'}, {title: 'Instagram: ', tag: '@thehackgt'}, {title: 'Twitter: ', tag: '@thehackgt'}, {title: 'Github: ', tag: '@hackgt'}]];
+    const contactProps = [[{ title: 'HackGT Staff: ', tag: '678-870-4225' }, { title: 'Campus Police: ', tag: '404-894-2500' }],
+    [{ title: 'Slack: ', tag: 'hellohackgt.slack.come' }, { title: 'Live Site: ', tag: 'info.hack.gt' }, { title: 'Devpost: ', tag: 'hackgt.devpost.com' }],
+    [{ title: 'Facebook: ', tag: 'TheHackGT' }, { title: 'Instagram: ', tag: '@thehackgt' }, { title: 'Twitter: ', tag: '@thehackgt' }, { title: 'Github: ', tag: '@hackgt' }]];
 
     return (
-      <DefaultScreen navigation={this.props.navigation}>
-          <View>
-            {
-              headerProps.map((props, i) =>
-                <View key={i}>
-                  <View style={styles.titleView}>
-                    <Text>{props.header}</Text>
-                  </View>
-                  <View style={styles.card}>
-                  {
-                    contactProps.map((desProps, k) =>
-                          <Text key={k}>
-                            <Text style={styles.title}>{desProps[k].title}</Text>
-                            <Text>{desProps[k].tag}</Text>
-                          </Text>
-                    )
-                  }
-                  </View>
-                </View>
-              )
-            }
-          </View>
-      </DefaultScreen>
+      <View>
+        {
+          headerProps.map((props, i) =>
+            <View key={i}>
+              <View style={styles.titleView}>
+                <Text>{props.header}</Text>
+              </View>
+              <View style={styles.card}>
+                {
+                  contactProps.map((desProps, k) =>
+                    <Text key={k}>
+                      <Text style={styles.title}>{desProps[k].title}</Text>
+                      <Text>{desProps[k].tag}</Text>
+                    </Text>
+                  )
+                }
+              </View>
+            </View>
+          )
+        }
+      </View>
     )
   }
 }

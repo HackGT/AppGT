@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, SectionList } from 'react-native';
-import { DefaultScreen } from './';
 
 export default class Schedule extends Component<Props> {
     static navigationOptions = {
@@ -9,15 +8,7 @@ export default class Schedule extends Component<Props> {
     };
     render() {
         return (
-            <DefaultScreen navigation={this.props.navigation}>
-                <Text>Workshops Page</Text>
-            </DefaultScreen>
+            <Text>Workshops Page</Text>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-});

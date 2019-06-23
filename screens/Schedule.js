@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, SectionList, Button, TouchableOpacity } from 'react-native';
-import { DefaultScreen } from './';
 import ScheduleCard from "../components/ScheduleCard";
 import ButtonControl from "../components/ButtonControl";
 import { SearchBar } from 'react-native-elements';
@@ -25,7 +24,7 @@ export default class Schedule extends Component<Props> {
             text: '',
             filtered: []
         },
-        
+
         selectedDayIndex: 0,
         selectedScheduleIndex: 0
     };
@@ -83,19 +82,17 @@ export default class Schedule extends Component<Props> {
         )
 
         const data = this.state.search.isSearching ? this.state.search.filtered : eventProps
-        
+
         return (
-            <DefaultScreen navigation={this.props.navigation}>
-                <SectionList
-                    renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
-                    sections={[
-                        { title: '', data: [''], renderItem: searchBar },
-                        { title: '', data: [''], renderItem: scheduleType },
-                        { title: '', data: [''], renderItem: dayFilter },
-                        { title: 'Events', data: data, renderItem: cardEvent },
-                    ]}
-                />
-            </DefaultScreen>
+            <SectionList
+                renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
+                sections={[
+                    { title: '', data: [''], renderItem: searchBar },
+                    { title: '', data: [''], renderItem: scheduleType },
+                    { title: '', data: [''], renderItem: dayFilter },
+                    { title: 'Events', data: data, renderItem: cardEvent },
+                ]}
+            />
         )
     }
 }

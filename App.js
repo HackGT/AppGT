@@ -8,83 +8,41 @@
 
 import React, { Component } from 'react';
 import { Workshops, Schedule, Home } from './screens';
-// import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
 import {
   createBottomTabNavigator,
   createStackNavigator,
   createAppContainer,
 } from 'react-navigation';
-class DetailsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Details!</Text>
-      </View>
-    );
-  }
-}
 
-class HomeScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* other code from before here */}
-        <Button
-          title="Go to Details"
-          onPress={() => this.props.navigation.navigate('Details')}
-        />
-      </View>
-    );
-  }
-}
-
-class SettingsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* other code from before here */}
-        <Button
-          title="Go to Details"
-          onPress={() => this.props.navigation.navigate('Details')}
-        />
-      </View>
-    );
-  }
-}
+// a StackNavgiator will give the ability to "push a screen"
+// for instance, when a user clicks a event cell it will push a detailed view on the stack
+const ScheduleStack = createStackNavigator({
+  Schedule: Schedule
+  // TODO: add view for when the user actually clicks a cell
+  // Event: Event 
+})
 
 const HomeStack = createStackNavigator({
-  Home: HomeScreen,
-  Details: DetailsScreen,
-});
+  Home: Home 
+})
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
-  Details: DetailsScreen,
-});
+const WorkshopStack = createStackNavigator({
+  Workshops: Workshops
+})
 
 const TabNavigator = createBottomTabNavigator({
   Home: HomeStack,
-  Settings: SettingsStack,
+  Schedule: ScheduleStack,
+  Workshops: WorkshopStack
 });
-
-
-
-// const MainNavigator = createStackNavigator({
-//   Home: { screen: Home },
-//   Schedule: { screen: Schedule },
-//   Workshops: { screen: Workshops },
-// });
 
 const AppContainer = createAppContainer(TabNavigator);
 
-type Props = {};
 export default class App extends Component<Props> {
 
   render() {
     return (
-      <AppContainer></AppContainer>
+      <AppContainer />
     )
   }
 }
