@@ -75,9 +75,8 @@ export default class Schedule extends Component<Props> {
 
         const searchBar = ({ item, index, section: { title, data } }) => (
             <SearchBar
-            // searchIcon={<FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>}
                 platform="android"
-                placeholder="Type Here..."
+                placeholder="Search..."
                 onChangeText={this.updateSearch}
                 value={text}
             />
