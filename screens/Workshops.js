@@ -6,6 +6,7 @@ export default class Schedule extends Component<Props> {
         title: 'Workshops',
         headerLeft: null
     };
+    
     render() {
         return (
             <Text>Workshops Page</Text>

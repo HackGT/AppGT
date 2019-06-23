@@ -18,6 +18,11 @@ const eventProps = [
 
 export default class Schedule extends Component<Props> {
 
+    static navigationOptions = {
+        title: 'Schedule',
+        headerLeft: null
+    };
+
     state = {
         search: {
             isSearching: false,
@@ -27,11 +32,6 @@ export default class Schedule extends Component<Props> {
 
         selectedDayIndex: 0,
         selectedScheduleIndex: 0
-    };
-
-    static navigationOptions = {
-        title: 'Schedule',
-        headerLeft: null
     };
 
     onSelectSchedule = (newIndex) => {
