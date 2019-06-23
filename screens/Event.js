@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, SectionList } from 'react-native';
+import { Text, View } from 'react-native';
 
 export default class Event extends Component<Props> {
-    static navigationOptions = {
-        title: 'Event',
-        headerLeft: null
-    };
-    
     render() {
+        const event = this.props.navigation.getParam('event', '');
+
+        if (event === '') {
+            this.props.navigation.goBack();
+        }
+
         return (
-            <Text>
-                {this.props.title}
-            </Text>
+            <View>
+                <Text>
+                    {event.title}
+                </Text>
+                <Text>
+                    {event.desc}
+                </Text>
+            </View>
         )
     }
 }

@@ -34,6 +34,12 @@ export default class Schedule extends Component<Props> {
         selectedScheduleIndex: 0
     };
 
+    onSelectEvent = (item) => {
+        this.props.navigation.navigate('Event', {
+            event: item 
+        })
+    }
+
     onSelectSchedule = (newIndex) => {
 
     }
@@ -66,8 +72,8 @@ export default class Schedule extends Component<Props> {
         )
 
         const cardEvent = ({ item, index, section: { title, data } }) => (
-            <View key={1}>
-                <ScheduleCard title={item.title}>{item.desc}</ScheduleCard>
+            <View key={index}>
+                <ScheduleCard item={item} onClick={this.onSelectEvent} title={item.title}>{item.desc}</ScheduleCard>
                 {vSpace}
             </View>
         )

@@ -7,19 +7,20 @@
  */
 
 import React, { Component } from 'react';
-import { Workshops, Schedule, Home } from './screens';
+import { Workshops, Schedule, Home, Event } from './screens';
 import {
   createBottomTabNavigator,
   createStackNavigator,
   createAppContainer,
 } from 'react-navigation';
+import { Text, View } from 'react-native';
+import { Button } from 'react-native-elements';
 
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
 const ScheduleStack = createStackNavigator({
-  Schedule: Schedule
-  // TODO: add view for when the user actually clicks a cell
-  // Event: Event 
+  Schedule: Schedule,
+  Event: Event 
 })
 
 const HomeStack = createStackNavigator({

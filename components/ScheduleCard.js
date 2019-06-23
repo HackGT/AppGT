@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
+import { thisExpression } from '@babel/types';
 
 export default class ScheduleCard extends Component<Props> {
 
-  onClick() {
-    // TODO: present card 
+  onClick = () => {
+    this.props.onClick(this.props.item);
   }
 
   render() {
@@ -17,7 +18,7 @@ export default class ScheduleCard extends Component<Props> {
     }
 
     return (
-      <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.onClick}>
+      <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.props.onClick}>
         <View>
 
           <View style={{
