@@ -13,18 +13,18 @@ import {
   createStackNavigator,
   createAppContainer,
 } from 'react-navigation';
-import { Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faHome, faList, faBell } from '@fortawesome/free-solid-svg-icons';
 
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
 const ScheduleStack = createStackNavigator({
   Schedule: Schedule,
-  Event: Event 
+  Event: Event
 })
 
 const HomeStack = createStackNavigator({
-  Home: Home 
+  Home: Home
 })
 
 const WorkshopStack = createStackNavigator({
@@ -34,8 +34,25 @@ const WorkshopStack = createStackNavigator({
 const TabNavigator = createBottomTabNavigator({
   Home: HomeStack,
   Schedule: ScheduleStack,
-  Workshops: WorkshopStack
-});
+  Notifications: WorkshopStack
+}, {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+
+        if (routeName === 'Home') {
+          icon = faHome
+        } else if (routeName === 'Schedule') {
+          icon = faList
+        } else if (routeName === 'Notifications') {
+          icon = faBell 
+        }
+
+        return <FontAwesomeIcon color={tintColor} icon={icon}></FontAwesomeIcon>
+    }
+
+    })
+  });
 
 const AppContainer = createAppContainer(TabNavigator);
 
