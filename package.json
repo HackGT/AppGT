@@ -11,7 +11,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/react-native-fontawesome": "^0.1.0",
     "react": "16.8.3",
-    "react-native": "0.59.8",
+    "react-native": "0.60.0-rc.2",
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.2.1",
     "react-native-safe-area-view": "^0.14.1",
