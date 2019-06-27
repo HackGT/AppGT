@@ -12,7 +12,7 @@ export default class ButtonControl extends Component<Props> {
 
     updateIndex(selectedIndex) {
         this.setState({ selectedIndex })
-        this.props.onChangeIndex(selectedIndex);
+        this.props.onChangeIndex(selectedIndex)
     }
 
     render() {

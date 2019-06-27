@@ -19,16 +19,16 @@ import { faHome, faList, faBell } from '@fortawesome/free-solid-svg-icons';
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
 const ScheduleStack = createStackNavigator({
-  Schedule: Schedule,
-  Event: Event
+  Schedule,
+  Event
 })
 
 const HomeStack = createStackNavigator({
-  Home: Home
+  Home
 })
 
 const WorkshopStack = createStackNavigator({
-  Workshops: Workshops
+  Workshops
 })
 
 const TabNavigator = createBottomTabNavigator({
@@ -40,15 +40,21 @@ const TabNavigator = createBottomTabNavigator({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
 
-        if (routeName === 'Home') {
-          icon = faHome
-        } else if (routeName === 'Schedule') {
-          icon = faList
-        } else if (routeName === 'Notifications') {
-          icon = faBell 
+        switch(routeName) {
+          case "Home":
+            icon = faHome
+            break;
+          case "Schedule":
+            icon = faList
+            break;
+          case "Notifications":
+            icon = faBell 
+            break;
+          default:
+            icon = null;
         }
 
-        return <FontAwesomeIcon color={tintColor} icon={icon}></FontAwesomeIcon>
+        return <FontAwesomeIcon color={tintColor} icon={icon} />
     }
 
     })

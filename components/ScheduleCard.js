@@ -11,11 +11,7 @@ export default class ScheduleCard extends Component<Props> {
   }
 
   render() {
-    let title = null;
-
-    if (this.props.title) {
-      title = <Text style={styles.title}>{this.props.title}</Text>
-    }
+    let title = this.props.title ? <Text style={styles.title}>{this.props.title}</Text> : null;
 
     return (
       <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.props.onClick}>
@@ -25,7 +21,6 @@ export default class ScheduleCard extends Component<Props> {
             position: "absolute", alignSelf: "flex-end",
             flex: 1, padding: 8
           }}>
-            {/* <FontAwesomeIcon color="#75BACF" size="20" icon={faStar} /> */}
           </View>
 
           {title}
