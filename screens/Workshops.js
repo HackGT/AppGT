@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { DefaultScreen } from './';
+import { StyleSheet, Text, View, SectionList } from 'react-native';
 
 export default class Schedule extends Component<Props> {
     static navigationOptions = {
         title: 'Workshops',
         headerLeft: null
     };
+    
     render() {
         return (
-            <DefaultScreen navigation={this.props.navigation}>
-                <Text>Workshops Page</Text>
-            </DefaultScreen>
+            <Text>Workshops Page</Text>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-});
