@@ -30,6 +30,8 @@ target 'AppGT' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'AppGTTests' do
     inherit! :search_paths
     # Pods for testing

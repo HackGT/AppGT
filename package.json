@@ -5,14 +5,17 @@
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "jetify"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/react-native-fontawesome": "^0.1.0",
+    "jetifier": "^1.6.3",
     "react": "16.8.6",
     "react-native": "0.60.3",
+    "react-native-gesture-handler": "^1.3.0",
     "react-native-svg": "^9.5.1"
   },
   "devDependencies": {
