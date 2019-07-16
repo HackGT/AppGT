@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import {Text} from "react-native";
-
 import Workshops from "./screens/Workshops";
 import Home from './screens/Home';
 import Schedule from "./screens/Schedule";
 import Event from './screens/Event';
+import Login from './screens/Login';
 import {
   createBottomTabNavigator,
   createStackNavigator,
   createAppContainer,
 } from 'react-navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faList, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faList, faBell, faKey, faQuestion } from '@fortawesome/free-solid-svg-icons';
 
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
@@ -28,10 +27,15 @@ const WorkshopStack = createStackNavigator({
   Workshops
 })
 
+const LoginStack = createStackNavigator({
+  Login 
+})
+
 const TabNavigator = createBottomTabNavigator({
   Home: HomeStack,
   Schedule: ScheduleStack,
-  Notifications: WorkshopStack
+  Notifications: WorkshopStack,
+  Login: LoginStack
 }, {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
@@ -47,8 +51,11 @@ const TabNavigator = createBottomTabNavigator({
           case "Notifications":
             icon = faBell 
             break;
+          case "Login":
+            icon = faKey;
+            break;
           default:
-            icon = null;
+            icon = faQuestion;
         }
 
         return <FontAwesomeIcon color={tintColor} icon={icon} />
@@ -63,7 +70,7 @@ export default class App extends Component<Props> {
 
   render() {
     return (
-      <AppContainer>Hi</AppContainer>
+      <AppContainer />
     )
   }
 }
