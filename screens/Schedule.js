@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, SectionList, Button, TouchableOpacity } from 'react-native';
 import ScheduleCard from "../components/ScheduleCard";
 import ButtonControl from "../components/ButtonControl";
-// import { SearchBar } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPlusCircle, faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -79,13 +79,12 @@ export default class Schedule extends Component<Props> {
         )
 
         const searchBar = ({ item, index, section: { title, data } }) => (
-            // <SearchBar
-            //     platform="android"
-            //     placeholder="Search..."
-            //     onChangeText={this.updateSearch}
-            //     value={text}
-            // />
-            <Text></Text>
+            <SearchBar
+                platform="android"
+                placeholder="Search..."
+                onChangeText={this.updateSearch}
+                value={text}
+            />
         )
 
         const data = this.state.search.isSearching ? this.state.search.filtered : eventProps

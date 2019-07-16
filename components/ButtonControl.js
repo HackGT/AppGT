@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { ButtonGroup } from "react-native-elements";
+import { ButtonGroup } from "react-native-elements";
 import {Text} from "react-native";
 
 export default class ButtonControl extends Component<Props> {
@@ -21,13 +21,12 @@ export default class ButtonControl extends Component<Props> {
         const { selectedIndex } = this.state
 
         return (
-            // <ButtonGroup
-            //     onPress={this.updateIndex}
-            //     selectedIndex={selectedIndex}
-            //     buttons={buttons}
-            //     containerStyle={{ height: this.props.height }}
-            // />
-            <Text>Test</Text>
+            <ButtonGroup
+                onPress={this.updateIndex}
+                selectedIndex={selectedIndex}
+                buttons={buttons}
+                containerStyle={{ height: this.props.height }}
+            />
         )
     }
 }
