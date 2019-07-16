@@ -85,7 +85,7 @@ export default class Schedule extends Component<Props> {
             //     onChangeText={this.updateSearch}
             //     value={text}
             // />
-            <View></View>
+            <Text></Text>
         )
 
         const data = this.state.search.isSearching ? this.state.search.filtered : eventProps

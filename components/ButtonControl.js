@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import { ButtonGroup } from "react-native-elements";
+import {Text} from "react-native";
 
 export default class ButtonControl extends Component<Props> {
     constructor() {
@@ -26,7 +27,7 @@ export default class ButtonControl extends Component<Props> {
             //     buttons={buttons}
             //     containerStyle={{ height: this.props.height }}
             // />
-            <View>Test</View>
+            <Text>Test</Text>
         )
     }
 }
