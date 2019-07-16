@@ -44,7 +44,7 @@ const App = () => {
           <View style={styles.body}>
 
             <ScheduleCard />
-
+            <FontAwesomeIcon icon={faHome} />
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
               <Text style={styles.sectionDescription}>
