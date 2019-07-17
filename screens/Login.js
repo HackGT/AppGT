@@ -3,30 +3,16 @@ import { Text, Button } from 'react-native';
 import { authorize } from 'react-native-app-auth';
 
 
-/*
-        const config = {
-            issuer: '<YOUR_ISSUER_URL>',
-            clientId: '<YOUR_CLIENT_ID>',
-            redirectUrl: '<YOUR_REDIRECT_URL>',
-            scopes: ['<YOUR_SCOPES_ARRAY>'],
-        };
-
-*/
-
 const config = {
-    issuer: 'https://demo.identityserver.io',
-    clientId: 'native.code',
-    redirectUrl: 'io.identityserver.demo:/oauthredirect',
-    additionalParameters: {},
-    scopes: ['openid', 'profile', 'email', 'offline_access']
-  
-    // serviceConfiguration: {
-    //   authorizationEndpoint: 'https://demo.identityserver.io/connect/authorize',
-    //   tokenEndpoint: 'https://demo.identityserver.io/connect/token',
-    //   revocationEndpoint: 'https://demo.identityserver.io/connect/revoke'
-    // }
-  };
-
+    clientId: '440020cd46e82fb1373d0f6ba814f755ed53d69bef28a4ea86d0473af9bc840c',
+    clientSecret: '',
+    redirectUrl: 'gt.hack.live://redirect',
+    serviceConfiguration: {
+      authorizationEndpoint: 'https://login.hack.gt/oauth/authorize',
+      tokenEndpoint: 'https://login.hack.gt/oauth/token',
+      revocationEndpoint: 'https://login.hack.gt/oauth/revoke'
+    }
+};
   
 export default class Login extends Component<Props> {
 
@@ -41,6 +27,7 @@ export default class Login extends Component<Props> {
         try {
             const result = await authorize(config);
             // result includes accessToken, accessTokenExpirationDate and refreshToken
+            console.log(result)
         } catch (error) {
             console.log(error);
         }
