@@ -1,13 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, { Component } from 'react';
-import { Workshops, Schedule, Home, Event } from './screens';
+import {Text} from "react-native";
+
+import Workshops from "./screens/Workshops";
+import Home from './screens/Home';
+import Schedule from "./screens/Schedule";
+import Event from './screens/Event';
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -66,7 +63,7 @@ export default class App extends Component<Props> {
 
   render() {
     return (
-      <AppContainer />
+      <AppContainer>Hi</AppContainer>
     )
   }
 }
