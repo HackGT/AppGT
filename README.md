@@ -11,11 +11,13 @@ First, make sure to read React Native's offical [Getting Started documentation](
 
 ### Running iOS
 
+* `cd ios` and `pod install` to install iOS dependencies 
 * Run `react-native run-ios` 
 
 or 
 
-* Open ios/AppGT.xcworkspace in Xcode
+* `cd ios` and `pod install` to install iOS dependencies 
+* Open `ios/AppGT.xcworkspace` in Xcode
 * Add your development account and click `Run` in the top left
 
 ### Running Android
