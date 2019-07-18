@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button } from 'react-native';
 import { authorize } from 'react-native-app-auth';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const config = {
     clientId: '440020cd46e82fb1373d0f6ba814f755ed53d69bef28a4ea86d0473af9bc840c',
@@ -24,11 +25,16 @@ export default class Login extends Component<Props> {
         user: null
     }
 
-    isSignedIn() {
-        return this.state.accessToken;
+    componentWillMount() {
+        AsyncStorage.getItem('userData', (error, result) => result && this.setState({ user: JSON.parse(result) }));
+        AsyncStorage.getItem('accessToken', (error, result) => result && this.setState({ accessToken: result }));
     }
 
-    fetchUserDetails = (accessToken) => {
+    isSignedIn() {
+        return this.state.user;
+    }
+
+    fetchUserDetails = async (accessToken) => {
         fetch('https://login.hack.gt/api/user', {
             method: 'GET',
             headers: {
@@ -36,15 +42,22 @@ export default class Login extends Component<Props> {
             },
         }).then(response => response.json()).then(userData => {
             const name = userData.nameParts;
-            this.setState({ user: {email: userData.email, name: userData.name, firstName: name.first, preferredName: name.preferred, lastName: name.last, uuid: userData.uuid} })
+            const user = { email: userData.email, name: userData.name, firstName: name.first, preferredName: name.preferred, lastName: name.last, uuid: userData.uuid };
+
+            AsyncStorage.setItem('userData', JSON.stringify(user));
+
+            this.setState({ user: user })
         });
     }
 
     onClickLogin = async () => {
         try {
             const result = await authorize(config);
+
             this.setState({ accessToken: result.accessToken })
             this.fetchUserDetails(result.accessToken)
+
+            AsyncStorage.setItem('accessToken', accessToken);
         } catch (error) {
             console.log(error);
         }
@@ -56,7 +69,11 @@ export default class Login extends Component<Props> {
             headers: {
                 Authorization: "Bearer " + this.state.accessToken
             },
-        }).then((response) => this.setState({ accessToken: '', user: null }));
+        }).then((response) => {
+            AsyncStorage.removeItem('accessToken')
+            AsyncStorage.removeItem('userData')
+            this.setState({ accessToken: '', user: null })
+        });
     }
 
     render() {
@@ -67,7 +84,7 @@ export default class Login extends Component<Props> {
         return (
             <View>
                 <Button onPress={toggledOnPress} title={toggledTitle} />
-                {user && Object.keys(user).map(key => <Text>{key} - {user[key]}</Text>)}
+                {user && Object.keys(user).map((key, index) => <Text key={index}>{key} - {user[key]}</Text>)}
             </View>
 
         )
