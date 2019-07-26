@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Text} from "react-native";
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 
-import Workshops from "./screens/Workshops";
+import Notifications from "./screens/Notifications";
 import Home from './screens/Home';
 import Schedule from "./screens/Schedule";
 import Event from './screens/Event';
@@ -25,14 +25,14 @@ const HomeStack = createStackNavigator({
   Home
 })
 
-const WorkshopStack = createStackNavigator({
-  Workshops
+const NotificationStack = createStackNavigator({
+  Notifications
 })
 
 const TabNavigator = createBottomTabNavigator({
   Home: HomeStack,
   Schedule: ScheduleStack,
-  Notifications: WorkshopStack
+  Notifications: NotificationStack
 }, {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
@@ -70,6 +70,11 @@ export default class App extends Component<Props> {
       OneSignal.addEventListener('received', this.onReceived);
       OneSignal.addEventListener('opened', this.onOpened);
       OneSignal.addEventListener('ids', this.onIds);
+
+      // Setting enableVibrate
+      OneSignal.enableVibrate(true);
+
+      OneSignal.enableSound(true);
     }
 
     componentWillUnmount() {

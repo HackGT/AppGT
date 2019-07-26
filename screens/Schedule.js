@@ -36,7 +36,7 @@ export default class Schedule extends Component<Props> {
 
     onSelectEvent = (item) => {
         this.props.navigation.navigate('Event', {
-            event: item 
+            event: item
         })
     }
 
