@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, SectionList } from 'react-native';
 
-export default class Schedule extends Component<Props> {
+class Notifications extends Component<Props> {
     static navigationOptions = {
         title: 'Notifications',
         headerLeft: null
@@ -13,3 +13,5 @@ export default class Schedule extends Component<Props> {
         )
     }
 }
+
+export default Notifications;

@@ -5,7 +5,7 @@ import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
 import { thisExpression } from '@babel/types';
 import OneSignal from 'react-native-onesignal';
 
-export default class ScheduleCard extends Component<Props> {
+class ScheduleCard extends Component<Props> {
 
   state = {
     switchValue: false,
@@ -71,3 +71,5 @@ const styles = StyleSheet.create({
     marginRight: 25,
   }
 });
+
+export default ScheduleCard;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, SectionList, Button, TouchableOpacity } from 'react-native';
-import ScheduleCard from "../components/ScheduleCard";
-import ButtonControl from "../components/ButtonControl";
+import { ScheduleCard, ButtonControl } from "../components";
 import { SearchBar } from 'react-native-elements';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPlusCircle, faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +15,7 @@ const eventProps = [
     makeEvent("Event 3", "This event will blow your socks off.")]
 
 
-export default class Schedule extends Component<Props> {
+class Schedule extends Component<Props> {
 
     static navigationOptions = {
         title: 'Schedule',
@@ -102,3 +101,5 @@ export default class Schedule extends Component<Props> {
         )
     }
 }
+
+export default Schedule;

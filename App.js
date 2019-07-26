@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import {Text} from "react-native";
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 
-import Notifications from "./screens/Notifications";
-import Home from './screens/Home';
-import Schedule from "./screens/Schedule";
-import Event from './screens/Event';
+import { Notifications, Home, Schedule, Event } from "./screens";
+
 import {
   createBottomTabNavigator,
   createStackNavigator,
