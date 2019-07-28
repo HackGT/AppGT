@@ -83,8 +83,8 @@ export default class Login extends Component<Props> {
 
         return (
             <View>
-                <Button onPress={toggledOnPress} title={toggledTitle} />
                 {user && Object.keys(user).map((key, index) => <Text key={index}>{key} - {user[key]}</Text>)}
+                <Button onPress={toggledOnPress} title={toggledTitle} />
             </View>
 
         )

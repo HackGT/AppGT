@@ -6,7 +6,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "postinstall": "jetify"
+    "postinstall": "jetify && patch-package"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.19",
@@ -14,6 +14,7 @@
     "@fortawesome/react-native-fontawesome": "^0.1.0",
     "@react-native-community/async-storage": "^1.5.1",
     "jetifier": "^1.6.3",
+    "patch-package": "^6.1.2",
     "react": "16.8.6",
     "react-native": "0.60.3",
     "react-native-app-auth": "^4.4.0",
@@ -28,6 +29,7 @@
     "@babel/runtime": "^7.5.4",
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.8.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "eslint": "^6.0.1",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "^0.55.0",
