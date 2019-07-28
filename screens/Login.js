@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const config = {
     clientId: '440020cd46e82fb1373d0f6ba814f755ed53d69bef28a4ea86d0473af9bc840c',
-    clientSecret: '',
     redirectUrl: 'gt.hack.live://redirect',
     serviceConfiguration: {
         authorizationEndpoint: 'https://login.hack.gt/oauth/authorize',
