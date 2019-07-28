@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
 import { thisExpression } from '@babel/types';
 
-export default class ScheduleCard extends Component<Props> {
+class ScheduleCard extends Component<Props> {
 
   onClick = () => {
     this.props.onClick(this.props.item);
@@ -49,3 +49,5 @@ const styles = StyleSheet.create({
     marginRight: 25,
   }
 });
+
+export default ScheduleCard;

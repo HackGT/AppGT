@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import {Text} from "react-native";
 
-import Workshops from "./screens/Workshops";
-import Home from './screens/Home';
-import Schedule from "./screens/Schedule";
-import Event from './screens/Event';
+import { Notifications, Event, Home, Schedule } from './screens'
 import {
   createBottomTabNavigator,
   createStackNavigator,
@@ -24,14 +21,14 @@ const HomeStack = createStackNavigator({
   Home
 })
 
-const WorkshopStack = createStackNavigator({
-  Workshops
+const NotificationsStack = createStackNavigator({
+  Notifications
 })
 
 const TabNavigator = createBottomTabNavigator({
   Home: HomeStack,
   Schedule: ScheduleStack,
-  Notifications: WorkshopStack
+  Notifications: NotificationsStack
 }, {
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
@@ -45,7 +42,7 @@ const TabNavigator = createBottomTabNavigator({
             icon = faList
             break;
           case "Notifications":
-            icon = faBell 
+            icon = faBell
             break;
           default:
             icon = null;
