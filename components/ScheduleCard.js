@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
 import { thisExpression } from '@babel/types';
-import Tag from './Tag';
 import TagList from './TagList';
 
 export default class ScheduleCard extends Component<Props> {

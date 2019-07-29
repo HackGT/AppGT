@@ -9,12 +9,13 @@ export default class TagList extends Component<Props> {
 
 	render() {
 		return(
-		<View style={styles.container}>
-        <FlatList horizontal={true}
-          data={this.props.tagList}
-          renderItem={({item}) => <Text style={styles.tag}>#{item.key}</Text>}
-        />
-      </View>)
+			<View style={styles.container}>
+		        <FlatList horizontal={true}
+		          data={this.props.tagList}
+		          renderItem={({item}) => <Text style={styles.tag}>#{item.key}</Text>}
+		        />
+	      	</View>
+		);
 	}
 }
 
