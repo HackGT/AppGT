@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text} from "react-native";
+import {Text, Alert} from "react-native";
 
 import { Notifications, Event, Home, Schedule } from './screens'
 import {
@@ -9,6 +9,8 @@ import {
 } from 'react-navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faList, faBell } from '@fortawesome/free-solid-svg-icons';
+import firebase from 'react-native-firebase';
+import type { Notification } from 'react-native-firebase';
 
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
@@ -57,6 +59,42 @@ const TabNavigator = createBottomTabNavigator({
 const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends Component<Props> {
+  async checkPermissions() {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+      console.log("Permissions Enabled");
+    } else {
+      console.log("Asking for permissions");
+      this.askPermissions();
+    }
+  }
+
+  async askPermissions() {
+    try {
+      await firebase.messaging().requestPermission();
+      console.log("Permissions enabled");
+    } catch (error) {
+      console.log("User rejected permissions");
+    }
+  }
+
+  componentDidMount() {
+    this.removeNotificationListener = firebase.notifications().onNotification((notification: Notification) => {
+        // Process your notification as required
+        const { title, body } = notification
+        this.showAlert(title, body);
+    });
+  }
+
+  componentWillUnmount() {
+    this.removeNotificationListener();
+  }
+
+  showAlert(title, body) {
+    Alert.alert(
+      title, body
+    );
+  }
 
   render() {
     return (
