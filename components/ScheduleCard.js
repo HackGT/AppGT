@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
 import { thisExpression } from '@babel/types';
+import Tag from './Tag';
+import TagList from './TagList';
 
 export default class ScheduleCard extends Component<Props> {
 
@@ -12,7 +14,6 @@ export default class ScheduleCard extends Component<Props> {
 
   render() {
     let title = this.props.title ? <Text style={styles.title}>{this.props.title}</Text> : null;
-
     return (
       <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.props.onClick}>
         <View>
@@ -25,6 +26,7 @@ export default class ScheduleCard extends Component<Props> {
 
           {title}
           <Text style={styles.text}>{this.props.children}</Text>
+		  <TagList tagList={this.props.tags} />
         </View>
       </TouchableHighlight>
     )
