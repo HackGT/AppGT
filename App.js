@@ -59,6 +59,9 @@ const TabNavigator = createBottomTabNavigator({
 const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends Component<Props> {
+
+  events = ["event 2", "event 4", "event 5"];
+
   async checkPermissions() {
     const enabled = await firebase.messaging().hasPermission();
     if (enabled) {
@@ -82,7 +85,17 @@ export default class App extends Component<Props> {
     this.removeNotificationListener = firebase.notifications().onNotification((notification: Notification) => {
         // Process your notification as required
         const { title, body } = notification
-        this.showAlert(title, body);
+        console.log(this.events.some((event) => {
+          notification.data.tags.includes(event);
+        }));
+
+        if (this.events.some((event) => {
+          if (notification.data.tags.includes(event)) {
+            return true;
+          }
+        })) {
+          this.showAlert(title, body);
+        }
     });
   }
 
