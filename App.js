@@ -100,8 +100,8 @@ export default class App extends Component<Props> {
 
     Object.keys(events).forEach((event) => {
       if (events[event.toString()].date == (curr.getDate())) {
-        if (Math.abs(events[event].timeStart - (curr.getTime())) <= 7 * 60 * 1000) {
-          showAlert(event, "Occurring now!");
+        if (events[event].timeStart - (curr.getTime()) <= 15 * 60 * 1000) {
+          showAlert(event, "Starting soon!");
         }
       }
     })
@@ -144,8 +144,8 @@ export default class App extends Component<Props> {
       console.log("checking background events");
       Object.keys(events).forEach((event) => {
         if (events[event.toString()].date == (curr.getDate())) {
-          if (Math.abs(events[event].timeStart - (curr.getTime())) <= 7 * 60 * 1000) {
-            showAlert(event, "Occurring now!");
+          if (events[event].timeStart - (curr.getTime()) <= 15 * 60 * 1000) {
+            showAlert(event, "Starting Soon!");
           }
         }
       })
