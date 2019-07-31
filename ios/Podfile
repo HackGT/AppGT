@@ -36,6 +36,8 @@ target 'AppGT' do
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
 
+  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
+
   target 'AppGTTests' do
     inherit! :search_paths
     # Pods for testing

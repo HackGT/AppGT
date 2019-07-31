@@ -11,6 +11,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faList, faBell } from '@fortawesome/free-solid-svg-icons';
 import firebase from 'react-native-firebase';
 import type { Notification } from 'react-native-firebase';
+import BackgroundFetch from "react-native-background-fetch";
+
+const events = {event_2: {
+            id: 0,
+            name: "event 2",
+            date: new Date().getDate(),
+            timeStart: new Date().getTime() + 5 * 60 * 1000,
+            timeEnd: new Date().getTime() + 15 * 60 * 1000 + 1000
+          },
+          event_4: {
+            id: 1,
+            name: "event 4",
+            date: new Date().getDate(),
+            timeStart: new Date().getTime() + 15 * 60 * 1000,
+            timeEnd: new Date().getTime() + 15 * 60 * 1000 + 1000
+          },
+          event_5: {
+            id: 2,
+            name: "event 5",
+            date: new Date().getDate(),
+            timeStart: new Date().getTime() + 17 * 60 * 1000,
+            timeEnd: new Date().getTime() + 17 * 60 * 1000 + 1000
+          }
+        };
 
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
@@ -56,6 +80,12 @@ const TabNavigator = createBottomTabNavigator({
     })
   });
 
+  const showAlert = ((title, body) => {
+    Alert.alert(
+      title, body
+    );
+  })
+
 const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends Component<Props> {
@@ -64,30 +94,66 @@ export default class App extends Component<Props> {
     super(props)
     firebase.messaging().subscribeToTopic("all");
     console.log("Subscribed to topic");
+    console.log("Checking Status")
+    this.checkStatus();
+    let curr = new Date();
+
+    Object.keys(events).forEach((event) => {
+      if (events[event.toString()].date == (curr.getDate())) {
+        if (Math.abs(events[event].timeStart - (curr.getTime())) <= 7 * 60 * 1000) {
+          showAlert(event, "Occurring now!");
+        }
+      }
+    })
   }
 
-  events = {"event 2": {
-              "id": 0,
-              "name": "event 2",
-              "date": new Date().getDate(),
-              "time start": new Date().getTime(),
-              "time end": new Date().getTime() + 1000
-            },
-            "event 4": {
-              "id": 1,
-              "name": "event 4",
-              "date": new Date().getDate(),
-              "time start": new Date().getTime() + 1000,
-              "time end": new Date().getTime() + 2000
-            },
-            "event 5": {
-              "id": 2,
-              "name": "event 5",
-              "date": new Date().getDate(),
-              "time start": new Date().getTime() + 2000,
-              "time end": new Date().getTime() + 3000
-            }
-          };
+  async checkStatus() {
+    BackgroundFetch.status((status) => {
+      switch(status) {
+        case BackgroundFetch.STATUS_RESTRICTED:
+          console.log("BackgroundFetch restricted");
+          break;
+        case BackgroundFetch.STATUS_DENIED:
+          console.log("BackgroundFetch denied");
+          break;
+        case BackgroundFetch.STATUS_AVAILABLE:
+          console.log("BackgroundFetch is enabled");
+          break;
+      }
+    })
+  }
+
+  localNotifs() {
+    console.log("Checking schedule");
+    BackgroundFetch.configure({
+      minimumFetchInterval: 15,     // <-- minutes (15 is minimum allowed)
+      // Android options
+      stopOnTerminate: false,
+      startOnBoot: true,
+      requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
+      requiresCharging: false,      // Default
+      requiresDeviceIdle: false,    // Default
+      requiresBatteryNotLow: false, // Default
+      requiresStorageNotLow: false  // Default
+    }, () => {
+      console.log("[js] Received background-fetch event");
+      // Required: Signal completion of your task to native code
+      // If you fail to do this, the OS can terminate your app
+      // or assign battery-blame for consuming too much background-time
+      let curr = new Date();
+      console.log("checking background events");
+      Object.keys(events).forEach((event) => {
+        if (events[event.toString()].date == (curr.getDate())) {
+          if (Math.abs(events[event].timeStart - (curr.getTime())) <= 7 * 60 * 1000) {
+            showAlert(event, "Occurring now!");
+          }
+        }
+      })
+      BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
+    }, (error) => {
+      console.log("[js] RNBackgroundFetch failed to start");
+    });
+  }
 
   async checkPermissions() {
     const enabled = await firebase.messaging().hasPermission();
@@ -109,14 +175,12 @@ export default class App extends Component<Props> {
   }
 
   componentDidMount() {
+    this.localNotifs();
     this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
         // Process your notification as required
-        const { title, body } = notification
-        console.log(this.events.some((event) => {
-          notification.data.tags.includes(event);
-        }));
+        const { title, body } = notification;
 
-        if (this.events.keys().some((event) => {
+        if (Object.keys(events).some((event) => {
           if (!notification.data.tags) {
             return false;
           }
@@ -124,19 +188,13 @@ export default class App extends Component<Props> {
             return true;
           }
         })) {
-          this.showAlert(title, body);
+          showAlert(title, body);
         }
     });
   }
 
   componentWillUnmount() {
     this.notificationListener();
-  }
-
-  showAlert(title, body) {
-    Alert.alert(
-      title, body
-    );
   }
 
   render() {
