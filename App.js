@@ -60,7 +60,34 @@ const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends Component<Props> {
 
-  events = ["event 2", "event 4", "event 5"];
+  constructor(props) {
+    super(props)
+    firebase.messaging().subscribeToTopic("all");
+    console.log("Subscribed to topic");
+  }
+
+  events = {"event 2": {
+              "id": 0,
+              "name": "event 2",
+              "date": new Date().getDate(),
+              "time start": new Date().getTime(),
+              "time end": new Date().getTime() + 1000
+            },
+            "event 4": {
+              "id": 1,
+              "name": "event 4",
+              "date": new Date().getDate(),
+              "time start": new Date().getTime() + 1000,
+              "time end": new Date().getTime() + 2000
+            },
+            "event 5": {
+              "id": 2,
+              "name": "event 5",
+              "date": new Date().getDate(),
+              "time start": new Date().getTime() + 2000,
+              "time end": new Date().getTime() + 3000
+            }
+          };
 
   async checkPermissions() {
     const enabled = await firebase.messaging().hasPermission();
@@ -82,14 +109,17 @@ export default class App extends Component<Props> {
   }
 
   componentDidMount() {
-    this.removeNotificationListener = firebase.notifications().onNotification((notification: Notification) => {
+    this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
         // Process your notification as required
         const { title, body } = notification
         console.log(this.events.some((event) => {
           notification.data.tags.includes(event);
         }));
 
-        if (this.events.some((event) => {
+        if (this.events.keys().some((event) => {
+          if (!notification.data.tags) {
+            return false;
+          }
           if (notification.data.tags.includes(event)) {
             return true;
           }
@@ -100,7 +130,7 @@ export default class App extends Component<Props> {
   }
 
   componentWillUnmount() {
-    this.removeNotificationListener();
+    this.notificationListener();
   }
 
   showAlert(title, body) {

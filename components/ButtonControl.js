@@ -17,7 +17,7 @@ class ButtonControl extends Component<Props> {
     }
 
     render() {
-        const buttons = this.props.buttons
+        const { buttons } = this.props
         const { selectedIndex } = this.state
 
         return (
