@@ -2,21 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
 import { Text } from 'react-native';
 
-export default class TagList extends Component<Props> {
-	constructor() {
-		super();
-	}
-
-	render() {
-		return(
-			<View style={styles.container}>
-		        <FlatList horizontal={true}
-		          data={this.props.tagList}
-		          renderItem={({item}) => <Text style={styles.tag}>#{item.key}</Text>}
-		        />
-	      	</View>
-		);
-	}
+export default TagList = ({ tagList }) => {
+	return (
+		<View style={styles.container}>
+			<FlatList horizontal={true}
+			  data={tagList}
+			  renderItem={({item}) => <Text style={styles.tag}>#{item.key}</Text>}
+			/>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
