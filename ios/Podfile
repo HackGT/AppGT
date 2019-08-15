@@ -34,10 +34,14 @@ target 'AppGT' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Core', '~> 6.3.0'
+  pod 'Firebase/Messaging', '~> 6.3.0'
 
-  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
+  # pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch/ios'
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+ 
   target 'AppGTTests' do
     inherit! :search_paths
     # Pods for testing
@@ -46,12 +50,3 @@ target 'AppGT' do
   use_native_modules!
 end
 
-target 'AppGT-tvOS' do
-  # Pods for AppGT-tvOS
-
-  target 'AppGT-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-end
