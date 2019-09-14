@@ -133,6 +133,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [
+                appAuthRedirectScheme: 'gt.hack.live'
+        ]
     }
     splits {
         abi {
@@ -190,6 +193,7 @@ android {
 dependencies {
     implementation project(':react-native-background-fetch')
     implementation project(':react-native-firebase')
+    implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-svg')
