@@ -15,8 +15,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		35661BF24ECC4185B47BB8B0 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5763F8302B6A4AEEABEA47A6 /* Feather.ttf */; };
 		389895C27B3548E5A714A147 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7720BD65CA984A6092CCE1CA /* MaterialIcons.ttf */; };
-		439260B82305C3C5008A2779 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 439260B72305C3C5008A2779 /* GoogleService-Info.plist */; };
-		439260B92305C3C5008A2779 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 439260B72305C3C5008A2779 /* GoogleService-Info.plist */; };
+		43D5BA11232D993400BC32C4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */; };
+		43D5BA12232D993400BC32C4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */; };
 		46A71EC6A7B1402CA9510472 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4AEA6D151A4E03AE3E6FC8 /* MaterialCommunityIcons.ttf */; };
 		4962CCBA8B5449859643EDAF /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83727427AA0F49A2B122A6A5 /* FontAwesome5_Solid.ttf */; };
 		50D996BDE44845B28A09A302 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B12A54104B24EF1960B2FCF /* Zocial.ttf */; };
@@ -68,7 +68,8 @@
 		2577DF5A4965FE9830048F04 /* Pods-AppGT-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOS/Pods-AppGT-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		2C099160FBFB423C8574057E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		38608AB0687D5BB33C335009 /* Pods-AppGTTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGTTests.release.xcconfig"; path = "Target Support Files/Pods-AppGTTests/Pods-AppGTTests.release.xcconfig"; sourceTree = "<group>"; };
-		439260B72305C3C5008A2779 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		43D5BA13232D9FE000BC32C4 /* AppGT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AppGT.entitlements; path = AppGT/AppGT.entitlements; sourceTree = "<group>"; };
 		5763F8302B6A4AEEABEA47A6 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		5C73623CA13B53CA3D2E1D1A /* Pods-AppGT-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOSTests/Pods-AppGT-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		6D4AEA6D151A4E03AE3E6FC8 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
@@ -134,6 +135,8 @@
 		13B07FAE1A68108700A75B9A /* AppGT */ = {
 			isa = PBXGroup;
 			children = (
+				43D5BA13232D9FE000BC32C4 /* AppGT.entitlements */,
+				43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -142,7 +145,6 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				822F80AC936149DFB8DDC9EE /* RNBackgroundFetch+AppDelegate.m */,
-				439260B72305C3C5008A2779 /* GoogleService-Info.plist */,
 			);
 			name = AppGT;
 			sourceTree = "<group>";
@@ -294,6 +296,9 @@
 							com.apple.BackgroundModes = {
 								enabled = true;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 				};
@@ -323,7 +328,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				439260B92305C3C5008A2779 /* GoogleService-Info.plist in Resources */,
+				43D5BA12232D993400BC32C4 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,7 +347,7 @@
 				F8180E12618A4CDFA68EC631 /* FontAwesome5_Regular.ttf in Resources */,
 				4962CCBA8B5449859643EDAF /* FontAwesome5_Solid.ttf in Resources */,
 				CD0311A487AB446A83DA3ACE /* Fontisto.ttf in Resources */,
-				439260B82305C3C5008A2779 /* GoogleService-Info.plist in Resources */,
+				43D5BA11232D993400BC32C4 /* GoogleService-Info.plist in Resources */,
 				B0ADA8339BBB4B4EBE70799E /* Foundation.ttf in Resources */,
 				F07DEE1D7A6F460CB48A72F3 /* Ionicons.ttf in Resources */,
 				46A71EC6A7B1402CA9510472 /* MaterialCommunityIcons.ttf in Resources */,
@@ -577,6 +582,7 @@
 			baseConfigurationReference = E2A8A716A7CE3F4FE6E831EA /* Pods-AppGT.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppGT/AppGT.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
@@ -588,7 +594,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = gt.hack.AppGT;
 				PRODUCT_NAME = AppGT;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -599,6 +605,7 @@
 			baseConfigurationReference = 83B90D9BEDC1FE142560E384 /* Pods-AppGT.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AppGT/AppGT.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)/**";
@@ -609,7 +616,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = gt.hack.AppGT;
 				PRODUCT_NAME = AppGT;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
