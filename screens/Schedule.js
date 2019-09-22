@@ -38,7 +38,11 @@ export default class Schedule extends Component<Props> {
     modalTitle: "",
     modalType: "",
     modalDesc: "",
-    modalTags: []
+    modalTags: [],
+    modalStart: "",
+    modalEnd: "",
+    modalRestaurant: "",
+    modalMenu: ""
   };
 
   makeEvent = (
@@ -104,13 +108,17 @@ export default class Schedule extends Component<Props> {
 
   eventProps = this.populateEvents();
 
-  toggleModal = (title, type, desc, tags) => {
+  toggleModal = (title, type, desc, tags, start, end, restaurant, menu) => {
     this.setState({
       isModalVisible: !this.state.isModalVisible,
       modalTitle: title,
       modalType: type,
       modalDesc: desc,
-      modalTags: tags
+      modalTags: tags,
+      modalStart: start,
+      modalEnd: end,
+      modalRestaurant: restaurant,
+      modalMenu: menu
     });
   };
 
@@ -166,7 +174,16 @@ export default class Schedule extends Component<Props> {
         <ScheduleCard
           item={item}
           onClick={() =>
-            this.toggleModal(item.title, item.eventType, item.desc, item.tags)
+            this.toggleModal(
+              item.title,
+              item.eventType,
+              item.desc,
+              item.tags,
+              item.start,
+              item.end,
+              item.restaurant,
+              item.menu
+            )
           }
           title={item.title}
           tags={item.tags}
@@ -175,10 +192,16 @@ export default class Schedule extends Component<Props> {
         </ScheduleCard>
         <Modal isVisible={this.state.isModalVisible}>
           <Event
-            isModalVisible={() => this.toggleModal(null, null, null, null)}
+            isModalVisible={() =>
+              this.toggleModal(null, null, null, null, null, null, null, null)
+            }
             title={this.state.modalTitle}
             desc={this.state.modalDesc}
             tags={this.state.modalTags}
+            startTime={this.state.modalStart}
+            endTime={this.state.modalEnd}
+            restaurant={this.state.modalRestaurant}
+            menuItems={this.state.modalMenu}
             eventType={this.state.modalType}
           />
         </Modal>
@@ -198,8 +221,7 @@ export default class Schedule extends Component<Props> {
     const data = this.state.search.isSearching
       ? this.state.search.filtered
       : this.eventProps;
-
-    console.log(this.props.screenProps);
+    console.log(this.props.screenProps.allData);
     return (
       <SectionList
         renderItem={({ item, index, section }) => (

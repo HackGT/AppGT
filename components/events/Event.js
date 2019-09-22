@@ -13,18 +13,20 @@ export default (Event = ({
   desc,
   tags,
   eventType,
-  restaurantName,
-  restaurantLink,
-  menuItem,
+  restaurant,
+  menuItems,
   presenter
 }) => {
   return (
     <View style={styles.content}>
       <Text style={styles.contentTitle}>{title}</Text>
-      <Text style={styles.contentTitle}>{desc}</Text>
-      {eventType === "meal" && <Meal />}
+      <Text style={styles.contentText}>{startTime}</Text>
+      <Text style={styles.contentText}>{endTime}</Text>
+      {eventType === "meal" && <Meal restaurant={restaurant} />}
       {eventType === "workshop" && <Workshop />}
       {eventType === "talk" && <Talk />}
+      <Text style={styles.contentTitle}>{desc}</Text>
+      <TagList tagList={tags} />
       <Button onPress={isModalVisible} title="Close" />
     </View>
   );
@@ -38,10 +40,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)",
-    height: 200
+    height: 400
   },
   contentTitle: {
     fontSize: 20,
+    marginBottom: 12
+  },
+  contentText: {
+    fontSize: 15,
     marginBottom: 12
   }
 });

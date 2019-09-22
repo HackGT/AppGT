@@ -2,10 +2,10 @@ import React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
 import TagList from "../TagList";
 
-export default (Meal = ({ restaurantName, restaurantLink, menuItem }) => {
+export default (Meal = ({ desc, restaurant, menuItem }) => {
   return (
     <View style={styles.content}>
-      <Text style={styles.contentTitle}>Meal Modal</Text>
+      <Text style={styles.contentTitle}>{restaurant.name}</Text>
     </View>
   );
 });

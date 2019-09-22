@@ -1,40 +1,47 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faPlusCircle, faStar } from '@fortawesome/free-solid-svg-icons'
-import { thisExpression } from '@babel/types';
-import TagList from './TagList';
+import React, { Component } from "react";
+import { Text, View, StyleSheet, TouchableHighlight } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faPlusCircle, faStar } from "@fortawesome/free-solid-svg-icons";
+import { thisExpression } from "@babel/types";
+import TagList from "./TagList";
 
 export default class ScheduleCard extends Component<Props> {
-
   onClick = () => {
     this.props.onClick(this.props.item);
-  }
+  };
 
   render() {
-    let title = this.props.title ? <Text style={styles.title}>{this.props.title}</Text> : null;
+    let title = this.props.title ? (
+      <Text style={styles.title}>{this.props.title}</Text>
+    ) : null;
     return (
-      <TouchableHighlight style={styles.card} underlayColor="gray" onPress={this.props.onClick}>
+      <TouchableHighlight
+        style={styles.card}
+        underlayColor="gray"
+        onPress={this.props.onClick}
+      >
         <View>
-
-          <View style={{
-            position: "absolute", alignSelf: "flex-end",
-            flex: 1, padding: 8
-          }}>
-          </View>
+          <View
+            style={{
+              position: "absolute",
+              alignSelf: "flex-end",
+              flex: 1,
+              padding: 8
+            }}
+          />
 
           {title}
           <Text style={styles.text}>{this.props.children}</Text>
-		  <TagList tagList={this.props.tags} />
+          <TagList tagList={this.props.tags} />
         </View>
       </TouchableHighlight>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingLeft: 10,
     paddingTop: 10
   },
@@ -42,11 +49,11 @@ const styles = StyleSheet.create({
     padding: 10
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderWidth: 0.5,
-    borderColor: 'grey',
+    borderColor: "grey",
     borderRadius: 10,
     marginLeft: 25,
-    marginRight: 25,
+    marginRight: 25
   }
 });
