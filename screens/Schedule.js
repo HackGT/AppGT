@@ -19,31 +19,6 @@ import {
   faSearch
 } from "@fortawesome/free-solid-svg-icons";
 
-const makeEvent = (title, description, tags, eventType) => {
-  return { title: title, desc: description, tags: tags, eventType: eventType };
-};
-
-const eventProps = [
-  makeEvent(
-    "Event 1",
-    "Really cool event.",
-    [{ key: "Tag1" }, { key: "Tag2" }, { key: "Tag3" }],
-    "meal"
-  ),
-  makeEvent(
-    "Event 2",
-    "Even cooler event.",
-    [{ key: "Tag4" }, { key: "Tag5" }, { key: "Tag6" }],
-    "workshop"
-  ),
-  makeEvent(
-    "Event 3",
-    "This event will blow your socks off.",
-    [{ key: "Tag7" }, { key: "Tag8" }, { key: "Tag9" }],
-    "meal"
-  )
-];
-
 export default class Schedule extends Component<Props> {
   static navigationOptions = {
     title: "Schedule",
@@ -56,7 +31,7 @@ export default class Schedule extends Component<Props> {
       text: "",
       filtered: []
     },
-
+    allData: null,
     selectedDayIndex: 0,
     selectedScheduleIndex: 0,
     isModalVisible: false,
@@ -65,6 +40,69 @@ export default class Schedule extends Component<Props> {
     modalDesc: "",
     modalTags: []
   };
+
+  makeEvent = (
+    title,
+    description,
+    tags,
+    start_time,
+    end_time,
+    restaurant,
+    menu_items,
+    eventType
+  ) => {
+    return {
+      title: title,
+      desc: description,
+      tags: tags,
+      start: start_time,
+      end: end_time,
+      restaurant: restaurant,
+      menu: menu_items,
+      eventType: eventType
+    };
+  };
+
+  populateEvents = () => {
+    let eventProps = [];
+    eventData = this.props.screenProps.allData.data.events;
+    for (let i = 0; i < eventData.length; i++) {
+      curEvent = eventData[i];
+      eventProps.push(
+        this.makeEvent(
+          curEvent.title,
+          curEvent.description,
+          curEvent.tags,
+          curEvent.start_time,
+          curEvent.end_time,
+          null,
+          null,
+          "event"
+        )
+      );
+    }
+
+    mealData = this.props.screenProps.allData.data.meals;
+    for (let i = 0; i < mealData.length; i++) {
+      curMeal = mealData[i];
+      eventProps.push(
+        this.makeEvent(
+          "no meal title",
+          curMeal.description,
+          curMeal.tags,
+          curMeal.start_time,
+          curMeal.end_time,
+          curMeal.restaurant,
+          curMeal.menu_items,
+          "meal"
+        )
+      );
+    }
+
+    return eventProps;
+  };
+
+  eventProps = this.populateEvents();
 
   toggleModal = (title, type, desc, tags) => {
     this.setState({
@@ -96,12 +134,11 @@ export default class Schedule extends Component<Props> {
         search: {
           text: text,
           isSearching: true,
-          filtered: eventProps.filter(item => item.title.includes(text))
+          filtered: this.eventProps.filter(item => item.title.includes(text))
         }
       });
     }
   };
-
   render() {
     const { text } = this.state.search;
     const vSpace = <View style={{ height: 10 }} />;
@@ -142,6 +179,7 @@ export default class Schedule extends Component<Props> {
             title={this.state.modalTitle}
             desc={this.state.modalDesc}
             tags={this.state.modalTags}
+            eventType={this.state.modalType}
           />
         </Modal>
         {vSpace}
@@ -159,8 +197,9 @@ export default class Schedule extends Component<Props> {
 
     const data = this.state.search.isSearching
       ? this.state.search.filtered
-      : eventProps;
+      : this.eventProps;
 
+    console.log(this.props.screenProps);
     return (
       <SectionList
         renderItem={({ item, index, section }) => (

@@ -20,7 +20,6 @@ export default (Event = ({
 }) => {
   return (
     <View style={styles.content}>
-      <TagList tagList={tags} />
       <Text style={styles.contentTitle}>{title}</Text>
       <Text style={styles.contentTitle}>{desc}</Text>
       {eventType === "meal" && <Meal />}
@@ -38,7 +37,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    height: 200
   },
   contentTitle: {
     fontSize: 20,
