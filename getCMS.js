@@ -18,6 +18,7 @@ var workshopMessage = `query {
       start_time
       end_time
       description
+	  title
       tags {
         name
       }

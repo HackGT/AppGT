@@ -91,7 +91,7 @@ export default class Schedule extends Component<Props> {
       curMeal = mealData[i];
       eventProps.push(
         this.makeEvent(
-          "no meal title",
+          curMeal.title,
           curMeal.description,
           curMeal.tags,
           curMeal.start_time,
