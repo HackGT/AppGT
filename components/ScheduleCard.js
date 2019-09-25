@@ -5,55 +5,55 @@ import { faPlusCircle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { thisExpression } from "@babel/types";
 import TagList from "./TagList";
 
-class ScheduleCard extends Component<Props> {
-    onClick = () => {
-        this.props.onClick(this.props.item);
-    };
+export default class ScheduleCard extends Component<Props> {
+  onClick = () => {
+    this.props.onClick(this.props.item);
+  };
 
-    render() {
-        let title = this.props.title ? (
-            <Text style={styles.title}>{this.props.title}</Text>
-        ) : null;
-        return (
-            <TouchableHighlight
-                style={styles.card}
-                underlayColor="gray"
-                onPress={this.props.onClick}
-            >
-                <View>
-                    <View
-                        style={{
-                            position: "absolute",
-                            alignSelf: "flex-end",
-                            flex: 1,
-                            padding: 8
-                        }}
-                    ></View>
+  render() {
+    let title = this.props.title ? (
+      <Text style={styles.title}>{this.props.title}</Text>
+    ) : null;
+    return (
+      <TouchableHighlight
+        style={styles.card}
+        underlayColor="gray"
+        onPress={this.props.onClick}
+      >
+        <View>
+          <View
+            style={{
+              position: "absolute",
+              alignSelf: "flex-end",
+              flex: 1,
+              padding: 8
+            }}
+          />
 
-                    {title}
-                    <Text style={styles.text}>{this.props.children}</Text>
-                    <TagList tagList={this.props.tags} />
-                </View>
-            </TouchableHighlight>
-        );
-    }
+          {title}
+          <Text style={styles.text}>{this.props.children}</Text>
+          <TagList tagList={this.props.tags} />
+        </View>
+      </TouchableHighlight>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    title: {
-        fontWeight: "bold",
-        paddingLeft: 10,
-        paddingTop: 10
-    },
-    text: {
-        padding: 10
-    },
-    card: {
-        backgroundColor: "white",
-        borderWidth: 0.5,
-        borderColor: "grey",
-        borderRadius: 10,
-        marginLeft: 25,
-        marginRight: 25
-    }
+  title: {
+    fontWeight: "bold",
+    paddingLeft: 10,
+    paddingTop: 10
+  },
+  text: {
+    padding: 10
+  },
+  card: {
+    backgroundColor: "white",
+    borderWidth: 0.5,
+    borderColor: "grey",
+    borderRadius: 10,
+    marginLeft: 25,
+    marginRight: 25
+  }
 });
