@@ -1,14 +1,15 @@
+import { Text, Alert } from "react-native";
+import { Notifications, Event, Home, Schedule, Login } from "./screens";
+import { NotificationsComp } from "./components";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import firebase from "react-native-firebase";
+import BackgroundFetch from "react-native-background-fetch";
 import React, { Component } from "react";
-import Workshops from "./screens/Workshops";
-import Home from "./screens/Home";
-import Schedule from "./screens/Schedule";
-import Login from "./screens/Login";
 import {
   createBottomTabNavigator,
   createStackNavigator,
   createAppContainer
 } from "react-navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faHome,
   faList,
@@ -42,8 +43,8 @@ const HomeStack = createStackNavigator({
   Home
 });
 
-const WorkshopStack = createStackNavigator({
-  Workshops
+const NotificationsStack = createStackNavigator({
+  Notifications
 });
 
 const LoginStack = createStackNavigator({
@@ -54,8 +55,8 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Schedule: ScheduleStack,
-    Notifications: WorkshopStack,
-    Login: LoginStack
+    Login: LoginStack,
+    Notifications: NotificationsStack
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -88,6 +89,22 @@ const TabNavigator = createBottomTabNavigator(
 const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends Component<Props> {
+  constructor(props) {
+    super(props);
+    Notif = new NotificationsComp();
+  }
+
+  componentDidMount() {
+    Notif.runNotifications();
+  }
+
+  componentWillUnmount() {
+    Notif.listener();
+  }
+
+  render() {
+    return <AppContainer>Hi</AppContainer>;
+  }
   state = {
     user: null,
     accessToken: null,

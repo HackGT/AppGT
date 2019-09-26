@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "778802244385",
+    "firebase_url": "https://appgt-push.firebaseio.com",
+    "project_id": "appgt-push",
+    "storage_bucket": "appgt-push.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778802244385:android:8eaecdf481104ca9",
+        "android_client_info": {
+          "package_name": "com.appgt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "778802244385-rodnfvt213fr1m36rc4mo9nq01te3obr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUX_H04tZqQS49q_cQms2ZDMvZg7arFGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "778802244385-rodnfvt213fr1m36rc4mo9nq01te3obr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

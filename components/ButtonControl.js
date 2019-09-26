@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ButtonGroup } from "react-native-elements";
 import {Text} from "react-native";
 
-export default class ButtonControl extends Component<Props> {
+class ButtonControl extends Component<Props> {
     constructor() {
         super()
         this.state = {
@@ -17,7 +17,7 @@ export default class ButtonControl extends Component<Props> {
     }
 
     render() {
-        const buttons = this.props.buttons 
+        const { buttons } = this.props
         const { selectedIndex } = this.state
 
         return (
@@ -30,3 +30,5 @@ export default class ButtonControl extends Component<Props> {
         )
     }
 }
+
+export default ButtonControl;

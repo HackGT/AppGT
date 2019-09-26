@@ -38,7 +38,7 @@ var workshopMessage = `query {
     }
 }`;
 async function getCMSData() {
-  return fetch("http://cms.dev.hack.gt/graphql", {
+  return fetch("https://cms.hack.gt/graphql", {
     method: "POST",
     headers: {
       "Content-Type": `application/json`,

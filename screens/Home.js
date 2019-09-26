@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import getAllData from "../getCMS";
 
-export default class Home extends Component<Props> {
+class Home extends Component<Props> {
   static navigationOptions = {
     title: "Home",
     headerLeft: null
@@ -76,3 +76,5 @@ const styles = StyleSheet.create({
     marginTop: 25
   }
 });
+
+export default Home;
