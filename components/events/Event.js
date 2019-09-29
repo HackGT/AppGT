@@ -13,7 +13,8 @@ export default (Event = ({
   desc,
   tags,
   eventType,
-  restaurant,
+  restaurantName,
+  restaurantLink,
   menuItems,
   presenter
 }) => {
@@ -22,7 +23,13 @@ export default (Event = ({
       <Text style={styles.contentTitle}>{title}</Text>
       <Text style={styles.contentText}>{startTime}</Text>
       <Text style={styles.contentText}>{endTime}</Text>
-      {eventType === "meal" && <Meal restaurant={restaurant} />}
+      {eventType === "meal" && (
+        <Meal
+          restaurantName={restaurantName}
+          restaurantLink={restaurantLink}
+          menuItem={menuItems}
+        />
+      )}
       {eventType === "workshop" && <Workshop />}
       {eventType === "talk" && <Talk />}
       <Text style={styles.contentTitle}>{desc}</Text>

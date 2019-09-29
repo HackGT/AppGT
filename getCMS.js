@@ -1,40 +1,55 @@
 var fetch = require("node-fetch");
 
-var workshopMessage = `query {
-    workshops(start: 0) {
-      id
-      start_time
-      createdAt
-      updatedAt
-      image {
-        url
-        hash
+var queryMessage = `query {
+    talks(start: 0) {
+      base {
+          start_time
+          end_time
+          title
+          description
+		  tags {
+			  name
+		  }
+          area {
+              name
+              mapgt_slug
+              capacity
+          }
       }
+      people {
+          name
+          bio
+          link
+          image {
+              url
+          }
+      }
+    }
+    faqs(start: 0) {
+        title
+        description
     }
     meals(start: 0) {
-      restaurant {
-        name
-      }
-      start_time
-      end_time
-      description
-	  title
-      tags {
-        name
-      }
-      menu_items {
-        name
-        diet_restriction
-      }
-    }
-    events(start: 0) {
-      start_time
-      end_time
-      title
-      description
-      tags {
-        name
-      }
+        base {
+            start_time
+            end_time
+            title
+            description
+			tags {
+				name
+			}
+            area {
+                name
+                mapgt_slug
+                capacity
+            }
+        }
+        restaurant_name
+        restaurant_link
+        menu_items {
+            name
+            diet_restriction
+        }
     }
 }`;
 async function getCMSData() {
@@ -45,7 +60,7 @@ async function getCMSData() {
       Accept: `application/json`
     },
     body: JSON.stringify({
-      query: workshopMessage
+      query: queryMessage
     })
   })
     .then(r => {
@@ -57,6 +72,7 @@ async function getCMSData() {
 }
 export default (getAllData = () => {
   return getCMSData().then(result => {
+    console.log(result);
     return result;
   });
 });

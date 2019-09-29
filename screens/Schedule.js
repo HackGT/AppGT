@@ -41,7 +41,8 @@ export default class Schedule extends Component<Props> {
     modalTags: [],
     modalStart: "",
     modalEnd: "",
-    modalRestaurant: "",
+    modalRestaurantName: "",
+    modalRestaurantLink: "",
     modalMenu: ""
   };
 
@@ -51,7 +52,8 @@ export default class Schedule extends Component<Props> {
     tags,
     start_time,
     end_time,
-    restaurant,
+    restaurant_name,
+    restaurant_link,
     menu_items,
     eventType
   ) => {
@@ -61,7 +63,8 @@ export default class Schedule extends Component<Props> {
       tags: tags,
       start: start_time,
       end: end_time,
-      restaurant: restaurant,
+      restaurant_name: restaurant_name,
+      restaurant_link: restaurant_link,
       menu: menu_items,
       eventType: eventType
     };
@@ -69,38 +72,44 @@ export default class Schedule extends Component<Props> {
 
   populateEvents = () => {
     let eventProps = [];
-    eventData = this.props.screenProps.allData.data.events;
-    for (let i = 0; i < eventData.length; i++) {
-      curEvent = eventData[i];
-      eventProps.push(
-        this.makeEvent(
-          curEvent.title,
-          curEvent.description,
-          curEvent.tags,
-          curEvent.start_time,
-          curEvent.end_time,
-          null,
-          null,
-          "event"
-        )
-      );
-    }
+    console.log(this.props.screenProps.allData.data);
 
     mealData = this.props.screenProps.allData.data.meals;
     for (let i = 0; i < mealData.length; i++) {
       curMeal = mealData[i];
       eventProps.push(
         this.makeEvent(
-          curMeal.title,
-          curMeal.description,
-          curMeal.tags,
-          curMeal.start_time,
-          curMeal.end_time,
-          curMeal.restaurant,
+          curMeal.base.title,
+          curMeal.base.description,
+          curMeal.base.tags,
+          curMeal.base.start_time,
+          curMeal.base.end_time,
+          curMeal.restaurant_name,
+          curMeal.restaurant_link,
           curMeal.menu_items,
           "meal"
         )
       );
+    }
+
+    talkData = this.props.screenProps.allData.data.talks;
+    for (let i = 0; i < talkData.length; i++) {
+      curMeal = talkData[i];
+      if (curMeal.base != null) {
+        eventProps.push(
+          this.makeEvent(
+            curMeal.base.title,
+            curMeal.base.description,
+            curMeal.base.tags,
+            curMeal.base.start_time,
+            curMeal.base.end_time,
+            null,
+            null,
+            null,
+            "talk"
+          )
+        );
+      }
     }
 
     return eventProps;
@@ -108,7 +117,17 @@ export default class Schedule extends Component<Props> {
 
   eventProps = this.populateEvents();
 
-  toggleModal = (title, type, desc, tags, start, end, restaurant, menu) => {
+  toggleModal = (
+    title,
+    type,
+    desc,
+    tags,
+    start,
+    end,
+    restaurant_name,
+    restaurant_link,
+    menu
+  ) => {
     this.setState({
       isModalVisible: !this.state.isModalVisible,
       modalTitle: title,
@@ -117,7 +136,8 @@ export default class Schedule extends Component<Props> {
       modalTags: tags,
       modalStart: start,
       modalEnd: end,
-      modalRestaurant: restaurant,
+      modalRestaurantName: restaurant_name,
+      modalRestaurantLink: restaurant_link,
       modalMenu: menu
     });
   };
@@ -181,7 +201,8 @@ export default class Schedule extends Component<Props> {
               item.tags,
               item.start,
               item.end,
-              item.restaurant,
+              item.restaurant_name,
+              item.restaurant_link,
               item.menu
             )
           }
@@ -200,7 +221,8 @@ export default class Schedule extends Component<Props> {
             tags={this.state.modalTags}
             startTime={this.state.modalStart}
             endTime={this.state.modalEnd}
-            restaurant={this.state.modalRestaurant}
+            restaurantName={this.state.modalRestaurantName}
+            restaurantLink={this.state.modalRestaurantLink}
             menuItems={this.state.modalMenu}
             eventType={this.state.modalType}
           />
