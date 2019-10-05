@@ -77,24 +77,6 @@ export default class Schedule extends Component<Props> {
     mealData = this.props.screenProps.allData.data.meals;
     for (let i = 0; i < mealData.length; i++) {
       curMeal = mealData[i];
-      eventProps.push(
-        this.makeEvent(
-          curMeal.base.title,
-          curMeal.base.description,
-          curMeal.base.tags,
-          curMeal.base.start_time,
-          curMeal.base.end_time,
-          curMeal.restaurant_name,
-          curMeal.restaurant_link,
-          curMeal.menu_items,
-          "meal"
-        )
-      );
-    }
-
-    talkData = this.props.screenProps.allData.data.talks;
-    for (let i = 0; i < talkData.length; i++) {
-      curMeal = talkData[i];
       if (curMeal.base != null) {
         eventProps.push(
           this.makeEvent(
@@ -103,6 +85,26 @@ export default class Schedule extends Component<Props> {
             curMeal.base.tags,
             curMeal.base.start_time,
             curMeal.base.end_time,
+            curMeal.restaurant_name,
+            curMeal.restaurant_link,
+            curMeal.menu_items,
+            "meal"
+          )
+        );
+      }
+    }
+
+    talkData = this.props.screenProps.allData.data.talks;
+    for (let i = 0; i < talkData.length; i++) {
+      curTalk = talkData[i];
+      if (curTalk.base != null) {
+        eventProps.push(
+          this.makeEvent(
+            curTalk.base.title,
+            curTalk.base.description,
+            curTalk.base.tags,
+            curTalk.base.start_time,
+            curTalk.base.end_time,
             null,
             null,
             null,
