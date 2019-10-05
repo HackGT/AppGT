@@ -48,7 +48,9 @@ var queryMessage = `query {
         restaurant_link
         menu_items {
             name
-            diet_restriction
+            dietrestrictions {
+				name
+			}
         }
     }
 }`;
