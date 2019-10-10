@@ -1,15 +1,22 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, TouchableHighlight } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlusCircle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { thisExpression } from "@babel/types";
 import TagList from "./TagList";
+import AsyncStorage from "@react-native-community/async-storage";
 
 export default class ScheduleCard extends Component<Props> {
   onClick = () => {
     this.props.onClick(this.props.item);
   };
-
   render() {
     let title = this.props.title ? (
       <Text style={styles.title}>{this.props.title}</Text>
@@ -32,6 +39,9 @@ export default class ScheduleCard extends Component<Props> {
 
           {title}
           <Text style={styles.text}>{this.props.children}</Text>
+          <TouchableOpacity onPress={this.props.onPressStar}>
+            <Text>star</Text>
+          </TouchableOpacity>
           <TagList tagList={this.props.tags} />
         </View>
       </TouchableHighlight>
