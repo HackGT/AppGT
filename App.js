@@ -21,6 +21,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
 
 export const AuthContext = React.createContext();
+export const StarContext = React.createContext();
+
 const authUrl = "https://login.hack.gt";
 
 const config = {
@@ -96,22 +98,6 @@ export default class App extends Component<Props> {
 
   componentDidMount() {
     Notif.runNotifications();
-  }
-
-  componentWillUnmount() {
-    Notif.listener();
-  }
-
-  render() {
-    return <AppContainer>Hi</AppContainer>;
-  }
-  state = {
-    user: null,
-    accessToken: null,
-    allData: null
-  };
-
-  componentDidMount() {
     AsyncStorage.getItem(
       "userData",
       (error, result) => result && this.setState({ user: JSON.parse(result) })
@@ -120,10 +106,24 @@ export default class App extends Component<Props> {
       "accessToken",
       (error, result) => result && this.setState({ accessToken: result })
     );
+    AsyncStorage.getItem("starredItems", (error, result) => {
+      this.setState({ starredItems: JSON.parse(result) });
+    });
     getAllData().then(data => {
       this.setState({ allData: data });
     });
   }
+
+  componentWillUnmount() {
+    Notif.listener();
+  }
+
+  state = {
+    user: null,
+    accessToken: null,
+    allData: null,
+    starredItems: null
+  };
 
   logout = async () => {
     fetch(`${authUrl}/api/user/logout`, {
@@ -179,9 +179,25 @@ export default class App extends Component<Props> {
       });
   };
 
-  updateAuthUser(newUser) {
-    this.setState({ auth: newUser });
-  }
+  toggleStarred = async (id, starDict) => {
+    let curItems;
+    if (this.state.starredItems == null) {
+      curItems = starDict;
+    } else {
+      curItems = this.state.starredItems;
+    }
+    if (curItems[id] == false) {
+      curItems[id] = true;
+    } else {
+      curItems[id] = false;
+    }
+    this.setState({ starredItems: curItems });
+    try {
+      await AsyncStorage.setItem("starredItems", JSON.stringify(curItems));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   render() {
     return (
@@ -192,7 +208,14 @@ export default class App extends Component<Props> {
           logout: this.logout
         }}
       >
-        <AppContainer screenProps={{ allData: this.state.allData }} />
+        <StarContext.Provider
+          value={{
+            toggleStarred: this.toggleStarred,
+            starredItems: this.state.starredItems
+          }}
+        >
+          <AppContainer screenProps={{ allData: this.state.allData }} />
+        </StarContext.Provider>
       </AuthContext.Provider>
     );
   }
