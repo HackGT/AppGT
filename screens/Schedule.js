@@ -22,6 +22,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default class Schedule extends Component<Props> {
+  constructor(props) {
+    super(props);
+  }
   static navigationOptions = {
     title: "Schedule",
     headerLeft: null
@@ -49,7 +52,8 @@ export default class Schedule extends Component<Props> {
     schedule: {
       isMySchedule: false,
       filtered: []
-    }
+    },
+    starDict: {}
   };
 
   makeEvent = (
@@ -99,7 +103,7 @@ export default class Schedule extends Component<Props> {
             "meal"
           )
         );
-        this.starDict[curMeal.id] = false;
+        this.state.starDict[curMeal.id] = false;
       }
     }
 
@@ -121,13 +125,12 @@ export default class Schedule extends Component<Props> {
             "talk"
           )
         );
-        this.starDict[curTalk.id] = false;
+        this.state.starDict[curTalk.id] = false;
       }
     }
     return eventProps;
   };
 
-  starDict = {};
   eventProps = this.populateEvents();
 
   toggleModal = (
@@ -167,7 +170,6 @@ export default class Schedule extends Component<Props> {
         schedule: {
           isMySchedule: true,
           filtered: this.eventProps.filter(function(item) {
-            console.log(starredItems);
             if (starredItems[item.id] === true) {
               return item;
             }
@@ -177,7 +179,6 @@ export default class Schedule extends Component<Props> {
     } else {
       this.setState({ schedule: { isMySchedule: false, filtered: [] } });
     }
-    console.log(this.state.schedule.isMySchedule);
   };
 
   onSelectDay = newIndex => {};
@@ -196,7 +197,6 @@ export default class Schedule extends Component<Props> {
         }
       });
     }
-    console.log(this.state.search.isSearching);
   };
 
   render() {
@@ -208,7 +208,9 @@ export default class Schedule extends Component<Props> {
         {({ toggleStarred, starredItems }) => (
           <ButtonControl
             height={40}
-            onChangeIndex={this.onSelectSchedule}
+            onChangeIndex={selectedIndex =>
+              this.onSelectSchedule(selectedIndex, starredItems)
+            }
             buttons={["Main Schedule", "My Schedule"]}
             starredItems={starredItems}
           />
@@ -248,7 +250,7 @@ export default class Schedule extends Component<Props> {
               title={item.title}
               tags={item.tags}
               id={item.id}
-              onPressStar={() => toggleStarred(item.id, this.starDict)}
+              onPressStar={() => toggleStarred(item.id, this.state.starDict)}
             >
               {item.desc}
             </ScheduleCard>
