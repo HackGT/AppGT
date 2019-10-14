@@ -13,6 +13,8 @@ import { SearchBar } from "react-native-elements";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Modal from "react-native-modal";
 import Event from "../components/events/Event";
+import AsyncStorage from "@react-native-community/async-storage";
+import { StarContext } from "../App";
 import {
   faPlusCircle,
   faStar,
@@ -20,6 +22,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default class Schedule extends Component<Props> {
+  constructor(props) {
+    super(props);
+  }
   static navigationOptions = {
     title: "Schedule",
     headerLeft: null
@@ -43,10 +48,16 @@ export default class Schedule extends Component<Props> {
     modalEnd: "",
     modalRestaurantName: "",
     modalRestaurantLink: "",
-    modalMenu: ""
+    modalMenu: "",
+    schedule: {
+      isMySchedule: false,
+      filtered: []
+    },
+    starDict: {}
   };
 
   makeEvent = (
+    id,
     title,
     description,
     tags,
@@ -58,6 +69,7 @@ export default class Schedule extends Component<Props> {
     eventType
   ) => {
     return {
+      id: id,
       title: title,
       desc: description,
       tags: tags,
@@ -72,46 +84,50 @@ export default class Schedule extends Component<Props> {
 
   populateEvents = () => {
     let eventProps = [];
-    console.log(this.props.screenProps.allData.data);
 
     mealData = this.props.screenProps.allData.data.meals;
     for (let i = 0; i < mealData.length; i++) {
       curMeal = mealData[i];
-      eventProps.push(
-        this.makeEvent(
-          curMeal.base.title,
-          curMeal.base.description,
-          curMeal.base.tags,
-          curMeal.base.start_time,
-          curMeal.base.end_time,
-          curMeal.restaurant_name,
-          curMeal.restaurant_link,
-          curMeal.menu_items,
-          "meal"
-        )
-      );
-    }
-
-    talkData = this.props.screenProps.allData.data.talks;
-    for (let i = 0; i < talkData.length; i++) {
-      curMeal = talkData[i];
       if (curMeal.base != null) {
         eventProps.push(
           this.makeEvent(
+            curMeal.id,
             curMeal.base.title,
             curMeal.base.description,
             curMeal.base.tags,
             curMeal.base.start_time,
             curMeal.base.end_time,
+            curMeal.restaurant_name,
+            curMeal.restaurant_link,
+            curMeal.menu_items,
+            "meal"
+          )
+        );
+        this.state.starDict[curMeal.id] = false;
+      }
+    }
+
+    talkData = this.props.screenProps.allData.data.talks;
+    for (let i = 0; i < talkData.length; i++) {
+      curTalk = talkData[i];
+      if (curTalk.base != null) {
+        eventProps.push(
+          this.makeEvent(
+            curTalk.id,
+            curTalk.base.title,
+            curTalk.base.description,
+            curTalk.base.tags,
+            curTalk.base.start_time,
+            curTalk.base.end_time,
             null,
             null,
             null,
             "talk"
           )
         );
+        this.state.starDict[curTalk.id] = false;
       }
     }
-
     return eventProps;
   };
 
@@ -148,7 +164,22 @@ export default class Schedule extends Component<Props> {
     });
   };
 
-  onSelectSchedule = newIndex => {};
+  onSelectSchedule = (newIndex, starredItems) => {
+    if (newIndex === 1) {
+      this.setState({
+        schedule: {
+          isMySchedule: true,
+          filtered: this.eventProps.filter(function(item) {
+            if (starredItems[item.id] === true) {
+              return item;
+            }
+          })
+        }
+      });
+    } else {
+      this.setState({ schedule: { isMySchedule: false, filtered: [] } });
+    }
+  };
 
   onSelectDay = newIndex => {};
 
@@ -167,16 +198,24 @@ export default class Schedule extends Component<Props> {
       });
     }
   };
+
   render() {
     const { text } = this.state.search;
     const vSpace = <View style={{ height: 10 }} />;
 
     const scheduleType = () => (
-      <ButtonControl
-        height={40}
-        onChangeIndex={this.onSelectSchedule}
-        buttons={["Main Schedule", "My Schedule"]}
-      />
+      <StarContext.Consumer>
+        {({ toggleStarred, starredItems }) => (
+          <ButtonControl
+            height={40}
+            onChangeIndex={selectedIndex =>
+              this.onSelectSchedule(selectedIndex, starredItems)
+            }
+            buttons={["Main Schedule", "My Schedule"]}
+            starredItems={starredItems}
+          />
+        )}
+      </StarContext.Consumer>
     );
 
     const dayFilter = () => (
@@ -191,26 +230,32 @@ export default class Schedule extends Component<Props> {
     );
     const cardEvent = ({ item, index, section: { title, data } }) => (
       <View key={index}>
-        <ScheduleCard
-          item={item}
-          onClick={() =>
-            this.toggleModal(
-              item.title,
-              item.eventType,
-              item.desc,
-              item.tags,
-              item.start,
-              item.end,
-              item.restaurant_name,
-              item.restaurant_link,
-              item.menu
-            )
-          }
-          title={item.title}
-          tags={item.tags}
-        >
-          {item.desc}
-        </ScheduleCard>
+        <StarContext.Consumer>
+          {({ toggleStarred, starredItems }) => (
+            <ScheduleCard
+              item={item}
+              onClick={() =>
+                this.toggleModal(
+                  item.title,
+                  item.eventType,
+                  item.desc,
+                  item.tags,
+                  item.start,
+                  item.end,
+                  item.restaurant_name,
+                  item.restaurant_link,
+                  item.menu
+                )
+              }
+              title={item.title}
+              tags={item.tags}
+              id={item.id}
+              onPressStar={() => toggleStarred(item.id, this.state.starDict)}
+            >
+              {item.desc}
+            </ScheduleCard>
+          )}
+        </StarContext.Consumer>
         <Modal isVisible={this.state.isModalVisible}>
           <Event
             isModalVisible={() =>
@@ -240,10 +285,16 @@ export default class Schedule extends Component<Props> {
       />
     );
 
-    const data = this.state.search.isSearching
-      ? this.state.search.filtered
-      : this.eventProps;
-    console.log(this.props.screenProps.allData);
+    let data;
+    if (this.state.search.isSearching) {
+      data = this.state.search.isSearching
+        ? this.state.search.filtered
+        : this.eventProps;
+    } else {
+      data = this.state.schedule.isMySchedule
+        ? this.state.schedule.filtered
+        : this.eventProps;
+    }
     return (
       <SectionList
         renderItem={({ item, index, section }) => (

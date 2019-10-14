@@ -2,6 +2,7 @@ var fetch = require("node-fetch");
 
 var queryMessage = `query {
     talks(start: 0) {
+	  id
       base {
           start_time
           end_time
@@ -30,6 +31,7 @@ var queryMessage = `query {
         description
     }
     meals(start: 0) {
+		id
         base {
             start_time
             end_time
@@ -48,7 +50,9 @@ var queryMessage = `query {
         restaurant_link
         menu_items {
             name
-            diet_restriction
+            dietrestrictions {
+				name
+			}
         }
     }
 }`;
@@ -72,7 +76,6 @@ async function getCMSData() {
 }
 export default (getAllData = () => {
   return getCMSData().then(result => {
-    console.log(result);
     return result;
   });
 });
