@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../themes";
 
 function elevationShadowStyle(elevation) {
   return {
@@ -35,6 +36,10 @@ export const styleguide = StyleSheet.create({
     marginBottom: 20,
     flexGrow: 1,
     ...elevationShadowStyle(5),
+  },
+  noShadow: {
+    backgroundColor: colors.lightGrayBackgroundBehindTagText,
+    ...elevationShadowStyle(1)
   },
   titleView: {
     marginLeft: 24,
