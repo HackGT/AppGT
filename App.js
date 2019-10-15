@@ -1,5 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
+import { YellowBox } from 'react-native';
+
+YellowBox.ignoreWarnings([
+  'Warning: componentWillMount is deprecated',
+  'Warning: componentWillReceiveProps is deprecated',
+]);
+
 import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
 import {
@@ -77,6 +84,7 @@ const TabNavigator = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
+
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
 
@@ -103,7 +111,7 @@ const TabNavigator = createBottomTabNavigator(
     tabBarOptions: {
       showLabel: false,
       activeTintColor: colors.primaryBlue,
-
+      // keyboardHidesTabBar: true,
       indicatorStyle: {
         backgroundColor: colors.primaryBlue,
       },
@@ -111,6 +119,8 @@ const TabNavigator = createBottomTabNavigator(
   }
 );
 
+// TODO hide nav bar on keyboard
+// https://github.com/bamlab/react-native-hide-with-keyboard/blob/master/index.js
 const AppContainer = createAppContainer(TabNavigator);
 
 export default class App extends Component<Props> {
@@ -122,7 +132,7 @@ export default class App extends Component<Props> {
       user: null,
       accessToken: null,
       allData: null,
-      starredItems: null
+      starredItems: {}
     };
   }
 
@@ -202,18 +212,10 @@ export default class App extends Component<Props> {
       });
   };
 
-  toggleStarred = async (id, starDict) => {
-    let curItems;
-    if (this.state.starredItems == null) {
-      curItems = starDict;
-    } else {
-      curItems = this.state.starredItems;
-    }
-    if (curItems[id] == false) {
-      curItems[id] = true;
-    } else {
-      curItems[id] = false;
-    }
+  toggleStarred = async (id) => {
+    const curItems = { ...this.state.starredItems };
+    curItems[id] = !curItems[id];
+
     this.setState({ starredItems: curItems });
     try {
       await AsyncStorage.setItem("starredItems", JSON.stringify(curItems));

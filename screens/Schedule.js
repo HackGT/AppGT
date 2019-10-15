@@ -3,38 +3,41 @@ import {
   StyleSheet,
   Text,
   View,
-  SectionList,
-  Button,
+  FlatList,
+  ScrollView,
+  Keyboard,
   TouchableOpacity
 } from "react-native";
-import ScheduleCard from "../components/ScheduleCard";
-import ButtonControl from "../components/ButtonControl";
+import Modal from "react-native-modal";
 import { SearchBar } from "react-native-elements";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Modal from "react-native-modal";
-import Event from "../components/events/Event";
-import AsyncStorage from "@react-native-community/async-storage";
-import { StarContext } from "../App";
 import {
-  faPlusCircle,
-  faStar,
-  faSearch
+  faSearch,
+  faQuestionCircle,
+  faTimes,
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
+import ScheduleCard from "../components/ScheduleCard";
+import ButtonControl from "../components/ButtonControl";
+import Event from "../components/events/Event";
+import { StarContext } from "../App";
+import { colors } from "../themes";
+import { styleguide } from "../styles";
+
+// TODO fix general appearance
+// TODO get timings displayed
+// TODO day filter
+// TODO color coding
+// TODO styling fix on button groups (probably going to have to roll own)
 export default class Schedule extends Component<Props> {
 
   constructor(props) {
     super(props);
-    this.eventProps = this.populateEvents();
     this.state = {
-      search: {
-        isSearching: false,
-        text: "",
-        filtered: []
-      },
+      isMySchedule: false,
+      searchText: "",
       allData: null,
-      selectedDayIndex: 0,
-      selectedScheduleIndex: 0,
       isModalVisible: false,
       modalTitle: "",
       modalType: "",
@@ -45,12 +48,12 @@ export default class Schedule extends Component<Props> {
       modalRestaurantName: "",
       modalRestaurantLink: "",
       modalMenu: "",
-      schedule: {
-        isMySchedule: false,
-        filtered: []
-      },
       starDict: {}
     };
+    this.eventProps = this.populateEvents(props.screenProps.allData.data);
+    this.tags = props.screenProps.allData.data.tags.map(tag => tag.name);
+    this.lowerTags = this.tags.map(tag => tag.toLowerCase());
+    console.log(this.tags)
   }
 
   makeEvent = (
@@ -69,7 +72,7 @@ export default class Schedule extends Component<Props> {
       id: id,
       title: title,
       desc: description,
-      tags: tags,
+      tags: tags.map(tag => tag.name),
       start: start_time,
       end: end_time,
       restaurant_name: restaurant_name,
@@ -79,10 +82,10 @@ export default class Schedule extends Component<Props> {
     };
   };
 
-  populateEvents = () => {
+  populateEvents = (data) => {
     let eventProps = [];
 
-    mealData = this.props.screenProps.allData.data.meals;
+    mealData = data.meals;
     for (let i = 0; i < mealData.length; i++) {
       curMeal = mealData[i];
       if (curMeal.base != null) {
@@ -104,7 +107,7 @@ export default class Schedule extends Component<Props> {
       }
     }
 
-    talkData = this.props.screenProps.allData.data.talks;
+    talkData = data.talks;
     for (let i = 0; i < talkData.length; i++) {
       curTalk = talkData[i];
       if (curTalk.base != null) {
@@ -159,98 +162,95 @@ export default class Schedule extends Component<Props> {
     });
   };
 
-  onSelectSchedule = (newIndex, starredItems) => {
-    if (newIndex === 1) {
-      this.setState({
-        schedule: {
-          isMySchedule: true,
-          filtered: this.eventProps.filter(function(item) {
-            if (starredItems[item.id] === true) {
-              return item;
-            }
-          })
-        }
-      });
-    } else {
-      this.setState({ schedule: { isMySchedule: false, filtered: [] } });
-    }
+  onSelectSchedule = (newIndex) => {
+    this.setState({
+      isMySchedule: newIndex === 1
+    });
   };
 
+  // TODO - test search and cancel
   onSelectDay = newIndex => {};
 
-  updateSearch = text => {
-    if (text === "") {
-      this.setState({
-        search: { text: text, isSearching: false, filtered: [] }
-      });
-    } else {
-      this.setState({
-        search: {
-          text: text,
-          isSearching: true,
-          filtered: this.eventProps.filter(item => item.title.includes(text))
-        }
-      });
-    }
-  };
-
   render() {
-    const { text } = this.state.search;
-    const vSpace = <View style={{ height: 10 }} />;
-
-    const scheduleType = () => (
-      <StarContext.Consumer>
-        {({ toggleStarred, starredItems }) => (
-          <ButtonControl
-            height={40}
-            onChangeIndex={selectedIndex =>
-              this.onSelectSchedule(selectedIndex, starredItems)
-            }
-            buttons={["Main Schedule", "My Schedule"]}
-            starredItems={starredItems}
-          />
-        )}
-      </StarContext.Consumer>
+    const { searchText, isMySchedule } = this.state;
+    const SearchComponent = () => (
+      <View style={styles.search}>
+        <SearchBar
+          icon = {{type: 'material-community', color: '#86939e', name: 'share' }}
+          searchIcon={
+            <FontAwesomeIcon
+              color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
+              icon={faSearch} size={28}
+            />
+          }
+          clearIcon = {
+            <FontAwesomeIcon
+              color={colors.darkGrayText}
+              icon={faTimes} size={28}
+            />
+          }
+          cancelIcon = {
+            <FontAwesomeIcon
+              color={colors.darkGrayText}
+              icon={faArrowLeft} size={28}
+            />
+          }
+          platform="android"
+          placeholder="Search by title or tag"
+          onChangeText={(searchText) => this.setState({ searchText })}
+          value={searchText}
+          autoCorrect={false}
+        />
+      </View>
     );
 
-    const dayFilter = () => (
+    const ScheduleSelector = () => (
+      <View style={styles.scheduleSelector}>
+        <ButtonControl
+          onChangeListener={this.onSelectSchedule}
+          buttons={["Main Schedule", "My Schedule"]}
+          containerSyle={{
+            width: 300
+          }}
+        />
+      </View>
+    );
+
+    const DaySelector = () => (
       <View>
         <ButtonControl
           height={30}
           onChangeIndex={this.onSelectDay}
           buttons={["Friday", "Saturday", "Sunday"]}
         />
-        {vSpace}
       </View>
     );
-    const cardEvent = ({ item, index, section: { title, data } }) => (
-      <View key={index}>
-        <StarContext.Consumer>
-          {({ toggleStarred, starredItems }) => (
-            <ScheduleCard
-              item={item}
-              onClick={() =>
-                this.toggleModal(
-                  item.title,
-                  item.eventType,
-                  item.desc,
-                  item.tags,
-                  item.start,
-                  item.end,
-                  item.restaurant_name,
-                  item.restaurant_link,
-                  item.menu
-                )
-              }
-              title={item.title}
-              tags={item.tags}
-              id={item.id}
-              onPressStar={() => toggleStarred(item.id, this.state.starDict)}
-            >
-              {item.desc}
-            </ScheduleCard>
-          )}
-        </StarContext.Consumer>
+
+    const EventCard = ({ eventData: item, isStarred, toggleEvent }) => (
+      <View>
+          <ScheduleCard
+            item={item}
+            onClick={() =>
+              this.toggleModal(
+                item.title,
+                item.eventType,
+                item.desc,
+                item.tags,
+                item.start,
+                item.end,
+                item.restaurant_name,
+                item.restaurant_link,
+                item.menu
+              )
+            }
+            title={item.title}
+            tags={item.tags}
+            id={item.id}
+            isStarred={isStarred}
+            onPressStar={toggleEvent}
+          >
+            {item.desc}
+          </ScheduleCard>
         <Modal isVisible={this.state.isModalVisible}>
           <Event
             isModalVisible={() =>
@@ -267,41 +267,69 @@ export default class Schedule extends Component<Props> {
             eventType={this.state.modalType}
           />
         </Modal>
-        {vSpace}
       </View>
     );
 
-    const searchBar = ({ item, index, section: { title, data } }) => (
-      <SearchBar
-        platform="android"
-        placeholder="Search..."
-        onChangeText={this.updateSearch}
-        value={text}
-      />
-    );
-
-    let data;
-    if (this.state.search.isSearching) {
-      data = this.state.search.isSearching
-        ? this.state.search.filtered
-        : this.eventProps;
-    } else {
-      data = this.state.schedule.isMySchedule
-        ? this.state.schedule.filtered
-        : this.eventProps;
-    }
+    const matchedTags = this.tags.filter((_, index) => this.lowerTags[index].includes(searchText));
+    console.log(matchedTags);
     return (
-      <SectionList
-        renderItem={({ item, index, section }) => (
-          <Text key={index}>{item}</Text>
-        )}
-        sections={[
-          { title: "", data: [""], renderItem: searchBar },
-          { title: "", data: [""], renderItem: scheduleType },
-          { title: "", data: [""], renderItem: dayFilter },
-          { title: "Events", data: data, renderItem: cardEvent }
-        ]}
-      />
+      <ScrollView
+        style={styleguide.wrapperView}
+        keyboardShouldPersistTaps='always'
+        keyboardDismissMode='on-drag'
+      >
+        <SearchComponent />
+        <ScheduleSelector />
+        <DaySelector />
+        <StarContext.Consumer>
+          {({ starredItems, toggleStarred }) => {
+            let eventData = this.eventProps;
+            if (isMySchedule) {
+              eventData = eventData.filter(item => starredItems[item.id]);
+            }
+            const searchingFiltered = eventData.filter(item => {
+              return item.title.includes(searchText) || item.tags.some(tag => matchedTags.includes(tag));
+            });
+            if (searchingFiltered.length === 0) {
+              return (<View style={styles.notfound}>
+                <FontAwesomeIcon
+                  color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
+                  icon={faQuestionCircle} size={28}
+                />
+                <Text>No events found.</Text>
+              </View>);
+            }
+            return (
+
+              <FlatList
+                data={searchingFiltered}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => {
+                  const toggleEvent = () => toggleStarred(item.id);
+                  return <EventCard eventData={item} toggleEvent={toggleEvent} isStarred={!!starredItems[item.id]} />;
+                }}
+              />
+            );
+          }}
+        </StarContext.Consumer>
+      </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  search: {
+  },
+  scheduleSelector: {
+    marginBottom: 12,
+  },
+  notfound: {
+    margin: 40,
+    flex: 1,
+    textAlign: 'center',
+    // height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});
+
