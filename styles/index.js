@@ -33,6 +33,7 @@ export const styleguide = StyleSheet.create({
     marginLeft: 24,
     marginRight: 24,
     marginBottom: 20,
+    flexGrow: 1,
     ...elevationShadowStyle(5),
   },
   titleView: {

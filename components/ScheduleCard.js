@@ -14,6 +14,8 @@ import { colors } from "../themes";
 import { styleguide } from "../styles";
 
 // TODO enable onClick
+// TODO make sure long names render properly
+
 export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags }) => {
 //      {/*onClick  noop */}
   const areaBlock = area && (<Text style={{
@@ -40,7 +42,7 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
           flexWrap: "wrap"
         }}>
           <View style={{
-            flex: 1,
+            flex: 60,
             marginBottom: 4,
           }}>
             <Text style={{
@@ -51,7 +53,12 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
             </Text>
             { areaBlock }
           </View>
-          <TouchableOpacity onPress={onPressStar}>
+          <TouchableOpacity
+            style={{
+              flex: 20
+            }}
+            onPress={onPressStar}
+          >
             {
               isStarred ? (
                 <FontAwesomeIcon
