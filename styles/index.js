@@ -30,22 +30,23 @@ export const styleguide = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 16,
     padding: 24,
-    marginLeft: 30,
-    marginRight: 30,
+    marginLeft: 24,
+    marginRight: 24,
     marginBottom: 20,
     ...elevationShadowStyle(5),
   },
   titleView: {
     marginLeft: 24,
     marginTop: 24,
-    marginBottom: 16
+    marginBottom: 12
   },
   wrapperView: {
     paddingTop: 48,
-    paddingLeft: 8,
-    paddingRight: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   popoutBar: {
-    ...popoutShadowStyle(2000),
+    ...popoutShadowStyle(5),
+    height: 80,
   }
 });

@@ -16,13 +16,12 @@ import {
   faKey,
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
-import { Notifications, Home, Schedule, Login } from "./screens";
+import { Home, Schedule, Login } from "./screens";
 import { NotificationsComp } from "./components";
 
 import { fetchEvents } from "./cms";
 import { colors } from "./themes";
 import { styleguide } from "./styles";
-import { ThemeConsumer } from "react-native-elements";
 
 export const AuthContext = React.createContext();
 export const StarContext = React.createContext();
@@ -83,8 +82,7 @@ const TabNavigator = createBottomTabNavigator(
 
         switch (routeName) {
           case "Home":
-            icon = faInfoCircle;
-            break;
+            return <FontAwesomeIcon color={tintColor} icon={faInfoCircle} size={32} />;
           case "Schedule":
             icon = faCalendarDay;
             break;
@@ -119,6 +117,13 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     Notif = new NotificationsComp();
+
+    this.state = {
+      user: null,
+      accessToken: null,
+      allData: null,
+      starredItems: null
+    };
   }
 
   componentDidMount() {
@@ -142,13 +147,6 @@ export default class App extends Component<Props> {
   componentWillUnmount() {
     Notif.listener();
   }
-
-  state = {
-    user: null,
-    accessToken: null,
-    allData: null,
-    starredItems: null
-  };
 
   logout = async () => {
     fetch(`${authUrl}/api/user/logout`, {
