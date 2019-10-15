@@ -1,11 +1,13 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+
+import Markdown from 'react-native-markdown-renderer';
+
 import { styleguide } from "../styles";
 
-// TODO render markdown
+// TODO better markdown styling - how though?
 export default InfoCard = ({ content }) => (
   <View style={styleguide.card}>
-    <Text>Hello</Text>
-    <Text>{ content }</Text>
+    <Markdown>{ content }</Markdown>
   </View>
 );

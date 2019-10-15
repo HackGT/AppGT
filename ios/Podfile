@@ -28,11 +28,8 @@ target 'AppGT' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   pod 'Firebase/Analytics'
   pod 'Firebase/Core', '~> 6.3.0'
@@ -40,9 +37,7 @@ target 'AppGT' do
 
   # pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch/ios'
 
-  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
  
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
   target 'AppGTTests' do
     inherit! :search_paths
