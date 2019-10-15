@@ -16,7 +16,7 @@ import { styleguide } from "../styles";
 // TODO enable onClick
 // TODO make sure long names render properly
 
-export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags }) => {
+export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags, isOld }) => {
 //      {/*onClick  noop */}
   const areaBlock = area && (<Text style={{
       color: colors.lightGrayText,
@@ -24,13 +24,17 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
     }} >
       {area}
     </Text>);
+  let styleWrap = {
+    ...styleguide.card,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+  };
+  if (isOld) { //
+    styleWrap = {...styleWrap, ...styleguide.noShadow }
+  }
   return (
     <TouchableHighlight
-      style={{
-        ...styleguide.card,
-        paddingHorizontal: 12,
-        paddingVertical: 4,
-      }}
+      style={styleWrap}
       underlayColor="gray"
       onPress={() => {}}
     >

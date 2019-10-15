@@ -28,8 +28,7 @@ import { styleguide } from "../styles";
 
 
 // TODO modal trigger refactor
-// TODO hide old events
-// TODO day filter
+// TODO optimization
 // TODO more formatting fixes
 // TODO color coding
 // TOOD fix scrollbar
@@ -71,6 +70,7 @@ export default class Schedule extends Component<Props> {
   }
 
   populateEvents = (data) => {
+    const now = moment();
     const unsortedEventInfo = data.eventbases;
     unsortedEventInfo.forEach((base) => { // squash tags
       if (!base.start_time) return;
@@ -81,13 +81,17 @@ export default class Schedule extends Component<Props> {
         base.area = base.area.name;
       base.type = "core";
       base.startTime = moment.parseZone(base.start_time); // toCamel
-      if (!base.end_time)
+      if (base.end_time) {
         base.endTime = moment.parseZone(base.end_time);
+      }
+      base.isOld = now > base.startTime;
     });
     const eventInfo = unsortedEventInfo.sort((e1, e2) => {
+      if (e1.isOld && !e2.isOld) return 1;
       if (e1.start_time === e2.start_time) // compare strings
         return e1.title > e2.title;
-      return e1.startTime > e2.startTime;
+      if (e1.startTime > e2.startTime) return 1;
+      return -1;
     });
     // Smoosh in additional info where relevant
     data.meals.forEach((meal) => {
@@ -255,6 +259,7 @@ export default class Schedule extends Component<Props> {
           id={item.id}
           isStarred={isStarred}
           onPressStar={toggleEvent}
+          isOld={item.isOld}
         >
           {item.desc}
         </ScheduleCard>
@@ -293,7 +298,7 @@ export default class Schedule extends Component<Props> {
             if (isMySchedule) {
               eventData = eventData.filter(item => starredItems[item.id]);
             }
-            eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
+            // eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
             const searchingFiltered = eventData.filter(item => {
               return item.title.toLowerCase().includes(searchLower) || item.tags.some(tag => matchedTags.includes(tag));
             });
@@ -354,7 +359,6 @@ const styles = StyleSheet.create({
     margin: 40,
     flex: 1,
     textAlign: 'center',
-    // height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   }
