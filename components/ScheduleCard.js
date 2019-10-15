@@ -2,65 +2,72 @@ import React, { Component } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   TouchableHighlight,
-  Image,
   TouchableOpacity
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faPlusCircle, faStar } from "@fortawesome/free-solid-svg-icons";
-import { thisExpression } from "@babel/types";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import TagList from "./TagList";
 
 import { colors } from "../themes";
 import { styleguide } from "../styles";
 
-export default ScheduleCard = ({ title, onClick, onPressStar, isStarred, tags }) => {
-//   <View
-//   style={{
-//     position: "absolute",
-//     alignSelf: "flex-end",
-//     flex: 1,
-//     padding: 8
-//   }}
-// />
+// TODO enable onClick
+export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags }) => {
+//      {/*onClick  noop */}
+  const areaBlock = area && (<Text style={{
+      color: colors.lightGrayText,
+      paddingLeft: 8,
+    }} >
+      {area}
+    </Text>);
   return (
     <TouchableHighlight
-      style={styles.card}
+      style={{
+        ...styleguide.card,
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+      }}
       underlayColor="gray"
-      onPress={onClick}
+      onPress={() => {}}
     >
       <View>
-        <Text style={styleguide.title}>
-          {title}
-        </Text>
-        <TouchableOpacity onPress={onPressStar}>
-          <FontAwesomeIcon
-            color={isStarred ? colors.primaryStar : colors.lightGrayText}
-            icon={faStar} size={28}
-          />
-        </TouchableOpacity>
+        <View style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap"
+        }}>
+          <View style={{
+            flex: 1,
+            marginBottom: 4,
+          }}>
+            <Text style={{
+              marginBottom: 4,
+              ...styleguide.title
+            }}>
+              {title}
+            </Text>
+            { areaBlock }
+          </View>
+          <TouchableOpacity onPress={onPressStar}>
+            {
+              isStarred ? (
+                <FontAwesomeIcon
+                  color={colors.primaryStar}
+                  icon={faStar} size={28}
+                />) : (
+                <FontAwesomeIcon
+                  color={colors.lightGrayText}
+                  icon={faStarRegular} size={28}
+                />
+              )
+            }
+          </TouchableOpacity>
+        </View>
         <TagList tags={tags} />
       </View>
     </TouchableHighlight>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontWeight: "bold",
-    paddingLeft: 10,
-    paddingTop: 10
-  },
-  text: {
-    padding: 10
-  },
-  card: {
-    backgroundColor: "white",
-    borderWidth: 0.5,
-    borderColor: "grey",
-    borderRadius: 10,
-    marginLeft: 25,
-    marginRight: 25
-  }
-});

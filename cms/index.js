@@ -1,52 +1,57 @@
 const eventQuery = `
-  talks(start: 0) {
-  id
-    base {
-        start_time
-        end_time
-        title
-        description
+  eventbases(start: 0) {
+    id
+    title
+    description
+    start_time
+    end_time
     tags {
       name
     }
-        area {
-            name
-            mapgt_slug
-            capacity
-        }
+    area {
+      name
+    }
+  }
+  talks(start: 0) {
+    id
+    base {
+      id
+      title
+      description
+      start_time
+      end_time
+      tags {
+        name
+      }
+      area {
+          name
+      }
     }
     people {
-        name
-        bio
-        link
-        image {
-            url
-        }
+      name
     }
   }
   meals(start: 0) {
     id
-      base {
-          start_time
-          end_time
-          title
-          description
-          tags {
-            name
-          }
-          area {
-            name
-            mapgt_slug
-            capacity
-          }
+    base {
+      title
+      description
+      start_time
+      end_time
+      tags {
+        name
       }
+      area {
+        name
+      }
+    }
     restaurant_name
     restaurant_link
     menu_items {
+      name
+      dietrestrictions {
         name
-        dietrestrictions {
-          name
-        }
+      }
     }
   }
   tags(start: 0) {

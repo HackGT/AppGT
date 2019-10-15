@@ -48,5 +48,8 @@ export const styleguide = StyleSheet.create({
   popoutBar: {
     ...popoutShadowStyle(5),
     height: 80,
+  },
+  elevate: {
+    ...elevationShadowStyle(10),
   }
 });
