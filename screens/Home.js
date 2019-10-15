@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 
 import { styleguide } from "../styles";
 import { InfoCard } from "../components";
 import { fetchInfoBlocks } from "../cms";
 // Select info blocks from CMS to render
-const CARD_KEYS = ["welcome", "app_links", "faq", "social_media", "loading"];
+const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
 
 // TODO store a lot of this information in app resources so we have default
+// TODO better loading state
 class Home extends Component {
 
   static navigationOptions = {
@@ -18,55 +19,46 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      infoBlocks: {
-        loading: {
-          title: "Welcome to HackGT 6!",
-          body: "Scanning the interwebs",
-        }
-      },
+      fetching: true,
+      infoBlocks: {},
     };
+    const infoBlocks = {};
+    fetchInfoBlocks()
+      .then(payload => {
+        const infoArray = payload.data.infoblocks;
+        infoArray.forEach( block => {
+          if (CARD_KEYS.includes(block.slug))
+            infoBlocks[block.slug] = block;
+        });
+        this.setState({ infoBlocks, fetching: false });
+      });
   }
 
-  // componentDidMount() {
-  //   // query cms
-  //   const infoBlocks = {};
-  //   console.log("hello\n\n")
-  //   fetchInfoBlocks()
-  //     .then(payload => {
-  //       // console.log(payload)
-  //       const infoArray = payload.data.infoblocks;
-  //       // console.log(infoArray);
-  //       infoArray.forEach( block => {
-  //         if (block.slug in CARD_KEYS)
-  //           infoBlocks[block.slug] = block;
-  //       });
-  //       this.setState({ infoBlocks });
-  //     });
-  // }
-
   render() {
-    const { infoBlocks } = this.state;
-    console.log("this is running");
+    const { infoBlocks, fetching } = this.state;
+    if (fetching) {
+      return (
+        <ScrollView>
+          <Text> Surfing the interwebs </Text>
+        </ScrollView>
+      );
+    }
     return (
-      <View>
-        <Text>Hello</Text>
-      </View>
+      <ScrollView style={styleguide.wrapperView}>
+        {CARD_KEYS.map((cardKey) => {
+          if (!(cardKey in infoBlocks)) return null;
+          const block = infoBlocks[cardKey];
+          return (
+            <View key={cardKey}>
+              <View style={styleguide.titleView}>
+                  <Text style={styleguide.title}>{block.title}</Text>
+              </View>
+              <InfoCard key={cardKey} content={block.body} />
+            </View>
+          );
+        })}
+      </ScrollView>
     );
-    //     {CARD_KEYS.map((cardKey) => {
-    //       if (!(cardKey in infoBlocks)) return null;
-    //       console.log("we're past it all")
-    //       const block = infoBlocks[cardKey];
-    //       return (
-    //         <View key={cardKey}>
-    //           <View style={styleguide.titleView}>
-    //               <Text>{block.title}</Text>
-    //           </View>
-    //           <InfoCard key={cardKey} content={block.body} />
-    //         </View>
-    //       );
-    //     })}
-    //   </View>
-    // );
   }
 }
 
