@@ -22,39 +22,36 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default class Schedule extends Component<Props> {
+
   constructor(props) {
     super(props);
+    this.eventProps = this.populateEvents();
+    this.state = {
+      search: {
+        isSearching: false,
+        text: "",
+        filtered: []
+      },
+      allData: null,
+      selectedDayIndex: 0,
+      selectedScheduleIndex: 0,
+      isModalVisible: false,
+      modalTitle: "",
+      modalType: "",
+      modalDesc: "",
+      modalTags: [],
+      modalStart: "",
+      modalEnd: "",
+      modalRestaurantName: "",
+      modalRestaurantLink: "",
+      modalMenu: "",
+      schedule: {
+        isMySchedule: false,
+        filtered: []
+      },
+      starDict: {}
+    };
   }
-  static navigationOptions = {
-    title: "Schedule",
-    headerLeft: null
-  };
-
-  state = {
-    search: {
-      isSearching: false,
-      text: "",
-      filtered: []
-    },
-    allData: null,
-    selectedDayIndex: 0,
-    selectedScheduleIndex: 0,
-    isModalVisible: false,
-    modalTitle: "",
-    modalType: "",
-    modalDesc: "",
-    modalTags: [],
-    modalStart: "",
-    modalEnd: "",
-    modalRestaurantName: "",
-    modalRestaurantLink: "",
-    modalMenu: "",
-    schedule: {
-      isMySchedule: false,
-      filtered: []
-    },
-    starDict: {}
-  };
 
   makeEvent = (
     id,
@@ -130,8 +127,6 @@ export default class Schedule extends Component<Props> {
     }
     return eventProps;
   };
-
-  eventProps = this.populateEvents();
 
   toggleModal = (
     title,
