@@ -28,8 +28,10 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
     ...styleguide.card,
     paddingHorizontal: 6,
     paddingVertical: 4,
+    flex: 1,
   };
-  if (isOld) { //
+
+  if (isOld) {
     styleWrap = {...styleWrap, ...styleguide.noShadow }
   }
   return (
@@ -46,7 +48,7 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
           flexWrap: "wrap"
         }}>
           <View style={{
-            flex: 60,
+            flex: 1,
             marginBottom: 4,
           }}>
             <Text style={{
@@ -59,7 +61,7 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
           </View>
           <TouchableOpacity
             style={{
-              flex: 20
+              width: 40
             }}
             onPress={onPressStar}
           >

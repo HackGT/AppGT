@@ -32,7 +32,7 @@ import { styleguide } from "../styles";
 // TODO more formatting fixes
 // TODO color coding
 // TOOD fix scrollbar
-// TODO styling fix on button groups (probably going to have to roll own)
+// TODO styling fix on button groups (probably going to have to roll own thing)
 
 const DATES = [
   {date: "10/25", day: "Friday"},
@@ -298,7 +298,7 @@ export default class Schedule extends Component<Props> {
             if (isMySchedule) {
               eventData = eventData.filter(item => starredItems[item.id]);
             }
-            // eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
+            eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
             const searchingFiltered = eventData.filter(item => {
               return item.title.toLowerCase().includes(searchLower) || item.tags.some(tag => matchedTags.includes(tag));
             });

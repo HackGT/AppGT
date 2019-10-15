@@ -6,7 +6,8 @@ import { colors } from "../themes";
 
 export default TagList = ({ tags }) => tags ? (
   <View style={{
-    flexDirection: "row"
+    flexDirection: "row",
+    flexWrap: "wrap",
   }}>
     {
       tags.map((tag) => (
