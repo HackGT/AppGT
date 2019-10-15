@@ -20,8 +20,10 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
 
+import { fetchEvents } from "./cms";
 export const AuthContext = React.createContext();
 export const StarContext = React.createContext();
+// export const CMSContext = React.createContext();
 
 const authUrl = "https://login.hack.gt";
 
@@ -109,7 +111,7 @@ export default class App extends Component<Props> {
     AsyncStorage.getItem("starredItems", (error, result) => {
       this.setState({ starredItems: JSON.parse(result) });
     });
-    getAllData().then(data => {
+    fetchEvents().then(data => {
       this.setState({ allData: data });
     });
   }
