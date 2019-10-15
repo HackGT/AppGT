@@ -26,9 +26,10 @@ import { colors } from "../themes";
 import { styleguide } from "../styles";
 
 // TODO fix general appearance
-// TODO get timings displayed
+// TODO get timings displayed on event
 // TODO day filter
 // TODO color coding
+// TOOD fix scrollbar
 // TODO styling fix on button groups (probably going to have to roll own)
 export default class Schedule extends Component<Props> {
 
@@ -50,85 +51,48 @@ export default class Schedule extends Component<Props> {
       modalMenu: "",
       starDict: {}
     };
-    this.eventProps = this.populateEvents(props.screenProps.allData.data);
-    this.tags = props.screenProps.allData.data.tags.map(tag => tag.name);
+    this.eventProps = this.populateEvents(props.screenProps.eventData);
+    this.tags = props.screenProps.eventData.tags.map(tag => tag.name);
     this.lowerTags = this.tags.map(tag => tag.toLowerCase());
-    console.log(this.tags)
   }
 
-  makeEvent = (
-    id,
-    title,
-    description,
-    tags,
-    start_time,
-    end_time,
-    restaurant_name,
-    restaurant_link,
-    menu_items,
-    eventType
-  ) => {
-    return {
-      id: id,
-      title: title,
-      desc: description,
-      tags: tags.map(tag => tag.name),
-      start: start_time,
-      end: end_time,
-      restaurant_name: restaurant_name,
-      restaurant_link: restaurant_link,
-      menu: menu_items,
-      eventType: eventType
-    };
-  };
-
   populateEvents = (data) => {
-    let eventProps = [];
-
-    mealData = data.meals;
-    for (let i = 0; i < mealData.length; i++) {
-      curMeal = mealData[i];
-      if (curMeal.base != null) {
-        eventProps.push(
-          this.makeEvent(
-            curMeal.id,
-            curMeal.base.title,
-            curMeal.base.description,
-            curMeal.base.tags,
-            curMeal.base.start_time,
-            curMeal.base.end_time,
-            curMeal.restaurant_name,
-            curMeal.restaurant_link,
-            curMeal.menu_items,
-            "meal"
-          )
-        );
-        this.state.starDict[curMeal.id] = false;
+    const eventInfo = data.eventbases;
+    eventInfo.forEach((base) => { // squash tags
+      if (base.tags) {
+        base.tags = base.tags.filter(tag => !!tag).map(tag => tag.name);
       }
-    }
+      if (base.area)
+        base.area = base.area.name;
+      base.type = "core";
+      base.startTime = base.start_time; // toCamel
+      base.endTime = base.end_time;
+    });
+    // Smoosh in additional info where relevant
+    data.meals.forEach((meal) => {
+      if (!meal.base) return;
+      const id = meal.base.id;
+      if (!(id in eventInfo)) return;
+      eventInfo[id] = {
+        ...eventInfo[id],
+        restaurantName: meal.restaurant_name,
+        restaurantLink: meal.restaurant_link,
+        menuItems: meal.menu_items,
+        type: "meal"
+      };
+    });
 
-    talkData = data.talks;
-    for (let i = 0; i < talkData.length; i++) {
-      curTalk = talkData[i];
-      if (curTalk.base != null) {
-        eventProps.push(
-          this.makeEvent(
-            curTalk.id,
-            curTalk.base.title,
-            curTalk.base.description,
-            curTalk.base.tags,
-            curTalk.base.start_time,
-            curTalk.base.end_time,
-            null,
-            null,
-            null,
-            "talk"
-          )
-        );
-        this.state.starDict[curTalk.id] = false;
-      }
-    }
-    return eventProps;
+    data.talks.forEach((talk) => {
+      if (!talk.base) return;
+      const id = talk.base.id;
+      if (!(id in eventInfo)) return;
+      eventInfo[id] = {
+        ...eventInfo[id],
+        people: talk.people.map(p => p.name),
+        type: "talk"
+      };
+    });
+    return eventInfo;
   };
 
   toggleModal = (
@@ -217,7 +181,7 @@ export default class Schedule extends Component<Props> {
     );
 
     const DaySelector = () => (
-      <View>
+      <View style={styles.daySelector}>
         <ButtonControl
           height={30}
           onChangeIndex={this.onSelectDay}
@@ -244,6 +208,7 @@ export default class Schedule extends Component<Props> {
               )
             }
             title={item.title}
+            area={item.area}
             tags={item.tags}
             id={item.id}
             isStarred={isStarred}
@@ -300,15 +265,20 @@ export default class Schedule extends Component<Props> {
               </View>);
             }
             return (
-
-              <FlatList
-                data={searchingFiltered}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => {
-                  const toggleEvent = () => toggleStarred(item.id);
-                  return <EventCard eventData={item} toggleEvent={toggleEvent} isStarred={!!starredItems[item.id]} />;
-                }}
-              />
+              <View>
+                <FlatList
+                  data={searchingFiltered}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item }) => {
+                    const startTime = item.start
+                    const toggleEvent = () => toggleStarred(item.id);
+                    return <EventCard eventData={item} toggleEvent={toggleEvent} isStarred={!!starredItems[item.id]} />;
+                  }}
+                />
+                <View style={{
+                  height: 40
+                }}/>
+              </View>
             );
           }}
         </StarContext.Consumer>
@@ -321,7 +291,11 @@ const styles = StyleSheet.create({
   search: {
   },
   scheduleSelector: {
-    marginBottom: 12,
+    marginBottom: 8,
+    ...styleguide.elevate,
+  },
+  daySelector: {
+    marginBottom: 4,
   },
   notfound: {
     margin: 40,

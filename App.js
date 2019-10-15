@@ -150,7 +150,16 @@ export default class App extends Component<Props> {
       this.setState({ starredItems: JSON.parse(result) });
     });
     fetchEvents().then(data => {
-      this.setState({ allData: data });
+      // load star dict before exposing to user - ? do we need to worry about CMS failure?
+      const starredItems = { ...this.state.starredItems };
+      data.data.eventbases.forEach((base) => {
+        // sync the events
+        if (!(base.id in starredItems)) {
+          starredItems[base.id] = false; // don't worry about the things in starred item that aren't in events, they won't render
+        }
+      })
+      // TODO run this fetch in background (every 30)
+      this.setState({ starredItems, eventData: data.data });
     });
   }
 
@@ -239,7 +248,7 @@ export default class App extends Component<Props> {
             starredItems: this.state.starredItems
           }}
         >
-          <AppContainer screenProps={{ allData: this.state.allData }} />
+          <AppContainer screenProps={{ eventData: this.state.eventData }} />
         </StarContext.Provider>
       </AuthContext.Provider>
     );
