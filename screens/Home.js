@@ -1,80 +1,73 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import getAllData from "../getCMS";
+import { Text, View } from "react-native";
 
-class Home extends Component<Props> {
+import { styleguide } from "../styles";
+import { InfoCard } from "../components";
+import { fetchInfoBlocks } from "../cms";
+// Select info blocks from CMS to render
+const CARD_KEYS = ["welcome", "app_links", "faq", "social_media", "loading"];
+
+// TODO store a lot of this information in app resources so we have default
+class Home extends Component {
+
   static navigationOptions = {
     title: "Home",
     headerLeft: null
   };
 
-  state = {
-    allData: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      infoBlocks: {
+        loading: {
+          title: "Welcome to HackGT 6!",
+          body: "Scanning the interwebs",
+        }
+      },
+    };
+  }
+
+  // componentDidMount() {
+  //   // query cms
+  //   const infoBlocks = {};
+  //   console.log("hello\n\n")
+  //   fetchInfoBlocks()
+  //     .then(payload => {
+  //       // console.log(payload)
+  //       const infoArray = payload.data.infoblocks;
+  //       // console.log(infoArray);
+  //       infoArray.forEach( block => {
+  //         if (block.slug in CARD_KEYS)
+  //           infoBlocks[block.slug] = block;
+  //       });
+  //       this.setState({ infoBlocks });
+  //     });
+  // }
 
   render() {
-    const headerProps = [
-      { header: "Contact Information" },
-      { header: "Important! Links" },
-      { header: "Social Media" }
-    ];
-
-    const contactProps = [
-      [
-        { title: "HackGT Staff: ", tag: "678-870-4225" },
-        { title: "Campus Police: ", tag: "404-894-2500" }
-      ],
-      [
-        { title: "Slack: ", tag: "hellohackgt.slack.come" },
-        { title: "Live Site: ", tag: "info.hack.gt" },
-        { title: "Devpost: ", tag: "hackgt.devpost.com" }
-      ],
-      [
-        { title: "Facebook: ", tag: "TheHackGT" },
-        { title: "Instagram: ", tag: "@thehackgt" },
-        { title: "Twitter: ", tag: "@thehackgt" },
-        { title: "Github: ", tag: "@hackgt" }
-      ]
-    ];
+    const { infoBlocks } = this.state;
+    console.log("this is running");
     return (
       <View>
-        {headerProps.map((props, i) => (
-          <View key={i}>
-            <View style={styles.titleView}>
-              <Text>{props.header}</Text>
-            </View>
-            <View style={styles.card}>
-              {contactProps.map((desProps, k) => (
-                <Text key={k}>
-                  <Text style={styles.title}>{desProps[k].title}</Text>
-                  <Text>{desProps[k].tag}</Text>
-                </Text>
-              ))}
-            </View>
-          </View>
-        ))}
+        <Text>Hello</Text>
       </View>
     );
+    //     {CARD_KEYS.map((cardKey) => {
+    //       if (!(cardKey in infoBlocks)) return null;
+    //       console.log("we're past it all")
+    //       const block = infoBlocks[cardKey];
+    //       return (
+    //         <View key={cardKey}>
+    //           <View style={styleguide.titleView}>
+    //               <Text>{block.title}</Text>
+    //           </View>
+    //           <InfoCard key={cardKey} content={block.body} />
+    //         </View>
+    //       );
+    //     })}
+    //   </View>
+    // );
   }
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontWeight: "bold"
-  },
-  card: {
-    backgroundColor: "white",
-    borderWidth: 0.5,
-    borderColor: "grey",
-    borderRadius: 10,
-    padding: 25,
-    marginLeft: 25,
-    marginRight: 25
-  },
-  titleView: {
-    marginLeft: 25,
-    marginTop: 25
-  }
-});
 
 export default Home;

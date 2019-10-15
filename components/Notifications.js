@@ -1,31 +1,30 @@
 import React, { Component } from "react";
 import { Text, Alert } from "react-native";
 import firebase from "react-native-firebase";
-import type { Notification } from "react-native-firebase";
 import BackgroundFetch from "react-native-background-fetch";
 
 const events = {
-    event_2: {
-        id: 0,
-        name: "event 2.",
-        date: new Date().getDate(),
-        timeStart: new Date().getTime() + 5 * 60 * 1000,
-        timeEnd: new Date().getTime() + 15 * 60 * 1000 + 1000
-    },
-    event_4: {
-        id: 1,
-        name: "event 4.",
-        date: new Date().getDate(),
-        timeStart: new Date().getTime() + 15 * 60 * 1000,
-        timeEnd: new Date().getTime() + 15 * 60 * 1000 + 1000
-    },
-    event_5: {
-        id: 2,
-        name: "event 5.",
-        date: new Date().getDate(),
-        timeStart: new Date().getTime() + 17 * 60 * 1000,
-        timeEnd: new Date().getTime() + 17 * 60 * 1000 + 1000
-    }
+    // event_2: {
+    //     id: 0,
+    //     name: "event 2.",
+    //     date: new Date().getDate(),
+    //     timeStart: new Date().getTime() + 5 * 60 * 1000,
+    //     timeEnd: new Date().getTime() + 15 * 60 * 1000 + 1000
+    // },
+    // event_4: {
+    //     id: 1,
+    //     name: "event 4.",
+    //     date: new Date().getDate(),
+    //     timeStart: new Date().getTime() + 15 * 60 * 1000,
+    //     timeEnd: new Date().getTime() + 15 * 60 * 1000 + 1000
+    // },
+    // event_5: {
+    //     id: 2,
+    //     name: "event 5.",
+    //     date: new Date().getDate(),
+    //     timeStart: new Date().getTime() + 17 * 60 * 1000,
+    //     timeEnd: new Date().getTime() + 17 * 60 * 1000 + 1000
+    // }
 };
 
 const showAlert = (title, body) => {
@@ -134,7 +133,7 @@ class Notifications extends Component<Props> {
         this.localNotifs();
         this.notificationListener = firebase
             .notifications()
-            .onNotification((notification: Notification) => {
+            .onNotification((notification) => {
                 // Process your notification as required
                 const { title, body } = notification;
 

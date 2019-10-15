@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ButtonGroup } from "react-native-elements";
-import { Text } from "react-native";
+
 
 class ButtonControl extends Component<Props> {
   constructor() {
