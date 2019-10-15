@@ -1,16 +1,20 @@
 import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text } from "react-native";
 
-export default (TagList = ({ tagList }) => {
-  tags = [];
-  if (tagList != null) {
-    for (let i = 0; i < tagList.length; i++) {
-      tags.push(<Text style={styles.tag}>{tagList[i].name}</Text>);
+import { colors } from "../themes";
+
+export default TagList = ({ tags }) => tags ? (
+  <View style={{
+    flexDirection: "row"
+  }}>
+    {
+      tags.map((tag) => (
+        <Text style={styles.tag} key={tag}>#{tag}</Text>
+      ))
     }
-  }
-  return <View style={{ flexDirection: "row" }}>{tags}</View>;
-});
+  </View>
+) : null;
 
 const styles = StyleSheet.create({
   list: {
@@ -19,10 +23,12 @@ const styles = StyleSheet.create({
     height: 40
   },
   tag: {
-    backgroundColor: "#E0E0E0",
+    backgroundColor: colors.lightGrayBackgroundBehindTagText,
     borderRadius: 18,
-    padding: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
     marginLeft: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    textDecorationLine: "underline"
   }
 });

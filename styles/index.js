@@ -41,7 +41,7 @@ export const styleguide = StyleSheet.create({
     marginBottom: 12
   },
   wrapperView: {
-    paddingTop: 48,
+    paddingTop: 36,
     paddingLeft: 16,
     paddingRight: 16,
   },

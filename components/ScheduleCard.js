@@ -12,40 +12,38 @@ import { faPlusCircle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { thisExpression } from "@babel/types";
 import TagList from "./TagList";
 
-export default class ScheduleCard extends Component<Props> {
-  onClick = () => {
-    this.props.onClick(this.props.item);
-  };
-  render() {
-    let title = this.props.title ? (
-      <Text style={styles.title}>{this.props.title}</Text>
-    ) : null;
-    return (
-      <TouchableHighlight
-        style={styles.card}
-        underlayColor="gray"
-        onPress={this.props.onClick}
-      >
-        <View>
-          <View
-            style={{
-              position: "absolute",
-              alignSelf: "flex-end",
-              flex: 1,
-              padding: 8
-            }}
-          />
+import { colors } from "../themes";
+import { styleguide } from "../styles";
 
+export default ScheduleCard = ({ title, onClick, onPressStar, isStarred, tags }) => {
+//   <View
+//   style={{
+//     position: "absolute",
+//     alignSelf: "flex-end",
+//     flex: 1,
+//     padding: 8
+//   }}
+// />
+  return (
+    <TouchableHighlight
+      style={styles.card}
+      underlayColor="gray"
+      onPress={onClick}
+    >
+      <View>
+        <Text style={styleguide.title}>
           {title}
-          <Text style={styles.text}>{this.props.children}</Text>
-          <TouchableOpacity onPress={this.props.onPressStar}>
-            <Text>star</Text>
-          </TouchableOpacity>
-          <TagList tagList={this.props.tags} />
-        </View>
-      </TouchableHighlight>
-    );
-  }
+        </Text>
+        <TouchableOpacity onPress={onPressStar}>
+          <FontAwesomeIcon
+            color={isStarred ? colors.primaryStar : colors.lightGrayText}
+            icon={faStar} size={28}
+          />
+        </TouchableOpacity>
+        <TagList tags={tags} />
+      </View>
+    </TouchableHighlight>
+  );
 }
 
 const styles = StyleSheet.create({

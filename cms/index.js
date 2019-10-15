@@ -49,6 +49,9 @@ const eventQuery = `
         }
     }
   }
+  tags(start: 0) {
+    name
+  }
 `;
 
 const infoQuery = `
