@@ -5,22 +5,15 @@ import { colors } from "../themes";
 class ButtonControl extends Component<Props> {
   constructor() {
     super();
-    this.state = {
-      selectedIndex: 0
-    };
     this.updateIndex = this.updateIndex.bind(this);
   }
 
   updateIndex(selectedIndex) {
-    this.setState({ selectedIndex });
-    if (this.props.changeListener)
-      this.props.changeListener(selectedIndex);
+    this.props.onChangeCallback(selectedIndex);
   }
 
   render() {
-    const { buttons, containerStyle, buttonStyle } = this.props;
-    const { selectedIndex } = this.state;
-
+    const { buttons, containerStyle, buttonStyle, selectedIndex } = this.props;
     return (
       <ButtonGroup
         onPress={this.updateIndex}
