@@ -116,6 +116,7 @@ class ScavHunt extends Component<Props> {
         var details = {
           "uuid": user.uuid
         };
+        console.log("**********************UUID: " + user.uuid)
 
         var resBody = []
         for (property in details) {
@@ -125,27 +126,21 @@ class ScavHunt extends Component<Props> {
         }
         resBody = resBody.join("&");
 
-        const request = async () => {
-          const response = await fetch('https://qa.hack.gt/num_questions', {
+        return(fetch('https://qa.hack.gt/num_questions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             },
             body: resBody,
-          }).then((response) => {
-            response.json();
-          }).then((res) => {
+          }).then((response) =>
+            response.json()).then((res) => {
               console.log(res);
               this.state.score = res.num_done;
-            })
-            .catch((error) => {
+            }).catch((error) => {
               console.error(error);
-            });
-        }
+            }));
 
-        request();
       }
-      return;
     }
 
     render() {
