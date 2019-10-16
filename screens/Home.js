@@ -9,7 +9,7 @@ import { styleguide } from "../styles";
 import { InfoCard, StyledText } from "../components";
 
 // Select info blocks from CMS to render
-const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
+export const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
 import { colors } from "../themes";
 import { CMSContext } from "../App";
 

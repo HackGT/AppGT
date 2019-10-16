@@ -184,18 +184,17 @@ export default class App extends Component<Props> {
     AsyncStorage.getItem("infoBlocks", (error, result) => {
       if (result) {
         this.setState({ infoBlocks: JSON.parse(result) });
-      } else {
-        fetchInfoBlocks().then(data => { // refresh
-          const infoBlocks = {};
-          const infoArray = data.data.infoblocks;
-          infoArray.forEach( block => {
-            if (CARD_KEYS.includes(block.slug))
-            infoBlocks[block.slug] = block;
-          });
-          this.setState({ infoBlocks });
-          AsyncStorage.setItem("infoBlocks", JSON.stringify(infoBlocks));
-        });
       }
+      fetchInfoBlocks().then(data => { // refresh
+        const infoBlocks = {};
+        const infoArray = data.data.infoblocks;
+        infoArray.forEach( block => {
+          if (CARD_KEYS.includes(block.slug))
+          infoBlocks[block.slug] = block;
+        });
+        this.setState({ infoBlocks });
+        AsyncStorage.setItem("infoBlocks", JSON.stringify(infoBlocks));
+      });
     });
   }
 
