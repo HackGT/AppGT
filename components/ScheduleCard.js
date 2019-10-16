@@ -13,14 +13,14 @@ import { colors } from "../themes";
 import { styleguide } from "../styles";
 
 // TODO enable onClick
-// TODO make sure long names render properly
 
 export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags, isOld }) => {
 //      {/*onClick  noop */}
   const areaBlock = area && (<StyledText style={{
       color: colors.lightGrayText,
       paddingLeft: 8,
-    }} >
+      marginBottom: 4,
+    }}>
       {area}
     </StyledText>);
   let styleWrap = {
@@ -43,21 +43,16 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
         <View style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "flex-start",
           flexWrap: "wrap"
         }}>
-          <View style={{
-            flex: 1,
-            marginBottom: 4,
-          }}>
             <StyledText style={{
-              marginBottom: 4,
+              marginBottom: 2,
+              flex: 1,
               ...styleguide.title
             }}>
               {title}
             </StyledText>
-            { areaBlock }
-          </View>
           <TouchableOpacity
             style={{
               width: 40
@@ -78,6 +73,7 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
             }
           </TouchableOpacity>
         </View>
+        { areaBlock }
         <TagList tags={tags} />
       </View>
     </TouchableHighlight>

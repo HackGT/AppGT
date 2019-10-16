@@ -24,7 +24,7 @@ function popoutShadowStyle(elevation) {
 export const styleguide = StyleSheet.create({
   title: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 20,
     paddingLeft: 8,
   },
   card: {
