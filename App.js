@@ -1,9 +1,3 @@
-import { Text, Alert } from "react-native";
-import { Notifications, Event, Home, Schedule, ScavHunt } from "./screens";
-import { NotificationsComp } from "./components";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import firebase from "react-native-firebase";
-import BackgroundFetch from "react-native-background-fetch";
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { YellowBox } from 'react-native';
@@ -29,7 +23,7 @@ import {
   faKey,
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
-import { Home, Schedule, Login } from "./screens";
+import { Home, Schedule, ScavHunt } from "./screens";
 import { NotificationsComp } from "./components";
 
 import { fetchEvents } from "./cms";
@@ -71,15 +65,22 @@ const HomeStack = createStackNavigator({
 
 const ScavHuntStack = createStackNavigator({
   ScavHunt
-});
+}, { headerMode: "none" });
+
+
+const TabBarComponent = (props) => (
+  <View style={styles.tabBar}>
+      {/* <View style={{ backgroundColor: "red", height: 10 }} /> */}
+      <BottomTabBar style={styles.innerTabBar} {...props} />
+  </View>
+)
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Schedule: ScheduleStack,
-    Login: LoginStack,
-    // Notifications: NotificationsStack
     ScavHunt: ScavHuntStack,
+    // Notifications: NotificationsStack
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

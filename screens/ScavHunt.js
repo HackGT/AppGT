@@ -4,6 +4,8 @@ import { AuthContext } from "../App";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import DialogInput from 'react-native-dialog-input';
 import AsyncStorage from "@react-native-community/async-storage";
+import { styleguide } from '../styles'
+import { colors } from "../themes";
 
 class ScavHunt extends Component<Props> {
     static navigationOptions = {
@@ -96,6 +98,7 @@ class ScavHunt extends Component<Props> {
               this.forceUpdate();
             }
             }
+            color={colors.primaryBlue}
           />
         );
       }
@@ -103,7 +106,7 @@ class ScavHunt extends Component<Props> {
 
     renderScores = (user) => {
       if (user) {
-        return(<Text>Score: TEST</Text>);
+        return(<Text style={styleguide.score}>Score: TEST</Text>);
       }
     }
 
@@ -113,7 +116,7 @@ class ScavHunt extends Component<Props> {
 
     render() {
         return (
-            <View>
+            <View style={styleguide.wrapperView}>
                 <AuthContext.Consumer>
                     {({ user, login, logout }) => {
                         if (!user && !this.state.login) {
@@ -121,42 +124,47 @@ class ScavHunt extends Component<Props> {
                         }
                         return(
                           <View>
-                            <Button
-                              title={user ? "Logout" : "Login"}
-                              onPress= {user ? logout : login}
-                            />
-                            <Text h3>HackGT6: Into the Scavenger Hunt!</Text>
-                            <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam euismod dapibus nibh quis porttitor.</Text>
-                            {this.renderQRButton(user)}
-                            {this.renderScores(user)}
-                            <View style={{marginTop: 22}}>
-                              <Modal
-                                animationType="slide"
-                                transparent={false}
-                                visible={this.state.qr}
-                                onRequestClose={() => {
-                                  console.log('Modal has been closed.');
-                                }}>
-                                <QRCodeScanner
-                                  onRead={this.handleQRCode.bind(this)}
-                                  topContent={
-                                    <Text>Scan the QR code!</Text>
-                                  }
-                                />
-                              </Modal>
+                            <View style={styleguide.titleView}>
+                              <Text style={styleguide.title}>HackGT6: Into the Scavenger Hunt!</Text>
                             </View>
-                              <DialogInput isDialogVisible={this.state.submit}
-                                title={"Scavenger Hunt Response"}
-                                message={this.state.values}
-                                hintInput ={"Response"}
-                                submitInput={ (user, inputText) => {
-                                  this.sendInput(user, inputText);
-                                } }
-                                closeDialog={() => {
-                                  this.state.submit = false;
-                                  this.forceUpdate();
-                                }}>
-                              </DialogInput>
+                            <View style={styleguide.card}>
+                              <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam euismod dapibus nibh quis porttitor.</Text>
+                              {this.renderScores(user)}
+                              {this.renderQRButton(user)}
+                              <View style={{marginTop: 22}}>
+                                <Modal
+                                  animationType="slide"
+                                  transparent={false}
+                                  visible={this.state.qr}
+                                  onRequestClose={() => {
+                                    console.log('Modal has been closed.');
+                                  }}>
+                                  <QRCodeScanner
+                                    onRead={this.handleQRCode.bind(this)}
+                                    topContent={
+                                      <Text>Scan the QR code!</Text>
+                                    }
+                                  />
+                                </Modal>
+                              </View>
+                                <DialogInput isDialogVisible={this.state.submit}
+                                  title={"Scavenger Hunt Response"}
+                                  message={this.state.values}
+                                  hintInput ={"Response"}
+                                  submitInput={ (user, inputText) => {
+                                    this.sendInput(user, inputText);
+                                  } }
+                                  closeDialog={() => {
+                                    this.state.submit = false;
+                                    this.forceUpdate();
+                                  }}>
+                                </DialogInput>
+                              </View>
+                              <Button
+                                title={user ? "Logout" : "Login"}
+                                onPress= {user ? logout : login}
+                                color={colors.primaryBlue}
+                              />
                           </View>
                         )
                     }}

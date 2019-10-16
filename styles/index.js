@@ -57,5 +57,9 @@ export const styleguide = StyleSheet.create({
   },
   elevate: {
     ...elevationShadowStyle(10),
+  },
+  score: {
+    paddingTop: 15,
+    paddingBottom: 15
   }
 });
