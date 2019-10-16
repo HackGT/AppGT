@@ -57,5 +57,12 @@ export const styleguide = StyleSheet.create({
   },
   elevate: {
     ...elevationShadowStyle(10),
+  },
+  notfound: {
+    margin: 40,
+    flex: 1,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 });

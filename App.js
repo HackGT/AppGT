@@ -24,15 +24,17 @@ import {
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { Home, Schedule, Login } from "./screens";
+import { CARD_KEYS } from "./screens/Home";
+import { populateEvents } from "./screens/Schedule";
 import { NotificationsComp } from "./components";
 
-import { fetchEvents } from "./cms";
+import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { colors } from "./themes";
 import { styleguide } from "./styles";
 
 export const AuthContext = React.createContext();
 export const StarContext = React.createContext();
-// export const CMSContext = React.createContext();
+export const CMSContext = React.createContext();
 
 const authUrl = "https://login.hack.gt";
 
@@ -47,6 +49,7 @@ const config = {
 };
 
 // TODO better navbar style to achieve design parity: https://stackoverflow.com/questions/50318728/get-height-of-tab-bar-on-any-device-in-react-navigation
+// TODO run event fetch in background (every 30)
 
 // a StackNavgiator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
@@ -126,18 +129,20 @@ const AppContainer = createAppContainer(TabNavigator);
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
-    Notif = new NotificationsComp();
+    this.notifierService = new NotificationsComp();
 
     this.state = {
       user: null,
       accessToken: null,
       allData: null,
-      starredItems: {}
+      starredItems: {},
+      infoBlocks: [],
+      eventData: [],
+      tags: [],
     };
   }
 
   componentDidMount() {
-    Notif.runNotifications();
     AsyncStorage.getItem(
       "userData",
       (error, result) => result && this.setState({ user: JSON.parse(result) })
@@ -146,25 +151,59 @@ export default class App extends Component<Props> {
       "accessToken",
       (error, result) => result && this.setState({ accessToken: result })
     );
-    AsyncStorage.getItem("starredItems", (error, result) => {
-      this.setState({ starredItems: JSON.parse(result) });
+    AsyncStorage.getItem(
+      "starredItems",
+      (error, result) => result && this.setState({ starredItems: JSON.parse(result) })
+    );
+
+    AsyncStorage.getItem(
+      "tags",
+      (error, result) => result && this.setState({ tags: JSON.parse(result) })
+    );
+
+    AsyncStorage.getItem("eventData", (error, result) => {
+      this.notifierService.setupNotifications();
+      if (result) {
+        this.setState({ eventData: JSON.parse(result) }); // TODO set starred keys according to this
+      }
+      fetchEvents().then(data => {
+        // load star dict before exposing to user - ? do we need to worry about CMS failure?
+        const starredItems = { ...this.state.starredItems };
+        data.data.eventbases.forEach((base) => {
+          if (!(base.id in starredItems)) {
+            starredItems[base.id] = false; // don't worry about the things in starred item that aren't in events, they won't render
+          }
+        })
+
+        const eventData = populateEvents(data.data); // store ready to use data
+        const tags = data.data.tags.map(tag => tag.name);
+
+        AsyncStorage.setItem("eventData", JSON.stringify(eventData));
+        AsyncStorage.setItem("tags", JSON.stringify(tags));
+        this.setState({ starredItems, eventData, tags });
+      });
     });
-    fetchEvents().then(data => {
-      // load star dict before exposing to user - ? do we need to worry about CMS failure?
-      const starredItems = { ...this.state.starredItems };
-      data.data.eventbases.forEach((base) => {
-        // sync the events
-        if (!(base.id in starredItems)) {
-          starredItems[base.id] = false; // don't worry about the things in starred item that aren't in events, they won't render
-        }
-      })
-      // TODO run this fetch in background (every 30)
-      this.setState({ starredItems, eventData: data.data });
+
+    AsyncStorage.getItem("infoBlocks", (error, result) => {
+      if (result) {
+        this.setState({ infoBlocks: JSON.parse(result) });
+      } else {
+        fetchInfoBlocks().then(data => { // refresh
+          const infoBlocks = {};
+          const infoArray = data.data.infoblocks;
+          infoArray.forEach( block => {
+            if (CARD_KEYS.includes(block.slug))
+            infoBlocks[block.slug] = block;
+          });
+          this.setState({ infoBlocks });
+          AsyncStorage.setItem("infoBlocks", JSON.stringify(infoBlocks));
+        });
+      }
     });
   }
 
   componentWillUnmount() {
-    Notif.listener();
+    this.notifierService.listener();
   }
 
   logout = async () => {
@@ -234,10 +273,11 @@ export default class App extends Component<Props> {
   };
 
   render() {
+    const { user, infoBlocks, eventData, starredItems, tags } = this.state;
     return (
       <AuthContext.Provider
         value={{
-          user: this.state.user,
+          user,
           login: this.login,
           logout: this.logout
         }}
@@ -245,10 +285,18 @@ export default class App extends Component<Props> {
         <StarContext.Provider
           value={{
             toggleStarred: this.toggleStarred,
-            starredItems: this.state.starredItems
+            starredItems
           }}
         >
-          <AppContainer screenProps={{ eventData: this.state.eventData }} />
+          <CMSContext.Provider
+            value={{
+              infoBlocks,
+              eventData,
+              tags,
+            }}
+          >
+            <AppContainer />
+          </CMSContext.Provider>
         </StarContext.Provider>
       </AuthContext.Provider>
     );

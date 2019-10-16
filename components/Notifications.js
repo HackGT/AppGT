@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, Alert } from "react-native";
 import firebase from "react-native-firebase";
 import BackgroundFetch from "react-native-background-fetch";
+import { StarContext } from "../App";
 
 const events = {
     // event_2: {
@@ -27,31 +28,54 @@ const events = {
     // }
 };
 
-const showAlert = (title, body) => {
-    Alert.alert(title, body);
+// TODO: don't spam
+const sendLocalAlerts = (events) => {
+    if (events.length === 0) return;
+    if (events.length === 1) {
+        const event = events[0]
+        const startTime = event.startTime.format("hh:mm");
+        if (event.area) {
+            Alert.alert(event.title, `Your event begins at ${startTime} in ${event.area}.`);
+        } else {
+            Alert.alert(event.title, `Your event begins at ${startTime}.`);
+        }
+        return;
+    }
+    const eventStrings = events.map(e => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
+    const body = eventStrings.join('\n');
+    Alert.alert("Upcoming events", body);
 };
 
+const sendRemoteAlert = (title, body) => {
+    Alert.alert(title, body);
+}
+
+// TODO pass along local event info somehow - through cms context?
+// Plan for cms - fetch every 15 minutes
 class Notifications extends Component<Props> {
+
+    static contextType = StarContext;
+
     constructor(props) {
         super(props);
         firebase.messaging().subscribeToTopic("all");
-        console.log("Subscribed to topic");
-        console.log("Checking Status");
+        // console.log("Subscribed to topic");
+        // console.log("Checking Status");
         this.checkStatus();
-        let curr = new Date();
         this.checkPermissions();
 
-        Object.keys(events).forEach(event => {
-            if (events[event.toString()].date == curr.getDate()) {
-                if (
-                    events[event].timeStart - curr.getTime() <=
-                        15 * 60 * 1000 &&
-                    events[event].timeStart - curr.getTime() >= 0
-                ) {
-                    showAlert(event, "Starting soon!");
-                }
-            }
-        });
+        // let curr = new Date();
+        // Object.keys(events).forEach(event => {
+        //     if (events[event.toString()].date == curr.getDate()) {
+        //         if (
+        //             events[event].timeStart - curr.getTime() <=
+        //                 15 * 60 * 1000 &&
+        //             events[event].timeStart - curr.getTime() >= 0
+        //         ) {
+        //             showAlert(event, "Starting soon!");
+        //         }
+        //     }
+        // });
     }
 
     async checkStatus() {
@@ -129,9 +153,9 @@ class Notifications extends Component<Props> {
         }
     }
 
-    runNotifications() {
+    setupNotifications() {
         this.localNotifs();
-        this.notificationListener = firebase
+        this.remoteNotificationListener = firebase
             .notifications()
             .onNotification((notification) => {
                 // Process your notification as required
@@ -153,7 +177,7 @@ class Notifications extends Component<Props> {
     }
 
     listener() {
-        this.notificationListener();
+        this.remoteNotificationListener();
     }
 }
 
