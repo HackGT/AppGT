@@ -278,8 +278,6 @@ export default class Schedule extends Component<Props> {
           {({ starredItems, toggleStarred }) => (
             <CMSContext.Consumer>
               {({ eventData, tags }) => {
-                console.log("In schedule")
-                console.log(eventData);
                 const lowerTags = tags.map(tag => tag.toLowerCase());
                 const matchedTags = tags.filter((_, index) => lowerTags[index].includes(searchLower));
                 if (isMySchedule) {

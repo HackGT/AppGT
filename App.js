@@ -26,7 +26,7 @@ import {
 import { Home, Schedule, Login } from "./screens";
 import { CARD_KEYS } from "./screens/Home";
 import { populateEvents } from "./screens/Schedule";
-import { NotificationsComp } from "./components";
+import { NotifierService } from "./components";
 
 import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { colors } from "./themes";
@@ -129,8 +129,6 @@ const AppContainer = createAppContainer(TabNavigator);
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
-    this.notifierService = new NotificationsComp();
-
     this.state = {
       user: null,
       accessToken: null,
@@ -162,7 +160,6 @@ export default class App extends Component<Props> {
     );
 
     AsyncStorage.getItem("eventData", (error, result) => {
-      this.notifierService.setupNotifications();
       if (result) {
         this.setState({ eventData: JSON.parse(result) }); // TODO set starred keys according to this
       }
@@ -200,10 +197,6 @@ export default class App extends Component<Props> {
         });
       }
     });
-  }
-
-  componentWillUnmount() {
-    this.notifierService.listener();
   }
 
   logout = async () => {
@@ -295,7 +288,9 @@ export default class App extends Component<Props> {
               tags,
             }}
           >
-            <AppContainer />
+            <NotifierService starredItems={starredItems} eventData={eventData}>
+              <AppContainer />
+            </NotifierService>
           </CMSContext.Provider>
         </StarContext.Provider>
       </AuthContext.Provider>

@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import { Text, View, ScrollView } from "react-native";
 
 import { styleguide } from "../styles";
+import { colors } from "../themes";
 import { InfoCard } from "../components";
 import { CMSContext } from "../App";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faSync,
+} from "@fortawesome/free-solid-svg-icons";
 
 // TODO better loading state
 export const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
@@ -21,7 +26,15 @@ class Home extends Component {
           {({ infoBlocks }) => {
             if (infoBlocks.length === 0) {
               return (
-                <Text style={styleguide.notfound}> Surfing the interwebs </Text>
+                <View style={styleguide.notfound}>
+                  <Text style={{
+                    textAlign: "center"
+                  }}>Surfing the interwebs...</Text>
+                  <FontAwesomeIcon
+                    color={colors.darkGrayText}
+                    icon={faSync} size={28}
+                  />
+                </View>
               );
             }
             return CARD_KEYS.map((cardKey) => {
