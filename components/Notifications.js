@@ -37,6 +37,13 @@ class Notifications extends Component<Props> {
         }
     }
 
+    sendEventAlert = (title, body, id) => {
+        const { starredItems } = this.props;
+        if (id in starredItems && starredItems[id]) {
+            this.sendRemoteAlert(title, body);
+        }
+    }
+
     sendLocalAlerts = () => {
         const { starredItems } = this.props;
         const { eventData } = this.state; // maybe we don't need this in state, but not sure
@@ -130,8 +137,13 @@ class Notifications extends Component<Props> {
             .notifications()
             .onNotification((notification) => {
                 // Process your notification as required
-                const { title, body } = notification;
-                sendRemoteAlert(title, body);
+                const { title, body, id } = notification;
+                if (!body) return;
+                if (!id) {
+                    sendRemoteAlert(title, body);
+                    return;
+                }
+                this.sendEventAlert(title, body, id);
             });
     }
 
