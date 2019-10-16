@@ -5,27 +5,11 @@ import BackgroundFetch from "react-native-background-fetch";
 import moment from "moment-timezone";
 
 // TODO: don't spam
-const sendLocalAlerts = (events) => {
-    if (events.length === 0) return;
-    if (events.length === 1) {
-        const event = events[0]
-        const startTime = event.startTime.format("hh:mm");
-        if (event.area) {
-            Alert.alert(event.title, `Your event begins at ${startTime} in ${event.area}.`);
-        } else {
-            Alert.alert(event.title, `Your event begins at ${startTime}.`);
-        }
-        return;
-    }
-    const eventStrings = events.map(e => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
-    const body = eventStrings.join('\n');
-    Alert.alert("Upcoming events", body);
-};
-
 const sendRemoteAlert = (title, body) => {
     Alert.alert(title, body);
 }
 
+// TODO test offline
 // TODO fetch cms every 15 minutes
 class Notifications extends Component<Props> {
 
@@ -36,8 +20,44 @@ class Notifications extends Component<Props> {
         console.log("Checking Status");
         this.checkStatus();
         this.checkPermissions();
+        this.state = {
+            eventData: props.eventData, // maintain a local copy for background thread?
+            starredItems: props.starredItems
+        };
+        this.runNotifications();
+    }
 
-        this.setupNotifications();
+    componentDidUpdate(prevProps) {
+        const { eventData: oldData } = prevProps;
+        const { eventData: newData } = this.props;
+        if (newData.length !== oldData.length) { // fragile diff
+            this.setState({
+                eventData: this.props.eventData
+            }, this.sendLocalAlerts); // if we've received new info, do another sanity check about events (TODO don't redundantly notify by caching notified in state)
+        }
+    }
+
+    sendLocalAlerts = () => {
+        const { starredItems } = this.props;
+        const { eventData } = this.state; // maybe we don't need this in state, but not sure
+        const now = moment();
+        const events = eventData.filter((event, index) => {
+            return (Math.abs(now.diff(event.startTime, "minutes")) <= 15);
+        }).filter(event => event.id in starredItems && starredItems[event.id])
+        if (events.length === 0) return;
+        if (events.length === 1) {
+            const event = events[0]
+            const startTime = event.startTime.format("hh:mm");
+            if (event.area) {
+                Alert.alert(event.title, `Your event begins at ${startTime} in ${event.area}.`);
+            } else {
+                Alert.alert(event.title, `Your event begins at ${startTime}.`);
+            }
+            return;
+        }
+        const eventStrings = events.map(event => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
+        const body = eventStrings.join('\n\n');
+        Alert.alert("Upcoming events", body);
     }
 
     async checkStatus() {
@@ -57,8 +77,7 @@ class Notifications extends Component<Props> {
     }
 
     localNotifs() {
-        console.log("Checking schedule");
-        const { starredItems, eventData } = this.props;
+        console.log("Launching background fetch");
         BackgroundFetch.configure(
             {
                 minimumFetchInterval: 15, // <-- minutes (15 is minimum allowed)
@@ -77,14 +96,7 @@ class Notifications extends Component<Props> {
                 // If you fail to do this, the OS can terminate your app
                 // or assign battery-blame for consuming too much background-time
                 console.log("checking background events");
-                const now = moment();
-                // .filter(event => event.id in starredItems )
-                const upcoming = eventData.filter((event, index) => {
-                    return index === 0 || (Math.abs(now.diff(event.timeStart, "minute")) <= 15);
-                })
-                sendLocalAlerts(upcoming);
-                console.log("bazinga");
-                console.log(upcoming);
+                this.sendLocalAlerts();
                 BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
             },
             error => {
@@ -112,24 +124,14 @@ class Notifications extends Component<Props> {
         }
     }
 
-    setupNotifications() {
+    runNotifications() {
         this.localNotifs();
         this.remoteNotificationListener = firebase
             .notifications()
             .onNotification((notification) => {
                 // Process your notification as required
                 const { title, body } = notification;
-                this.sendRemoteAlert(title, body);
-                // if (
-                //     Object.keys(events).some(event => {
-                //         if (!notification.data.tags) {
-                //             return false;
-                //         }
-                //         if (notification.data.tags.includes(event)) {
-                //             return true;
-                //         }
-                //     })
-                // ) {
+                sendRemoteAlert(title, body);
             });
     }
 

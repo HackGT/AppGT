@@ -31,6 +31,7 @@ import { NotifierService } from "./components";
 import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { colors } from "./themes";
 import { styleguide } from "./styles";
+import moment from "moment-timezone";
 
 export const AuthContext = React.createContext();
 export const StarContext = React.createContext();
@@ -161,7 +162,13 @@ export default class App extends Component<Props> {
 
     AsyncStorage.getItem("eventData", (error, result) => {
       if (result) {
-        this.setState({ eventData: JSON.parse(result) }); // TODO set starred keys according to this
+        const eventData = JSON.parse(result);
+        // create moments
+        eventData.forEach(event => { // read off clean version
+          event.startTime = moment.parseZone(event.start_time);
+          event.endTime = moment.parseZone(event.end_time);
+        })
+        this.setState({ eventData }); // TODO set starred keys according to this
       }
       fetchEvents().then(data => {
         // load star dict before exposing to user - ? do we need to worry about CMS failure?
@@ -175,7 +182,7 @@ export default class App extends Component<Props> {
         const eventData = populateEvents(data.data); // store ready to use data
         const tags = data.data.tags.map(tag => tag.name);
 
-        AsyncStorage.setItem("eventData", JSON.stringify(eventData));
+        AsyncStorage.setItem("eventData", JSON.stringify(eventData)); // store the clean version
         AsyncStorage.setItem("tags", JSON.stringify(tags));
         this.setState({ starredItems, eventData, tags });
       });

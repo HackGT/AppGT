@@ -37,6 +37,7 @@ const DATES = [
 ];
 
 export const populateEvents = (data) => {
+  moment.fn.toJSON = function() { return this.format(); }
   const now = moment();
   const unsortedEventInfo = data.eventbases;
   unsortedEventInfo.forEach((base) => { // squash tags
