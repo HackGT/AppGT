@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Text,
   View,
   TouchableHighlight,
   TouchableOpacity
@@ -8,7 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
-import TagList from "./TagList";
+import { StyledText, TagList } from "./";
 
 import { colors } from "../themes";
 import { styleguide } from "../styles";
@@ -18,12 +17,12 @@ import { styleguide } from "../styles";
 
 export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags, isOld }) => {
 //      {/*onClick  noop */}
-  const areaBlock = area && (<Text style={{
+  const areaBlock = area && (<StyledText style={{
       color: colors.lightGrayText,
       paddingLeft: 8,
     }} >
       {area}
-    </Text>);
+    </StyledText>);
   let styleWrap = {
     ...styleguide.card,
     paddingHorizontal: 6,
@@ -51,12 +50,12 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
             flex: 1,
             marginBottom: 4,
           }}>
-            <Text style={{
+            <StyledText style={{
               marginBottom: 4,
               ...styleguide.title
             }}>
               {title}
-            </Text>
+            </StyledText>
             { areaBlock }
           </View>
           <TouchableOpacity

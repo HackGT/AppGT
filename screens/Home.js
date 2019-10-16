@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView } from "react-native";
-
+import { View, ScrollView } from "react-native";
 import { styleguide } from "../styles";
-import { InfoCard } from "../components";
+import { InfoCard, StyledText } from "../components";
 import { fetchInfoBlocks } from "../cms";
 // Select info blocks from CMS to render
 const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
@@ -39,7 +38,7 @@ class Home extends Component {
     if (fetching) {
       return (
         <ScrollView>
-          <Text> Surfing the interwebs </Text>
+          <StyledText> Surfing the interwebs </StyledText>
         </ScrollView>
       );
     }
@@ -51,7 +50,7 @@ class Home extends Component {
           return (
             <View key={cardKey}>
               <View style={styleguide.titleView}>
-                  <Text style={styleguide.title}>{block.title}</Text>
+                  <StyledText style={styleguide.title}>{block.title}</StyledText>
               </View>
               <InfoCard key={cardKey} content={block.body} />
             </View>

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   ScrollView,
@@ -19,9 +18,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment-timezone";
 
-import ScheduleCard from "../components/ScheduleCard";
-import ButtonControl from "../components/ButtonControl";
 import Event from "../components/events/Event";
+import { ScheduleCard, ButtonControl, StyledText } from "../components";
 import { StarContext } from "../App";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
@@ -231,11 +229,11 @@ export default class Schedule extends Component<Props> {
         }}>
           { shouldShowTime && (
 
-            <Text style={{
+            <StyledText style={{
               textAlign: "center"
             }}>
               {item.startTime.format("hh:mm A")}
-            </Text>
+            </StyledText>
           )}
         </View>
         <ScheduleCard
@@ -308,8 +306,8 @@ export default class Schedule extends Component<Props> {
                   color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
                   icon={faQuestionCircle} size={28}
                 />
-                <Text>No events found.</Text>
-                { isMySchedule && <Text> Star some events to get started! </Text>}
+                <StyledText>No events found.</StyledText>
+                { isMySchedule && <StyledText> Star some events to get started! </StyledText>}
               </View>);
             }
             return (

@@ -9,7 +9,7 @@ class Notifications extends Component<Props> {
 
     render() {
         return (
-            <Text>Notifications Page</Text>
+            <StyledText>Notifications Page</StyledText>
         )
     }
 }

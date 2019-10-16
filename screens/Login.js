@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Button } from "react-native";
 import { AuthContext } from "../App";
-
+import { StyledText } from "../components";
 class Login extends Component<Props> {
     static navigationOptions = {
         title: "Login",
@@ -12,9 +12,9 @@ class Login extends Component<Props> {
         return (
             user &&
             Object.keys(user).map((key, index) => (
-                <Text key={index}>
+                <StyledText key={index}>
                     {key} - {user[key]}
-                </Text>
+                </StyledText>
             ))
         );
     };
