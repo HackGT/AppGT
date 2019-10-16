@@ -1,3 +1,9 @@
+import { Text, Alert } from "react-native";
+import { Notifications, Event, Home, Schedule, ScavHunt } from "./screens";
+import { NotificationsComp } from "./components";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import firebase from "react-native-firebase";
+import BackgroundFetch from "react-native-background-fetch";
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { YellowBox } from 'react-native';
@@ -63,17 +69,9 @@ const HomeStack = createStackNavigator({
 //   Notifications
 // }, { headerMode: "none" });
 
-const LoginStack = createStackNavigator({
-  Login
-}, { headerMode: "none" });
-
-
-const TabBarComponent = (props) => (
-  <View style={styles.tabBar}>
-      {/* <View style={{ backgroundColor: "red", height: 10 }} /> */}
-      <BottomTabBar style={styles.innerTabBar} {...props} />
-  </View>
-)
+const ScavHuntStack = createStackNavigator({
+  ScavHunt
+});
 
 const TabNavigator = createBottomTabNavigator(
   {
@@ -81,6 +79,7 @@ const TabNavigator = createBottomTabNavigator(
     Schedule: ScheduleStack,
     Login: LoginStack,
     // Notifications: NotificationsStack
+    ScavHunt: ScavHuntStack,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -97,7 +96,7 @@ const TabNavigator = createBottomTabNavigator(
           case "Notifications":
             icon = faBell;
             break;
-          case "Login":
+          case "ScavHunt":
             icon = faKey;
             break;
           default:
