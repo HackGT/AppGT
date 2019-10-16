@@ -20,7 +20,7 @@ class ScavHunt extends Component<Props> {
       isDialogVisible: true,
       qr: false,
       submit: false,
-      score: 0,
+      score: 99999,
       user: null
     };
 
@@ -90,6 +90,7 @@ class ScavHunt extends Component<Props> {
     renderQRButton = (user) => {
       if (user) {
         this.state.user = user;
+        this.getScores(user);
         return(
           <Button
             title="Found a clue?"
@@ -106,12 +107,45 @@ class ScavHunt extends Component<Props> {
 
     renderScores = (user) => {
       if (user) {
-        return(<Text style={styleguide.score}>Score: TEST</Text>);
+        return(<Text style={styleguide.score}>Score: {this.state.score}</Text>);
       }
     }
 
-    static getDerivedStateFromProps(nextProps, state) {
-      console.log("Doesn't work rn");
+    getScores = (user) => {
+      if (user) {
+        var details = {
+          "uuid": user.uuid
+        };
+
+        var resBody = []
+        for (property in details) {
+          var encodedKey = encodeURIComponent(property);
+          var encodedValue = encodeURIComponent(details[property]);
+          resBody.push(encodedKey + "=" + encodedValue);
+        }
+        resBody = resBody.join("&");
+
+        const request = async () => {
+          const response = await fetch('https://qa.hack.gt/num_questions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: resBody,
+          }).then((response) => {
+            response.json();
+          }).then((res) => {
+              console.log(res);
+              this.state.score = res.num_done;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+
+        request();
+      }
+      return;
     }
 
     render() {
