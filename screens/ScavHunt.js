@@ -142,7 +142,7 @@ class ScavHunt extends Component<Props> {
                                   <QRCodeScanner
                                     onRead={this.handleQRCode.bind(this)}
                                     topContent={
-                                      <Text>Scan the QR code!</Text>
+                                      <Text style={styleguide.qr}>Scan the QR code!</Text>
                                     }
                                   />
                                 </Modal>

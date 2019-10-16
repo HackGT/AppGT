@@ -61,5 +61,8 @@ export const styleguide = StyleSheet.create({
   score: {
     paddingTop: 15,
     paddingBottom: 15
+  },
+  qr: {
+    fontWeight: "bold",
   }
 });
