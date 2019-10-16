@@ -13,37 +13,16 @@ const eventQuery = `
     }
   }
   talks(start: 0) {
-    id
     base {
       id
-      title
-      description
-      start_time
-      end_time
-      tags {
-        name
-      }
-      area {
-          name
-      }
     }
     people {
       name
     }
   }
   meals(start: 0) {
-    id
     base {
-      title
-      description
-      start_time
-      end_time
-      tags {
-        name
-      }
-      area {
-        name
-      }
+      id
     }
     restaurant_name
     restaurant_link
