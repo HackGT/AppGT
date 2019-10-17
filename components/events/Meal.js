@@ -13,7 +13,7 @@ export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
       </View>
       <View>
         {menuItems.map(item => (
-          <StyledText style={{ ...styleguide.text }} key={item.name}>
+          <StyledText style={styles.menuItem} key={item.name}>
             - {item.name}
           </StyledText>
         ))}
@@ -78,5 +78,10 @@ const styles = StyleSheet.create({
   restaurantNameTitle: {
     fontSize: 15,
     fontWeight: "bold"
+  },
+  menuItem: {
+    fontSize: 15,
+    marginLeft: 30,
+    marginBottom: 5
   }
 });
