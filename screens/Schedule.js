@@ -19,7 +19,7 @@ import {
 import moment from "moment-timezone";
 
 import Event from "../components/events/Event";
-import { ScheduleCard, ButtonControl, StyledText } from "../components";
+import { ScheduleCard, ButtonControl, StyledText, Spacer } from "../components";
 import { StarContext, CMSContext } from "../App";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
@@ -320,11 +320,7 @@ export default class Schedule extends Component<Props> {
                         );
                       }}
                     />
-                    <View
-                      style={{
-                        height: 40
-                      }}
-                    />
+                    <Spacer />
                   </View>
                 );
               }}

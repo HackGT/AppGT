@@ -6,3 +6,4 @@ export { default as TagList } from "./TagList";
 export { default as NotifierService } from './Notifications';
 export { default as LoggedIn } from './LoggedIn';
 export { default as LoggedOut } from './LoggedOut';
+export { default as Spacer } from './Spacer';
