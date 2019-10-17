@@ -53,9 +53,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UIAppFonts</key>
-<<<<<<< HEAD
-	<array/>
-=======
 	<array>
 		<string>SpaceMono-Bold.ttf</string>
 		<string>SpaceMono-BoldItalic.ttf</string>
@@ -78,7 +75,6 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
->>>>>>> 1cd5a5146f6336c0893988b6163ec77666939cc5
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
