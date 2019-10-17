@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Button, Alert, Modal, TouchableOpacity, Image } from "react-native";
-import { AuthContext } from "../App";
+import { View, Alert, Modal, TouchableOpacity, StyleSheet, Image } from "react-native";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import DialogInput from 'react-native-dialog-input';
 import AsyncStorage from "@react-native-community/async-storage";
@@ -80,7 +79,6 @@ class LoggedIn extends Component<Props> {
         const resString = this.getPayload();
         return fetchQA(resString, SCORE_ENDPOINT)
             .then((res) => {
-                // console.log(res);
                 this.setState({ score: res.num_done });
             }).catch((error) => {
                 console.error(error);
@@ -88,18 +86,24 @@ class LoggedIn extends Component<Props> {
     }
 
     handleQRCode = (e) => {
-        this.setState({ values: JSON.parse(e.data).question});
-        this.setState({ qr: false });
-        this.setState({ submit: true });
+        this.setState({
+            puzzle: JSON.parse(e.data),
+            qr: false,
+            isFormVisible: true,
+        });
+    }
+
+    closeQR = () => {
+        this.setState({ qr: false });s
     }
 
     render() {
-        const { score, values, isFormVisible } = this.state;
+        const { score, values, isFormVisible, qr } = this.state;
 
         return (
                 <View>
                     <View style={styleguide.card}>
-                        <StyledText style={styleguide.score}>Score: {this.state.score}</StyledText>
+                        <StyledText style={styleguide.score}>Puzzles solved: {this.state.score}</StyledText>
                     </View>
                     <View style={styleguide.card}>
                         <StyledText style={{padding: 10}}>Where to next? Splash around Lobster Beach, wander in the Mushroom Forest, sit at the Tea Party, and pick flowers in the Secret Garden!</StyledText>
@@ -114,27 +118,24 @@ class LoggedIn extends Component<Props> {
                             <Modal
                                 animationType="slide"
                                 transparent={false}
-                                visible={this.state.qr}
-                                onRequestClose={() => {
-                                console.log('Modal has been closed.');
-                                }}
+                                visible={qr}
+                                onRequestClose={this.closeQR}
                             >
                                 <QRCodeScanner
-                                onRead={this.handleQRCode.bind(this)}
-                                topContent={
-                                    <View style={styleguide.qrView}>
+                                    onRead={this.handleQRCode}
+                                    topContent={
                                         <StyledText style={styleguide.qr}>Scan the QR code!</StyledText>
-                                    </View>
-                                }
-                                bottomContent={
-                                    <TouchableOpacity
-                                        onPress={() => this.setState({qr: false})}
-                                        style={styleguide.cancelButton}
-                                    >
-                                        <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
-                                    </TouchableOpacity>
-                                }
-                                topViewStyle={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", paddingBottom: 50, paddingLeft: 20}}
+                                    }
+                                    bottomContent={
+                                        <TouchableOpacity
+                                            onPress={this.closeQR}
+                                            style={styleguide.cancelButton}
+                                        >
+                                            <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
+                                        </TouchableOpacity>
+                                    }
+                                    topViewStyle={styles.qrTop}
+                                    bottomViewStyle={{ paddingVertical: 10 }}
                                 />
                             </Modal>
                         </View>
@@ -142,11 +143,9 @@ class LoggedIn extends Component<Props> {
                             title={"Scavenger Hunt Response"}
                             message={values}
                             hintInput ={"Response"}
-                            submitInput={(inputText) => {
-                            this.sendInput(inputText);
-                            } }
+                            submitInput={this.sendInput}
                             closeDialog={() => {
-                            this.setState({submit: false});
+                                this.setState({isFormVisible: false});
                             }}>
                         </DialogInput>
                     </View>
@@ -155,4 +154,14 @@ class LoggedIn extends Component<Props> {
     }
 }
 
+const styles = StyleSheet.create({
+    qrTop: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: 50,
+        paddingLeft: 20
+    },
+    qrBottom: {},
+});
 export default LoggedIn;

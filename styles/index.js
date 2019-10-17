@@ -95,12 +95,6 @@ export const styleguide = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 70
   },
-  qrView: {
-    flex: 1,
-    flexDirection: "row",
-    padding: 10,
-    justifyContent: "center",
-  },
   qr: {
     fontWeight: "bold",
     textAlign: "center",
