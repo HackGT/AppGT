@@ -62,11 +62,42 @@ export const styleguide = StyleSheet.create({
   elevate: {
     ...elevationShadowStyle(10)
   },
+  score: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
+  },
   notfound: {
     margin: 40,
     flex: 1,
-    textAlign: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
+  },
+  button: {
+    backgroundColor: colors.primaryBlue,
+    padding: 20,
+    borderRadius: 10,
+    margin: 8,
+    flex: 1,
+    flexDirection: "row",
+    height: 28,
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+  cancelButton: {
+    padding: 5,
+    borderRadius: 10,
+    flex: 1,
+    flexDirection: "row",
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 70
+  },
+  qr: {
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });

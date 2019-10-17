@@ -23,7 +23,7 @@ import {
   faKey,
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
-import { Home, Schedule, Login } from "./screens";
+import { Home, Schedule, ScavHunt } from "./screens";
 import { CARD_KEYS } from "./screens/Home";
 import { populateEvents } from "./screens/Schedule";
 import { NotifierService } from "./components";
@@ -68,8 +68,8 @@ const HomeStack = createStackNavigator({
 //   Notifications
 // }, { headerMode: "none" });
 
-const LoginStack = createStackNavigator({
-  Login
+const ScavHuntStack = createStackNavigator({
+  ScavHunt
 }, { headerMode: "none" });
 
 
@@ -84,7 +84,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Schedule: ScheduleStack,
-    Login: LoginStack,
+    ScavHunt: ScavHuntStack,
     // Notifications: NotificationsStack
   },
   {
@@ -102,7 +102,7 @@ const TabNavigator = createBottomTabNavigator(
           case "Notifications":
             icon = faBell;
             break;
-          case "Login":
+          case "ScavHunt":
             icon = faKey;
             break;
           default:
