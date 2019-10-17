@@ -4,7 +4,7 @@ import { colors } from "../themes";
 function elevationShadowStyle(elevation) {
   return {
     elevation,
-    shadowColor: 'grey',
+    shadowColor: "grey",
     shadowOffset: { width: 0, height: 0.6 * elevation },
     shadowOpacity: 0.3,
     shadowRadius: 0.8 * elevation
@@ -14,7 +14,7 @@ function elevationShadowStyle(elevation) {
 function popoutShadowStyle(elevation) {
   return {
     elevation,
-    shadowColor: 'grey',
+    shadowColor: "grey",
     shadowOffset: { width: 0, height: -0.3 * elevation },
     shadowOpacity: 0.3,
     shadowRadius: 0.8 * elevation
@@ -25,7 +25,11 @@ export const styleguide = StyleSheet.create({
   title: {
     fontWeight: "bold",
     fontSize: 20,
-    paddingLeft: 8,
+    paddingLeft: 8
+  },
+  text: {
+    fontSize: 15,
+    marginBottom: 12
   },
   card: {
     backgroundColor: "white",
@@ -35,7 +39,7 @@ export const styleguide = StyleSheet.create({
     marginRight: 24,
     marginBottom: 20,
     flexGrow: 1,
-    ...elevationShadowStyle(5),
+    ...elevationShadowStyle(5)
   },
   noShadow: {
     backgroundColor: colors.lightGrayBackgroundBehindTagText,
@@ -49,20 +53,20 @@ export const styleguide = StyleSheet.create({
   wrapperView: {
     paddingTop: 36,
     paddingLeft: 16,
-    paddingRight: 16,
+    paddingRight: 16
   },
   popoutBar: {
     ...popoutShadowStyle(5),
-    height: 80,
+    height: 80
   },
   elevate: {
-    ...elevationShadowStyle(10),
+    ...elevationShadowStyle(10)
   },
   notfound: {
     margin: 40,
     flex: 1,
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

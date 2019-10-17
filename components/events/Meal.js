@@ -1,12 +1,26 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { StyledText } from "../";
+import { styleguide } from "../../styles";
 
-export default (Meal = ({ restaurantName, restaurantLink, menuItem }) => {
+export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
+  console.log(menuItems);
   return (
     <View style={styles.content}>
-      <StyledText style={styles.contentTitle}>{restaurantName}</StyledText>
-      <StyledText style={styles.contentTitle}>{restaurantLink}</StyledText>
+      <StyledText style={{ ...styleguide.text }}>{restaurantName}</StyledText>
+      <StyledText style={{ ...styleguide.text }}>{restaurantLink}</StyledText>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap"
+        }}
+      >
+        {menuItems.map(item => (
+          <StyledText style={{ ...styleguide.text }} key={item}>
+            {item.name}
+          </StyledText>
+        ))}
+      </View>
     </View>
   );
 });
@@ -19,9 +33,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
-  },
-  contentTitle: {
-    fontSize: 20,
-    marginBottom: 12
   }
 });

@@ -14,7 +14,7 @@ import {
   faSearch,
   faQuestionCircle,
   faTimes,
-  faArrowLeft,
+  faArrowLeft
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment-timezone";
 
@@ -24,50 +24,56 @@ import { StarContext, CMSContext } from "../App";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
 
-
 // TODO modal trigger refactor
 // TODO Star all
 // TODO color coding
 // TOOD fix scrollbar
 // TODO styling fix on button groups (probably going to have to roll own thing)
 const DATES = [
-  {date: "10/25", day: "Friday"},
-  {date: "10/26", day: "Saturday"},
-  {date: "10/27", day: "Sunday"}
+  { date: "10/25", day: "Friday" },
+  { date: "10/26", day: "Saturday" },
+  { date: "10/27", day: "Sunday" }
 ];
 
-export const populateEvents = (data) => {
-  moment.fn.toJSON = function() { return this.format(); }
+export const populateEvents = data => {
+  moment.fn.toJSON = function() {
+    return this.format();
+  };
   const now = moment();
   const unsortedEventInfo = data.eventbases;
-  unsortedEventInfo.forEach((base) => { // squash tags
+  unsortedEventInfo.forEach(base => {
+    // squash tags
     if (!base.start_time) return;
     if (base.tags) {
       base.tags = base.tags.filter(tag => !!tag).map(tag => tag.name);
     }
-    if (base.area)
-      base.area = base.area.name;
+    if (base.area) base.area = base.area.name;
     base.type = "core";
     base.startTime = moment.parseZone(base.start_time); // toCamel
     if (base.end_time) {
       base.endTime = moment.parseZone(base.end_time);
     }
+    if (base.description) {
+      base.desc = base.description;
+    }
     base.isOld = now > base.startTime;
   });
   const eventInfo = unsortedEventInfo.sort((e1, e2) => {
     if (e1.isOld && !e2.isOld) return 1;
-    if (e1.start_time === e2.start_time) // compare strings
+    if (e1.start_time === e2.start_time)
+      // compare strings
       return e1.title > e2.title;
     if (e1.startTime > e2.startTime) return 1;
     return -1;
   });
   // Smoosh in additional info where relevant
-  data.meals.forEach((meal) => {
+  data.meals.forEach(meal => {
     if (!meal.base) return;
     const id = meal.base.id;
-    if (!(id in eventInfo)) return;
-    eventInfo[id] = {
-      ...eventInfo[id],
+    const index = eventInfo.findIndex(event => event.id === id);
+    if (index === -1) return;
+    eventInfo[index] = {
+      ...eventInfo[index],
       restaurantName: meal.restaurant_name,
       restaurantLink: meal.restaurant_link,
       menuItems: meal.menu_items,
@@ -75,12 +81,13 @@ export const populateEvents = (data) => {
     };
   });
 
-  data.talks.forEach((talk) => {
+  data.talks.forEach(talk => {
     if (!talk.base) return;
     const id = talk.base.id;
-    if (!(id in eventInfo)) return;
-    eventInfo[id] = {
-      ...eventInfo[id],
+    const index = eventInfo.findIndex(event => event.id === id);
+    if (index === -1) return;
+    eventInfo[index] = {
+      ...eventInfo[index],
       people: talk.people.map(p => p.name),
       type: "talk"
     };
@@ -89,7 +96,6 @@ export const populateEvents = (data) => {
 };
 
 export default class Schedule extends Component<Props> {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -108,6 +114,7 @@ export default class Schedule extends Component<Props> {
       modalRestaurantName: "",
       modalRestaurantLink: "",
       modalMenu: "",
+      modalPeople: [],
       starDict: {}
     };
   }
@@ -121,8 +128,10 @@ export default class Schedule extends Component<Props> {
     end,
     restaurant_name,
     restaurant_link,
-    menu
+    menu,
+    people
   ) => {
+    console.log(desc);
     this.setState({
       isModalVisible: !this.state.isModalVisible,
       modalTitle: title,
@@ -133,7 +142,8 @@ export default class Schedule extends Component<Props> {
       modalEnd: end,
       modalRestaurantName: restaurant_name,
       modalRestaurantLink: restaurant_link,
-      modalMenu: menu
+      modalMenu: menu,
+      modalPeople: people
     });
   };
 
@@ -143,7 +153,8 @@ export default class Schedule extends Component<Props> {
     });
   };
 
-  onSelectSchedule = (newIndex) => this.setState({ isMySchedule: newIndex === 1 });
+  onSelectSchedule = newIndex =>
+    this.setState({ isMySchedule: newIndex === 1 });
 
   onSelectDay = dayIndex => this.setState({ dayIndex });
 
@@ -154,25 +165,32 @@ export default class Schedule extends Component<Props> {
         <SearchBar
           searchIcon={
             <FontAwesomeIcon
-              color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
-              icon={faSearch} size={28}
+              color={
+                searchText === "" ? colors.lightGrayText : colors.darkGrayText
+              }
+              icon={faSearch}
+              size={28}
             />
           }
-          clearIcon = {
+          clearIcon={
             <FontAwesomeIcon
               color={colors.darkGrayText}
-              icon={faTimes} size={28}
+              icon={faTimes}
+              size={28}
             />
           }
-          cancelIcon = {
+          cancelIcon={
             <FontAwesomeIcon
               color={colors.darkGrayText}
-              icon={faArrowLeft} size={28}
+              icon={faArrowLeft}
+              size={28}
             />
           }
           platform="android"
           placeholder="Search by title or tag"
-          onChangeText={(searchText) => this.setState({ searchText, searchLower: searchText.toLowerCase() })}
+          onChangeText={searchText =>
+            this.setState({ searchText, searchLower: searchText.toLowerCase() })
+          }
           value={searchText}
           autoCorrect={false}
         />
@@ -184,7 +202,7 @@ export default class Schedule extends Component<Props> {
         <ButtonControl
           onChangeCallback={this.onSelectSchedule}
           buttons={["Main Schedule", "My Schedule"]}
-          selectedIndex={ this.state.isMySchedule ? 1 : 0}
+          selectedIndex={this.state.isMySchedule ? 1 : 0}
           containerSyle={{
             width: 300
           }}
@@ -203,38 +221,49 @@ export default class Schedule extends Component<Props> {
       </View>
     );
 
-    const EventCard = ({ eventData: item, isStarred, toggleEvent, shouldShowTime }) => (
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center",
-      }}>
-        <View style={{
-          width: 70,
-        }}>
-          { shouldShowTime && (
-
-            <StyledText style={{
-              textAlign: "center"
-            }}>
+    const EventCard = ({
+      eventData: item,
+      isStarred,
+      toggleEvent,
+      shouldShowTime
+    }) => (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center"
+        }}
+      >
+        <View
+          style={{
+            width: 70
+          }}
+        >
+          {shouldShowTime && (
+            <StyledText
+              style={{
+                textAlign: "center"
+              }}
+            >
               {item.startTime.format("hh:mm A")}
             </StyledText>
           )}
         </View>
         <ScheduleCard
           item={item}
-          onClick={() =>
+          onClick={() => {
             this.toggleModal(
               item.title,
-              item.eventType,
+              item.type,
               item.desc,
               item.tags,
               item.startTime,
               item.endTime,
               item.restaurantName,
               item.restaurantLink,
-              item.menu
-            )
-          }
+              item.menuItems,
+              item.people
+            );
+          }}
           title={item.title}
           area={item.area}
           tags={item.tags}
@@ -251,8 +280,8 @@ export default class Schedule extends Component<Props> {
     return (
       <ScrollView
         style={styleguide.wrapperView}
-        keyboardShouldPersistTaps='always'
-        keyboardDismissMode='on-drag'
+        keyboardShouldPersistTaps="always"
+        keyboardDismissMode="on-drag"
       >
         <SearchComponent />
         <ScheduleSelector />
@@ -260,7 +289,17 @@ export default class Schedule extends Component<Props> {
         <Modal isVisible={this.state.isModalVisible}>
           <Event
             isModalVisible={() =>
-              this.toggleModal(null, null, null, null, null, null, null, null)
+              this.toggleModal(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              )
             }
             title={this.state.modalTitle}
             desc={this.state.modalDesc}
@@ -270,6 +309,7 @@ export default class Schedule extends Component<Props> {
             restaurantName={this.state.modalRestaurantName}
             restaurantLink={this.state.modalRestaurantLink}
             menuItems={this.state.modalMenu}
+            people={this.state.modalPeople}
             eventType={this.state.modalType}
           />
         </Modal>
@@ -278,23 +318,43 @@ export default class Schedule extends Component<Props> {
             <CMSContext.Consumer>
               {({ eventData, tags }) => {
                 const lowerTags = tags.map(tag => tag.toLowerCase());
-                const matchedTags = tags.filter((_, index) => lowerTags[index].includes(searchLower));
+                const matchedTags = tags.filter((_, index) =>
+                  lowerTags[index].includes(searchLower)
+                );
                 if (isMySchedule) {
                   eventData = eventData.filter(item => starredItems[item.id]);
                 }
-                eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
+                eventData = eventData.filter(
+                  item =>
+                    item.startTime.format("MM/DD") === DATES[dayIndex].date
+                );
                 const searchingFiltered = eventData.filter(item => {
-                  return item.title.toLowerCase().includes(searchLower) || item.tags.some(tag => matchedTags.includes(tag));
+                  return (
+                    item.title.toLowerCase().includes(searchLower) ||
+                    item.tags.some(tag => matchedTags.includes(tag))
+                  );
                 });
                 if (searchingFiltered.length === 0) {
-                  return (<View style={styleguide.notfound}>
-                    <FontAwesomeIcon
-                      color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
-                      icon={faQuestionCircle} size={28}
+                  return (
+                    <View style={styleguide.notfound}>
+                      <FontAwesomeIcon
+                        color={
+                          searchText === ""
+                            ? colors.lightGrayText
+                            : colors.darkGrayText
+                        }
+                        icon={faQuestionCircle}
+                        size={28}
                       />
-                    <StyledText>No events found.</StyledText>
-                    { isMySchedule && <StyledText> Star some events to get started! </StyledText>}
-                  </View>);
+                      <StyledText>No events found.</StyledText>
+                      {isMySchedule && (
+                        <StyledText>
+                          {" "}
+                          Star some events to get started!{" "}
+                        </StyledText>
+                      )}
+                    </View>
+                  );
                 }
                 return (
                   <View>
@@ -304,26 +364,34 @@ export default class Schedule extends Component<Props> {
                       renderItem={({ item, index }) => {
                         let shouldShowTime = index === 0;
                         if (index !== 0) {
-                          if (searchingFiltered[index - 1].startTime.format('HH:mm') !== item.startTime.format('HH:mm')) {
+                          if (
+                            searchingFiltered[index - 1].startTime.format(
+                              "HH:mm"
+                            ) !== item.startTime.format("HH:mm")
+                          ) {
                             shouldShowTime = true;
                           }
                         }
                         const toggleEvent = () => toggleStarred(item.id);
-                        return (<EventCard
-                          eventData={item}
-                          toggleEvent={toggleEvent}
-                          shouldShowTime={shouldShowTime}
-                          isStarred={!!starredItems[item.id]}
-                          />);
-                        }}
+                        return (
+                          <EventCard
+                            eventData={item}
+                            toggleEvent={toggleEvent}
+                            shouldShowTime={shouldShowTime}
+                            isStarred={!!starredItems[item.id]}
+                          />
+                        );
+                      }}
                     />
-                    <View style={{
-                      height: 40
-                    }}/>
+                    <View
+                      style={{
+                        height: 40
+                      }}
+                    />
                   </View>
                 );
-            }}
-          </CMSContext.Consumer>
+              }}
+            </CMSContext.Consumer>
           )}
         </StarContext.Consumer>
       </ScrollView>
@@ -332,14 +400,12 @@ export default class Schedule extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-  search: {
-  },
+  search: {},
   scheduleSelector: {
     marginBottom: 8,
-    ...styleguide.elevate,
+    ...styleguide.elevate
   },
   daySelector: {
-    marginBottom: 12,
+    marginBottom: 12
   }
 });
-
