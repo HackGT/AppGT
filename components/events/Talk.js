@@ -12,6 +12,7 @@ export default (Talk = ({ people }) => {
         flexWrap: "wrap"
       }}
     >
+      <StyledText style={styles.heading}>Presenter:</StyledText>
       {people.map(person => (
         <StyledText style={{ ...styleguide.text }} key={person}>
           {person}
@@ -33,5 +34,9 @@ const styles = StyleSheet.create({
   contentTitle: {
     fontSize: 20,
     marginBottom: 12
+  },
+  heading: {
+    fontSize: 15,
+    fontWeight: "bold"
   }
 });

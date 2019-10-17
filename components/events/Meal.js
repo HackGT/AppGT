@@ -4,21 +4,17 @@ import { StyledText } from "../";
 import { styleguide } from "../../styles";
 import { colors } from "../../themes";
 
-
 export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
   return (
     <View style={styles.content}>
-      <StyledText style={styles.restaurantNameTitle}>
-        Restaurant:
-      </StyledText>
+      <StyledText style={styles.restaurantNameTitle}>Restaurant:</StyledText>
       <View style={styles.restaurantNames}>
         {makeHyperlinks(restaurantName, restaurantLink)}
       </View>
-      <View
-      >
+      <View>
         {menuItems.map(item => (
           <StyledText style={{ ...styleguide.text }} key={item.name}>
-           - {item.name}
+            - {item.name}
           </StyledText>
         ))}
       </View>
@@ -61,20 +57,18 @@ const makeHyperlinks = (restaurantName, restaurantLink) => {
 const styles = StyleSheet.create({
   content: {
     backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
   },
   link: {
     fontSize: 15,
     marginBottom: 12,
-    marginLeft: 5,
+    marginRight: 5,
     color: colors.primaryBlue
   },
   text: {
     fontSize: 15,
-    marginLeft: 5,
+    marginRight: 5,
     marginBottom: 12
   },
   restaurantNames: {
