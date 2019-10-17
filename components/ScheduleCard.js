@@ -84,7 +84,11 @@ export default (ScheduleCard = ({
           </TouchableOpacity>
         </View>
         {areaBlock}
-        <TagList tags={tags} />
+        <View style={{
+          paddingLeft: 10
+        }}>
+          <TagList tags={tags} />
+        </View>
       </View>
     </TouchableHighlight>
   );

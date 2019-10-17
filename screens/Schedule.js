@@ -43,7 +43,7 @@ export const populateEvents = data => {
   const unsortedEventInfo = data.eventbases;
   unsortedEventInfo.forEach(base => {
     // squash tags
-    if (!base.start_time) return;
+    if (!base.start_time || !base.title) return; // the bare minimum
     if (base.tags) {
       base.tags = base.tags.filter(tag => !!tag).map(tag => tag.name);
     }
@@ -52,9 +52,6 @@ export const populateEvents = data => {
     base.startTime = moment.parseZone(base.start_time); // toCamel
     if (base.end_time) {
       base.endTime = moment.parseZone(base.end_time);
-    }
-    if (base.description) {
-      base.desc = base.description;
     }
     base.isOld = now > base.startTime;
   });
@@ -103,49 +100,10 @@ export default class Schedule extends Component<Props> {
       dayIndex: 0,
       searchText: "",
       searchLower: "",
-      allData: null,
       isModalVisible: false,
-      modalTitle: "",
-      modalType: "",
-      modalDesc: "",
-      modalTags: [],
-      modalStart: "",
-      modalEnd: "",
-      modalRestaurantName: "",
-      modalRestaurantLink: "",
-      modalMenu: "",
-      modalPeople: [],
-      starDict: {}
+      modalEvent: null,
     };
   }
-
-  toggleModal = (
-    title,
-    type,
-    desc,
-    tags,
-    start,
-    end,
-    restaurant_name,
-    restaurant_link,
-    menu,
-    people
-  ) => {
-    console.log(desc);
-    this.setState({
-      isModalVisible: !this.state.isModalVisible,
-      modalTitle: title,
-      modalType: type,
-      modalDesc: desc,
-      modalTags: tags,
-      modalStart: start,
-      modalEnd: end,
-      modalRestaurantName: restaurant_name,
-      modalRestaurantLink: restaurant_link,
-      modalMenu: menu,
-      modalPeople: people
-    });
-  };
 
   onSelectEvent = item => {
     this.props.navigation.navigate("Event", {
@@ -251,18 +209,7 @@ export default class Schedule extends Component<Props> {
         <ScheduleCard
           item={item}
           onClick={() => {
-            this.toggleModal(
-              item.title,
-              item.type,
-              item.desc,
-              item.tags,
-              item.startTime,
-              item.endTime,
-              item.restaurantName,
-              item.restaurantLink,
-              item.menuItems,
-              item.people
-            );
+            this.setState({modalEvent: item, isModalVisible: true})
           }}
           title={item.title}
           area={item.area}
@@ -272,10 +219,28 @@ export default class Schedule extends Component<Props> {
           onPressStar={toggleEvent}
           isOld={item.isOld}
         >
-          {item.desc}
+          {item.description}
         </ScheduleCard>
       </View>
     );
+
+    const EventModal = () => {
+      const { isModalVisible, modalEvent } = this.state;
+      const closeModal = () => this.setState({isModalVisible: false});
+      return (
+        <Modal
+          isVisible={isModalVisible}
+          onBackButtonPress={closeModal}
+          onBackdropPress={closeModal}
+          propagateSwipe
+        >
+          <Event
+            closeModal={closeModal}
+            eventInfo={modalEvent}
+          />
+        </Modal>
+      );
+    }
 
     return (
       <ScrollView
@@ -286,33 +251,6 @@ export default class Schedule extends Component<Props> {
         <SearchComponent />
         <ScheduleSelector />
         <DaySelector />
-        <Modal isVisible={this.state.isModalVisible}>
-          <Event
-            isModalVisible={() =>
-              this.toggleModal(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-              )
-            }
-            title={this.state.modalTitle}
-            desc={this.state.modalDesc}
-            tags={this.state.modalTags}
-            startTime={this.state.modalStart}
-            endTime={this.state.modalEnd}
-            restaurantName={this.state.modalRestaurantName}
-            restaurantLink={this.state.modalRestaurantLink}
-            menuItems={this.state.modalMenu}
-            people={this.state.modalPeople}
-            eventType={this.state.modalType}
-          />
-        </Modal>
         <StarContext.Consumer>
           {({ starredItems, toggleStarred }) => (
             <CMSContext.Consumer>
@@ -358,6 +296,7 @@ export default class Schedule extends Component<Props> {
                 }
                 return (
                   <View>
+                    <EventModal />
                     <FlatList
                       data={searchingFiltered}
                       keyExtractor={item => item.id}
