@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { View, Alert, Modal, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Modal as DefaultModal, TouchableOpacity, StyleSheet, Image, TextInput, Button } from "react-native";
+import Modal from "react-native-modal";
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import DialogInput from 'react-native-dialog-input';
 import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from '../styles'
 import { colors } from "../themes";
@@ -9,11 +9,11 @@ import { StyledText } from "../components";
 import { faTimesCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-// TODO list of completed/incomplete puzzles
-// TODO score in async storage
-
+// TODO revamped UI
+// TODO list of completed/incomplete puzzles (instead of score)
+// TODO loading states
 const CHECK_ENDPOINT = 'https://qa.hack.gt/check';
-const SCORE_ENDPOINT = 'https://qa.hack.gt/num_questions';
+const SCORE_ENDPOINT = 'https://qa.hack.gt/score';
 
 const fetchQA = (resString, endpoint) => {
     return fetch(endpoint, {
@@ -23,18 +23,48 @@ const fetchQA = (resString, endpoint) => {
             },
             body: resString,
         })
-        .then((response) => response.json());
+        .then((response) => {
+            if (!response.ok) {
+                return {
+                    status: false,
+                    message: "Something went wrong. Our team is on it."
+                };
+            }
+            try {
+                return response.json();
+            } catch (err) {
+                return {
+                    status: false,
+                    message: "Something went wrong. Our team is on it."
+                };
+            }
+        });
 }
 
+const FORM_CLOSED = 0, FORM_SUBMIT = 1, FORM_LOADING = 2, FORM_FEEDBACK = 3;
 class LoggedIn extends Component<Props> {
     constructor(props) {
         super(props);
         this.getScores();
         this.state = {
-            puzzle: null,
+            puzzle: {
+                slug: "hi",
+            },
             qr: false,
-            isFormVisible: false, // todo: feedback?
+            formState: FORM_CLOSED,
+            formMessage: "", // only used in feedback
+            formInput: "",
+            solvedQuestions: [],
+            done: false,
         };
+        AsyncStorage.getItem(
+            "solvedQuestions",
+            (error, result) => result && this.setState({ solvedQuestions: JSON.parse(result) })
+        );
+        AsyncStorage.getItem(
+            "scavDone",
+            (error, result) => result && this.setState({ done: JSON.parse(result) })
+        );
     }
 
     getPayload = (details = {}) => {
@@ -50,25 +80,25 @@ class LoggedIn extends Component<Props> {
         return resBody.join("&");
     }
 
-    sendInput = (inputText) => {
-        this.setState({ isFormVisible: false });
-        const { puzzle } = this.state;
+    sendInput = () => {
+        this.setState({ formState: FORM_LOADING });
+        const { puzzle, formInput } = this.state;
         const resString = this.getPayload({
             "question": puzzle.slug,
-            "answer": inputText,
+            "answer": formInput,
         });
-
         return fetchQA(resString, CHECK_ENDPOINT)
-            .then((responseJson) => {
-                console.log(responseJson);
-                Alert.alert(
-                    'Response',
-                    responseJson.message,
-                    [
-                        { text : 'Dismiss', onPress: () => console.log("Dismissed") },
-                    ],
-                    {cancelable: true},
-                );
+            .then((res) => { // schema: message, status (bool), answered, done
+                console.log("goodbye");
+
+                const { status, message, answered: solvedQuestions, done } = res;
+                this.setState({ formState: FORM_FEEDBACK, formMessage: message });
+                if (!status) {
+                    return;
+                }
+                this.setState({ solvedQuestions, done });
+                AsyncStorage.setItem("solvedQuestions", JSON.stringify(solvedQuestions));
+                AsyncStorage.setItem("scavDone", JSON.stringify(done));
             })
             .catch((error) => {
                 console.error(error);
@@ -79,7 +109,10 @@ class LoggedIn extends Component<Props> {
         const resString = this.getPayload();
         return fetchQA(resString, SCORE_ENDPOINT)
             .then((res) => {
-                this.setState({ score: res.num_done });
+                const { done, answered: solvedQuestions } = res;
+                this.setState({ solvedQuestions, done });
+                AsyncStorage.setItem("solvedQuestions", JSON.stringify(solvedQuestions));
+                AsyncStorage.setItem("scavDone", JSON.stringify(done));
             }).catch((error) => {
                 console.error(error);
             });
@@ -89,7 +122,7 @@ class LoggedIn extends Component<Props> {
         this.setState({
             puzzle: JSON.parse(e.data),
             qr: false,
-            isFormVisible: true,
+            formState: FORM_SUBMIT,
         });
     }
 
@@ -98,60 +131,128 @@ class LoggedIn extends Component<Props> {
     }
 
     render() {
-        const { score, values, isFormVisible, qr } = this.state;
+        const { solvedQuestions, formState, qr, done,
+            formMessage, formInput
+        } = this.state;
 
         return (
                 <View>
                     <View style={styleguide.card}>
-                        <StyledText style={styleguide.score}>Puzzles solved: {this.state.score}</StyledText>
+                        <StyledText style={styleguide.score}>Puzzles solved: {solvedQuestions.length}</StyledText>
+                        { done && <StyledText>Save Beardell! Return to the Quest Board!</StyledText>}
                     </View>
-                    <View style={styleguide.card}>
-                        <StyledText style={{padding: 10}}>Where to next? Splash around Lobster Beach, wander in the Mushroom Forest, sit at the Tea Party, and pick flowers in the Secret Garden!</StyledText>
-                        <TouchableOpacity
-                            onPress= {() => {this.setState({qr: true})}}
-                            style={styleguide.button}
-                        >
-                            <StyledText style={{color: "white", paddingRight: 15}}>Found a Clue?</StyledText>
-                            <FontAwesomeIcon color="white" icon={faCamera} size={28} />
-                        </TouchableOpacity>
-                        <View style={{marginTop: 22}}>
-                            <Modal
-                                animationType="slide"
-                                transparent={false}
-                                visible={qr}
-                                onRequestClose={this.closeQR}
+                    { !done &&
+                        <View style={styleguide.card}>
+                            <StyledText style={{padding: 10}}>Where to next? Splash around Lobster Beach, wander in the Mushroom Forest, sit at the Tea Party, and pick flowers in the Secret Garden!</StyledText>
+                            <TouchableOpacity
+                                onPress= {() => {this.setState({formState: FORM_SUBMIT})}}
+                                style={styleguide.button}
                             >
-                                <QRCodeScanner
-                                    onRead={this.handleQRCode}
-                                    topContent={
-                                        <StyledText style={styleguide.qr}>Scan the QR code!</StyledText>
-                                    }
-                                    bottomContent={
-                                        <TouchableOpacity
-                                            onPress={this.closeQR}
-                                            style={styleguide.cancelButton}
-                                        >
-                                            <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
-                                        </TouchableOpacity>
-                                    }
-                                    topViewStyle={styles.qrTop}
-                                    bottomViewStyle={{ paddingVertical: 10 }}
-                                />
-                            </Modal>
+                                <StyledText style={{color: "white", paddingRight: 15}}>Found a Clue?</StyledText>
+                                <FontAwesomeIcon color="white" icon={faCamera} size={28} />
+                            </TouchableOpacity>
+                            <View style={{marginTop: 22}}>
+                                <DefaultModal
+                                    animationType="slide"
+                                    transparent={false}
+                                    visible={qr}
+                                    onRequestClose={this.closeQR}
+                                >
+                                    <QRCodeScanner
+                                        onRead={this.handleQRCode}
+                                        topContent={
+                                            <StyledText style={styleguide.qr}>Scan the QR code!</StyledText>
+                                        }
+                                        bottomContent={
+                                            <TouchableOpacity
+                                                onPress={this.closeQR}
+                                                style={styleguide.cancelButton}
+                                            >
+                                                <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
+                                            </TouchableOpacity>
+                                        }
+                                        topViewStyle={styles.qrTop}
+                                        bottomViewStyle={{ paddingVertical: 10 }}
+                                    />
+                                </DefaultModal>
+                            </View>
+                            <SubmissionModal
+                                formState={formState}
+                                formMessage={formMessage}
+                                formInput={formInput}
+                                setFormInput={(formInput) => this.setState({formInput})}
+                                onSubmit={this.sendInput}
+                                closeModal={() => this.setState({
+                                    formInput: "",
+                                    formState: FORM_CLOSED
+                                })}
+                            />
                         </View>
-                        <DialogInput isDialogVisible={isFormVisible}
-                            title={"Scavenger Hunt Response"}
-                            message={values}
-                            hintInput ={"Response"}
-                            submitInput={this.sendInput}
-                            closeDialog={() => {
-                                this.setState({isFormVisible: false});
-                            }}>
-                        </DialogInput>
-                    </View>
+                    }
                 </View>
         );
     }
+}
+
+
+const SubmissionModal = ({ onSubmit, formState, formMessage, formInput, setFormInput, closeModal }) => {
+    return (
+        <Modal
+            isVisible={formState !== FORM_CLOSED}
+            hintInput ={"Response"}
+            onBackButtonPress={closeModal}
+            onBackdropPress={closeModal}
+            closeDialog={() => {
+                this.setState({formState: FORM_CLOSED});
+            }}
+        >
+            <View style={styles.content}>
+            { formState === FORM_SUBMIT && (
+                <View>
+                    <View style={{
+                        marginLeft: 8,
+                        marginBottom: 8,
+                    }}>
+                        <StyledText style={{fontWeight: "bold"}}>Answer:</StyledText>
+                        <TextInput
+                            value={formInput}
+                            onChangeText={setFormInput}
+                            style={{
+                                borderBottomColor: colors.darkGrayText,
+                                borderBottomWidth: 2
+                            }}
+                        />
+                    </View>
+                    <TouchableOpacity
+                        onPress= {onSubmit}
+                        style={styleguide.button}
+                        disabled={formInput.length === 0}
+                    >
+                        <StyledText style={{color: "white"}}>Submit</StyledText>
+                    </TouchableOpacity>
+                </View>
+            )}
+
+            { formState === FORM_LOADING && (
+                <View>
+                    <StyledText>Checking your answer...</StyledText>
+                </View>
+            )}
+
+            { formState === FORM_FEEDBACK && (
+                <View>
+                    <StyledText>{formMessage}</StyledText>
+                    <TouchableOpacity
+                        onPress={closeModal}
+                        style={styleguide.button}
+                    >
+                        <StyledText style={{color: "white"}}>Close</StyledText>
+                    </TouchableOpacity>
+                </View>
+            )}
+            </View>
+        </Modal>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -163,5 +264,14 @@ const styles = StyleSheet.create({
         paddingLeft: 20
     },
     qrBottom: {},
+    content: {
+        backgroundColor: "white",
+        paddingHorizontal: 22,
+        paddingTop: 18,
+        paddingBottom: 18,
+        borderRadius: 8,
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        maxHeight: 600
+    },
 });
 export default LoggedIn;

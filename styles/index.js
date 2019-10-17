@@ -79,6 +79,7 @@ export const styleguide = StyleSheet.create({
     backgroundColor: colors.primaryBlue,
     padding: 20,
     borderRadius: 10,
+    margin: 8,
     flex: 1,
     flexDirection: "row",
     height: 28,
