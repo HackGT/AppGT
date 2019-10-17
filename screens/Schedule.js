@@ -24,7 +24,6 @@ import { StarContext, CMSContext } from "../App";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
 
-// TODO modal trigger refactor
 // TODO Star all
 // TODO color coding
 // TOOD fix scrollbar
@@ -96,13 +95,17 @@ export default class Schedule extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isMySchedule: false,
-      dayIndex: 0,
       searchText: "",
       searchLower: "",
+      isMySchedule: false,
+      dayIndex: 0,
       isModalVisible: false,
       modalEvent: null,
     };
+  }
+
+  updateText = searchText => {
+      this.setState({ searchText, searchLower: searchText.toLowerCase() });
   }
 
   onSelectEvent = item => {
@@ -118,42 +121,6 @@ export default class Schedule extends Component<Props> {
 
   render() {
     const { searchText, searchLower, isMySchedule, dayIndex } = this.state;
-    const SearchComponent = () => (
-      <View style={styles.search}>
-        <SearchBar
-          searchIcon={
-            <FontAwesomeIcon
-              color={
-                searchText === "" ? colors.lightGrayText : colors.darkGrayText
-              }
-              icon={faSearch}
-              size={28}
-            />
-          }
-          clearIcon={
-            <FontAwesomeIcon
-              color={colors.darkGrayText}
-              icon={faTimes}
-              size={28}
-            />
-          }
-          cancelIcon={
-            <FontAwesomeIcon
-              color={colors.darkGrayText}
-              icon={faArrowLeft}
-              size={28}
-            />
-          }
-          platform="android"
-          placeholder="Search by title or tag"
-          onChangeText={searchText =>
-            this.setState({ searchText, searchLower: searchText.toLowerCase() })
-          }
-          value={searchText}
-          autoCorrect={false}
-        />
-      </View>
-    );
 
     const ScheduleSelector = () => (
       <View style={styles.scheduleSelector}>
@@ -248,7 +215,38 @@ export default class Schedule extends Component<Props> {
         keyboardShouldPersistTaps="always"
         keyboardDismissMode="on-drag"
       >
-        <SearchComponent />
+        <View style={styles.search}>
+          <SearchBar
+            searchIcon={
+              <FontAwesomeIcon
+                color={
+                  searchText === "" ? colors.lightGrayText : colors.darkGrayText
+                }
+                icon={faSearch}
+                size={28}
+              />
+            }
+            clearIcon={
+              <FontAwesomeIcon
+                color={colors.darkGrayText}
+                icon={faTimes}
+                size={28}
+              />
+            }
+            cancelIcon={
+              <FontAwesomeIcon
+                color={colors.darkGrayText}
+                icon={faArrowLeft}
+                size={28}
+              />
+            }
+            platform="android"
+            placeholder="Search by title or tag"
+            onChangeText={this.updateText}
+            value={searchText}
+            autoCorrect={false}
+          />
+        </View>
         <ScheduleSelector />
         <DaySelector />
         <StarContext.Consumer>
