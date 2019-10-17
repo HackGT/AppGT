@@ -77,7 +77,7 @@ export const styleguide = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign: 'center
+    textAlign: 'center'
   },
   button: {
     backgroundColor: colors.primaryBlue,
