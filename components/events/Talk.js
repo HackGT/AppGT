@@ -1,11 +1,23 @@
 import React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
 import { StyledText } from "../";
+import { styleguide } from "../../styles";
 
-export default (Talk = ({ presenter }) => {
+export default (Talk = ({ people }) => {
+  console.log(people);
   return (
-    <View style={styles.content}>
-      <StyledText style={styles.contentTitle}>Workshops Modal</StyledText>
+    <View
+      style={{
+        flexDirection: "row",
+        flexWrap: "wrap"
+      }}
+    >
+      <StyledText style={styles.heading}>Presenter:</StyledText>
+      {people.map(person => (
+        <StyledText style={{ ...styleguide.text }} key={person}>
+          {person}
+        </StyledText>
+      ))}
     </View>
   );
 });
@@ -22,5 +34,9 @@ const styles = StyleSheet.create({
   contentTitle: {
     fontSize: 20,
     marginBottom: 12
+  },
+  heading: {
+    fontSize: 15,
+    fontWeight: "bold"
   }
 });

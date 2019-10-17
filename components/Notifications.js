@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { Alert } from "react-native";
+import { AppState, Alert } from "react-native";
 import firebase from "react-native-firebase";
 import BackgroundFetch from "react-native-background-fetch";
+import PushNotification from 'react-native-push-notification';
 import moment from "moment-timezone";
 
 // TODO: don't spam
-const sendRemoteAlert = (title, body) => {
-    Alert.alert(title, body);
-}
 
 // TODO test offline
 // TODO fetch cms every 15 minutes
@@ -22,10 +20,34 @@ class Notifications extends Component<Props> {
         this.checkPermissions();
         this.state = {
             eventData: props.eventData, // maintain a local copy for background thread?
-            starredItems: props.starredItems
+            starredItems: props.starredItems,
+            appState: AppState.currentState
         };
         this.runNotifications();
+        this.pushNotif = new PushNotifService();
     }
+
+
+    sendProperNotif = (title, body) => {
+        const { appState } = this.state;
+        if (appState === "active") {
+            Alert.alert(title, body);
+        } else {
+            this.pushNotif.sendPush(title, body);
+        }
+    }
+
+    componentDidMount() {
+        AppState.addEventListener('change', this._handleAppStateChange);
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
+
+    _handleAppStateChange = (nextAppState) => {
+        this.setState({appState: nextAppState});
+    };
 
     componentDidUpdate(prevProps) {
         const { eventData: oldData } = prevProps;
@@ -40,7 +62,7 @@ class Notifications extends Component<Props> {
     sendEventAlert = (title, body, id) => {
         const { starredItems } = this.props;
         if (id in starredItems && starredItems[id]) {
-            this.sendRemoteAlert(title, body);
+            this.sendProperNotif(title, body);
         }
     }
 
@@ -48,23 +70,23 @@ class Notifications extends Component<Props> {
         const { starredItems } = this.props;
         const { eventData } = this.state; // maybe we don't need this in state, but not sure
         const now = moment();
-        const events = eventData.filter((event, index) => {
+        const events = eventData.filter((event) => {
             return (Math.abs(now.diff(event.startTime, "minutes")) <= 15);
         }).filter(event => event.id in starredItems && starredItems[event.id])
         if (events.length === 0) return;
+        let title, body;
         if (events.length === 1) {
             const event = events[0]
             const startTime = event.startTime.format("hh:mm");
-            if (event.area) {
-                Alert.alert(event.title, `Your event begins at ${startTime} in ${event.area}.`);
-            } else {
-                Alert.alert(event.title, `Your event begins at ${startTime}.`);
-            }
-            return;
+            title = event.title;
+            body = `Your event begins at ${startTime}${event.area ? " in " + event.area : ""}.`;
+        } else {
+            const eventStrings = events.map(event => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
+            title = "Upcoming events";
+            body = eventStrings.join('\n\n');
         }
-        const eventStrings = events.map(event => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
-        const body = eventStrings.join('\n\n');
-        Alert.alert("Upcoming events", body);
+
+        this.sendProperNotif(title, body);
     }
 
     async checkStatus() {
@@ -99,10 +121,6 @@ class Notifications extends Component<Props> {
             },
             () => {
                 console.log("[js] Received background-fetch event");
-                // Required: Signal completion of your task to native code
-                // If you fail to do this, the OS can terminate your app
-                // or assign battery-blame for consuming too much background-time
-                console.log("checking background events");
                 this.sendLocalAlerts();
                 BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
             },
@@ -140,7 +158,7 @@ class Notifications extends Component<Props> {
                 const { title, body, id } = notification;
                 if (!body) return;
                 if (!id) {
-                    sendRemoteAlert(title, body);
+                    this.sendProperNotif(title, body);
                     return;
                 }
                 this.sendEventAlert(title, body, id);
@@ -154,6 +172,68 @@ class Notifications extends Component<Props> {
     render() {
         return this.props.children;
     }
+}
+
+
+class PushNotifService {
+
+  constructor() {
+    this.configure(() => {}, () => {});
+
+    this.lastId = 0;
+  }
+
+  configure(onRegister, onNotification, gcm = "") {
+    PushNotification.configure({
+      // (optional) Called when Token is generated (iOS and Android)
+      onRegister: onRegister, //this._onRegister.bind(this),
+
+      // (required) Called when a remote or local notification is opened or received
+      onNotification: onNotification, //this._onNotification,
+
+      // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
+      senderID: gcm,
+
+      // IOS ONLY (optional): default: all - Permissions to register.
+      permissions: {
+        alert: true,
+        badge: true,
+        sound: true
+      },
+
+      // Should the initial notification be popped automatically
+      // default: true
+      popInitialNotification: true,
+
+      /**
+        * (optional) default: true
+        * - Specified if permissions (ios) and token (android and ios) will requested or not,
+        * - if not, you must call PushNotificationsHandler.requestPermissions() later
+        */
+      requestPermissions: true,
+    });
+  }
+
+  sendPush(title, body) {
+    this.lastId++;
+    PushNotification.localNotification({
+      /* Android Only Properties */
+      id: ''+this.lastId, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+      bigText: body, // (optional) default: "message" prop
+      vibrate: true, // (optional) default: true
+      vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+      ongoing: false, // (optional) set whether this is an "ongoing" notification
+
+      /* iOS and Android properties */
+      title: title, // (optional)
+      message: body, // (required)
+      number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+    });
+  }
+
+  checkPermission(cbk) {
+    return PushNotification.checkPermissions(cbk);
+  }
 }
 
 export default Notifications;

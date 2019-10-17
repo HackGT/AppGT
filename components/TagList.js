@@ -18,17 +18,11 @@ export default TagList = ({ tags }) => tags ? (
 ) : null;
 
 const styles = StyleSheet.create({
-  list: {
-    paddingBottom: 0,
-    marginBottom: 0,
-    height: 40
-  },
   tag: {
     backgroundColor: colors.lightGrayBackgroundBehindTagText,
     borderRadius: 18,
     paddingVertical: 6,
     paddingHorizontal: 10,
-    marginLeft: 10,
     marginBottom: 10,
     textDecorationLine: "underline"
   }

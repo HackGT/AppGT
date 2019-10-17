@@ -158,6 +158,8 @@ PODS:
     - React
   - RNCAsyncStorage (1.5.1):
     - React
+  - RNCPushNotificationIOS (1.0.2):
+    - React
   - RNFirebase (5.5.6):
     - Firebase/Core
     - React
@@ -203,6 +205,7 @@ DEPENDENCIES:
   - RNAppAuth (from `../node_modules/react-native-app-auth/ios`)
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios/RNCPushNotificationIOS.podspec`)"
   - RNFirebase (from `../node_modules/react-native-firebase/ios`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -275,6 +278,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-fetch"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNCPushNotificationIOS:
+    :path: "../node_modules/@react-native-community/push-notification-ios/RNCPushNotificationIOS.podspec"
   RNFirebase:
     :path: "../node_modules/react-native-firebase/ios"
   RNGestureHandler:
@@ -325,12 +330,13 @@ SPEC CHECKSUMS:
   RNAppAuth: eac16a338ed1117d8b7729b36de3b1a58b5e96f2
   RNBackgroundFetch: ca9c8740e944913474262b63022d95a2be5e003a
   RNCAsyncStorage: 2808c378f6a70f22f66eeb6c11a8d69f326dd795
+  RNCPushNotificationIOS: 7bcc4071d6f25c4d441cbef42a097462f4e30208
   RNFirebase: ac0de8b24c6f91ae9459575491ed6a77327619c6
   RNGestureHandler: 5329a942fce3d41c68b84c2c2276ce06a696d8b0
   RNSVG: 0eb087cfb5d7937be93c45b163b26352a647e681
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: 843fe25849b56131275bf3e5da2c468e96f68aff
 
-PODFILE CHECKSUM: 1404eee89213e7ab23fb29a671132aa7fbb0f130
+PODFILE CHECKSUM: 3cd85d93555a38bf6ca2b2b5366c95e30755ec26
 
 COCOAPODS: 1.7.5

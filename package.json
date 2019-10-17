@@ -14,6 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/react-native-fontawesome": "^0.1.0",
     "@react-native-community/async-storage": "^1.5.1",
+    "@react-native-community/push-notification-ios": "^1.0.2",
     "jetifier": "^1.6.3",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
@@ -32,6 +33,7 @@
     "react-native-modal": "^11.3.1",
     "react-native-permissions": "^2.0.2",
     "react-native-qrcode-scanner": "^1.2.3",
+    "react-native-push-notification": "^3.1.9",
     "react-native-svg": "^9.5.1",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^3.11.1"
