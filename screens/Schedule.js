@@ -120,31 +120,7 @@ export default class Schedule extends Component<Props> {
   onSelectDay = dayIndex => this.setState({ dayIndex });
 
   render() {
-    const { searchText, searchLower, isMySchedule, dayIndex } = this.state;
-
-    const ScheduleSelector = () => (
-      <View style={styles.scheduleSelector}>
-        <ButtonControl
-          onChangeCallback={this.onSelectSchedule}
-          buttons={["Main Schedule", "My Schedule"]}
-          selectedIndex={this.state.isMySchedule ? 1 : 0}
-          containerSyle={{
-            width: 300
-          }}
-        />
-      </View>
-    );
-
-    const DaySelector = () => (
-      <View style={styles.daySelector}>
-        <ButtonControl
-          height={30}
-          onChangeCallback={this.onSelectDay}
-          selectedIndex={this.state.dayIndex}
-          buttons={DATES.map(time => time.day)}
-        />
-      </View>
-    );
+    const { searchText, searchLower, isMySchedule, dayIndex, modalEvent, isModalVisible } = this.state;
 
     const EventCard = ({
       eventData: item,
@@ -191,24 +167,6 @@ export default class Schedule extends Component<Props> {
       </View>
     );
 
-    const EventModal = () => {
-      const { isModalVisible, modalEvent } = this.state;
-      const closeModal = () => this.setState({isModalVisible: false});
-      return (
-        <Modal
-          isVisible={isModalVisible}
-          onBackButtonPress={closeModal}
-          onBackdropPress={closeModal}
-          propagateSwipe
-        >
-          <Event
-            closeModal={closeModal}
-            eventInfo={modalEvent}
-          />
-        </Modal>
-      );
-    }
-
     return (
       <ScrollView
         style={styleguide.wrapperView}
@@ -247,8 +205,8 @@ export default class Schedule extends Component<Props> {
             autoCorrect={false}
           />
         </View>
-        <ScheduleSelector />
-        <DaySelector />
+        <ScheduleSelector onSelectSchedule={this.onSelectSchedule} selectedIndex={isMySchedule ? 1 : 0} />
+        <DaySelector onSelectDay={this.onSelectDay} selectedIndex={dayIndex} />
         <StarContext.Consumer>
           {({ starredItems, toggleStarred }) => (
             <CMSContext.Consumer>
@@ -294,7 +252,11 @@ export default class Schedule extends Component<Props> {
                 }
                 return (
                   <View>
-                    <EventModal />
+                    <EventModal
+                      closeModal={() => this.setState({isModalVisible: false})}
+                      modalEvent={modalEvent}
+                      isModalVisible={isModalVisible}
+                    />
                     <FlatList
                       data={searchingFiltered}
                       keyExtractor={item => item.id}
@@ -330,6 +292,46 @@ export default class Schedule extends Component<Props> {
       </ScrollView>
     );
   }
+}
+
+const ScheduleSelector = ({ onSelectSchedule, selectedIndex }) => (
+  <View style={styles.scheduleSelector}>
+    <ButtonControl
+      onChangeCallback={onSelectSchedule}
+      buttons={["Main Schedule", "My Schedule"]}
+      selectedIndex={selectedIndex}
+      containerSyle={{
+        width: 300
+      }}
+    />
+  </View>
+);
+
+const DaySelector = ({ onSelectDay, selectedIndex }) => (
+  <View style={styles.daySelector}>
+    <ButtonControl
+      height={30}
+      onChangeCallback={onSelectDay}
+      selectedIndex={selectedIndex}
+      buttons={DATES.map(time => time.day)}
+    />
+  </View>
+);
+
+const EventModal = ({ closeModal, isModalVisible, modalEvent }) => {
+  return (
+    <Modal
+      isVisible={isModalVisible}
+      onBackButtonPress={closeModal}
+      onBackdropPress={closeModal}
+      propagateSwipe
+    >
+      <Event
+        closeModal={closeModal}
+        eventInfo={modalEvent}
+      />
+    </Modal>
+  );
 }
 
 const styles = StyleSheet.create({

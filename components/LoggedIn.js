@@ -94,7 +94,7 @@ class LoggedIn extends Component<Props> {
     }
 
     closeQR = () => {
-        this.setState({ qr: false });s
+        this.setState({ qr: false });
     }
 
     render() {
