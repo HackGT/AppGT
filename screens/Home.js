@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { styleguide } from "../styles";
-import { InfoCard, StyledText } from "../components";
+import { InfoCard, StyledText, Spacer } from "../components";
 
 // Select info blocks from CMS to render
 export const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
@@ -52,6 +52,7 @@ class Home extends Component {
             });
           }}
         </CMSContext.Consumer>
+        <Spacer />
       </ScrollView>
     );
   }
