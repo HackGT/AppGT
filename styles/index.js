@@ -66,6 +66,7 @@ export const styleguide = StyleSheet.create({
   },
   qr: {
     fontWeight: "bold",
+    padding: 10
   },
   notfound: {
     margin: 40,
@@ -81,6 +82,22 @@ export const styleguide = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     height: 28,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  cancelButton: {
+    padding: 5,
+    borderRadius: 10,
+    flex: 1,
+    flexDirection: "row",
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 70
+  },
+  qrView: {
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center"
   }

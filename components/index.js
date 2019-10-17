@@ -4,3 +4,5 @@ export { default as ScheduleCard } from './ScheduleCard';
 export { default as StyledText } from "./StyledText";
 export { default as TagList } from "./TagList";
 export { default as NotifierService } from './Notifications';
+export { default as LoggedIn } from './LoggedIn';
+export { default as LoggedOut } from './LoggedOut';
