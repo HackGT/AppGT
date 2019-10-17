@@ -11,8 +11,8 @@ import {
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-// TODO meals
-// TODO talks
+// TODO meals (later) - diet restrictions
+// TODO talks - @Meha
 // TODO (later) exit animation is no bueno
 export default Event = ({
   closeModal,
@@ -25,7 +25,7 @@ export default Event = ({
     title,
     description,
     tags,
-    eventType,
+    type,
     restaurantName,
     restaurantLink,
     menuItems,
@@ -74,14 +74,14 @@ export default Event = ({
           </View>
         }
         <StyledText style={ styleguide.text }>{description || "No description provided. It's all in the title."}</StyledText>
-        {eventType === "meal" && (
+        {type === "meal" && (
           <Meal
             restaurantName={restaurantName}
             restaurantLink={restaurantLink}
             menuItems={menuItems}
           />
         )}
-        {eventType === "talk" && <Talk people={people} />}
+        {type === "talk" && <Talk people={people} />}
       </ScrollView>
       <View style={styles.tagArea}>
         <TagList tags={tags} />

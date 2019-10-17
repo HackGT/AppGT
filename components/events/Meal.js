@@ -2,25 +2,23 @@ import React from "react";
 import { View, StyleSheet, Linking } from "react-native";
 import { StyledText } from "../";
 import { styleguide } from "../../styles";
+import { colors } from "../../themes";
+
 
 export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
   return (
     <View style={styles.content}>
+      <StyledText style={styles.restaurantNameTitle}>
+        Restaurant:
+      </StyledText>
       <View style={styles.restaurantNames}>
-        <StyledText style={styles.restaurantNameTitle}>
-          Restaurant Name:
-        </StyledText>
         {makeHyperlinks(restaurantName, restaurantLink)}
       </View>
       <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap"
-        }}
       >
         {menuItems.map(item => (
-          <StyledText style={{ ...styleguide.text }} key={item}>
-            {item.name}
+          <StyledText style={{ ...styleguide.text }} key={item.name}>
+           - {item.name}
           </StyledText>
         ))}
       </View>
@@ -29,9 +27,8 @@ export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
 });
 
 const makeHyperlinks = (restaurantName, restaurantLink) => {
-  console.log("in makeHyperlinks");
-  restaurantNameArr = restaurantName.split(", ");
-  restaurantLinkArr = restaurantLink.split(", ");
+  restaurantNameArr = restaurantName.split(",").map(s => s.trim());
+  restaurantLinkArr = restaurantLink.split(",").map(s => s.trim());
   return restaurantNameArr.map((name, index) => {
     if (index === restaurantNameArr.length - 1) {
       if (index < restaurantLinkArr.length) {
@@ -59,13 +56,11 @@ const makeHyperlinks = (restaurantName, restaurantLink) => {
       return <StyledText style={styles.text}>{name}, </StyledText>;
     }
   });
-  return restaurantName;
 };
 
 const styles = StyleSheet.create({
   content: {
     backgroundColor: "white",
-    padding: 22,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
@@ -75,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 12,
     marginLeft: 5,
-    color: "blue"
+    color: colors.primaryBlue
   },
   text: {
     fontSize: 15,
