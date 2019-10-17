@@ -52,7 +52,8 @@ const config = {
 // TODO better navbar style to achieve design parity: https://stackoverflow.com/questions/50318728/get-height-of-tab-bar-on-any-device-in-react-navigation
 // TODO run event fetch in background (every 30)
 
-// a StackNavgiator will give the ability to "push a screen"
+// TODO schedule local notifs in background fetch for accurate notifs
+// a StackNavigator will give the ability to "push a screen"
 // for instance, when a user clicks a event cell it will push a detailed view on the stack
 const ScheduleStack = createStackNavigator({
   Schedule,
