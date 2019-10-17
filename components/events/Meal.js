@@ -1,12 +1,12 @@
 import React from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
-import TagList from "../TagList";
+import { View, StyleSheet } from "react-native";
+import { StyledText } from "../";
 
 export default (Meal = ({ restaurantName, restaurantLink, menuItem }) => {
   return (
     <View style={styles.content}>
-      <Text style={styles.contentTitle}>{restaurantName}</Text>
-      <Text style={styles.contentTitle}>{restaurantLink}</Text>
+      <StyledText style={styles.contentTitle}>{restaurantName}</StyledText>
+      <StyledText style={styles.contentTitle}>{restaurantLink}</StyledText>
     </View>
   );
 });

@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
-import TagList from "../TagList";
+import { StyledText } from "../";
 
 export default (Talk = ({ presenter }) => {
   return (
     <View style={styles.content}>
-      <Text style={styles.contentTitle}>Workshops Modal</Text>
+      <StyledText style={styles.contentTitle}>Workshops Modal</StyledText>
     </View>
   );
 });

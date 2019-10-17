@@ -1,16 +1,17 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native";
+import { StyledText } from "./";
 
 import { colors } from "../themes";
 
 export default TagList = ({ tags }) => tags ? (
   <View style={{
-    flexDirection: "row"
+    flexDirection: "row",
+    flexWrap: "wrap",
   }}>
     {
       tags.map((tag) => (
-        <Text style={styles.tag} key={tag}>#{tag}</Text>
+        <StyledText style={styles.tag} key={tag}>#{tag}</StyledText>
       ))
     }
   </View>

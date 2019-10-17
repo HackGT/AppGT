@@ -5,7 +5,7 @@ import TagList from "../TagList";
 export default (Workshop = ({ presenter }) => {
   return (
     <View style={styles.content}>
-      <Text style={styles.contentTitle}>Workshops Modal</Text>
+      <StyledText style={styles.contentTitle}>Workshops Modal</StyledText>
     </View>
   );
 });

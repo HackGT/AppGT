@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Text,
   View,
   TouchableHighlight,
   TouchableOpacity
@@ -8,28 +7,30 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
-import TagList from "./TagList";
+import { StyledText, TagList } from "./";
 
 import { colors } from "../themes";
 import { styleguide } from "../styles";
 
 // TODO enable onClick
-// TODO make sure long names render properly
 
 export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, tags, isOld }) => {
 //      {/*onClick  noop */}
-  const areaBlock = area && (<Text style={{
+  const areaBlock = area && (<StyledText style={{
       color: colors.lightGrayText,
       paddingLeft: 8,
-    }} >
+      marginBottom: 4,
+    }}>
       {area}
-    </Text>);
+    </StyledText>);
   let styleWrap = {
     ...styleguide.card,
     paddingHorizontal: 6,
     paddingVertical: 4,
+    flex: 1,
   };
-  if (isOld) { //
+
+  if (isOld) {
     styleWrap = {...styleWrap, ...styleguide.noShadow }
   }
   return (
@@ -42,24 +43,19 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
         <View style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "flex-start",
           flexWrap: "wrap"
         }}>
-          <View style={{
-            flex: 60,
-            marginBottom: 4,
-          }}>
-            <Text style={{
-              marginBottom: 4,
+            <StyledText style={{
+              marginBottom: 2,
+              flex: 1,
               ...styleguide.title
             }}>
               {title}
-            </Text>
-            { areaBlock }
-          </View>
+            </StyledText>
           <TouchableOpacity
             style={{
-              flex: 20
+              width: 40
             }}
             onPress={onPressStar}
           >
@@ -77,6 +73,7 @@ export default ScheduleCard = ({ title, area, onClick, onPressStar, isStarred, t
             }
           </TouchableOpacity>
         </View>
+        { areaBlock }
         <TagList tags={tags} />
       </View>
     </TouchableHighlight>

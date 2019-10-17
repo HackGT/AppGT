@@ -1,5 +1,6 @@
 import React from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
+import { View, StyleSheet, Button } from "react-native";
+import { StyledText } from "../";
 import TagList from "../TagList";
 import Meal from "./Meal";
 import Workshop from "./Workshop";
@@ -20,9 +21,9 @@ export default (Event = ({
 }) => {
   return (
     <View style={styles.content}>
-      <Text style={styles.contentTitle}>{title}</Text>
-      <Text style={styles.contentText}>{startTime}</Text>
-      <Text style={styles.contentText}>{endTime}</Text>
+      <StyledText style={styles.contentTitle}>{title}</StyledText>
+      <StyledText style={styles.contentText}>{startTime}</StyledText>
+      <StyledText style={styles.contentText}>{endTime}</StyledText>
       {eventType === "meal" && (
         <Meal
           restaurantName={restaurantName}
@@ -32,7 +33,7 @@ export default (Event = ({
       )}
       {eventType === "workshop" && <Workshop />}
       {eventType === "talk" && <Talk />}
-      <Text style={styles.contentTitle}>{desc}</Text>
+      <StyledText style={styles.contentTitle}>{desc}</StyledText>
       <TagList tagList={tags} />
       <Button onPress={isModalVisible} title="Close" />
     </View>

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   ScrollView,
@@ -19,26 +18,75 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment-timezone";
 
-import ScheduleCard from "../components/ScheduleCard";
-import ButtonControl from "../components/ButtonControl";
 import Event from "../components/events/Event";
-import { StarContext } from "../App";
+import { ScheduleCard, ButtonControl, StyledText } from "../components";
+import { StarContext, CMSContext } from "../App";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
 
 
 // TODO modal trigger refactor
-// TODO optimization
-// TODO more formatting fixes
+// TODO Star all
 // TODO color coding
 // TOOD fix scrollbar
-// TODO styling fix on button groups (probably going to have to roll own)
-
+// TODO styling fix on button groups (probably going to have to roll own thing)
 const DATES = [
   {date: "10/25", day: "Friday"},
   {date: "10/26", day: "Saturday"},
   {date: "10/27", day: "Sunday"}
 ];
+
+export const populateEvents = (data) => {
+  moment.fn.toJSON = function() { return this.format(); }
+  const now = moment();
+  const unsortedEventInfo = data.eventbases;
+  unsortedEventInfo.forEach((base) => { // squash tags
+    if (!base.start_time) return;
+    if (base.tags) {
+      base.tags = base.tags.filter(tag => !!tag).map(tag => tag.name);
+    }
+    if (base.area)
+      base.area = base.area.name;
+    base.type = "core";
+    base.startTime = moment.parseZone(base.start_time); // toCamel
+    if (base.end_time) {
+      base.endTime = moment.parseZone(base.end_time);
+    }
+    base.isOld = now > base.startTime;
+  });
+  const eventInfo = unsortedEventInfo.sort((e1, e2) => {
+    if (e1.isOld && !e2.isOld) return 1;
+    if (e1.start_time === e2.start_time) // compare strings
+      return e1.title > e2.title;
+    if (e1.startTime > e2.startTime) return 1;
+    return -1;
+  });
+  // Smoosh in additional info where relevant
+  data.meals.forEach((meal) => {
+    if (!meal.base) return;
+    const id = meal.base.id;
+    if (!(id in eventInfo)) return;
+    eventInfo[id] = {
+      ...eventInfo[id],
+      restaurantName: meal.restaurant_name,
+      restaurantLink: meal.restaurant_link,
+      menuItems: meal.menu_items,
+      type: "meal"
+    };
+  });
+
+  data.talks.forEach((talk) => {
+    if (!talk.base) return;
+    const id = talk.base.id;
+    if (!(id in eventInfo)) return;
+    eventInfo[id] = {
+      ...eventInfo[id],
+      people: talk.people.map(p => p.name),
+      type: "talk"
+    };
+  });
+  return eventInfo;
+};
 
 export default class Schedule extends Component<Props> {
 
@@ -62,63 +110,7 @@ export default class Schedule extends Component<Props> {
       modalMenu: "",
       starDict: {}
     };
-    this.eventProps = this.populateEvents(props.screenProps.eventData);
-    this.tags = props.screenProps.eventData.tags.map(tag => tag.name);
-    this.lowerTags = this.tags.map(tag => tag.toLowerCase());
-    // const now = moment().format('LLLL'); TODO
-    moment.tz.setDefault("America/New_York");
   }
-
-  populateEvents = (data) => {
-    const now = moment();
-    const unsortedEventInfo = data.eventbases;
-    unsortedEventInfo.forEach((base) => { // squash tags
-      if (!base.start_time) return;
-      if (base.tags) {
-        base.tags = base.tags.filter(tag => !!tag).map(tag => tag.name);
-      }
-      if (base.area)
-        base.area = base.area.name;
-      base.type = "core";
-      base.startTime = moment.parseZone(base.start_time); // toCamel
-      if (base.end_time) {
-        base.endTime = moment.parseZone(base.end_time);
-      }
-      base.isOld = now > base.startTime;
-    });
-    const eventInfo = unsortedEventInfo.sort((e1, e2) => {
-      if (e1.isOld && !e2.isOld) return 1;
-      if (e1.start_time === e2.start_time) // compare strings
-        return e1.title > e2.title;
-      if (e1.startTime > e2.startTime) return 1;
-      return -1;
-    });
-    // Smoosh in additional info where relevant
-    data.meals.forEach((meal) => {
-      if (!meal.base) return;
-      const id = meal.base.id;
-      if (!(id in eventInfo)) return;
-      eventInfo[id] = {
-        ...eventInfo[id],
-        restaurantName: meal.restaurant_name,
-        restaurantLink: meal.restaurant_link,
-        menuItems: meal.menu_items,
-        type: "meal"
-      };
-    });
-
-    data.talks.forEach((talk) => {
-      if (!talk.base) return;
-      const id = talk.base.id;
-      if (!(id in eventInfo)) return;
-      eventInfo[id] = {
-        ...eventInfo[id],
-        people: talk.people.map(p => p.name),
-        type: "talk"
-      };
-    });
-    return eventInfo;
-  };
 
   toggleModal = (
     title,
@@ -151,25 +143,15 @@ export default class Schedule extends Component<Props> {
     });
   };
 
-  onSelectSchedule = (newIndex) => {
-    this.setState({
-      isMySchedule: newIndex === 1
-    });
-  };
+  onSelectSchedule = (newIndex) => this.setState({ isMySchedule: newIndex === 1 });
 
-  // TODO - test search and cancel
-  onSelectDay = dayIndex => {
-    this.setState({
-      dayIndex
-    });
-  };
+  onSelectDay = dayIndex => this.setState({ dayIndex });
 
   render() {
     const { searchText, searchLower, isMySchedule, dayIndex } = this.state;
     const SearchComponent = () => (
       <View style={styles.search}>
         <SearchBar
-          icon = {{type: 'material-community', color: '#86939e', name: 'share' }}
           searchIcon={
             <FontAwesomeIcon
               color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
@@ -231,11 +213,11 @@ export default class Schedule extends Component<Props> {
         }}>
           { shouldShowTime && (
 
-            <Text style={{
+            <StyledText style={{
               textAlign: "center"
             }}>
               {item.startTime.format("hh:mm A")}
-            </Text>
+            </StyledText>
           )}
         </View>
         <ScheduleCard
@@ -266,7 +248,6 @@ export default class Schedule extends Component<Props> {
       </View>
     );
 
-    const matchedTags = this.tags.filter((_, index) => this.lowerTags[index].includes(searchLower));
     return (
       <ScrollView
         style={styleguide.wrapperView}
@@ -293,52 +274,57 @@ export default class Schedule extends Component<Props> {
           />
         </Modal>
         <StarContext.Consumer>
-          {({ starredItems, toggleStarred }) => {
-            let eventData = this.eventProps;
-            if (isMySchedule) {
-              eventData = eventData.filter(item => starredItems[item.id]);
-            }
-            // eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
-            const searchingFiltered = eventData.filter(item => {
-              return item.title.toLowerCase().includes(searchLower) || item.tags.some(tag => matchedTags.includes(tag));
-            });
-            if (searchingFiltered.length === 0) {
-              return (<View style={styles.notfound}>
-                <FontAwesomeIcon
-                  color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
-                  icon={faQuestionCircle} size={28}
-                />
-                <Text>No events found.</Text>
-                { isMySchedule && <Text> Star some events to get started! </Text>}
-              </View>);
-            }
-            return (
-              <View>
-                <FlatList
-                  data={searchingFiltered}
-                  keyExtractor={item => item.id}
-                  renderItem={({ item, index }) => {
-                    let shouldShowTime = index === 0;
-                    if (index !== 0) {
-                      if (searchingFiltered[index - 1].startTime.format('HH:mm') !== item.startTime.format('HH:mm')) {
-                        shouldShowTime = true;
-                      }
-                    }
-                    const toggleEvent = () => toggleStarred(item.id);
-                    return (<EventCard
-                      eventData={item}
-                      toggleEvent={toggleEvent}
-                      shouldShowTime={shouldShowTime}
-                      isStarred={!!starredItems[item.id]}
-                    />);
-                  }}
-                />
-                <View style={{
-                  height: 40
-                }}/>
-              </View>
-            );
-          }}
+          {({ starredItems, toggleStarred }) => (
+            <CMSContext.Consumer>
+              {({ eventData, tags }) => {
+                const lowerTags = tags.map(tag => tag.toLowerCase());
+                const matchedTags = tags.filter((_, index) => lowerTags[index].includes(searchLower));
+                if (isMySchedule) {
+                  eventData = eventData.filter(item => starredItems[item.id]);
+                }
+                eventData = eventData.filter(item => item.startTime.format('MM/DD') === DATES[dayIndex].date);
+                const searchingFiltered = eventData.filter(item => {
+                  return item.title.toLowerCase().includes(searchLower) || item.tags.some(tag => matchedTags.includes(tag));
+                });
+                if (searchingFiltered.length === 0) {
+                  return (<View style={styleguide.notfound}>
+                    <FontAwesomeIcon
+                      color={searchText === "" ? colors.lightGrayText : colors.darkGrayText}
+                      icon={faQuestionCircle} size={28}
+                      />
+                    <StyledText>No events found.</StyledText>
+                    { isMySchedule && <StyledText> Star some events to get started! </StyledText>}
+                  </View>);
+                }
+                return (
+                  <View>
+                    <FlatList
+                      data={searchingFiltered}
+                      keyExtractor={item => item.id}
+                      renderItem={({ item, index }) => {
+                        let shouldShowTime = index === 0;
+                        if (index !== 0) {
+                          if (searchingFiltered[index - 1].startTime.format('HH:mm') !== item.startTime.format('HH:mm')) {
+                            shouldShowTime = true;
+                          }
+                        }
+                        const toggleEvent = () => toggleStarred(item.id);
+                        return (<EventCard
+                          eventData={item}
+                          toggleEvent={toggleEvent}
+                          shouldShowTime={shouldShowTime}
+                          isStarred={!!starredItems[item.id]}
+                          />);
+                        }}
+                    />
+                    <View style={{
+                      height: 40
+                    }}/>
+                  </View>
+                );
+            }}
+          </CMSContext.Consumer>
+          )}
         </StarContext.Consumer>
       </ScrollView>
     );
@@ -354,13 +340,5 @@ const styles = StyleSheet.create({
   },
   daySelector: {
     marginBottom: 12,
-  },
-  notfound: {
-    margin: 40,
-    flex: 1,
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
   }
 });
-

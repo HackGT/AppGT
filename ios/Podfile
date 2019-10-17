@@ -37,7 +37,7 @@ target 'AppGT' do
 
   # pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch/ios'
 
- 
+
 
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
@@ -50,4 +50,3 @@ target 'AppGT' do
 
   use_native_modules!
 end
-
