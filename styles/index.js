@@ -60,7 +60,9 @@ export const styleguide = StyleSheet.create({
   },
   score: {
     paddingTop: 15,
-    paddingBottom: 15
+    paddingBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
   },
   qr: {
     fontWeight: "bold",
@@ -71,5 +73,15 @@ export const styleguide = StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: colors.primaryBlue,
+    padding: 20,
+    borderRadius: 10,
+    flex: 1,
+    flexDirection: "row",
+    height: 28,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

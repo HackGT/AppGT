@@ -1,11 +1,15 @@
 import React, { Component } from "react";
-import { View, Text, Button, Alert, Modal } from "react-native";
+import { View, Text, Button, Alert, Modal, TouchableOpacity, Image } from "react-native";
 import { AuthContext } from "../App";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import DialogInput from 'react-native-dialog-input';
 import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from '../styles'
 import { colors } from "../themes";
+import { StyledText } from "../components";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
 
 class ScavHunt extends Component<Props> {
     static navigationOptions = {
@@ -20,7 +24,6 @@ class ScavHunt extends Component<Props> {
       isDialogVisible: true,
       qr: false,
       submit: false,
-      score: 99999,
       user: null
     };
 
@@ -88,25 +91,24 @@ class ScavHunt extends Component<Props> {
     }
 
     renderQRButton = (user) => {
-      if (user) {
-        this.state.user = user;
-        this.getScores(user);
-        return(
-          <Button
-            title="Found a clue?"
-            onPress= {() => {
-              this.state.qr = true;
-              this.forceUpdate();
-            }
-            }
-            color={colors.primaryBlue}
-          />
-        );
-      }
+      if (!user) return null;
+
+      this.state.user = user;
+      return(
+        <TouchableOpacity
+          onPress= {() => {
+            this.state.qr = true;
+            this.forceUpdate();}}
+          style={styleguide.button}>
+          <Text style={{color: "white", paddingRight: 15}}>Found a Clue?</Text>
+          <FontAwesomeIcon color="white" icon={faCamera} size={28} />
+        </TouchableOpacity>
+      );
     }
 
     renderScores = (user) => {
       if (user) {
+        this.getScores(user);
         return(<Text style={styleguide.score}>Score: {this.state.score}</Text>);
       }
     }
@@ -135,7 +137,7 @@ class ScavHunt extends Component<Props> {
           }).then((response) =>
             response.json()).then((res) => {
               console.log(res);
-              this.state.score = res.num_done;
+              this.setState({score: res.num_done});
             }).catch((error) => {
               console.error(error);
             }));
@@ -149,16 +151,18 @@ class ScavHunt extends Component<Props> {
                 <AuthContext.Consumer>
                     {({ user, login, logout }) => {
                         if (!user && !this.state.login) {
-                          this.loginAlert(login)
+                          this.loginAlert(login);
                         }
                         return(
                           <View>
                             <View style={styleguide.titleView}>
-                              <Text style={styleguide.title}>HackGT6: Into the Scavenger Hunt!</Text>
+                              <StyledText style={styleguide.title}>HackGT6: Scavenger Hunt!</StyledText>
+                            </View>
+                            <View style={styleguide.card}>
+                              {this.renderScores(user)}
                             </View>
                             <View style={styleguide.card}>
                               <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam euismod dapibus nibh quis porttitor.</Text>
-                              {this.renderScores(user)}
                               {this.renderQRButton(user)}
                               <View style={{marginTop: 22}}>
                                 <Modal
@@ -189,11 +193,12 @@ class ScavHunt extends Component<Props> {
                                   }}>
                                 </DialogInput>
                               </View>
-                              <Button
-                                title={user ? "Logout" : "Login"}
+                              <TouchableOpacity
                                 onPress= {user ? logout : login}
-                                color={colors.primaryBlue}
-                              />
+                                style={styleguide.button}
+                              >
+                                <Text style={{color: "white"}}>{user ? "Logout" : "Login"}</Text>
+                              </TouchableOpacity>
                           </View>
                         )
                     }}
