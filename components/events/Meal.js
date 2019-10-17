@@ -32,24 +32,26 @@ const makeHyperlinks = (restaurantName, restaurantLink) => {
           <StyledText
             style={styles.link}
             onPress={() => Linking.openURL(restaurantLinkArr[index])}
+            key={name}
           >
             {name}
           </StyledText>
         );
       } else {
-        return <StyledText style={styles.text}>{name}</StyledText>;
+        return <StyledText style={styles.text} key={name}>{name}</StyledText>;
       }
     } else if (index < restaurantLinkArr.length) {
       return (
         <StyledText
           style={styles.link}
           onPress={() => Linking.openURL(restaurantLinkArr[index])}
+          key={name}
         >
           {name},
         </StyledText>
       );
     } else {
-      return <StyledText style={styles.text}>{name}, </StyledText>;
+      return <StyledText style={styles.text} key={name}>{name}, </StyledText>;
     }
   });
 };
