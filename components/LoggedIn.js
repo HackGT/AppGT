@@ -52,6 +52,14 @@ class LoggedIn extends Component<Props> {
     }).then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson);
+        Alert.alert(
+          'Response',
+          responseJson.message,
+          [
+            { text : 'Dismiss', onPress: () => console.log("Dismissed") },
+          ],
+          {cancelable: true},
+        );
         this.getScores();
       })
       .catch((error) => {
