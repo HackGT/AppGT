@@ -123,14 +123,15 @@ class LoggedIn extends Component<Props> {
                                 onRead={this.handleQRCode.bind(this)}
                                 topContent={
                                     <View style={styleguide.qrView}>
-                                    <StyledText style={styleguide.qr}>Scan the QR code!</StyledText>
+                                        <StyledText style={styleguide.qr}>Scan the QR code!</StyledText>
                                     </View>
                                 }
                                 bottomContent={
                                     <TouchableOpacity
-                                    onPress={() => this.setState({qr: false})}
-                                    style={styleguide.cancelButton}>
-                                    <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
+                                        onPress={() => this.setState({qr: false})}
+                                        style={styleguide.cancelButton}
+                                    >
+                                        <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
                                     </TouchableOpacity>
                                 }
                                 topViewStyle={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", paddingBottom: 50, paddingLeft: 20}}

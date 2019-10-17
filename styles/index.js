@@ -68,10 +68,6 @@ export const styleguide = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold"
   },
-  qr: {
-    fontWeight: "bold",
-    padding: 10
-  },
   notfound: {
     margin: 40,
     flex: 1,
@@ -102,5 +98,11 @@ export const styleguide = StyleSheet.create({
   qrView: {
     flex: 1,
     flexDirection: "row",
-  }
+    padding: 10,
+    justifyContent: "center",
+  },
+  qr: {
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });
