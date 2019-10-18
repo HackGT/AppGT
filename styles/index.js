@@ -102,5 +102,75 @@ export const styleguide = StyleSheet.create({
   qrView: {
     flex: 1,
     flexDirection: "row",
-  }
+  },
+  LobButton: {
+    background: "#FDE8C1",
+    borderRadius: 10,
+    textAlign: "center",
+    width: 272,
+    height: 66,
+    left: 61,
+    top: 92,
+  },
+  LobText: {
+    color: "#F9A57C",
+    fontWeight: "bold",
+    fontSize: 24
+  },
+  RoseButton: {
+    background: "#F9BDC6",
+    borderRadius: 10,
+    textAlign: "center",
+    width: 272,
+    height: 66,
+    left: 61,
+    top: 92,
+  },
+  RoseText: {
+    color: "#F05F9B",
+    fontWeight: "bold",
+    fontSize: 24
+  },
+  ShroomButton: {
+    background: "#A4D496",
+    borderRadius: 10,
+    textAlign: "center",
+    width: 272,
+    height: 66,
+    left: 61,
+    top: 92,
+  },
+  ShroomText: {
+    color: "#457483",
+    fontWeight: "bold",
+    fontSize: 24
+  },
+  TeaButton: {
+    background: "#CDECFB",
+    borderRadius: 10,
+    textAlign: "center",
+    width: 272,
+    height: 66,
+    left: 61,
+    top: 92,
+  },
+  TeaText: {
+    color: "#6DAEDF",
+    fontWeight: "bold",
+    fontSize: 24
+  },
+  unsolvedButton: {
+    background: "#DCDCDC",
+    borderRadius: 10,
+    textAlign: "center",
+    width: 272,
+    height: 66,
+    left: 61,
+    top: 92,
+  },
+  unsolvedText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 24
+  },
 });

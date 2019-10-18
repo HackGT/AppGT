@@ -17,14 +17,16 @@ class LoggedIn extends Component<Props> {
     this.setState({uuid: this.props.user.uuid});
     this.setState({login: this.props.login});
     this.setState({logout: this.props.logout});
-    this.getScores();
+    //this.getScores();
   }
 
   state = {
     login: false,
     isDialogVisible: true,
-    qr: false,
+    qr: true,
     submit: false,
+    found: ["Rose", "Lobster", "Tea", "Mushroom"],
+    solved: ["Rose", "Lobster", "Tea", "Mushroom"]
   };
 
   sendInput = (inputText) => {
@@ -60,7 +62,7 @@ class LoggedIn extends Component<Props> {
           ],
           {cancelable: true},
         );
-        this.getScores();
+        //this.getScores();
       })
       .catch((error) => {
         console.error(error);
@@ -102,22 +104,28 @@ class LoggedIn extends Component<Props> {
     this.setState({submit: true});
   }
 
+  componentDidMount() {
+    // AsyncStorage.getItem("Found", (error, result) => {
+    //   if (error) {
+    //     console.log("Error: " + error);
+    //   } else {
+    //     this.setState({found: result});
+    //   }
+    // });
+    //
+    // AsyncStorage.getItem("Solved", (error, result) => {
+    //   if(error) {
+    //     console.log("Error: " + error);
+    //   } else {
+    //     this.setState({solved: result});
+    //   }
+    // })
+  }
+
   render() {
       return (
-              <View>
                 <View style={styleguide.card}>
-                  <StyledText style={styleguide.score}>Score: {this.state.score}</StyledText>
-                </View>
-                <View style={styleguide.card}>
-                  <StyledText style={{padding: 10}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam euismod dapibus nibh quis porttitor.</StyledText>
-                  <TouchableOpacity
-                    onPress= {() => {
-                      this.setState({qr: true})}}
-                    style={styleguide.button}>
-                    <StyledText style={{color: "white", paddingRight: 15}}>Found a Clue?</StyledText>
-                    <FontAwesomeIcon color="white" icon={faCamera} size={28} />
-                  </TouchableOpacity>
-                  <View style={{marginTop: 22}}>
+                  <View>
                     <Modal
                       animationType="slide"
                       transparent={false}
@@ -128,34 +136,92 @@ class LoggedIn extends Component<Props> {
                       <QRCodeScanner
                         onRead={this.handleQRCode.bind(this)}
                         topContent={
-                          <View style={styleguide.qrView}>
-                            <StyledText style={styleguide.qr}>Scan the QR code!</StyledText>
+                          <View style={styleguide.titleView}>
+                            <StyledText style={styleguide.title}>Scavenger Hunt</StyledText>
+                            <StyledText>HackGT6: Into the Rabbit Hole</StyledText>
                           </View>
                         }
                         bottomContent={
-                          <TouchableOpacity
-                            onPress={() => this.setState({qr: false})}
-                            style={styleguide.cancelButton}>
-                            <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
-                          </TouchableOpacity>
+                          <View>
+                            <View>
+                              <StyledText>Scan QR Code to Begin</StyledText>
+                            </View>
+                            {
+                              <View>
+                              if (!this.state.found) {
+                                <View>
+                                  <StyledText>No locations found yet :( </StyledText>
+                                    <StyledText>Check out the quest board near Help Desk to start exploring Wonderland!</StyledText>
+                                </View>
+                              } else {
+                                <View>
+                                <StyledText>Locations Found</StyledText>
+                                if (this.state.found.find("Lobster")) {
+                                  style = (this.state.solved.find("Lobster") ? styleguide.LobButton : styleguide.unsolvedButton)
+                                  text = (this.state.solved.find("Lobster") ? styleguide.LobText : styleguide.unsolvedText)
+                                  <TouchableOpacity
+                                    onPress={() => console.log("Lobster")}
+                                    style={style}>
+                                    <StyledText style={text}>Lobster Beach</StyledText>
+                                  </TouchableOpacity>
+                                }
+                                if (this.state.found.find("Rose")) {
+                                  style = (this.state.solved.find("Rose") ? styleguide.RoseButton : styleguide.unsolvedButton)
+                                  text = (this.state.solved.find("Rose") ? styleguide.RoseText : styleguide.unsolvedText)
+                                  <TouchableOpacity
+                                    onPress={() => console.log("Rose")}
+                                    style={style}>
+                                    <StyledText style={text}>Rose Garden</StyledText>
+                                  </TouchableOpacity>
+                                }
+                                if (this.state.found.find("Mushroom")) {
+                                  style = (this.state.solved.find("Mushroom") ? styleguide.ShroomButton : styleguide.unsolvedButton)
+                                  text = (this.state.solved.find("Mushroom") ? styleguide.ShroomText : styleguide.unsolvedText)
+                                  <TouchableOpacity
+                                    onPress={() => console.log("Shroom")}
+                                    style={style}>
+                                    <StyledText style={text}>Mushroom Forest</StyledText>
+                                  </TouchableOpacity>
+                                }
+                                if (this.state.found.find("Tea")) {
+                                  style = (this.state.solved.find("Tea") ? styleguide.TeaButton : styleguide.unsolvedButton)
+                                  text = (this.state.solved.find("Tea") ? styleguide.TeaText : styleguide.unsolvedText)
+                                  <TouchableOpacity
+                                    onPress={() => console.log("Tea")}
+                                    style={style}>
+                                    <StyledText style={text}>Tea Party</StyledText>
+                                  </TouchableOpacity>
+                                }
+                                <StyledText>Show your tokens to Help Desk to collect a reward!</StyledText>
+                                </View>
+                              }
+                              </View>
+                            }
+                            <TouchableOpacity
+                              onPress={() => this.setState({qr: false})}
+                              style={styleguide.cancelButton}>
+                              <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
+                            </TouchableOpacity>
+                          </View>
                         }
                         topViewStyle={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", paddingBottom: 50, paddingLeft: 20}}
                       />
                     </Modal>
-                  </View>
-                    <DialogInput isDialogVisible={this.state.submit}
-                      title={"Scavenger Hunt Response"}
-                      message={this.state.values}
-                      hintInput ={"Response"}
-                      submitInput={(inputText) => {
-                        this.sendInput(inputText);
-                      } }
-                      closeDialog={() => {
-                        this.setState({submit: false});
-                      }}>
-                    </DialogInput>
-                  </View>
+                  // </View>
+                  //   <DialogInput isDialogVisible={this.state.submit}
+                  //     title={"Scavenger Hunt Response"}
+                  //     message={this.state.values}
+                  //     hintInput ={"Response"}
+                  //     submitInput={(inputText) => {
+                  //       this.sendInput(inputText);
+                  //     } }
+                  //     closeDialog={() => {
+                  //       this.setState({submit: false});
+                  //     }}>
+                  //   </DialogInput>
+                  // </View>
               </View>
+            </View>
       );
   }
 }
