@@ -71,18 +71,17 @@ export const styleguide = StyleSheet.create({
   notfound: {
     margin: 40,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center'
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center"
   },
   button: {
     backgroundColor: colors.primaryBlue,
-    padding: 20,
-    borderRadius: 10,
+    padding: 5,
+    borderRadius: 20,
     margin: 8,
-    flex: 1,
     flexDirection: "row",
-    height: 28,
+    height: 40,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -98,6 +97,6 @@ export const styleguide = StyleSheet.create({
   },
   qr: {
     fontWeight: "bold",
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });
