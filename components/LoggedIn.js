@@ -283,7 +283,11 @@ const SubmissionModal = ({
             </View>
             <TouchableOpacity
               onPress={onSubmit}
-              style={{ ...styleguide.button }}
+              style={
+                formInput.length === 0
+                  ? styleguide.buttonDisabled
+                  : styleguide.button
+              }
               disabled={formInput.length === 0}
             >
               <StyledText style={{ color: "white" }}>Submit</StyledText>

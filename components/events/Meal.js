@@ -33,18 +33,31 @@ export default (Meal = ({
 });
 
 const makeRestrictions = dietRestrictionsArr => {
-  console.log("in restrictions method");
   return dietRestrictionsArr.map((item, index) => {
-    if (index == 0) {
+    if (index === 0) {
+      if (dietRestrictionsArr.length > 1) {
+        return (
+          <StyledText style={styles.dietRestrictions} key={item.name}>
+            > {item.name},{" "}
+          </StyledText>
+        );
+      } else {
+        return (
+          <StyledText style={styles.dietRestrictions} key={item.name}>
+            > {item.name}
+          </StyledText>
+        );
+      }
+    } else if (index === dietRestrictionsArr.length - 1) {
       return (
         <StyledText style={styles.dietRestrictions} key={item.name}>
-          > {item.name}
+          {item.name}
         </StyledText>
       );
     } else {
       return (
         <StyledText style={styles.dietRestrictions} key={item.name}>
-          , {item.name}
+          {item.name},{" "}
         </StyledText>
       );
     }
@@ -97,7 +110,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 15,
-    marginRight: 5,
     marginBottom: 12
   },
   restaurantNames: {

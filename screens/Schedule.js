@@ -65,16 +65,13 @@ export const populateEvents = data => {
   // Smoosh in additional info where relevant
   data.meals.forEach(meal => {
     if (!meal.base) return;
-    console.log(meal);
     const id = meal.base.id;
     const index = eventInfo.findIndex(event => event.id === id);
     if (index === -1) return;
     let dietRestrictionsArr = [];
     meal.menu_items.forEach(item => {
-      console.log(item.dietrestrictions);
       dietRestrictionsArr.push(item.dietrestrictions);
     });
-    console.log(dietRestrictionsArr);
     eventInfo[index] = {
       ...eventInfo[index],
       restaurantName: meal.restaurant_name,

@@ -98,5 +98,15 @@ export const styleguide = StyleSheet.create({
   qr: {
     fontWeight: "bold",
     textAlign: "center"
+  },
+  buttonDisabled: {
+    backgroundColor: colors.lightGrayImages,
+    padding: 5,
+    borderRadius: 20,
+    margin: 8,
+    flexDirection: "row",
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
