@@ -38,7 +38,6 @@ export const populateEvents = data => {
   moment.fn.toJSON = function() {
     return this.format();
   };
-  const now = moment();
   const unsortedEventInfo = data.eventbases;
   unsortedEventInfo.forEach(base => {
     // squash tags
@@ -48,19 +47,20 @@ export const populateEvents = data => {
     }
     if (base.area) base.area = base.area.name;
     base.type = "core";
+    base.startTime = UNSAFE_parseAsLocal(base.start_time);
+    base.endTime = UNSAFE_parseAsLocal(base.end_time);
+    console.log(base.startTime.format("hh:mm A"));
     base.startTime = moment.parseZone(base.start_time); // toCamel
     if (base.end_time) {
       base.endTime = moment.parseZone(base.end_time);
     }
-    base.isOld = now > base.startTime;
   });
   const eventInfo = unsortedEventInfo.sort((e1, e2) => {
-    if (e1.isOld && !e2.isOld) return 1;
-    if (e1.start_time === e2.start_time)
-      // compare strings
-      return e1.title > e2.title;
-    if (e1.startTime > e2.startTime) return 1;
-    return -1;
+    if (e1.start_time !== e2.start_time)
+      return e1.startTime > e2.startTime ? 1 : -1;
+    if (e1.end_time !== e2.end_time)
+      return e1.endTime > e2.endTime ? 1 : -1;
+    return e1.title > e2.title;
   });
   // Smoosh in additional info where relevant
   data.meals.forEach(meal => {
@@ -160,7 +160,7 @@ export default class Schedule extends Component<Props> {
           id={item.id}
           isStarred={isStarred}
           onPressStar={toggleEvent}
-          isOld={item.isOld}
+          isOld={moment().diff(item.startTime) > 0}
         >
           {item.description}
         </ScheduleCard>
@@ -250,6 +250,10 @@ export default class Schedule extends Component<Props> {
                     </View>
                   );
                 }
+                const now = moment();
+                const oldEvents = searchingFiltered.filter(e => now.diff(e.timeStart) > 0); // pseudo-sort
+                const newEvents = searchingFiltered.filter(e => now.diff(e.timeStart) <= 0);
+                const joinedEvents = newEvents.concat(oldEvents);
                 return (
                   <View>
                     <EventModal
@@ -258,7 +262,7 @@ export default class Schedule extends Component<Props> {
                       isModalVisible={isModalVisible}
                     />
                     <FlatList
-                      data={searchingFiltered}
+                      data={joinedEvents}
                       keyExtractor={item => item.id}
                       renderItem={({ item, index }) => {
                         let shouldShowTime = index === 0;
@@ -334,6 +338,15 @@ const EventModal = ({ closeModal, isModalVisible, modalEvent }) => {
   );
 }
 
+export const UNSAFE_parseAsLocal = (t) => { // parse iso-formatted string as local time
+  if (!t) return "";
+	let localString = t;
+	if (t.slice(-1).toLowerCase() === "z") {
+		localString = t.slice(0, -1);
+	}
+	return moment(localString);
+}
+
 const styles = StyleSheet.create({
   search: {},
   scheduleSelector: {
@@ -344,3 +357,4 @@ const styles = StyleSheet.create({
     marginBottom: 12
   }
 });
+
