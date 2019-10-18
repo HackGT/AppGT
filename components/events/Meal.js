@@ -1,10 +1,15 @@
 import React from "react";
-import { View, StyleSheet, Linking } from "react-native";
+import { View, StyleSheet, Linking, Text } from "react-native";
 import { StyledText } from "../";
 import { styleguide } from "../../styles";
 import { colors } from "../../themes";
 
-export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
+export default (Meal = ({
+  restaurantName,
+  restaurantLink,
+  menuItems,
+  dietRestrictionsArr
+}) => {
   return (
     <View style={styles.content}>
       <StyledText style={styles.restaurantNameTitle}>Restaurant:</StyledText>
@@ -12,15 +17,39 @@ export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
         {makeHyperlinks(restaurantName, restaurantLink)}
       </View>
       <View>
-        {menuItems.map(item => (
-          <StyledText style={styles.menuItem} key={item.name}>
-            - {item.name}
-          </StyledText>
-        ))}
+        {menuItems.map((item, index) => {
+          return (
+            <View style={styles.menuContent}>
+              <StyledText key={item.name}>- {item.name}</StyledText>
+              <View style={styles.restrictionsView}>
+                {makeRestrictions(dietRestrictionsArr[index])}
+              </View>
+            </View>
+          );
+        })}
       </View>
     </View>
   );
 });
+
+const makeRestrictions = dietRestrictionsArr => {
+  console.log("in restrictions method");
+  return dietRestrictionsArr.map((item, index) => {
+    if (index == 0) {
+      return (
+        <StyledText style={styles.dietRestrictions} key={item.name}>
+          > {item.name}
+        </StyledText>
+      );
+    } else {
+      return (
+        <StyledText style={styles.dietRestrictions} key={item.name}>
+          , {item.name}
+        </StyledText>
+      );
+    }
+  });
+};
 
 const makeHyperlinks = (restaurantName, restaurantLink) => {
   restaurantNameArr = restaurantName.split(",").map(s => s.trim());
@@ -79,9 +108,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold"
   },
-  menuItem: {
-    fontSize: 15,
-    marginLeft: 30,
+  restrictionsView: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginLeft: 20
+  },
+  dietRestrictions: {
+    marginTop: 5
+  },
+  menuContent: {
+    marginLeft: 20,
     marginBottom: 5
   }
 });

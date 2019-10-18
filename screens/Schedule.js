@@ -65,14 +65,22 @@ export const populateEvents = data => {
   // Smoosh in additional info where relevant
   data.meals.forEach(meal => {
     if (!meal.base) return;
+    console.log(meal);
     const id = meal.base.id;
     const index = eventInfo.findIndex(event => event.id === id);
     if (index === -1) return;
+    let dietRestrictionsArr = [];
+    meal.menu_items.forEach(item => {
+      console.log(item.dietrestrictions);
+      dietRestrictionsArr.push(item.dietrestrictions);
+    });
+    console.log(dietRestrictionsArr);
     eventInfo[index] = {
       ...eventInfo[index],
       restaurantName: meal.restaurant_name,
       restaurantLink: meal.restaurant_link,
       menuItems: meal.menu_items,
+      dietRestrictions: dietRestrictionsArr,
       type: "meal"
     };
   });
@@ -100,13 +108,13 @@ export default class Schedule extends Component<Props> {
       isMySchedule: false,
       dayIndex: 0,
       isModalVisible: false,
-      modalEvent: null,
+      modalEvent: null
     };
   }
 
   updateText = searchText => {
-      this.setState({ searchText, searchLower: searchText.toLowerCase() });
-  }
+    this.setState({ searchText, searchLower: searchText.toLowerCase() });
+  };
 
   onSelectEvent = item => {
     this.props.navigation.navigate("Event", {
@@ -120,7 +128,14 @@ export default class Schedule extends Component<Props> {
   onSelectDay = dayIndex => this.setState({ dayIndex });
 
   render() {
-    const { searchText, searchLower, isMySchedule, dayIndex, modalEvent, isModalVisible } = this.state;
+    const {
+      searchText,
+      searchLower,
+      isMySchedule,
+      dayIndex,
+      modalEvent,
+      isModalVisible
+    } = this.state;
 
     const EventCard = ({
       eventData: item,
@@ -152,7 +167,7 @@ export default class Schedule extends Component<Props> {
         <ScheduleCard
           item={item}
           onClick={() => {
-            this.setState({modalEvent: item, isModalVisible: true})
+            this.setState({ modalEvent: item, isModalVisible: true });
           }}
           title={item.title}
           area={item.area}
@@ -205,7 +220,10 @@ export default class Schedule extends Component<Props> {
             autoCorrect={false}
           />
         </View>
-        <ScheduleSelector onSelectSchedule={this.onSelectSchedule} selectedIndex={isMySchedule ? 1 : 0} />
+        <ScheduleSelector
+          onSelectSchedule={this.onSelectSchedule}
+          selectedIndex={isMySchedule ? 1 : 0}
+        />
         <DaySelector onSelectDay={this.onSelectDay} selectedIndex={dayIndex} />
         <StarContext.Consumer>
           {({ starredItems, toggleStarred }) => (
@@ -253,7 +271,9 @@ export default class Schedule extends Component<Props> {
                 return (
                   <View>
                     <EventModal
-                      closeModal={() => this.setState({isModalVisible: false})}
+                      closeModal={() =>
+                        this.setState({ isModalVisible: false })
+                      }
                       modalEvent={modalEvent}
                       isModalVisible={isModalVisible}
                     />
@@ -326,13 +346,10 @@ const EventModal = ({ closeModal, isModalVisible, modalEvent }) => {
       onBackdropPress={closeModal}
       propagateSwipe
     >
-      <Event
-        closeModal={closeModal}
-        eventInfo={modalEvent}
-      />
+      <Event closeModal={closeModal} eventInfo={modalEvent} />
     </Modal>
   );
-}
+};
 
 const styles = StyleSheet.create({
   search: {},
