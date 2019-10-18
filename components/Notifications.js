@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 // import { AppState, Alert } from "react-native";
 import firebase from "react-native-firebase";
+import { Alert } from "react-native";
 // import BackgroundFetch from "react-native-background-fetch";
 // import PushNotification from 'react-native-push-notification';
 // import moment from "moment-timezone";
@@ -13,11 +14,10 @@ class Notifications extends Component<Props> {
 
     constructor() {
         super();
-        firebase.messaging().subscribeToTopic("all");
-        console.log("Subscribed to topic");
         // console.log("Checking Status");
         // this.checkStatus();
         this.checkPermissions();
+        firebase.messaging().subscribeToTopic("all");
         // this.state = {
         //     eventData: props.eventData, // maintain a local copy for background thread?
         //     starredItems: props.starredItems,
@@ -25,10 +25,15 @@ class Notifications extends Component<Props> {
         // };
         // this.runNotifications();
         // this.pushNotif = new PushNotifService();
+        firebase.messaging().getToken().then(token => {
+          console.log(token)
+        });
+
     }
 
     subscribe(id) {
         if (!id) return;
+        // console.log(`sub ${id}`)
         firebase.messaging().subscribeToTopic(id);
     }
 

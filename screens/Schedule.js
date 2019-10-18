@@ -49,7 +49,6 @@ export const populateEvents = data => {
     base.type = "core";
     base.startTime = UNSAFE_parseAsLocal(base.start_time);
     base.endTime = UNSAFE_parseAsLocal(base.end_time);
-    console.log(base.startTime.format("hh:mm A"));
     base.startTime = moment.parseZone(base.start_time); // toCamel
     if (base.end_time) {
       base.endTime = moment.parseZone(base.end_time);
