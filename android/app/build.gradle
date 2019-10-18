@@ -203,7 +203,6 @@ android {
 dependencies {
     implementation project(':react-native-camera')
     implementation project(':react-native-permissions')
-    implementation project(':react-native-background-fetch')
     implementation project(':react-native-firebase')
     implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-vector-icons')

@@ -22,7 +22,6 @@
     "react": "16.8.6",
     "react-native": "0.60.3",
     "react-native-app-auth": "^4.4.0",
-    "react-native-background-task": "^0.2.1",
     "react-native-camera": "^3.7.2",
     "react-native-elements": "^1.1.0",
     "react-native-firebase": "~5.5.5",
