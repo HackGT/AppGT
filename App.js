@@ -24,8 +24,6 @@ import {
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 
-import moment from "moment-timezone";
-
 import { Home, Schedule, ScavHunt } from "./screens";
 import { CARD_KEYS } from "./screens/Home";
 import { populateEvents, UNSAFE_parseAsLocal } from "./screens/Schedule";
