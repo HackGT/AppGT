@@ -7,17 +7,12 @@ import Talk from "./Talk";
 import { styleguide } from "../../styles";
 import { colors } from "../../themes";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 // TODO meals (later) - diet restrictions
 // TODO talks - @Meha
 // TODO (later) exit animation is no bueno
-export default Event = ({
-  closeModal,
-  eventInfo
-}) => {
+export default (Event = ({ closeModal, eventInfo }) => {
   const {
     startTime,
     endTime,
@@ -29,6 +24,7 @@ export default Event = ({
     restaurantName,
     restaurantLink,
     menuItems,
+    dietRestrictions,
     people
   } = eventInfo;
   const exitButton = (
@@ -39,46 +35,48 @@ export default Event = ({
       }}
       onPress={closeModal}
     >
-      <FontAwesomeIcon
-        color={colors.red}
-        icon={faTimesCircle}
-        size={28}
-      />
+      <FontAwesomeIcon color={colors.red} icon={faTimesCircle} size={28} />
     </TouchableOpacity>
   );
   let timeString = startTime.format("ddd hh:mm");
   if (!!endTime) {
-    timeString += ` - ${endTime.format("hh:mm")}`
+    timeString += ` - ${endTime.format("hh:mm")}`;
   }
 
   return (
     <View style={styles.content}>
       <View style={styles.headerRow}>
-        <StyledText style={{
-          ...styleguide.title,
-          flex: 1
-        }}>{title}</StyledText>
+        <StyledText
+          style={{
+            ...styleguide.title,
+            flex: 1
+          }}
+        >
+          {title}
+        </StyledText>
         {exitButton}
       </View>
-      <ScrollView style={{
-        paddingHorizontal: 8
-      }}>
-        { // time and area block
+      <ScrollView
+        style={{
+          paddingHorizontal: 8
+        }}
+      >
+        {
+          // time and area block
           <View style={styles.timeAndArea}>
-            <StyledText style={styleguide.text}>
-              {timeString}
-            </StyledText>
-            <StyledText style={styleguide.text}>
-              {area}
-            </StyledText>
+            <StyledText style={styleguide.text}>{timeString}</StyledText>
+            <StyledText style={styleguide.text}>{area}</StyledText>
           </View>
         }
-        <StyledText style={ styleguide.text }>{description || "No description provided. It's all in the title."}</StyledText>
+        <StyledText style={styleguide.text}>
+          {description || "No description provided. It's all in the title."}
+        </StyledText>
         {type === "meal" && (
           <Meal
             restaurantName={restaurantName}
             restaurantLink={restaurantLink}
             menuItems={menuItems}
+            dietRestrictionsArr={dietRestrictions}
           />
         )}
         {type === "talk" && <Talk people={people} />}
@@ -88,7 +86,7 @@ export default Event = ({
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   headerRow: {
