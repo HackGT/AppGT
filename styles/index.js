@@ -110,7 +110,7 @@ export const styleguide = StyleSheet.create({
     justifyContent: "center"
   },
   LobButton: {
-    background: "#FDE8C1",
+    backgroundColor: "#FDE8C1",
     borderRadius: 10,
     textAlign: "center",
     width: 272,
@@ -124,7 +124,7 @@ export const styleguide = StyleSheet.create({
     fontSize: 24
   },
   RoseButton: {
-    background: "#F9BDC6",
+    backgroundColor: "#F9BDC6",
     borderRadius: 10,
     textAlign: "center",
     width: 272,
@@ -138,7 +138,7 @@ export const styleguide = StyleSheet.create({
     fontSize: 24
   },
   ShroomButton: {
-    background: "#A4D496",
+    backgroundColor: "#A4D496",
     borderRadius: 10,
     textAlign: "center",
     width: 272,
@@ -152,7 +152,7 @@ export const styleguide = StyleSheet.create({
     fontSize: 24
   },
   TeaButton: {
-    background: "#CDECFB",
+    backgroundColor: "#CDECFB",
     borderRadius: 10,
     textAlign: "center",
     width: 272,

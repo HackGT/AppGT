@@ -60,16 +60,18 @@ class LoggedIn extends Component<Props> {
     this.setState({uuid: this.props.user.uuid});
     this.setState({login: this.props.login});
     this.setState({logout: this.props.logout});
+    this.setState({found: ["Rose", "Lobster", "Tea", "Mushroom"]});
     //this.getScores();
+    console.log("*********************FOUND: " + (this.state.found.indexOf("Lobster") > -1));
   }
+
 
   state = {
     login: false,
     isDialogVisible: true,
     qr: true,
     submit: false,
-    found: ["Rose", "Lobster", "Tea", "Mushroom"],
-    solved: ["Rose", "Lobster", "Tea", "Mushroom"]
+    found: [],
   };
 
   sendInput = (inputText) => {
@@ -78,6 +80,7 @@ class LoggedIn extends Component<Props> {
       "question": this.state.values,
       "answer": inputText,
       "uuid": this.state.uuid
+    }
     this.getScores();
     this.state = {
       puzzle: {
@@ -214,57 +217,49 @@ class LoggedIn extends Component<Props> {
                             <View>
                               <StyledText>Scan QR Code to Begin</StyledText>
                             </View>
-                            {
+                            <View>
+                            {this.state.found.length == 0 &&
                               <View>
-                              if (!this.state.found) {
-                                <View>
-                                  <StyledText>No locations found yet :( </StyledText>
-                                    <StyledText>Check out the quest board near Help Desk to start exploring Wonderland!</StyledText>
-                                </View>
-                              } else {
-                                <View>
-                                <StyledText>Locations Found</StyledText>
-                                if (this.state.found.find("Lobster")) {
-                                  style = (this.state.solved.find("Lobster") ? styleguide.LobButton : styleguide.unsolvedButton)
-                                  text = (this.state.solved.find("Lobster") ? styleguide.LobText : styleguide.unsolvedText)
-                                  <TouchableOpacity
-                                    onPress={() => console.log("Lobster")}
-                                    style={style}>
-                                    <StyledText style={text}>Lobster Beach</StyledText>
-                                  </TouchableOpacity>
-                                }
-                                if (this.state.found.find("Rose")) {
-                                  style = (this.state.solved.find("Rose") ? styleguide.RoseButton : styleguide.unsolvedButton)
-                                  text = (this.state.solved.find("Rose") ? styleguide.RoseText : styleguide.unsolvedText)
-                                  <TouchableOpacity
-                                    onPress={() => console.log("Rose")}
-                                    style={style}>
-                                    <StyledText style={text}>Rose Garden</StyledText>
-                                  </TouchableOpacity>
-                                }
-                                if (this.state.found.find("Mushroom")) {
-                                  style = (this.state.solved.find("Mushroom") ? styleguide.ShroomButton : styleguide.unsolvedButton)
-                                  text = (this.state.solved.find("Mushroom") ? styleguide.ShroomText : styleguide.unsolvedText)
-                                  <TouchableOpacity
-                                    onPress={() => console.log("Shroom")}
-                                    style={style}>
-                                    <StyledText style={text}>Mushroom Forest</StyledText>
-                                  </TouchableOpacity>
-                                }
-                                if (this.state.found.find("Tea")) {
-                                  style = (this.state.solved.find("Tea") ? styleguide.TeaButton : styleguide.unsolvedButton)
-                                  text = (this.state.solved.find("Tea") ? styleguide.TeaText : styleguide.unsolvedText)
-                                  <TouchableOpacity
-                                    onPress={() => console.log("Tea")}
-                                    style={style}>
-                                    <StyledText style={text}>Tea Party</StyledText>
-                                  </TouchableOpacity>
-                                }
-                                <StyledText>Show your tokens to Help Desk to collect a reward!</StyledText>
-                                </View>
-                              }
+                                <StyledText>No locations found yet :( </StyledText>
+                                <StyledText>Check out the quest board near Help Desk to start exploring Wonderland!</StyledText>
                               </View>
                             }
+                            {this.state.found.length > 0 &&
+                              <StyledText>Locations Found</StyledText>
+                            }
+                            { this.state.found.length > 0 && this.state.found.indexOf("Lobster") > -1 &&
+                              <TouchableOpacity
+                                onPress={() => console.log("Lobster")}
+                                style={styleguide.LobButton}>
+                                <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
+                              </TouchableOpacity>
+                            }
+
+                            { this.state.found.length > 0 && this.state.found.indexOf("Rose") > -1 &&
+                              <TouchableOpacity
+                                onPress={() => console.log("Rose")}
+                                style={styleguide.RoseButton}>
+                                <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
+                              </TouchableOpacity>
+                            }
+                            { this.state.found.length > 0 && this.state.found.indexOf("Mushroom") > -1 &&
+                              <TouchableOpacity
+                                onPress={() => console.log("Shroom")}
+                                style={styleguide.ShroomButton}>
+                                <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
+                              </TouchableOpacity>
+                            }
+                            { this.state.found.length > 0 && this.state.found.indexOf("Tea") > -1 &&
+                              <TouchableOpacity
+                                onPress={() => console.log("Tea")}
+                                style={styleguide.TeaButton}>
+                                <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
+                              </TouchableOpacity>
+                            }
+                            { this.state.found.length > 0 &&
+                                <StyledText>Show your tokens to Help Desk to collect a reward!</StyledText>
+                            }
+                            </View>
                             <TouchableOpacity
                               onPress={() => this.setState({qr: false})}
                               style={styleguide.cancelButton}>
@@ -273,23 +268,11 @@ class LoggedIn extends Component<Props> {
                           </View>
                         }
                         topViewStyle={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", paddingBottom: 50, paddingLeft: 20}}
+                        cameraStyle={{borderRadius: 20, height: 50, width: 50}}
                       />
                     </Modal>
-                  // </View>
-                  //   <DialogInput isDialogVisible={this.state.submit}
-                  //     title={"Scavenger Hunt Response"}
-                  //     message={this.state.values}
-                  //     hintInput ={"Response"}
-                  //     submitInput={(inputText) => {
-                  //       this.sendInput(inputText);
-                  //     } }
-                  //     closeDialog={() => {
-                  //       this.setState({submit: false});
-                  //     }}>
-                  //   </DialogInput>
-                  // </View>
-              </View>
-            </View>
+                  </View>
+                </View>
       );
   }
 }
