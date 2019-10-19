@@ -19,7 +19,7 @@ import {
 import moment from "moment-timezone";
 
 import Event from "../components/events/Event";
-import { ScheduleCard, ButtonControl, StyledText } from "../components";
+import { ScheduleCard, ButtonControl, StyledText, Spacer } from "../components";
 import { StarContext, CMSContext } from "../App";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
@@ -38,7 +38,6 @@ export const populateEvents = data => {
   moment.fn.toJSON = function() {
     return this.format();
   };
-  const now = moment();
   const unsortedEventInfo = data.eventbases;
   unsortedEventInfo.forEach(base => {
     // squash tags
@@ -48,19 +47,19 @@ export const populateEvents = data => {
     }
     if (base.area) base.area = base.area.name;
     base.type = "core";
+    base.startTime = UNSAFE_parseAsLocal(base.start_time);
+    base.endTime = UNSAFE_parseAsLocal(base.end_time);
     base.startTime = moment.parseZone(base.start_time); // toCamel
     if (base.end_time) {
       base.endTime = moment.parseZone(base.end_time);
     }
-    base.isOld = now > base.startTime;
   });
   const eventInfo = unsortedEventInfo.sort((e1, e2) => {
-    if (e1.isOld && !e2.isOld) return 1;
-    if (e1.start_time === e2.start_time)
-      // compare strings
-      return e1.title > e2.title;
-    if (e1.startTime > e2.startTime) return 1;
-    return -1;
+    if (e1.start_time !== e2.start_time)
+      return e1.startTime > e2.startTime ? 1 : -1;
+    if (e1.end_time !== e2.end_time)
+      return e1.endTime > e2.endTime ? 1 : -1;
+    return e1.title > e2.title;
   });
   // Smoosh in additional info where relevant
   data.meals.forEach(meal => {
@@ -68,11 +67,16 @@ export const populateEvents = data => {
     const id = meal.base.id;
     const index = eventInfo.findIndex(event => event.id === id);
     if (index === -1) return;
+    let dietRestrictionsArr = [];
+    meal.menu_items.forEach(item => {
+      dietRestrictionsArr.push(item.dietrestrictions);
+    });
     eventInfo[index] = {
       ...eventInfo[index],
       restaurantName: meal.restaurant_name,
       restaurantLink: meal.restaurant_link,
       menuItems: meal.menu_items,
+      dietRestrictions: dietRestrictionsArr,
       type: "meal"
     };
   });
@@ -100,13 +104,13 @@ export default class Schedule extends Component<Props> {
       isMySchedule: false,
       dayIndex: 0,
       isModalVisible: false,
-      modalEvent: null,
+      modalEvent: null
     };
   }
 
   updateText = searchText => {
-      this.setState({ searchText, searchLower: searchText.toLowerCase() });
-  }
+    this.setState({ searchText, searchLower: searchText.toLowerCase() });
+  };
 
   onSelectEvent = item => {
     this.props.navigation.navigate("Event", {
@@ -120,31 +124,14 @@ export default class Schedule extends Component<Props> {
   onSelectDay = dayIndex => this.setState({ dayIndex });
 
   render() {
-    const { searchText, searchLower, isMySchedule, dayIndex } = this.state;
-
-    const ScheduleSelector = () => (
-      <View style={styles.scheduleSelector}>
-        <ButtonControl
-          onChangeCallback={this.onSelectSchedule}
-          buttons={["Main Schedule", "My Schedule"]}
-          selectedIndex={this.state.isMySchedule ? 1 : 0}
-          containerSyle={{
-            width: 300
-          }}
-        />
-      </View>
-    );
-
-    const DaySelector = () => (
-      <View style={styles.daySelector}>
-        <ButtonControl
-          height={30}
-          onChangeCallback={this.onSelectDay}
-          selectedIndex={this.state.dayIndex}
-          buttons={DATES.map(time => time.day)}
-        />
-      </View>
-    );
+    const {
+      searchText,
+      searchLower,
+      isMySchedule,
+      dayIndex,
+      modalEvent,
+      isModalVisible
+    } = this.state;
 
     const EventCard = ({
       eventData: item,
@@ -176,7 +163,7 @@ export default class Schedule extends Component<Props> {
         <ScheduleCard
           item={item}
           onClick={() => {
-            this.setState({modalEvent: item, isModalVisible: true})
+            this.setState({ modalEvent: item, isModalVisible: true });
           }}
           title={item.title}
           area={item.area}
@@ -184,30 +171,12 @@ export default class Schedule extends Component<Props> {
           id={item.id}
           isStarred={isStarred}
           onPressStar={toggleEvent}
-          isOld={item.isOld}
+          isOld={moment().diff(item.startTime) > 0}
         >
           {item.description}
         </ScheduleCard>
       </View>
     );
-
-    const EventModal = () => {
-      const { isModalVisible, modalEvent } = this.state;
-      const closeModal = () => this.setState({isModalVisible: false});
-      return (
-        <Modal
-          isVisible={isModalVisible}
-          onBackButtonPress={closeModal}
-          onBackdropPress={closeModal}
-          propagateSwipe
-        >
-          <Event
-            closeModal={closeModal}
-            eventInfo={modalEvent}
-          />
-        </Modal>
-      );
-    }
 
     return (
       <ScrollView
@@ -247,8 +216,11 @@ export default class Schedule extends Component<Props> {
             autoCorrect={false}
           />
         </View>
-        <ScheduleSelector />
-        <DaySelector />
+        <ScheduleSelector
+          onSelectSchedule={this.onSelectSchedule}
+          selectedIndex={isMySchedule ? 1 : 0}
+        />
+        <DaySelector onSelectDay={this.onSelectDay} selectedIndex={dayIndex} />
         <StarContext.Consumer>
           {({ starredItems, toggleStarred }) => (
             <CMSContext.Consumer>
@@ -292,11 +264,21 @@ export default class Schedule extends Component<Props> {
                     </View>
                   );
                 }
+                const now = moment();
+                const oldEvents = searchingFiltered.filter(e => now.diff(e.timeStart) > 0); // pseudo-sort
+                const newEvents = searchingFiltered.filter(e => now.diff(e.timeStart) <= 0);
+                const joinedEvents = newEvents.concat(oldEvents);
                 return (
                   <View>
-                    <EventModal />
+                    <EventModal
+                      closeModal={() =>
+                        this.setState({ isModalVisible: false })
+                      }
+                      modalEvent={modalEvent}
+                      isModalVisible={isModalVisible}
+                    />
                     <FlatList
-                      data={searchingFiltered}
+                      data={joinedEvents}
                       keyExtractor={item => item.id}
                       renderItem={({ item, index }) => {
                         let shouldShowTime = index === 0;
@@ -320,11 +302,7 @@ export default class Schedule extends Component<Props> {
                         );
                       }}
                     />
-                    <View
-                      style={{
-                        height: 40
-                      }}
-                    />
+                    <Spacer />
                   </View>
                 );
               }}
@@ -334,6 +312,52 @@ export default class Schedule extends Component<Props> {
       </ScrollView>
     );
   }
+}
+
+const ScheduleSelector = ({ onSelectSchedule, selectedIndex }) => (
+  <View style={styles.scheduleSelector}>
+    <ButtonControl
+      onChangeCallback={onSelectSchedule}
+      buttons={["Main Schedule", "My Schedule"]}
+      selectedIndex={selectedIndex}
+      containerSyle={{
+        width: 300
+      }}
+    />
+  </View>
+);
+
+const DaySelector = ({ onSelectDay, selectedIndex }) => (
+  <View style={styles.daySelector}>
+    <ButtonControl
+      height={30}
+      onChangeCallback={onSelectDay}
+      selectedIndex={selectedIndex}
+      buttons={DATES.map(time => time.day)}
+    />
+  </View>
+);
+
+const EventModal = ({ closeModal, isModalVisible, modalEvent }) => {
+  return (
+    <Modal
+      isVisible={isModalVisible}
+      onBackButtonPress={closeModal}
+      onBackdropPress={closeModal}
+      propagateSwipe
+    >
+      <Event closeModal={closeModal} eventInfo={modalEvent} />
+    </Modal>
+  );
+};
+
+export const UNSAFE_parseAsLocal = (t) => { // parse iso-formatted string as local time
+  if (!t) return "";
+	let localString = t;
+	if (t.slice(-1).toLowerCase() === "z") {
+		localString = t.slice(0, -1);
+	}
+	return moment(localString);
 }
 
 const styles = StyleSheet.create({
@@ -346,3 +370,4 @@ const styles = StyleSheet.create({
     marginBottom: 12
   }
 });
+

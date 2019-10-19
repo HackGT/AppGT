@@ -4,7 +4,6 @@ import { StyledText } from "../";
 import { styleguide } from "../../styles";
 
 export default (Talk = ({ people }) => {
-  console.log(people);
   return (
     <View
       style={{

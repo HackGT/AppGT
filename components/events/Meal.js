@@ -1,10 +1,15 @@
 import React from "react";
-import { View, StyleSheet, Linking } from "react-native";
+import { View, StyleSheet, Linking, Text } from "react-native";
 import { StyledText } from "../";
 import { styleguide } from "../../styles";
 import { colors } from "../../themes";
 
-export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
+export default (Meal = ({
+  restaurantName,
+  restaurantLink,
+  menuItems,
+  dietRestrictionsArr
+}) => {
   return (
     <View style={styles.content}>
       <StyledText style={styles.restaurantNameTitle}>Restaurant:</StyledText>
@@ -12,15 +17,52 @@ export default (Meal = ({ restaurantName, restaurantLink, menuItems }) => {
         {makeHyperlinks(restaurantName, restaurantLink)}
       </View>
       <View>
-        {menuItems.map(item => (
-          <StyledText style={{ ...styleguide.text }} key={item.name}>
-            - {item.name}
-          </StyledText>
-        ))}
+        {menuItems.map((item, index) => {
+          return (
+            <View style={styles.menuContent}>
+              <StyledText key={item.name}>- {item.name}</StyledText>
+              <View style={styles.restrictionsView}>
+                {makeRestrictions(dietRestrictionsArr[index])}
+              </View>
+            </View>
+          );
+        })}
       </View>
     </View>
   );
 });
+
+const makeRestrictions = dietRestrictionsArr => {
+  return dietRestrictionsArr.map((item, index) => {
+    if (index === 0) {
+      if (dietRestrictionsArr.length > 1) {
+        return (
+          <StyledText style={styles.dietRestrictions} key={item.name}>
+            > {item.name},{" "}
+          </StyledText>
+        );
+      } else {
+        return (
+          <StyledText style={styles.dietRestrictions} key={item.name}>
+            > {item.name}
+          </StyledText>
+        );
+      }
+    } else if (index === dietRestrictionsArr.length - 1) {
+      return (
+        <StyledText style={styles.dietRestrictions} key={item.name}>
+          {item.name}
+        </StyledText>
+      );
+    } else {
+      return (
+        <StyledText style={styles.dietRestrictions} key={item.name}>
+          {item.name},{" "}
+        </StyledText>
+      );
+    }
+  });
+};
 
 const makeHyperlinks = (restaurantName, restaurantLink) => {
   restaurantNameArr = restaurantName.split(",").map(s => s.trim());
@@ -32,24 +74,26 @@ const makeHyperlinks = (restaurantName, restaurantLink) => {
           <StyledText
             style={styles.link}
             onPress={() => Linking.openURL(restaurantLinkArr[index])}
+            key={name}
           >
             {name}
           </StyledText>
         );
       } else {
-        return <StyledText style={styles.text}>{name}</StyledText>;
+        return <StyledText style={styles.text} key={name}>{name}</StyledText>;
       }
     } else if (index < restaurantLinkArr.length) {
       return (
         <StyledText
           style={styles.link}
           onPress={() => Linking.openURL(restaurantLinkArr[index])}
+          key={name}
         >
           {name},
         </StyledText>
       );
     } else {
-      return <StyledText style={styles.text}>{name}, </StyledText>;
+      return <StyledText style={styles.text} key={name}>{name}, </StyledText>;
     }
   });
 };
@@ -68,7 +112,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 15,
-    marginRight: 5,
     marginBottom: 12
   },
   restaurantNames: {
@@ -78,5 +121,17 @@ const styles = StyleSheet.create({
   restaurantNameTitle: {
     fontSize: 15,
     fontWeight: "bold"
+  },
+  restrictionsView: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginLeft: 20
+  },
+  dietRestrictions: {
+    marginTop: 5
+  },
+  menuContent: {
+    marginLeft: 20,
+    marginBottom: 5
   }
 });

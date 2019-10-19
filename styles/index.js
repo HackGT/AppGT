@@ -68,24 +68,20 @@ export const styleguide = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold"
   },
-  qr: {
-    fontWeight: "bold",
-    padding: 10
-  },
   notfound: {
     margin: 40,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center'
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center"
   },
   button: {
     backgroundColor: colors.primaryBlue,
-    padding: 20,
-    borderRadius: 10,
-    flex: 1,
+    padding: 5,
+    borderRadius: 20,
+    margin: 8,
     flexDirection: "row",
-    height: 28,
+    height: 40,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -99,9 +95,19 @@ export const styleguide = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 70
   },
-  qrView: {
-    flex: 1,
+  qr: {
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  buttonDisabled: {
+    backgroundColor: colors.lightGrayImages,
+    padding: 5,
+    borderRadius: 20,
+    margin: 8,
     flexDirection: "row",
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center"
   },
   LobButton: {
     background: "#FDE8C1",
@@ -156,20 +162,6 @@ export const styleguide = StyleSheet.create({
   },
   TeaText: {
     color: "#6DAEDF",
-    fontWeight: "bold",
-    fontSize: 24
-  },
-  unsolvedButton: {
-    background: "#DCDCDC",
-    borderRadius: 10,
-    textAlign: "center",
-    width: 272,
-    height: 66,
-    left: 61,
-    top: 92,
-  },
-  unsolvedText: {
-    color: "#FFFFFF",
     fontWeight: "bold",
     fontSize: 24
   },

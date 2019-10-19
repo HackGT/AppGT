@@ -23,15 +23,15 @@ import {
   faKey,
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { Home, Schedule, ScavHunt } from "./screens";
 import { CARD_KEYS } from "./screens/Home";
-import { populateEvents } from "./screens/Schedule";
+import { populateEvents, UNSAFE_parseAsLocal } from "./screens/Schedule";
 import { NotifierService } from "./components";
 
 import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { colors } from "./themes";
 import { styleguide } from "./styles";
-import moment from "moment-timezone";
 
 export const AuthContext = React.createContext();
 export const StarContext = React.createContext();
@@ -131,6 +131,9 @@ const AppContainer = createAppContainer(TabNavigator);
 export default class App extends Component<Props> {
   constructor(props) {
     super(props);
+
+    this.notifierService = new NotifierService();
+
     this.state = {
       user: null,
       accessToken: null,
@@ -166,8 +169,8 @@ export default class App extends Component<Props> {
         const eventData = JSON.parse(result);
         // create moments
         eventData.forEach(event => { // read off clean version
-          event.startTime = moment.parseZone(event.start_time);
-          event.endTime = moment.parseZone(event.end_time);
+          event.startTime = UNSAFE_parseAsLocal(event.start_time);
+          event.endTime = UNSAFE_parseAsLocal(event.end_time);
         })
         this.setState({ eventData }); // TODO set starred keys according to this
       }
@@ -262,6 +265,12 @@ export default class App extends Component<Props> {
 
   toggleStarred = async (id) => {
     const curItems = { ...this.state.starredItems };
+
+    if (curItems[id]) { // toggled off, unsubscribe
+      this.notifierService.unsubscribe(id);
+    } else { // subscribe
+      this.notifierService.subscribe(id);
+    }
     curItems[id] = !curItems[id];
 
     this.setState({ starredItems: curItems });
@@ -295,15 +304,14 @@ export default class App extends Component<Props> {
               tags,
             }}
           >
-            <NotifierService starredItems={starredItems} eventData={eventData}>
-              <AppContainer />
-            </NotifierService>
+            <AppContainer />
           </CMSContext.Provider>
         </StarContext.Provider>
       </AuthContext.Provider>
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   tabBar: {
