@@ -160,6 +160,7 @@ class LoggedIn extends Component<Props> {
     } = this.state;
 
     return (
+
       <View>
         <View style={styleguide.card}>
           <StyledText style={styleguide.score}>
@@ -178,7 +179,8 @@ class LoggedIn extends Component<Props> {
             </StyledText>
             <TouchableOpacity
               onPress={() => {
-                this.setState({ formState: FORM_SUBMIT });
+                // this.setState({ formState: FORM_SUBMIT });
+                this.setState({qr: true});
               }}
             >
               <View style={{ ...styleguide.button }}>
