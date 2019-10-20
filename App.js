@@ -29,13 +29,10 @@ import { CARD_KEYS } from "./screens/Home";
 import { populateEvents, UNSAFE_parseAsLocal } from "./screens/Schedule";
 import { NotifierService } from "./components";
 
+import { StarContext, AuthContext, CMSContext } from "./context";
 import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { colors } from "./themes";
 import { styleguide } from "./styles";
-
-export const AuthContext = React.createContext();
-export const StarContext = React.createContext();
-export const CMSContext = React.createContext();
 
 const authUrl = "https://login.hack.gt";
 
@@ -171,22 +168,7 @@ export default class App extends Component<Props> {
         })
         this.setState({ eventData }); // TODO set starred keys according to this
       }
-      fetchEvents().then(data => {
-        // load star dict before exposing to user - ? do we need to worry about CMS failure?
-        const starredItems = { ...this.state.starredItems };
-        data.data.eventbases.forEach((base) => {
-          if (!(base.id in starredItems)) {
-            starredItems[base.id] = false; // don't worry about the things in starred item that aren't in events, they won't render
-          }
-        })
-
-        const eventData = populateEvents(data.data); // store ready to use data
-        const tags = data.data.tags.map(tag => tag.name);
-
-        AsyncStorage.setItem("eventData", JSON.stringify(eventData)); // store the clean version
-        AsyncStorage.setItem("tags", JSON.stringify(tags));
-        this.setState({ starredItems, eventData, tags });
-      });
+      this.refreshSchedule();
     });
 
     AsyncStorage.getItem("infoBlocks", (error, result) => {
@@ -260,6 +242,25 @@ export default class App extends Component<Props> {
       });
   };
 
+  refreshSchedule = async () => {
+    fetchEvents().then(data => {
+      // load star dict before exposing to user - ? do we need to worry about CMS failure?
+      const starredItems = { ...this.state.starredItems };
+      data.data.eventbases.forEach((base) => {
+        if (!(base.id in starredItems)) {
+          starredItems[base.id] = false; // don't worry about the things in starred item that aren't in events, they won't render
+        }
+      })
+
+      const eventData = populateEvents(data.data); // store ready to use data
+      const tags = data.data.tags.map(tag => tag.name);
+
+      AsyncStorage.setItem("eventData", JSON.stringify(eventData)); // store the clean version
+      AsyncStorage.setItem("tags", JSON.stringify(tags));
+      this.setState({ starredItems, eventData, tags });
+    });
+  }
+
   toggleStarred = async (id) => {
     const curItems = { ...this.state.starredItems };
 
@@ -299,6 +300,7 @@ export default class App extends Component<Props> {
               infoBlocks,
               eventData,
               tags,
+              refreshSchedule: this.refreshSchedule,
             }}
           >
             <AppContainer />

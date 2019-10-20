@@ -11,7 +11,7 @@ import { InfoCard, StyledText, Spacer } from "../components";
 // Select info blocks from CMS to render
 export const CARD_KEYS = ["welcome", "app_links", "faq", "social_media"];
 import { colors } from "../themes";
-import { CMSContext } from "../App";
+import { CMSContext } from "../context";
 
 class Home extends Component {
 
