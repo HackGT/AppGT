@@ -5,22 +5,21 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* AppGTTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AppGTTests.m */; };
-		050E5D42A4BE49A48B503C99 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 822F80AC936149DFB8DDC9EE /* RNBackgroundFetch+AppDelegate.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		43D5BA11232D993400BC32C4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */; };
 		43D5BA12232D993400BC32C4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */; };
-		59DCC33FEC4649DC8FBB853C /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB038A9400B84433B99EB274 /* TSBackgroundFetch.framework */; };
-		B4F14156E0DA26B24B095F7F /* libPods-AppGTTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B694C8962D68457D2DF88E /* libPods-AppGTTests.a */; };
-		F1A03C8C937FEDD938CAC48F /* libPods-AppGT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 218F6D413EE088AF243EB8EF /* libPods-AppGT.a */; };
 		7D1BC169C88049B49DDC706C /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A31AA524BEF1468EBB9972FC /* SpaceMono-Bold.ttf */; };
-		CEC1530855EA4943BBDD093A /* SpaceMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A816B4401B74672BD1F5B9C /* SpaceMono-BoldItalic.ttf */; };
-		C9BFA8F51BCF4A3C8B4C1544 /* SpaceMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A36C432A5E2A436988AD9F02 /* SpaceMono-Italic.ttf */; };
+		B4F14156E0DA26B24B095F7F /* libPods-AppGTTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B694C8962D68457D2DF88E /* libPods-AppGTTests.a */; };
 		C7887A59C9974CD791A43562 /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1332F2F4396B4059AD8E8A50 /* SpaceMono-Regular.ttf */; };
+		C9BFA8F51BCF4A3C8B4C1544 /* SpaceMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A36C432A5E2A436988AD9F02 /* SpaceMono-Italic.ttf */; };
+		CEC1530855EA4943BBDD093A /* SpaceMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A816B4401B74672BD1F5B9C /* SpaceMono-BoldItalic.ttf */; };
+		F1A03C8C937FEDD938CAC48F /* libPods-AppGT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 218F6D413EE088AF243EB8EF /* libPods-AppGT.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +39,7 @@
 		00E356F21AD99517003FC87E /* AppGTTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppGTTests.m; sourceTree = "<group>"; };
 		01487494C63778A9B7066D1A /* libPods-AppGT-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB473E776854E5060D43726 /* Pods-AppGT-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOS/Pods-AppGT-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		1332F2F4396B4059AD8E8A50 /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AppGT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppGT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppGT/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = AppGT/AppDelegate.m; sourceTree = "<group>"; };
@@ -52,8 +52,6 @@
 		38608AB0687D5BB33C335009 /* Pods-AppGTTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGTTests.release.xcconfig"; path = "Target Support Files/Pods-AppGTTests/Pods-AppGTTests.release.xcconfig"; sourceTree = "<group>"; };
 		43D5BA10232D993400BC32C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		43D5BA13232D9FE000BC32C4 /* AppGT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AppGT.entitlements; path = AppGT/AppGT.entitlements; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* AppGT-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AppGT-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* AppGT-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppGT-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C73623CA13B53CA3D2E1D1A /* Pods-AppGT-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOSTests/Pods-AppGT-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		77BB4E226B41E568D1E58068 /* Pods-AppGT-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOSTests/Pods-AppGT-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		803253AFFE51A6CCC55D00EC /* libPods-AppGT-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,14 +59,13 @@
 		83B90D9BEDC1FE142560E384 /* Pods-AppGT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT.release.xcconfig"; path = "Target Support Files/Pods-AppGT/Pods-AppGT.release.xcconfig"; sourceTree = "<group>"; };
 		90B694C8962D68457D2DF88E /* libPods-AppGTTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGTTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		99DF9EFC71CEA85D16F2F878 /* Pods-AppGTTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGTTests.debug.xcconfig"; path = "Target Support Files/Pods-AppGTTests/Pods-AppGTTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9A816B4401B74672BD1F5B9C /* SpaceMono-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-BoldItalic.ttf"; path = "../assets/fonts/SpaceMono-BoldItalic.ttf"; sourceTree = "<group>"; };
+		A31AA524BEF1468EBB9972FC /* SpaceMono-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Bold.ttf"; path = "../assets/fonts/SpaceMono-Bold.ttf"; sourceTree = "<group>"; };
+		A36C432A5E2A436988AD9F02 /* SpaceMono-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Italic.ttf"; path = "../assets/fonts/SpaceMono-Italic.ttf"; sourceTree = "<group>"; };
 		DB038A9400B84433B99EB274 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; };
 		E2A8A716A7CE3F4FE6E831EA /* Pods-AppGT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT.debug.xcconfig"; path = "Target Support Files/Pods-AppGT/Pods-AppGT.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		A31AA524BEF1468EBB9972FC /* SpaceMono-Bold.ttf */ = {isa = PBXFileReference; name = "SpaceMono-Bold.ttf"; path = "../assets/fonts/SpaceMono-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		9A816B4401B74672BD1F5B9C /* SpaceMono-BoldItalic.ttf */ = {isa = PBXFileReference; name = "SpaceMono-BoldItalic.ttf"; path = "../assets/fonts/SpaceMono-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A36C432A5E2A436988AD9F02 /* SpaceMono-Italic.ttf */ = {isa = PBXFileReference; name = "SpaceMono-Italic.ttf"; path = "../assets/fonts/SpaceMono-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		1332F2F4396B4059AD8E8A50 /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +82,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1A03C8C937FEDD938CAC48F /* libPods-AppGT.a in Frameworks */,
-				59DCC33FEC4649DC8FBB853C /* TSBackgroundFetch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,17 +261,6 @@
 								enabled = 1;
 							};
 						};
-					};
-					2D02E47A1E0B4A5D006451C7 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = VG8HJ8DZBZ;
-						ProvisioningStyle = Automatic;
-					};
-					2D02E48F1E0B4A5D006451C7 = {
-						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = VG8HJ8DZBZ;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
 				};
 			};
@@ -467,7 +452,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				050E5D42A4BE49A48B503C99 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,120 +567,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = gt.hack.AppGT;
 				PRODUCT_NAME = AppGT;
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Release;
-		};
-		2D02E4971E0B4A5E006451C7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2577DF5A4965FE9830048F04 /* Pods-AppGT-tvOS.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppGT-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.AppGT-tvOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		2D02E4981E0B4A5E006451C7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0BB473E776854E5060D43726 /* Pods-AppGT-tvOS.release.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppGT-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.AppGT-tvOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
-		2D02E4991E0B4A5E006451C7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 77BB4E226B41E568D1E58068 /* Pods-AppGT-tvOSTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppGT-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.AppGT-tvOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppGT-tvOS.app/AppGT-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
-			};
-			name = Debug;
-		};
-		2D02E49A1E0B4A5E006451C7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5C73623CA13B53CA3D2E1D1A /* Pods-AppGT-tvOSTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "AppGT-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.AppGT-tvOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppGT-tvOS.app/AppGT-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
 		};
