@@ -57,7 +57,7 @@ export default (ScheduleCard = ({
             style={{
               marginBottom: 2,
               flex: 1,
-              ...styleguide.title
+              ...styleguide.scheduleCardTitle
             }}
           >
             {title}
@@ -84,9 +84,11 @@ export default (ScheduleCard = ({
           </TouchableOpacity>
         </View>
         {areaBlock}
-        <View style={{
-          paddingLeft: 10
-        }}>
+        <View
+          style={{
+            paddingLeft: 10
+          }}
+        >
           <TagList tags={tags} />
         </View>
       </View>

@@ -29,7 +29,7 @@ class ButtonControl extends Component<Props> {
           ...containerStyle
         }}
         selectedButtonStyle={{
-          backgroundColor: colors.primaryBlue,
+          backgroundColor: colors.primaryBlue
         }}
         selectedTextStyle={{
           fontWeight: "bold",
