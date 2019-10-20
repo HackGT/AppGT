@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from "../styles";
 import { colors } from "../themes";
 import { StyledText, Location } from "../components";
-import { faTimesCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle, faCamera, faSync, faSpinner} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 // TODO revamped UI
@@ -68,7 +68,8 @@ class LoggedIn extends Component<Props> {
       solvedQuestions: [],
       done: false,
       found: ["Rose Garden", "Lobster Beach", "Tea Party", "Mushroom Forest"],
-      location: ""
+      location: "",
+      load: false
     };
     AsyncStorage.getItem(
       "solvedQuestions",
@@ -124,6 +125,7 @@ class LoggedIn extends Component<Props> {
   };
 
   getScores = () => {
+    console.log("Fetching");
     const resString = this.getPayload();
     return fetchQA(resString, SCORE_ENDPOINT)
       .then(res => {
@@ -154,6 +156,10 @@ class LoggedIn extends Component<Props> {
     this.setState({ qr: false });
   };
 
+  updateModal = () => {
+    this.setState({location: ""});
+  }
+
   render() {
     const {
       solvedQuestions,
@@ -169,14 +175,29 @@ class LoggedIn extends Component<Props> {
 
       <View>
         <View style={styleguide.card}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({load: true});
+              this.getScores();
+              this.setState({load: false});
+            }}
+            style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0}}
+          >
+            <FontAwesomeIcon
+              color="black"
+              icon={faSync}
+              size={20}
+            />
+          </TouchableOpacity>
           <StyledText style={styleguide.score}>
-            Puzzles solved: {solvedQuestions.length}
+            Puzzles solved:
           </StyledText>
           {done && (
             <StyledText>Save Beardell! Return to the Quest Board!</StyledText>
           )}
           { this.state.location !== "" &&
-            <Location puzzle={this.state.puzzle} user={this.props.user} />
+            <Location puzzle={this.state.puzzle} user={this.props.user} refreshModal={this.updateModal}
+             />
           }
           {!done && (
             <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>

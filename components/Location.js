@@ -56,6 +56,25 @@ class Location extends Component<Props> {
   constructor(props) {
     super(props);
 
+    img = null;
+
+    switch (this.props.puzzle.title) {
+      case "Lobster Beach":
+        img = lob_back;
+        break;
+
+      case "Rose Garden":
+        img = rose_back;
+        break;
+
+      case "Mushroom Forest":
+        img = shroom_back;
+        break;
+
+      default:
+        img = tea_back;
+    }
+
     this.state = {
       formState: FORM_CLOSED,
       formMessage: "", // only used in feedback
@@ -63,8 +82,9 @@ class Location extends Component<Props> {
       done: false,
       puzzle: this.props.puzzle,
       show: true,
-      image: {tea_back},
-      uuid: ""
+      image: lob_back,
+      uuid: "",
+      image: img
     };
 
     console.log(this.props);
@@ -72,22 +92,6 @@ class Location extends Component<Props> {
     this.setState({puzzle: this.props.puzzle});
     console.log(this.state.puzzle);
 
-    // switch(this.props.puzzle.title) {
-    //   case "Lobster Beach":
-    //     this.setState({image: lob_back});
-    //     break;
-    //
-    //   case "Rose Garden":
-    //     this.setState({image: rose_back});
-    //     break;
-    //
-    //   case "Mushroom Forest":
-    //     this.setState({image: shroom_back});
-    //     break;
-    //
-    //   default:
-    //     this.setState({image: tea_back});
-    // }
 
     this.setState({formState: FORM_CLOSED});
   }
@@ -105,6 +109,11 @@ class Location extends Component<Props> {
     resBody.push(encodedKey + "=" + encodedValue);
     return resBody.join("&");
   };
+
+  closeModal = () => {
+    this.setState({show: false});
+    this.props.refreshModal();
+  }
 
   sendInput = () => {
     this.setState({ formState: FORM_LOADING });
@@ -154,8 +163,33 @@ class Location extends Component<Props> {
           transparent={false}
         >
           <View style={{width: "100%", height: "100%", backgroundColor: "white"}}>
-            <Image source={image} style={{width: "100%", height: 250}}/>
+            <TouchableOpacity
+              onPress={this.closeModal}
+              style={{
+                zIndex: 1,
+                ...styleguide.cancelButton,
+                position: "absolute",
+              }}
+            >
+              <FontAwesomeIcon
+                color="red"
+                icon={faTimesCircle}
+                size={30}
+              />
+            </TouchableOpacity>
+            <View>
+              <Image source={image} style={{width: "100%", height: 250, top: 0}}/>
+            </View>
             <StyledText> {puzzle.question} </StyledText>
+            <TouchableOpacity
+              onPress={() => this.setState({formState: FORM_SUBMIT})}
+              style={{
+                marginTop: 10,
+                ...styleguide.button,
+              }}
+            >
+              <StyledText style={{color: "white"}}>Input Answer</StyledText>
+            </TouchableOpacity>
           </View>
         </Modal>
         <SubmissionModal

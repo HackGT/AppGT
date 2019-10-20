@@ -95,7 +95,7 @@ export const styleguide = StyleSheet.create({
     width: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10
+    marginTop: 10,
   },
   qr: {
     fontWeight: "bold",
