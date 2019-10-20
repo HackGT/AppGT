@@ -15,18 +15,7 @@ class ScavHunt extends Component<Props> {
 
     render() {
         return (
-            <ScrollView style={styleguide.wrapperView}>
-                <View style={styleguide.titleView}>
-                    <StyledText style={styleguide.title}>HackGT6: Scavenger Hunt</StyledText>
-                </View>
-                <View style={styleguide.card}>
-                    <StyledText style={{ fontWeight: "bold" }}>
-                        Help Beardell save his friends!
-                    </StyledText>
-                    <StyledText>
-                        Beardell’s friends have been kidnapped by the evil forces of creative block. Help him rescue them by completing activities!
-                    </StyledText>
-                </View>
+            <View style={styleguide.wrapperView}>
                 <AuthContext.Consumer>
                     {({ user, login, logout }) => {
                         if (!user) return <LoggedOut login={login} />;
@@ -34,7 +23,7 @@ class ScavHunt extends Component<Props> {
                     }}
                 </AuthContext.Consumer>
                 <Spacer />
-            </ScrollView>
+            </View>
         );
     }
 }

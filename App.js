@@ -99,9 +99,6 @@ const TabNavigator = createBottomTabNavigator(
           case "Schedule":
             icon = faCalendarDay;
             break;
-          case "Notifications":
-            icon = faBell;
-            break;
           case "ScavHunt":
             icon = faKey;
             break;

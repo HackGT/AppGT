@@ -6,14 +6,16 @@ import {
   StyleSheet,
   Image,
   TextInput,
-  Button
+  Button,
+  ScrollView,
+  Vibration
 } from "react-native";
 import Modal from "react-native-modal";
-import QRCodeScanner from "react-native-qrcode-scanner";
+import {RNCamera} from "react-native-camera";
 import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from "../styles";
 import { colors } from "../themes";
-import { StyledText } from "../components";
+import { StyledText, Spacer } from "../components";
 import { faTimesCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
@@ -60,49 +62,57 @@ class LoggedIn extends Component<Props> {
     this.setState({uuid: this.props.user.uuid});
     this.setState({login: this.props.login});
     this.setState({logout: this.props.logout});
-    this.setState({found: ["Rose", "Lobster", "Tea", "Mushroom"]});
+    // this.setState({found: ["Rose", "Lobster", "Tea", "Mushroom"]});
+    this.setState({formState: FORM_CLOSED});
+    // this.setState({cameraType: Camera.constants.Type.back});
+
     //this.getScores();
-    console.log("*********************FOUND: " + (this.state.found.indexOf("Lobster") > -1));
   }
 
 
   state = {
-    login: false,
-    isDialogVisible: true,
+    puzzle: {
+      slug: "hi"
+    },
     qr: true,
-    submit: false,
-    found: [],
+    formState: FORM_CLOSED,
+    formMessage: "", // only used in feedback
+    formInput: "",
+    solvedQuestions: [],
+    done: false,
+    found: ["Rose", "Lobster", "Tea", "Mushroom"]
   };
 
-  sendInput = (inputText) => {
-    this.setState({submit: false});
-    var details = {
-      "question": this.state.values,
-      "answer": inputText,
-      "uuid": this.state.uuid
-    }
-    this.getScores();
-    this.state = {
-      puzzle: {
-        slug: "hi"
-      },
-      qr: false,
-      formState: FORM_CLOSED,
-      formMessage: "", // only used in feedback
-      formInput: "",
-      solvedQuestions: [],
-      done: false
-    };
-    AsyncStorage.getItem(
-      "solvedQuestions",
-      (error, result) =>
-        result && this.setState({ solvedQuestions: JSON.parse(result) })
-    );
-    AsyncStorage.getItem(
-      "scavDone",
-      (error, result) => result && this.setState({ done: JSON.parse(result) })
-    );
-  }
+  // sendInput = (inputText) => {
+  //   this.setState({submit: false});
+  //   var details = {
+  //     "question": this.state.values,
+  //     "answer": inputText,
+  //     "uuid": this.state.uuid
+  //   }
+  //   this.getScores();
+  //   this.state = {
+  //     puzzle: {
+  //       slug: "hi"
+  //     },
+  //     qr: false,
+  //     formState: FORM_CLOSED,
+  //     formMessage: "", // only used in feedback
+  //     formInput: "",
+  //     solvedQuestions: [],
+  //     done: false
+  //   };
+  //   AsyncStorage.getItem(
+  //     "solvedQuestions",
+  //     (error, result) =>
+  //       result && this.setState({ solvedQuestions: JSON.parse(result) })
+  //   );
+  //   AsyncStorage.getItem(
+  //     "scavDone",
+  //     (error, result) => result && this.setState({ done: JSON.parse(result) })
+  //   );
+  //   this.setState({qr: true});
+  // }
 
   getPayload = (details = {}) => {
     const resBody = [];
@@ -119,6 +129,7 @@ class LoggedIn extends Component<Props> {
 
   sendInput = () => {
     this.setState({ formState: FORM_LOADING });
+    this.setState({qr: true});
     const { puzzle, formInput } = this.state;
     const resString = this.getPayload({
       question: puzzle.slug,
@@ -164,6 +175,8 @@ class LoggedIn extends Component<Props> {
   };
 
   handleQRCode = e => {
+    Vibration.vibrate();
+    console.log(JSON.parse(e.data))
     this.setState({
       puzzle: JSON.parse(e.data),
       qr: false,
@@ -194,85 +207,95 @@ class LoggedIn extends Component<Props> {
   }
 
   render() {
+    const {
+      solvedQuestions,
+      formState,
+      qr,
+      done,
+      formMessage,
+      formInput
+    } = this.state;
       return (
-                <View style={styleguide.card}>
-                  <View>
-                    <Modal
-                      animationType="slide"
-                      transparent={false}
-                      visible={this.state.qr}
-                      onRequestClose={() => {
-                        console.log('Modal has been closed.');
-                      }}>
-                      <QRCodeScanner
-                        onRead={this.handleQRCode.bind(this)}
-                        topContent={
-                          <View style={styleguide.titleView}>
-                            <StyledText style={styleguide.title}>Scavenger Hunt</StyledText>
-                            <StyledText>HackGT6: Into the Rabbit Hole</StyledText>
-                          </View>
-                        }
-                        bottomContent={
-                          <View>
-                            <View>
-                              <StyledText>Scan QR Code to Begin</StyledText>
-                            </View>
-                            <View>
-                            {this.state.found.length == 0 &&
-                              <View>
-                                <StyledText>No locations found yet :( </StyledText>
-                                <StyledText>Check out the quest board near Help Desk to start exploring Wonderland!</StyledText>
-                              </View>
-                            }
-                            {this.state.found.length > 0 &&
-                              <StyledText>Locations Found</StyledText>
-                            }
-                            { this.state.found.length > 0 && this.state.found.indexOf("Lobster") > -1 &&
-                              <TouchableOpacity
-                                onPress={() => console.log("Lobster")}
-                                style={styleguide.LobButton}>
-                                <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
-                              </TouchableOpacity>
-                            }
+                <ScrollView contentContainerStyle={{flexDirection: "column", justifyContent: "center", textAlign: "center", alignItems: "center", paddingBottom: 100}}>
+                  <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                    <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                      <StyledText style={{fontWeight: "bold", fontSize: 20}}>Scavenger Hunt</StyledText>
+                      <StyledText>HackGT6: Into the Rabbit Hole</StyledText>
+                    </View>
+                    { this.state.qr && <RNCamera
+                      onBarCodeRead={this.handleQRCode.bind(this)}
+                      captureAudio={false}
+                      style={{flex: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent', height: 370, width: 278,}}
+                    >
+                      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent'}}>
+                        <View style={{ height: 370, width: 278, backgroundColor: 'transparent'}} />
+                      </View>
+                    </RNCamera> }
+                    <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                      <View>
+                        <StyledText>Scan QR Code to Begin</StyledText>
+                      </View>
+                      {this.state.found.length == 0 &&
+                        <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                          <StyledText>No locations found yet :( </StyledText>
+                          <StyledText>Check out the quest board near Help Desk to start exploring Wonderland!</StyledText>
+                        </View>
+                      }
+                      {this.state.found.length > 0 &&
+                        <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                          <StyledText>Show your tokens to Help Desk to collect a reward!</StyledText>
+                          <StyledText>Locations Found</StyledText>
+                        </View>
 
-                            { this.state.found.length > 0 && this.state.found.indexOf("Rose") > -1 &&
-                              <TouchableOpacity
-                                onPress={() => console.log("Rose")}
-                                style={styleguide.RoseButton}>
-                                <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
-                              </TouchableOpacity>
-                            }
-                            { this.state.found.length > 0 && this.state.found.indexOf("Mushroom") > -1 &&
-                              <TouchableOpacity
-                                onPress={() => console.log("Shroom")}
-                                style={styleguide.ShroomButton}>
-                                <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
-                              </TouchableOpacity>
-                            }
-                            { this.state.found.length > 0 && this.state.found.indexOf("Tea") > -1 &&
-                              <TouchableOpacity
-                                onPress={() => console.log("Tea")}
-                                style={styleguide.TeaButton}>
-                                <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
-                              </TouchableOpacity>
-                            }
-                            { this.state.found.length > 0 &&
-                                <StyledText>Show your tokens to Help Desk to collect a reward!</StyledText>
-                            }
-                            </View>
-                            <TouchableOpacity
-                              onPress={() => this.setState({qr: false})}
-                              style={styleguide.cancelButton}>
-                              <FontAwesomeIcon color="red" icon={faTimesCircle} size={30} />
-                            </TouchableOpacity>
-                          </View>
-                        }
-                        topViewStyle={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", paddingBottom: 50, paddingLeft: 20}}
-                        cameraStyle={{borderRadius: 20, height: 50, width: 50}}
-                      />
-                    </Modal>
+                      }
+                      <View style={{justifyContent: "center", textAlign: "center", alignItems: "center", paddingRight: 100}}>
+
+                      { this.state.found.length > 0 && this.state.found.indexOf("Lobster") > -1 &&
+                        <TouchableOpacity
+                          onPress={() => console.log("Lobster")}
+                          style={styleguide.LobButton}>
+                          <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
+                        </TouchableOpacity>
+                      }
+
+                      { this.state.found.length > 0 && this.state.found.indexOf("Rose") > -1 &&
+                        <TouchableOpacity
+                          onPress={() => console.log("Rose")}
+                          style={styleguide.RoseButton}>
+                          <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
+                        </TouchableOpacity>
+                      }
+                      { this.state.found.length > 0 && this.state.found.indexOf("Mushroom") > -1 &&
+                        <TouchableOpacity
+                          onPress={() => console.log("Shroom")}
+                          style={styleguide.ShroomButton}>
+                          <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
+                        </TouchableOpacity>
+                      }
+                      { this.state.found.length > 0 && this.state.found.indexOf("Tea") > -1 &&
+                        <TouchableOpacity
+                          onPress={() => console.log("Tea")}
+                          style={styleguide.TeaButton}>
+                          <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
+                        </TouchableOpacity>
+                      }
+                      </View>
+                    </View>
                   </View>
-                </View>
+                  <SubmissionModal
+                    formState={formState}
+                    formMessage={formMessage}
+                    formInput={formInput}
+                    setFormInput={formInput => this.setState({ formInput })}
+                    onSubmit={this.sendInput}
+                    closeModal={() =>
+                      this.setState({
+                        formInput: "",
+                        formState: FORM_CLOSED
+                      })
+                    }
+                  />
+                </ScrollView>
       );
   }
 }

@@ -48,7 +48,8 @@ export const styleguide = StyleSheet.create({
   titleView: {
     marginLeft: 24,
     marginTop: 24,
-    marginBottom: 12
+    marginBottom: 12,
+    marginRight: 24
   },
   wrapperView: {
     paddingTop: 36,
@@ -117,6 +118,9 @@ export const styleguide = StyleSheet.create({
     height: 66,
     left: 61,
     top: 92,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10
   },
   LobText: {
     color: "#F9A57C",
@@ -131,6 +135,9 @@ export const styleguide = StyleSheet.create({
     height: 66,
     left: 61,
     top: 92,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10
   },
   RoseText: {
     color: "#F05F9B",
@@ -145,6 +152,9 @@ export const styleguide = StyleSheet.create({
     height: 66,
     left: 61,
     top: 92,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10
   },
   ShroomText: {
     color: "#457483",
@@ -159,6 +169,9 @@ export const styleguide = StyleSheet.create({
     height: 66,
     left: 61,
     top: 92,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10
   },
   TeaText: {
     color: "#6DAEDF",
