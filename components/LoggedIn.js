@@ -14,7 +14,7 @@ import {RNCamera} from "react-native-camera";
 import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from "../styles";
 import { colors } from "../themes";
-import { StyledText } from "../components";
+import { StyledText, Location } from "../components";
 import { faTimesCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
@@ -67,7 +67,8 @@ class LoggedIn extends Component<Props> {
       formInput: "",
       solvedQuestions: [],
       done: false,
-      found: ["Rose", "Lobster", "Tea", "Mushroom"]
+      found: ["Rose Garden", "Lobster Beach", "Tea Party", "Mushroom Forest"],
+      location: ""
     };
     AsyncStorage.getItem(
       "solvedQuestions",
@@ -146,6 +147,7 @@ class LoggedIn extends Component<Props> {
       qr: false,
       formState: FORM_SUBMIT
     });
+    this.setState({location: this.state.puzzle.title});
   };
 
   closeQR = () => {
@@ -159,10 +161,12 @@ class LoggedIn extends Component<Props> {
       qr,
       done,
       formMessage,
-      formInput
+      formInput,
+      location
     } = this.state;
 
     return (
+
       <View>
         <View style={styleguide.card}>
           <StyledText style={styleguide.score}>
@@ -171,28 +175,31 @@ class LoggedIn extends Component<Props> {
           {done && (
             <StyledText>Save Beardell! Return to the Quest Board!</StyledText>
           )}
+          { this.state.location !== "" &&
+            <Location puzzle={this.state.puzzle} user={this.props.user} />
+          }
           {!done && (
             <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
-              { this.state.found.length > 0 && this.state.found.indexOf("Lobster") > -1 &&
+              { this.state.found.length > 0 && this.state.found.indexOf("Lobster Beach") > -1 &&
                 <View
                   style={styleguide.LobButton}>
                   <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
                 </View>
               }
 
-              { this.state.found.length > 0 && this.state.found.indexOf("Rose") > -1 &&
+              { this.state.found.length > 0 && this.state.found.indexOf("Rose Garden") > -1 &&
                 <View
                   style={styleguide.RoseButton}>
                   <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
                 </View>
               }
-              { this.state.found.length > 0 && this.state.found.indexOf("Mushroom") > -1 &&
+              { this.state.found.length > 0 && this.state.found.indexOf("Mushroom Forest") > -1 &&
                 <View
                   style={styleguide.ShroomButton}>
                   <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
                 </View>
               }
-              { this.state.found.length > 0 && this.state.found.indexOf("Tea") > -1 &&
+              { this.state.found.length > 0 && this.state.found.indexOf("Tea Party") > -1 &&
                 <View
                   style={styleguide.TeaButton}>
                   <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
@@ -255,19 +262,6 @@ class LoggedIn extends Component<Props> {
                 </RNCamera>
               </DefaultModal>
             </View>
-            <SubmissionModal
-              formState={formState}
-              formMessage={formMessage}
-              formInput={formInput}
-              setFormInput={formInput => this.setState({ formInput })}
-              onSubmit={this.sendInput}
-              closeModal={() =>
-                this.setState({
-                  formInput: "",
-                  formState: FORM_CLOSED
-                })
-              }
-            />
           </View>
         )}
       </View>
@@ -275,75 +269,75 @@ class LoggedIn extends Component<Props> {
   }
 }
 
-const SubmissionModal = ({
-  onSubmit,
-  formState,
-  formMessage,
-  formInput,
-  setFormInput,
-  closeModal
-}) => {
-  return (
-    <Modal
-      isVisible={formState !== FORM_CLOSED}
-      hintInput={"Response"}
-      onBackButtonPress={closeModal}
-      onBackdropPress={closeModal}
-      closeDialog={() => {
-        this.setState({ formState: FORM_CLOSED });
-      }}
-    >
-      <View style={styles.content}>
-        {formState === FORM_SUBMIT && (
-          <View>
-            <View
-              style={{
-                marginLeft: 8,
-                marginBottom: 8
-              }}
-            >
-              <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
-              <TextInput
-                value={formInput}
-                onChangeText={setFormInput}
-                style={{
-                  borderBottomColor: colors.darkGrayText,
-                  borderBottomWidth: 2
-                }}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={onSubmit}
-              style={
-                formInput.length === 0
-                  ? styleguide.buttonDisabled
-                  : styleguide.button
-              }
-              disabled={formInput.length === 0}
-            >
-              <StyledText style={{ color: "white" }}>Submit</StyledText>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {formState === FORM_LOADING && (
-          <View>
-            <StyledText>Checking your answer...</StyledText>
-          </View>
-        )}
-
-        {formState === FORM_FEEDBACK && (
-          <View>
-            <StyledText>{formMessage}</StyledText>
-            <TouchableOpacity onPress={closeModal} style={styleguide.button}>
-              <StyledText style={{ color: "white" }}>Close</StyledText>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    </Modal>
-  );
-};
+// const SubmissionModal = ({
+//   onSubmit,
+//   formState,
+//   formMessage,
+//   formInput,
+//   setFormInput,
+//   closeModal
+// }) => {
+//   return (
+//     <Modal
+//       isVisible={formState !== FORM_CLOSED}
+//       hintInput={"Response"}
+//       onBackButtonPress={closeModal}
+//       onBackdropPress={closeModal}
+//       closeDialog={() => {
+//         this.setState({ formState: FORM_CLOSED });
+//       }}
+//     >
+//       <View style={styles.content}>
+//         {formState === FORM_SUBMIT && (
+//           <View>
+//             <View
+//               style={{
+//                 marginLeft: 8,
+//                 marginBottom: 8
+//               }}
+//             >
+//               <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
+//               <TextInput
+//                 value={formInput}
+//                 onChangeText={setFormInput}
+//                 style={{
+//                   borderBottomColor: colors.darkGrayText,
+//                   borderBottomWidth: 2
+//                 }}
+//               />
+//             </View>
+//             <TouchableOpacity
+//               onPress={onSubmit}
+//               style={
+//                 formInput.length === 0
+//                   ? styleguide.buttonDisabled
+//                   : styleguide.button
+//               }
+//               disabled={formInput.length === 0}
+//             >
+//               <StyledText style={{ color: "white" }}>Submit</StyledText>
+//             </TouchableOpacity>
+//           </View>
+//         )}
+//
+//         {formState === FORM_LOADING && (
+//           <View>
+//             <StyledText>Checking your answer...</StyledText>
+//           </View>
+//         )}
+//
+//         {formState === FORM_FEEDBACK && (
+//           <View>
+//             <StyledText>{formMessage}</StyledText>
+//             <TouchableOpacity onPress={closeModal} style={styleguide.button}>
+//               <StyledText style={{ color: "white" }}>Close</StyledText>
+//             </TouchableOpacity>
+//           </View>
+//         )}
+//       </View>
+//     </Modal>
+//   );
+// };
 
 const styles = StyleSheet.create({
   qrTop: {

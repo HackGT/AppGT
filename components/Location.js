@@ -17,6 +17,7 @@ import { colors } from "../themes";
 import { StyledText, Spacer } from "../components";
 import { faTimesCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { lob_back, rose_back, shroom_back, tea_back } from "../images";
 
 const CHECK_ENDPOINT = "https://qa.hack.gt/check";
 const SCORE_ENDPOINT = "https://qa.hack.gt/score";
@@ -55,20 +56,42 @@ class Location extends Component<Props> {
   constructor(props) {
     super(props);
 
+    this.state = {
+      formState: FORM_CLOSED,
+      formMessage: "", // only used in feedback
+      formInput: "",
+      done: false,
+      puzzle: this.props.puzzle,
+      show: true,
+      image: null,
+      uuid: ""
+    };
+
     console.log(this.props);
     this.setState({uuid: this.props.user.uuid});
-    this.setState({location: this.props.location});
+    this.setState({puzzle: this.props.puzzle});
+    console.log(this.state.puzzle);
+
+    switch(this.props.puzzle.title) {
+      case "Lobster Beach":
+        this.setState({image: lob_back});
+        break;
+
+      case "Rose Garden":
+        this.setState({image: rose_back});
+        break;
+
+      case "Mushroom Forest":
+        this.setState({image: shroom_back});
+        break;
+
+      default:
+        this.setState({image: tea_back});
+    }
 
     this.setState({formState: FORM_CLOSED});
   }
 
-
-  state = {
-    formState: FORM_CLOSED,
-    formMessage: "", // only used in feedback
-    formInput: "",
-    done: false,
-  };
 
   getPayload = (details = {}) => {
     const resBody = [];
@@ -101,7 +124,7 @@ class Location extends Component<Props> {
         if (!status) {
           return;
         }
-        this.setState({ solvedQuestions, done });
+        // this.setState({ solvedQuestions, done });
         AsyncStorage.setItem(
           "solvedQuestions",
           JSON.stringify(solvedQuestions)
@@ -114,14 +137,25 @@ class Location extends Component<Props> {
   };
 
   render() {
+    const {
+      formState,
+      formMessage,
+      show,
+      image,
+      puzzle,
+      formInput
+    } = this.state;
     return(
       <View>
         <Modal
-          isVisible={this.state.show}
+          isVisible={show}
           onBackButtonPress={() => this.setState({show: false})}
           closeDialog={() => this.setState({show:false})}
         >
-
+          <View style={{width: "100%", height: "100%"}}>
+            <Image source={image} />
+            <StyledText> {puzzle.question} </StyledText>
+          </View>
         </Modal>
         <SubmissionModal
           formState={formState}
@@ -210,5 +244,25 @@ const SubmissionModal = ({
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  qrTop: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 50,
+    paddingLeft: 20
+  },
+  qrBottom: {},
+  content: {
+    backgroundColor: "white",
+    paddingHorizontal: 22,
+    paddingTop: 18,
+    paddingBottom: 18,
+    borderRadius: 8,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    maxHeight: 600
+  }
+});
 
 export default Location;
