@@ -95,7 +95,7 @@ export const populateEvents = data => {
   return eventInfo;
 };
 
-export default class Schedule extends Component<Props> {
+class ScheduleBase extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
@@ -108,8 +108,12 @@ export default class Schedule extends Component<Props> {
     };
   }
 
+  componentDidMount() {
+    this.props.refreshSchedule();
+  }
+
   updateText = searchText => {
-    this.setState({ searchText, searchLower: searchText.toLowerCase() });
+    this.setState({ searchText, searchLower: searchText.trim().toLowerCase() });
   };
 
   onSelectEvent = item => {
@@ -230,7 +234,7 @@ export default class Schedule extends Component<Props> {
                   lowerTags[index].includes(searchLower)
                 );
                 if (isMySchedule) {
-                  eventData = eventData.filter(item => starredItems[item.id]);
+                  eventData = eventData.filter(item => !!starredItems[item.id]);
                 }
                 eventData = eventData.filter(
                   item =>
@@ -313,6 +317,15 @@ export default class Schedule extends Component<Props> {
     );
   }
 }
+
+// Wrapper for context
+export default Schedule = (props) => (
+  <CMSContext.Consumer>
+  {({ refreshSchedule }) => (
+    <ScheduleBase refreshSchedule={refreshSchedule} {...props} />
+  )}
+  </CMSContext.Consumer>
+);
 
 const ScheduleSelector = ({ onSelectSchedule, selectedIndex }) => (
   <View style={styles.scheduleSelector}>
