@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import {
   View,
-  Modal as DefaultModal,
   TouchableOpacity,
   StyleSheet,
   Image,
   TextInput,
   Button,
   ScrollView,
-  Vibration
+  Vibration,
+  Modal as DefaultModal
 } from "react-native";
 import Modal from "react-native-modal";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -63,7 +63,7 @@ class Location extends Component<Props> {
       done: false,
       puzzle: this.props.puzzle,
       show: true,
-      image: null,
+      image: {tea_back},
       uuid: ""
     };
 
@@ -72,22 +72,22 @@ class Location extends Component<Props> {
     this.setState({puzzle: this.props.puzzle});
     console.log(this.state.puzzle);
 
-    switch(this.props.puzzle.title) {
-      case "Lobster Beach":
-        this.setState({image: lob_back});
-        break;
-
-      case "Rose Garden":
-        this.setState({image: rose_back});
-        break;
-
-      case "Mushroom Forest":
-        this.setState({image: shroom_back});
-        break;
-
-      default:
-        this.setState({image: tea_back});
-    }
+    // switch(this.props.puzzle.title) {
+    //   case "Lobster Beach":
+    //     this.setState({image: lob_back});
+    //     break;
+    //
+    //   case "Rose Garden":
+    //     this.setState({image: rose_back});
+    //     break;
+    //
+    //   case "Mushroom Forest":
+    //     this.setState({image: shroom_back});
+    //     break;
+    //
+    //   default:
+    //     this.setState({image: tea_back});
+    // }
 
     this.setState({formState: FORM_CLOSED});
   }
@@ -149,11 +149,12 @@ class Location extends Component<Props> {
       <View>
         <Modal
           isVisible={show}
-          onBackButtonPress={() => this.setState({show: false})}
-          closeDialog={() => this.setState({show:false})}
+          onRequestClose={() => this.setState({show:false})}
+          animationType="slide"
+          transparent={false}
         >
-          <View style={{width: "100%", height: "100%"}}>
-            <Image source={image} />
+          <View style={{width: "100%", height: "100%", backgroundColor: "white"}}>
+            <Image source={image} style={{width: "100%", height: 250}}/>
             <StyledText> {puzzle.question} </StyledText>
           </View>
         </Modal>
