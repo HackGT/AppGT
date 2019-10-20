@@ -29,13 +29,10 @@ import { CARD_KEYS } from "./screens/Home";
 import { populateEvents, UNSAFE_parseAsLocal } from "./screens/Schedule";
 import { NotifierService } from "./components";
 
+import { StarContext, AuthContext, CMSContext } from "./context";
 import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { colors } from "./themes";
 import { styleguide } from "./styles";
-
-export const AuthContext = React.createContext();
-export const StarContext = React.createContext();
-export const CMSContext = React.createContext();
 
 const authUrl = "https://login.hack.gt";
 

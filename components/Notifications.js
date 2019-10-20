@@ -26,6 +26,7 @@ class Notifications extends Component<Props> {
         // this.runNotifications();
         // this.pushNotif = new PushNotifService();
         firebase.messaging().getToken().then(token => {
+          console.log("Token:");
           console.log(token)
         });
 
@@ -33,7 +34,7 @@ class Notifications extends Component<Props> {
 
     subscribe(id) {
         if (!id) return;
-        // console.log(`sub ${id}`)
+        console.log(`sub ${id}`)
         firebase.messaging().subscribeToTopic(id);
     }
 

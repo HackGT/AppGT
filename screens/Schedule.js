@@ -20,7 +20,7 @@ import moment from "moment-timezone";
 
 import Event from "../components/events/Event";
 import { ScheduleCard, ButtonControl, StyledText, Spacer } from "../components";
-import { StarContext, CMSContext } from "../App";
+import { StarContext, CMSContext } from "../context";
 import { colors } from "../themes";
 import { styleguide } from "../styles";
 
