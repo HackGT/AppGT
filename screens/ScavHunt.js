@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ScrollView, View } from "react-native";
-import { AuthContext } from "../App";
+import { AuthContext } from "../context";
 import { styleguide } from '../styles'
 import { colors } from "../themes";
 import { StyledText, LoggedIn, LoggedOut, Spacer } from "../components";

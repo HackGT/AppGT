@@ -41,9 +41,7 @@ target 'AppGT' do
 
 
 
-  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
-  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
   target 'AppGTTests' do
     inherit! :search_paths
