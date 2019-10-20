@@ -80,7 +80,11 @@ const makeHyperlinks = (restaurantName, restaurantLink) => {
           </StyledText>
         );
       } else {
-        return <StyledText style={styles.text} key={name}>{name}</StyledText>;
+        return (
+          <StyledText style={styles.text} key={name}>
+            {name}
+          </StyledText>
+        );
       }
     } else if (index < restaurantLinkArr.length) {
       return (
@@ -93,7 +97,11 @@ const makeHyperlinks = (restaurantName, restaurantLink) => {
         </StyledText>
       );
     } else {
-      return <StyledText style={styles.text} key={name}>{name}, </StyledText>;
+      return (
+        <StyledText style={styles.text} key={name}>
+          {name},{" "}
+        </StyledText>
+      );
     }
   });
 };

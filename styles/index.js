@@ -27,6 +27,11 @@ export const styleguide = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 8
   },
+  scheduleCardTitle: {
+    fontWeight: "bold",
+    fontSize: 18,
+    paddingLeft: 8
+  },
   text: {
     fontSize: 15,
     marginBottom: 12

@@ -57,8 +57,7 @@ export const populateEvents = data => {
   const eventInfo = unsortedEventInfo.sort((e1, e2) => {
     if (e1.start_time !== e2.start_time)
       return e1.startTime > e2.startTime ? 1 : -1;
-    if (e1.end_time !== e2.end_time)
-      return e1.endTime > e2.endTime ? 1 : -1;
+    if (e1.end_time !== e2.end_time) return e1.endTime > e2.endTime ? 1 : -1;
     return e1.title > e2.title;
   });
   // Smoosh in additional info where relevant
@@ -110,6 +109,17 @@ export default class Schedule extends Component<Props> {
 
   updateText = searchText => {
     this.setState({ searchText, searchLower: searchText.toLowerCase() });
+  };
+
+  clearText = () => {
+    this.setState({ searchText: "" });
+    this.updateText("");
+  };
+
+  cancelSearch = () => {
+    this.setState({ searchText: "" });
+    this.updateText("");
+    Keyboard.dismiss();
   };
 
   onSelectEvent = item => {
@@ -200,6 +210,7 @@ export default class Schedule extends Component<Props> {
                 color={colors.darkGrayText}
                 icon={faTimes}
                 size={28}
+                onPress={this.clearText}
               />
             }
             cancelIcon={
@@ -207,8 +218,10 @@ export default class Schedule extends Component<Props> {
                 color={colors.darkGrayText}
                 icon={faArrowLeft}
                 size={28}
+                onPress={this.cancelSearch}
               />
             }
+            ref={search => (this.search = search)}
             platform="android"
             placeholder="Search by title or tag"
             onChangeText={this.updateText}
@@ -265,8 +278,12 @@ export default class Schedule extends Component<Props> {
                   );
                 }
                 const now = moment();
-                const oldEvents = searchingFiltered.filter(e => now.diff(e.timeStart) > 0); // pseudo-sort
-                const newEvents = searchingFiltered.filter(e => now.diff(e.timeStart) <= 0);
+                const oldEvents = searchingFiltered.filter(
+                  e => now.diff(e.timeStart) > 0
+                ); // pseudo-sort
+                const newEvents = searchingFiltered.filter(
+                  e => now.diff(e.timeStart) <= 0
+                );
                 const joinedEvents = newEvents.concat(oldEvents);
                 return (
                   <View>
@@ -351,14 +368,15 @@ const EventModal = ({ closeModal, isModalVisible, modalEvent }) => {
   );
 };
 
-export const UNSAFE_parseAsLocal = (t) => { // parse iso-formatted string as local time
+export const UNSAFE_parseAsLocal = t => {
+  // parse iso-formatted string as local time
   if (!t) return "";
-	let localString = t;
-	if (t.slice(-1).toLowerCase() === "z") {
-		localString = t.slice(0, -1);
-	}
-	return moment(localString);
-}
+  let localString = t;
+  if (t.slice(-1).toLowerCase() === "z") {
+    localString = t.slice(0, -1);
+  }
+  return moment(localString);
+};
 
 const styles = StyleSheet.create({
   search: {},
@@ -370,4 +388,3 @@ const styles = StyleSheet.create({
     marginBottom: 12
   }
 });
-
