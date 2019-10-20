@@ -26,10 +26,16 @@ class Notifications extends Component<Props> {
         // this.runNotifications();
         // this.pushNotif = new PushNotifService();
         firebase.messaging().getToken().then(token => {
-          console.log("Token:");
+          // console.log("Token:");
           console.log(token)
         });
 
+        // Build a channel
+        const channel = new firebase.notifications.Android.Channel('hackgt-channel', 'HackGT Channel', firebase.notifications.Android.Importance.Max)
+        .setDescription('For all your HackGT needs');
+
+        // Create the channel
+        firebase.notifications().android.createChannel(channel);
     }
 
     subscribe(id) {
