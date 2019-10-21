@@ -289,7 +289,7 @@ class LoggedIn extends Component<Props> {
             </View>
           )}
         </View>
-        {!done && (
+        {!done && this.state.solvedQuestions.length < 4 && (
           <View style={styleguide.card}>
             <StyledText style={{ padding: 10 }}>
               Where to next? Splash around Lobster Beach, wander in the Mushroom
