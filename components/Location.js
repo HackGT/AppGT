@@ -80,20 +80,8 @@ class Location extends Component<Props> {
       formMessage: "", // only used in feedback
       formInput: "",
       done: false,
-      puzzle: this.props.puzzle,
-      show: true,
-      image: lob_back,
-      uuid: "",
       image: img
     };
-
-    console.log(this.props);
-    this.setState({uuid: this.props.user.uuid});
-    this.setState({puzzle: this.props.puzzle});
-    console.log(this.state.puzzle);
-
-
-    this.setState({formState: FORM_CLOSED});
   }
 
 
@@ -110,14 +98,9 @@ class Location extends Component<Props> {
     return resBody.join("&");
   };
 
-  closeModal = () => {
-    this.setState({show: false});
-    this.props.refreshModal();
-  }
-
   sendInput = () => {
     this.setState({ formState: FORM_LOADING });
-
+    const { setSolvedQuestions, setDone } = this.props;
     const { puzzle, formInput } = this.state;
     const resString = this.getPayload({
       question: puzzle.slug,
@@ -126,14 +109,14 @@ class Location extends Component<Props> {
     return fetchQA(resString, CHECK_ENDPOINT)
       .then(res => {
         // schema: message, status (bool), answered, done
-        console.log("goodbye");
-
         const { status, message, answered: solvedQuestions, done } = res;
         this.setState({ formState: FORM_FEEDBACK, formMessage: message });
         if (!status) {
           return;
         }
-        // this.setState({ solvedQuestions, done });
+        setSolvedQuestions(solvedQuestions);
+        setDone(done);
+        this.setState({ solvedQuestions, done });
         AsyncStorage.setItem(
           "solvedQuestions",
           JSON.stringify(solvedQuestions)
@@ -149,16 +132,17 @@ class Location extends Component<Props> {
     const {
       formState,
       formMessage,
-      show,
       image,
-      puzzle,
-      formInput
+      formInput,
     } = this.state;
+
+    const { puzzle, closePuzzleModal } = this.props;
+
     return(
       <View>
         <Modal
-          isVisible={show}
-          onRequestClose={() => this.setState({show:false})}
+          isVisible={true}
+          onRequestClose={closePuzzleModal}
           animationType="slide"
           transparent={false}
         >

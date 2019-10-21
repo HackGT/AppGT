@@ -67,7 +67,7 @@ class LoggedIn extends Component<Props> {
       formInput: "",
       solvedQuestions: [],
       done: false,
-      location: "",
+      location: false,
       load: false
     };
     AsyncStorage.getItem(
@@ -104,8 +104,6 @@ class LoggedIn extends Component<Props> {
     return fetchQA(resString, CHECK_ENDPOINT)
       .then(res => {
         // schema: message, status (bool), answered, done
-        console.log("goodbye");
-
         const { status, message, answered: solvedQuestions, done } = res;
         this.setState({ formState: FORM_FEEDBACK, formMessage: message });
         if (!status) {
@@ -146,17 +144,20 @@ class LoggedIn extends Component<Props> {
     this.setState({
       puzzle: JSON.parse(e.data),
       qr: false,
+      location: true
       // formState: FORM_SUBMIT
     });
-    this.setState({location: this.state.puzzle.title});
   };
 
   closeQR = () => {
     this.setState({ qr: false });
   };
 
-  updateModal = () => {
-    this.setState({location: ""});
+  closePuzzleModal = () => {
+    this.setState({
+      puzzle: null,
+      location: false
+    });
   }
 
   finalPuzzle = () => {
@@ -184,7 +185,7 @@ class LoggedIn extends Component<Props> {
 
       <View>
         <View style={styleguide.card}>
-          { this.state.solvedQuestions.length == 4 &&
+          { solvedQuestions.length == 4 &&
             (<View>
               <StyledText>Dear hacker,  {"\n"}</StyledText>
 
@@ -209,9 +210,14 @@ class LoggedIn extends Component<Props> {
               </TouchableOpacity>
             </View>)
           }
-          { this.state.location !== "" &&
-            <Location puzzle={this.state.puzzle} user={this.props.user} refreshModal={this.updateModal}
-             />
+          { location &&
+            <Location
+              puzzle={puzzle}
+              user={this.props.user}
+              closePuzzleModal={this.closePuzzleModal}
+              setSolvedQuestions={(solvedQuestions) => this.setState({solvedQuestions})}
+              setDone={(done) => this.setState({done})}
+            />
           }
           { done && (
             <View>
@@ -219,13 +225,15 @@ class LoggedIn extends Component<Props> {
               <StyledText>Go to Help Desk to receive your prize. Thanks for playing!</StyledText>
             </View>
           )}
-          {!done && this.state.solvedQuestions.length == 0 && (
+          {solvedQuestions.length == 0 && (
             <View>
               <TouchableOpacity
                 onPress={() => {
                   this.setState({load: true});
-                  this.getScores();
-                  this.setState({load: false});
+                  this.getScores()
+                    .then(() => {
+                      this.setState({load: false});
+                    });
                 }}
                 style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0, marginBottom: 10}}
               >
@@ -238,14 +246,16 @@ class LoggedIn extends Component<Props> {
               <StyledText>No puzzles solved yet :(</StyledText>
             </View>
           )}
-          {!done && this.state.solvedQuestions.length > 0 && (
+          {!done && solvedQuestions.length > 0 && (
             <View>
             <View>
               <TouchableOpacity
                 onPress={() => {
                   this.setState({load: true});
-                  this.getScores();
-                  this.setState({load: false});
+                  this.getScores()
+                    .then(() => {
+                      this.setState({load: false});
+                    });
                 }}
                 style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0}}
               >
@@ -260,26 +270,25 @@ class LoggedIn extends Component<Props> {
               </StyledText>
             </View>
             <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
-              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Lobster Beach") > -1 &&
+              { solvedQuestions.indexOf("lobster-beach-stage-2") > -1 &&
                 <View
                   style={styleguide.LobButton}>
                   <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
                 </View>
               }
-
-              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Rose Garden") > -1 &&
+              { solvedQuestions.indexOf("rose-garden-stage-1") > -1 &&
                 <View
                   style={styleguide.RoseButton}>
                   <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
                 </View>
               }
-              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Mushroom Forest") > -1 &&
+              { solvedQuestions.indexOf("button-wall-stage-4") > -1 &&
                 <View
                   style={styleguide.ShroomButton}>
                   <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
                 </View>
               }
-              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Tea Party") > -1 &&
+              { solvedQuestions.indexOf("tea-party-stage-3") > -1 &&
                 <View
                   style={styleguide.TeaButton}>
                   <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
@@ -289,7 +298,7 @@ class LoggedIn extends Component<Props> {
             </View>
           )}
         </View>
-        {!done && this.state.solvedQuestions.length < 4 && (
+        {solvedQuestions.length < 4 && (
           <View style={styleguide.card}>
             <StyledText style={{ padding: 10 }}>
               Where to next? Splash around Lobster Beach, wander in the Mushroom
@@ -302,7 +311,7 @@ class LoggedIn extends Component<Props> {
                 this.setState({qr: true});
               }}
             >
-              <View style={{ ...styleguide.button }}>
+              <View style={ styleguide.button }>
                 <StyledText
                   style={{
                     color: "white",
@@ -323,11 +332,11 @@ class LoggedIn extends Component<Props> {
                 onRequestClose={this.closeQR}
               >
                 <RNCamera
-                  onBarCodeRead={this.handleQRCode.bind(this)}
+                  onBarCodeRead={this.handleQRCode}
                   captureAudio={false}
                   style={{flex: 0, alignItems: 'flex-start', justifyContent: 'flex-start', backgroundColor: 'transparent', height: "100%", width: "100%",}}
                 >
-                  <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'flex-start', backgroundColor: 'transparent'}}>
+                  <View style={{flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: 'transparent'}}>
                     <TouchableOpacity
                       onPress={this.closeQR}
                       style={styleguide.cancelButton}
