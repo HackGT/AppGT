@@ -4,7 +4,7 @@ import { StyledText } from "./";
 
 import { colors } from "../themes";
 
-export default (TagList = ({ tags }) =>
+export default TagList = ({ tags }) =>
   tags ? (
     <View
       style={{
@@ -18,7 +18,7 @@ export default (TagList = ({ tags }) =>
         </StyledText>
       ))}
     </View>
-  ) : null);
+  ) : null;
 
 const styles = StyleSheet.create({
   tag: {
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
     marginBottom: 10,
-    marginRight: 10,
-    textDecorationLine: "underline"
+    marginRight: 10
   }
 });
