@@ -135,20 +135,11 @@ class LoggedIn extends Component<Props> {
   handleQRCode = e => {
     Vibration.vibrate();
     this.setState({
-      puzzle: {
-        slug: "rose-garden-stage-1",
-        question: "Lobster Beach?",
-        title: "Lobster Beach"
-      },
+      puzzle: JSON.parse(e.data),
       qr: false,
-      location: true,
+      location: true
+      // formState: FORM_SUBMIT
     });
-    // this.setState({
-    //   puzzle: JSON.parse(e.data),
-    //   qr: false,
-    //   location: true
-    //   // formState: FORM_SUBMIT
-    // });
   };
 
   closeQR = () => {
