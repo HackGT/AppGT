@@ -24,7 +24,7 @@ class ScavHunt extends Component<Props> {
                         Help Beardell save his friends!
                     </StyledText>
                     <StyledText>
-                        Beardell’s friends have been kidnapped by the evil forces of creative block. Help him rescue them by completing activities!
+                        Don’t be deceived: while everything seems great at first, something is not quite right … Help Beardell explore different regions and get to the bottom of the mysterious events happening around Wonderland.
                     </StyledText>
                 </View>
                 <AuthContext.Consumer>
