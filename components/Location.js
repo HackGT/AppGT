@@ -178,7 +178,7 @@ class Location extends Component<Props> {
               />
             </TouchableOpacity>
             <View>
-              <Image source={image} style={{width: "100%", height: 250, top: 0}}/>
+              <Image source={image} style={{width: "100%", height: 250, top: 0, marginBottom: 10}}/>
             </View>
             <StyledText> {puzzle.question} </StyledText>
             <TouchableOpacity

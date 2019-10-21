@@ -67,7 +67,6 @@ class LoggedIn extends Component<Props> {
       formInput: "",
       solvedQuestions: [],
       done: false,
-      found: ["Rose Garden", "Lobster Beach", "Tea Party", "Mushroom Forest"],
       location: "",
       load: false
     };
@@ -147,7 +146,7 @@ class LoggedIn extends Component<Props> {
     this.setState({
       puzzle: JSON.parse(e.data),
       qr: false,
-      formState: FORM_SUBMIT
+      // formState: FORM_SUBMIT
     });
     this.setState({location: this.state.puzzle.title});
   };
@@ -160,6 +159,15 @@ class LoggedIn extends Component<Props> {
     this.setState({location: ""});
   }
 
+  finalPuzzle = () => {
+    this.setState({
+      puzzle: {
+        slug: "final-stage-stage-5"
+      },
+      formState: FORM_SUBMIT
+    });
+  }
+
   render() {
     const {
       solvedQuestions,
@@ -168,64 +176,116 @@ class LoggedIn extends Component<Props> {
       done,
       formMessage,
       formInput,
-      location
+      location,
+      puzzle
     } = this.state;
 
     return (
 
       <View>
         <View style={styleguide.card}>
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({load: true});
-              this.getScores();
-              this.setState({load: false});
-            }}
-            style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0}}
-          >
-            <FontAwesomeIcon
-              color="black"
-              icon={faSync}
-              size={20}
-            />
-          </TouchableOpacity>
-          <StyledText style={styleguide.score}>
-            Puzzles solved:
-          </StyledText>
-          {done && (
-            <StyledText>Save Beardell! Return to the Quest Board!</StyledText>
-          )}
+          { this.state.solvedQuestions.length == 4 &&
+            (<View>
+              <StyledText>Dear hacker,  {"\n"}</StyledText>
+
+              <StyledText>The Queen heard of how you have helped the creatures of wonderland, and she has declared she will behead you! You must go back to safety. To escape, there is one last riddle you must solve. Go back to the quest board, and find the key to the exit: {"\n"}</StyledText>
+
+              <StyledText style={{fontStyle: "italic"}}>Spin a yarn, tell your tale</StyledText>
+              <StyledText style={{fontStyle: "italic"}}>of the colorful adventures you will keep without fail</StyledText>
+              <StyledText style={{fontStyle: "italic"}}>In a world of tangles and knots, it is easy to go astray</StyledText>
+              <StyledText style={{fontStyle: "italic"}}>Let your new found wisdom point the way{"\n"}</StyledText>
+
+              <StyledText>I wish you the best of luck!</StyledText>
+              <StyledText>Beardell</StyledText>
+
+              <TouchableOpacity
+                onPress={() => this.finalPuzzle()}
+                style={{
+                  marginTop: 10,
+                  ...styleguide.button,
+                }}
+              >
+                <StyledText style={{color: "white"}}>Input Answer</StyledText>
+              </TouchableOpacity>
+            </View>)
+          }
           { this.state.location !== "" &&
             <Location puzzle={this.state.puzzle} user={this.props.user} refreshModal={this.updateModal}
              />
           }
-          {!done && (
+          { done && (
+            <View>
+              <StyledText>Congratulations! You have successfully escaped the wrath of the Queen, and helped Beardell uncover the mysteries of Wonderland.{"\n"}</StyledText>
+              <StyledText>Go to Help Desk to receive your prize. Thanks for playing!</StyledText>
+            </View>
+          )}
+          {!done && this.state.solvedQuestions.length == 0 && (
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({load: true});
+                  this.getScores();
+                  this.setState({load: false});
+                }}
+                style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0, marginBottom: 10}}
+              >
+                <FontAwesomeIcon
+                  color="black"
+                  icon={faSync}
+                  size={20}
+                />
+              </TouchableOpacity>
+              <StyledText>No puzzles solved yet :(</StyledText>
+            </View>
+          )}
+          {!done && this.state.solvedQuestions.length > 0 && (
+            <View>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({load: true});
+                  this.getScores();
+                  this.setState({load: false});
+                }}
+                style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0}}
+              >
+                <FontAwesomeIcon
+                  color="black"
+                  icon={faSync}
+                  size={20}
+                />
+              </TouchableOpacity>
+              <StyledText style={styleguide.score}>
+                Puzzles solved:
+              </StyledText>
+            </View>
             <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
-              { this.state.found.length > 0 && this.state.found.indexOf("Lobster Beach") > -1 &&
+              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Lobster Beach") > -1 &&
                 <View
                   style={styleguide.LobButton}>
                   <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
                 </View>
               }
 
-              { this.state.found.length > 0 && this.state.found.indexOf("Rose Garden") > -1 &&
+              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Rose Garden") > -1 &&
                 <View
                   style={styleguide.RoseButton}>
                   <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
                 </View>
               }
-              { this.state.found.length > 0 && this.state.found.indexOf("Mushroom Forest") > -1 &&
+              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Mushroom Forest") > -1 &&
                 <View
                   style={styleguide.ShroomButton}>
                   <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
                 </View>
               }
-              { this.state.found.length > 0 && this.state.found.indexOf("Tea Party") > -1 &&
+              { this.state.solvedQuestions.length > 0 && this.state.solvedQuestions.indexOf("Tea Party") > -1 &&
                 <View
                   style={styleguide.TeaButton}>
                   <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
                 </View>
               }
+            </View>
             </View>
           )}
         </View>
@@ -284,81 +344,95 @@ class LoggedIn extends Component<Props> {
               </DefaultModal>
             </View>
           </View>
+
         )}
+        <SubmissionModal
+          formState={formState}
+          formMessage={formMessage}
+          formInput={formInput}
+          setFormInput={formInput => this.setState({ formInput })}
+          onSubmit={this.sendInput}
+          closeModal={() =>
+            this.setState({
+              formInput: "",
+              formState: FORM_CLOSED
+            })
+          }
+        />
       </View>
     );
   }
 }
 
-// const SubmissionModal = ({
-//   onSubmit,
-//   formState,
-//   formMessage,
-//   formInput,
-//   setFormInput,
-//   closeModal
-// }) => {
-//   return (
-//     <Modal
-//       isVisible={formState !== FORM_CLOSED}
-//       hintInput={"Response"}
-//       onBackButtonPress={closeModal}
-//       onBackdropPress={closeModal}
-//       closeDialog={() => {
-//         this.setState({ formState: FORM_CLOSED });
-//       }}
-//     >
-//       <View style={styles.content}>
-//         {formState === FORM_SUBMIT && (
-//           <View>
-//             <View
-//               style={{
-//                 marginLeft: 8,
-//                 marginBottom: 8
-//               }}
-//             >
-//               <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
-//               <TextInput
-//                 value={formInput}
-//                 onChangeText={setFormInput}
-//                 style={{
-//                   borderBottomColor: colors.darkGrayText,
-//                   borderBottomWidth: 2
-//                 }}
-//               />
-//             </View>
-//             <TouchableOpacity
-//               onPress={onSubmit}
-//               style={
-//                 formInput.length === 0
-//                   ? styleguide.buttonDisabled
-//                   : styleguide.button
-//               }
-//               disabled={formInput.length === 0}
-//             >
-//               <StyledText style={{ color: "white" }}>Submit</StyledText>
-//             </TouchableOpacity>
-//           </View>
-//         )}
-//
-//         {formState === FORM_LOADING && (
-//           <View>
-//             <StyledText>Checking your answer...</StyledText>
-//           </View>
-//         )}
-//
-//         {formState === FORM_FEEDBACK && (
-//           <View>
-//             <StyledText>{formMessage}</StyledText>
-//             <TouchableOpacity onPress={closeModal} style={styleguide.button}>
-//               <StyledText style={{ color: "white" }}>Close</StyledText>
-//             </TouchableOpacity>
-//           </View>
-//         )}
-//       </View>
-//     </Modal>
-//   );
-// };
+const SubmissionModal = ({
+  onSubmit,
+  formState,
+  formMessage,
+  formInput,
+  setFormInput,
+  closeModal
+}) => {
+  return (
+    <Modal
+      isVisible={formState !== FORM_CLOSED}
+      hintInput={"Response"}
+      onBackButtonPress={closeModal}
+      onBackdropPress={closeModal}
+      closeDialog={() => {
+        this.setState({ formState: FORM_CLOSED });
+      }}
+    >
+      <View style={styles.content}>
+        {formState === FORM_SUBMIT && (
+          <View>
+            <View
+              style={{
+                marginLeft: 8,
+                marginBottom: 8
+              }}
+            >
+              <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
+              <TextInput
+                value={formInput}
+                onChangeText={setFormInput}
+                style={{
+                  borderBottomColor: colors.darkGrayText,
+                  borderBottomWidth: 2
+                }}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={onSubmit}
+              style={
+                formInput.length === 0
+                  ? styleguide.buttonDisabled
+                  : styleguide.button
+              }
+              disabled={formInput.length === 0}
+            >
+              <StyledText style={{ color: "white" }}>Submit</StyledText>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {formState === FORM_LOADING && (
+          <View>
+            <StyledText>Checking your answer...</StyledText>
+          </View>
+        )}
+
+        {formState === FORM_FEEDBACK && (
+          <View>
+            <StyledText>{formMessage}</StyledText>
+            <TouchableOpacity onPress={closeModal} style={styleguide.button}>
+              <StyledText style={{ color: "white" }}>Close</StyledText>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   qrTop: {
