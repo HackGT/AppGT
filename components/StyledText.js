@@ -11,16 +11,14 @@ import { colors } from "../themes";
 export default StyledText = ({ style, ...other }) => {
   if (!style) return (<Text style={textStyles.themeText} {...other} />);
   const { fontWeight, fontStyle, ...otherStyle } = style;
-  let finalStyle = {
-    color: colors.darkGrayText,
-  };
+  let finalStyle = textStyles.themeText;
   if (fontWeight === "bold" && fontStyle === "italic") {
-    finalStyle = { ...textStyles.boldThemeText, ...finalStyle }
+    finalStyle = { ...finalStyle, ...textStyles.bothText }
   } else {
     if (fontWeight === "bold")
-      finalStyle = { ...textStyles.boldThemeText, ...finalStyle }
+      finalStyle = { ...finalStyle, ...textStyles.boldThemeText }
     if (fontStyle === "italic")
-      finalStyle = { ...textStyles.italicThemeText, ...finalStyle }
+      finalStyle = {  ...finalStyle, ...textStyles.italicThemeText }
   }
   return <Text style={{ ...finalStyle, ...otherStyle }} {...other} />;
 }

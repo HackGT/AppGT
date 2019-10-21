@@ -4,9 +4,7 @@ import {
   Modal as DefaultModal,
   TouchableOpacity,
   StyleSheet,
-  Image,
   TextInput,
-  Button,
   Vibration
 } from "react-native";
 import Modal from "react-native-modal";
@@ -15,12 +13,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from "../styles";
 import { colors } from "../themes";
 import { StyledText, Location } from "../components";
-import { faTimesCircle, faCamera, faSync, faSpinner} from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faCamera, faSync, faSpinner} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-// TODO revamped UI
-// TODO list of completed/incomplete puzzles (instead of score)
-// TODO loading states
 const CHECK_ENDPOINT = "https://qa.hack.gt/check";
 const SCORE_ENDPOINT = "https://qa.hack.gt/score";
 
@@ -58,9 +53,7 @@ class LoggedIn extends Component<Props> {
     super(props);
     this.getScores();
     this.state = {
-      puzzle: {
-        slug: "hi"
-      },
+      puzzle: null,
       qr: false,
       formState: FORM_CLOSED,
       formMessage: "", // only used in feedback
@@ -142,11 +135,20 @@ class LoggedIn extends Component<Props> {
   handleQRCode = e => {
     Vibration.vibrate();
     this.setState({
-      puzzle: JSON.parse(e.data),
+      puzzle: {
+        slug: "rose-garden-stage-1",
+        question: "Lobster Beach?",
+        title: "Lobster Beach"
+      },
       qr: false,
-      location: true
-      // formState: FORM_SUBMIT
+      location: true,
     });
+    // this.setState({
+    //   puzzle: JSON.parse(e.data),
+    //   qr: false,
+    //   location: true
+    //   // formState: FORM_SUBMIT
+    // });
   };
 
   closeQR = () => {
@@ -226,7 +228,7 @@ class LoggedIn extends Component<Props> {
             </View>
           )}
           {solvedQuestions.length == 0 && (
-            <View>
+            <View style={{flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
               <TouchableOpacity
                 onPress={() => {
                   this.setState({load: true});
@@ -235,29 +237,7 @@ class LoggedIn extends Component<Props> {
                       this.setState({load: false});
                     });
                 }}
-                style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0, marginBottom: 10}}
-              >
-                <FontAwesomeIcon
-                  color="black"
-                  icon={faSync}
-                  size={20}
-                />
-              </TouchableOpacity>
-              <StyledText>No puzzles solved yet :(</StyledText>
-            </View>
-          )}
-          {!done && solvedQuestions.length > 0 && (
-            <View>
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({load: true});
-                  this.getScores()
-                    .then(() => {
-                      this.setState({load: false});
-                    });
-                }}
-                style={{width: 30, height: 30, justifyContent: "flex-end", alignItems: "flex-end", top: 0}}
+                style={{width: 30, height: 30}}
               >
                 <FontAwesomeIcon
                   color="black"
@@ -266,35 +246,59 @@ class LoggedIn extends Component<Props> {
                 />
               </TouchableOpacity>
               <StyledText style={styleguide.score}>
-                Puzzles solved:
+                {this.state.load ? "Loading score..." : "No puzzles solved yet :("}
               </StyledText>
             </View>
-            <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
-              { solvedQuestions.indexOf("lobster-beach-stage-2") > -1 &&
-                <View
-                  style={styleguide.LobButton}>
-                  <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
-                </View>
-              }
-              { solvedQuestions.indexOf("rose-garden-stage-1") > -1 &&
-                <View
-                  style={styleguide.RoseButton}>
-                  <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
-                </View>
-              }
-              { solvedQuestions.indexOf("button-wall-stage-4") > -1 &&
-                <View
-                  style={styleguide.ShroomButton}>
-                  <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
-                </View>
-              }
-              { solvedQuestions.indexOf("tea-party-stage-3") > -1 &&
-                <View
-                  style={styleguide.TeaButton}>
-                  <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
-                </View>
-              }
-            </View>
+          )}
+          {!done && solvedQuestions.length > 0 && (
+            <View>
+              <View style={{flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({load: true});
+                    this.getScores()
+                      .then(() => {
+                        this.setState({load: false});
+                      });
+                  }}
+                  style={{width: 30, height: 30}}
+                >
+                  <FontAwesomeIcon
+                    color="black"
+                    icon={faSync}
+                    size={20}
+                  />
+                </TouchableOpacity>
+                <StyledText style={styleguide.score}>
+                  {this.state.load ? "Loading score..." : "Puzzles solved:"}
+                </StyledText>
+              </View>
+              <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                { solvedQuestions.indexOf("lobster-beach-stage-2") > -1 &&
+                  <View
+                    style={styleguide.LobButton}>
+                    <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
+                  </View>
+                }
+                { solvedQuestions.indexOf("rose-garden-stage-1") > -1 &&
+                  <View
+                    style={styleguide.RoseButton}>
+                    <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
+                  </View>
+                }
+                { solvedQuestions.indexOf("button-wall-stage-4") > -1 &&
+                  <View
+                    style={styleguide.ShroomButton}>
+                    <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
+                  </View>
+                }
+                { solvedQuestions.indexOf("tea-party-stage-3") > -1 &&
+                  <View
+                    style={styleguide.TeaButton}>
+                    <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
+                  </View>
+                }
+              </View>
             </View>
           )}
         </View>
@@ -336,19 +340,23 @@ class LoggedIn extends Component<Props> {
                   captureAudio={false}
                   style={{flex: 0, alignItems: 'flex-start', justifyContent: 'flex-start', backgroundColor: 'transparent', height: "100%", width: "100%",}}
                 >
-                  <View style={{flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: 'transparent'}}>
-                    <TouchableOpacity
-                      onPress={this.closeQR}
-                      style={styleguide.cancelButton}
-                    >
-                      <FontAwesomeIcon
-                        color="red"
-                        icon={faTimesCircle}
-                        size={30}
-                      />
-                    </TouchableOpacity>
-                    <View style={{ height: "100%", width: "100%", backgroundColor: 'transparent'}} />
-                  </View>
+                  <TouchableOpacity
+                    onPress={this.closeQR}
+                    style={{
+                      ...styleguide.cancelButton,
+                      position: "absolute",
+                      top: 8,
+                      left: 8,
+                      backgroundColor: "white",
+                      borderRadius: 25,
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      color="red"
+                      icon={faTimes}
+                      size={30}
+                    />
+                  </TouchableOpacity>
                 </RNCamera>
               </DefaultModal>
             </View>

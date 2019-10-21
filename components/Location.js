@@ -58,16 +58,16 @@ class Location extends Component<Props> {
 
     img = null;
 
-    switch (this.props.puzzle.title) {
-      case "Lobster Beach":
+    switch (this.props.puzzle.slug) {
+      case "lobster-beach-stage-2":
         img = lob_back;
         break;
 
-      case "Rose Garden":
+      case "rose-garden-stage-1":
         img = rose_back;
         break;
 
-      case "Mushroom Forest":
+      case "button-wall-stage-4":
         img = shroom_back;
         break;
 
@@ -100,8 +100,8 @@ class Location extends Component<Props> {
 
   sendInput = () => {
     this.setState({ formState: FORM_LOADING });
-    const { setSolvedQuestions, setDone } = this.props;
-    const { puzzle, formInput } = this.state;
+    const { puzzle, setSolvedQuestions, setDone } = this.props;
+    const { formInput } = this.state;
     const resString = this.getPayload({
       question: puzzle.slug,
       answer: formInput
@@ -148,7 +148,7 @@ class Location extends Component<Props> {
         >
           <View style={{width: "100%", height: "100%", backgroundColor: "white"}}>
             <TouchableOpacity
-              onPress={this.closeModal}
+              onPress={closePuzzleModal}
               style={{
                 zIndex: 1,
                 ...styleguide.cancelButton,
@@ -164,7 +164,12 @@ class Location extends Component<Props> {
             <View>
               <Image source={image} style={{width: "100%", height: 250, top: 0, marginBottom: 10}}/>
             </View>
-            <StyledText> {puzzle.question} </StyledText>
+            <View style={{
+              margin: 10,
+            }}>
+              <StyledText style={{fontWeight: "bold"}}> {puzzle.title} </StyledText>
+              <StyledText> {puzzle.question} </StyledText>
+            </View>
             <TouchableOpacity
               onPress={() => this.setState({formState: FORM_SUBMIT})}
               style={{

@@ -69,6 +69,7 @@ export const styleguide = StyleSheet.create({
     ...elevationShadowStyle(10)
   },
   score: {
+    flex: 1,
     paddingTop: 15,
     paddingBottom: 15,
     textAlign: "center",
