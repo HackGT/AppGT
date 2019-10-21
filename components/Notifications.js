@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-// import { AppState, Alert } from "react-native";
+import { AppState, Alert } from "react-native";
 import firebase from "react-native-firebase";
-import { Alert } from "react-native";
 // import BackgroundFetch from "react-native-background-fetch";
 // import PushNotification from 'react-native-push-notification';
 // import moment from "moment-timezone";
@@ -18,12 +17,12 @@ class Notifications extends Component<Props> {
         // this.checkStatus();
         this.checkPermissions();
         firebase.messaging().subscribeToTopic("all");
-        // this.state = {
+        this.state = {
         //     eventData: props.eventData, // maintain a local copy for background thread?
         //     starredItems: props.starredItems,
-        //     appState: AppState.currentState
-        // };
-        // this.runNotifications();
+            appState: AppState.currentState
+        };
+        this.runNotifications();
         // this.pushNotif = new PushNotifService();
         firebase.messaging().getToken().then(token => {
           // console.log("Token:");
@@ -49,26 +48,27 @@ class Notifications extends Component<Props> {
         firebase.messaging().unsubscribeFromTopic(id);
     }
 
-    // sendProperNotif = (title, body) => {
-    //     const { appState } = this.state;
-    //     if (appState === "active") {
-    //         Alert.alert(title, body);
-    //     } else {
-    //         this.pushNotif.sendPush(title, body);
-    //     }
-    // }
+    sendProperNotif = (title, body) => {
+        const { appState } = this.state;
+        if (appState === "active") {
+            Alert.alert(title, body);
+        }
+        //  else {
+        //     this.pushNotif.sendPush(title, body);
+        // }
+    }
 
-    // componentDidMount() {
-    //     AppState.addEventListener('change', this._handleAppStateChange);
-    // }
+    componentDidMount() {
+        AppState.addEventListener('change', this._handleAppStateChange);
+    }
 
-    // componentWillUnmount() {
-    //     AppState.removeEventListener('change', this._handleAppStateChange);
-    // }
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
 
-    // _handleAppStateChange = (nextAppState) => {
-    //     this.setState({appState: nextAppState});
-    // };
+    _handleAppStateChange = (nextAppState) => {
+        this.setState({appState: nextAppState});
+    };
 
     // componentDidUpdate(prevProps) {
     //     const { eventData: oldData } = prevProps;
@@ -171,26 +171,28 @@ class Notifications extends Component<Props> {
         }
     }
 
-    // runNotifications() {
-    //     this.localNotifs();
-    //     this.remoteNotificationListener = firebase
-    //         .notifications()
-    //         .onNotification((notification) => {
-    //             // We don't need this - firebase is going to push the notification through anyway
-    //             // Process your notification as required
-    //             // const { title, body, id } = notification;
-    //             // if (!body) return;
-    //             // if (!id) {
-    //             //     this.sendProperNotif(title, body);
-    //             //     return;
-    //             // }
-    //             // this.sendEventAlert(title, body, id);
-    //         });
-    // }
+    runNotifications() {
+        // this.localNotifs();
+        this.remoteNotificationListener = firebase
+            .notifications()
+            .onNotification((notification) => {
+                // We don't need this - firebase is going to push the notification through anyway
+                // Process your notification as required
+                const { title, body } = notification;
+                this.sendProperNotif(title, body);
+                // if (!body) return;
+                // if (!id) {
+                //     this.sendProperNotif(title, body);
+                //     return;
+                // }
+                // this.sendEventAlert(title, body, id);
+            });
+        this.remoteNotificationListener();
+    }
 
-    // componentWillUnmount() {
-    //     this.remoteNotificationListener();
-    // }
+    componentWillUnmount() {
+        // this.remoteNotificationListener();
+    }
 
     // render() {
     //     return this.props.children;
