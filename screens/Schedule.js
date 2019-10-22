@@ -161,7 +161,7 @@ class ScheduleBase extends Component<Props> {
       >
         <View
           style={{
-            width: 70
+            width: 50
           }}
         >
           {shouldShowTime && (
@@ -170,7 +170,16 @@ class ScheduleBase extends Component<Props> {
                 textAlign: "center"
               }}
             >
-              {item.startTime.format("hh:mm A")}
+              {item.startTime.format("hh:mm")}
+            </StyledText>
+          )}
+          {shouldShowTime && (
+            <StyledText
+              style={{
+                textAlign: "center"
+              }}
+            >
+              {item.startTime.format("A")}
             </StyledText>
           )}
         </View>
@@ -336,11 +345,11 @@ class ScheduleBase extends Component<Props> {
 }
 
 // Wrapper for context
-export default Schedule = (props) => (
+export default Schedule = props => (
   <CMSContext.Consumer>
-  {({ refreshSchedule }) => (
-    <ScheduleBase refreshSchedule={refreshSchedule} {...props} />
-  )}
+    {({ refreshSchedule }) => (
+      <ScheduleBase refreshSchedule={refreshSchedule} {...props} />
+    )}
   </CMSContext.Consumer>
 );
 
