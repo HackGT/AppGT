@@ -115,7 +115,7 @@ class LoggedIn extends Component<Props> {
   };
 
   getScores = () => {
-    console.log("Fetching");
+    // console.log("Fetching");
     const resString = this.getPayload();
     return fetchQA(resString, SCORE_ENDPOINT)
       .then(res => {

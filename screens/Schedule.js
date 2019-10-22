@@ -161,7 +161,9 @@ class ScheduleBase extends Component<Props> {
       >
         <View
           style={{
-            width: 50
+            width: 50,
+            justifyContent: "flex-start",
+            paddingTop: 4,
           }}
         >
           {shouldShowTime && (

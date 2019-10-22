@@ -28,7 +28,7 @@ class Notifications extends Component<Props> {
       .getToken()
       .then(token => {
         // console.log("Token:");
-        console.log(token);
+        // console.log(token);
       });
 
     // Build a channel
@@ -44,7 +44,7 @@ class Notifications extends Component<Props> {
 
   subscribe(id) {
     if (!id) return;
-    console.log(`sub ${id}`);
+    // console.log(`sub ${id}`);
     firebase.messaging().subscribeToTopic(id);
   }
 
@@ -181,7 +181,7 @@ class Notifications extends Component<Props> {
     this.remoteNotificationListener = firebase
       .notifications()
       .onNotification(notification => {
-        console.log(`received ${notification}`);
+        // console.log(`received ${notification}`);
         // Process your notification as required
         const { title, body } = notification;
         this.sendProperNotif(title, body);
