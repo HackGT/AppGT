@@ -226,7 +226,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - AppAuth
     - boost-for-react-native
     - Crashlytics
     - Fabric
@@ -240,6 +239,8 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - Protobuf
+  trunk:
+    - AppAuth
 
 EXTERNAL SOURCES:
   DoubleConversion:
