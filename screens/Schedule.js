@@ -310,6 +310,7 @@ class ScheduleBase extends Component<Props> {
                       isModalVisible={isModalVisible}
                     />
                     <FlatList
+                      maxToRenderPerBatch={7}
                       data={joinedEvents}
                       keyExtractor={item => item.id}
                       renderItem={({ item, index }) => {
