@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-// import { AppState, Alert } from "react-native";
+import { AppState, Alert } from "react-native";
 import firebase from "react-native-firebase";
-import { Alert } from "react-native";
 // import BackgroundFetch from "react-native-background-fetch";
 // import PushNotification from 'react-native-push-notification';
 // import moment from "moment-timezone";
@@ -11,195 +10,200 @@ import { Alert } from "react-native";
 // TODO test offline
 // TODO fetch cms every 15 minutes
 class Notifications extends Component<Props> {
+  constructor() {
+    super();
+    // console.log("Checking Status");
+    // this.checkStatus();
+    this.checkPermissions();
+    firebase.messaging().subscribeToTopic("all");
+    this.state = {
+      //     eventData: props.eventData, // maintain a local copy for background thread?
+      //     starredItems: props.starredItems,
+      appState: AppState.currentState
+    };
+    this.runNotifications();
+    // this.pushNotif = new PushNotifService();
+    firebase
+      .messaging()
+      .getToken()
+      .then(token => {
+        // console.log("Token:");
+        console.log(token);
+      });
 
-    constructor() {
-        super();
-        // console.log("Checking Status");
-        // this.checkStatus();
-        this.checkPermissions();
-        firebase.messaging().subscribeToTopic("all");
-        // this.state = {
-        //     eventData: props.eventData, // maintain a local copy for background thread?
-        //     starredItems: props.starredItems,
-        //     appState: AppState.currentState
-        // };
-        // this.runNotifications();
-        // this.pushNotif = new PushNotifService();
-        firebase.messaging().getToken().then(token => {
-          // console.log("Token:");
-          console.log(token)
-        });
+    // Build a channel
+    const channel = new firebase.notifications.Android.Channel(
+      "hackgt-channel",
+      "HackGT Channel",
+      firebase.notifications.Android.Importance.Max
+    ).setDescription("For all your HackGT needs");
 
-        // Build a channel
-        const channel = new firebase.notifications.Android.Channel('hackgt-channel', 'HackGT Channel', firebase.notifications.Android.Importance.Max)
-        .setDescription('For all your HackGT needs');
+    // Create the channel
+    firebase.notifications().android.createChannel(channel);
+  }
 
-        // Create the channel
-        firebase.notifications().android.createChannel(channel);
+  subscribe(id) {
+    if (!id) return;
+    console.log(`sub ${id}`);
+    firebase.messaging().subscribeToTopic(id);
+  }
+
+  unsubscribe(id) {
+    if (!id) return;
+    firebase.messaging().unsubscribeFromTopic(id);
+  }
+
+  sendProperNotif = (title, body) => {
+    const { appState } = this.state;
+    if (appState === "active") {
+      Alert.alert(title, body);
     }
+    //  else {
+    //     this.pushNotif.sendPush(title, body);
+    // }
+  };
 
-    subscribe(id) {
-        if (!id) return;
-        console.log(`sub ${id}`)
-        firebase.messaging().subscribeToTopic(id);
+  componentDidMount() {
+    AppState.addEventListener("change", this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener("change", this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = nextAppState => {
+    this.setState({ appState: nextAppState });
+  };
+
+  // componentDidUpdate(prevProps) {
+  //     const { eventData: oldData } = prevProps;
+  //     const { eventData: newData } = this.props;
+  //     if (newData.length !== oldData.length) { // fragile diff
+  //         this.setState({
+  //             eventData: this.props.eventData
+  //         }, this.sendLocalAlerts); // if we've received new info, do another sanity check about events (TODO don't redundantly notify by caching notified in state)
+  //     }
+  // }
+
+  // sendEventAlert = (title, body, id) => {
+  //     const { starredItems } = this.props;
+  //     if (id in starredItems && starredItems[id]) {
+  //         this.sendProperNotif(title, body);
+  //     }
+  // }
+
+  // sendLocalAlerts = () => {
+  //     const { starredItems } = this.props;
+  //     const { eventData } = this.state; // maybe we don't need this in state, but not sure
+  //     const now = moment();
+  //     const events = eventData.filter((event) => {
+  //         const difference = now.diff(event.startTime, "minutes");
+  //         return difference <= 15 && difference >= -2;
+  //     }).filter(event => event.id in starredItems && starredItems[event.id])
+  //     if (events.length === 0) return;
+  //     let title, body;
+  //     if (events.length === 1) {
+  //         const event = events[0]
+  //         const startTime = event.startTime.format("hh:mm");
+  //         title = event.title;
+  //         body = `Your event begins at ${startTime}${event.area ? " in " + event.area : ""}.`;
+  //     } else {
+  //         const eventStrings = events.map(event => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
+  //         title = "Upcoming events";
+  //         body = eventStrings.join('\n\n');
+  //     }
+
+  //     this.sendProperNotif(title, body);
+  // }
+
+  // async checkStatus() {
+  //     BackgroundFetch.status(status => {
+  //         switch (status) {
+  //             case BackgroundFetch.STATUS_RESTRICTED:
+  //                 console.log("BackgroundFetch restricted");
+  //                 break;
+  //             case BackgroundFetch.STATUS_DENIED:
+  //                 console.log("BackgroundFetch denied");
+  //                 break;
+  //             case BackgroundFetch.STATUS_AVAILABLE:
+  //                 console.log("BackgroundFetch is enabled");
+  //                 break;
+  //         }
+  //     });
+  // }
+
+  // localNotifs() {
+  //     console.log("Launching background fetch");
+  //     BackgroundFetch.configure(
+  //         {
+  //             minimumFetchInterval: 15, // <-- minutes (15 is minimum allowed)
+  //             // Android options
+  //             stopOnTerminate: false,
+  //             startOnBoot: true,
+  //             requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
+  //             requiresCharging: false, // Default
+  //             requiresDeviceIdle: false, // Default
+  //             requiresBatteryNotLow: false, // Default
+  //             requiresStorageNotLow: false // Default
+  //         },
+  //         () => {
+  //             console.log("[js] Received background-fetch event");
+  //             this.sendLocalAlerts();
+  //             BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
+  //         },
+  //         error => {
+  //             console.log("[js] RNBackgroundFetch failed to start");
+  //         }
+  //     );
+  // }
+
+  async checkPermissions() {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+      console.log("Permissions Enabled");
+    } else {
+      console.log("Asking for permissions");
+      this.askPermissions();
     }
+  }
 
-    unsubscribe(id) {
-        if (!id) return;
-        firebase.messaging().unsubscribeFromTopic(id);
+  async askPermissions() {
+    try {
+      await firebase.messaging().requestPermission();
+      console.log("Permissions enabled");
+    } catch (error) {
+      console.log("User rejected permissions");
     }
+  }
 
-    // sendProperNotif = (title, body) => {
-    //     const { appState } = this.state;
-    //     if (appState === "active") {
-    //         Alert.alert(title, body);
-    //     } else {
-    //         this.pushNotif.sendPush(title, body);
-    //     }
-    // }
+  runNotifications() {
+    // this.localNotifs();
+    this.remoteNotificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        console.log(`received ${notification}`);
+        // Process your notification as required
+        const { title, body } = notification;
+        this.sendProperNotif(title, body);
+        // if (!body) return;
+        // if (!id) {
+        //     this.sendProperNotif(title, body);
+        //     return;
+        // }
+        // this.sendEventAlert(title, body, id);
+      });
+  }
 
-    // componentDidMount() {
-    //     AppState.addEventListener('change', this._handleAppStateChange);
-    // }
+  componentWillUnmount() {
+    this.remoteNotificationListener();
+  }
 
-    // componentWillUnmount() {
-    //     AppState.removeEventListener('change', this._handleAppStateChange);
-    // }
-
-    // _handleAppStateChange = (nextAppState) => {
-    //     this.setState({appState: nextAppState});
-    // };
-
-    // componentDidUpdate(prevProps) {
-    //     const { eventData: oldData } = prevProps;
-    //     const { eventData: newData } = this.props;
-    //     if (newData.length !== oldData.length) { // fragile diff
-    //         this.setState({
-    //             eventData: this.props.eventData
-    //         }, this.sendLocalAlerts); // if we've received new info, do another sanity check about events (TODO don't redundantly notify by caching notified in state)
-    //     }
-    // }
-
-    // sendEventAlert = (title, body, id) => {
-    //     const { starredItems } = this.props;
-    //     if (id in starredItems && starredItems[id]) {
-    //         this.sendProperNotif(title, body);
-    //     }
-    // }
-
-    // sendLocalAlerts = () => {
-    //     const { starredItems } = this.props;
-    //     const { eventData } = this.state; // maybe we don't need this in state, but not sure
-    //     const now = moment();
-    //     const events = eventData.filter((event) => {
-    //         const difference = now.diff(event.startTime, "minutes");
-    //         return difference <= 15 && difference >= -2;
-    //     }).filter(event => event.id in starredItems && starredItems[event.id])
-    //     if (events.length === 0) return;
-    //     let title, body;
-    //     if (events.length === 1) {
-    //         const event = events[0]
-    //         const startTime = event.startTime.format("hh:mm");
-    //         title = event.title;
-    //         body = `Your event begins at ${startTime}${event.area ? " in " + event.area : ""}.`;
-    //     } else {
-    //         const eventStrings = events.map(event => `${event.title} starts at ${event.startTime.format("hh:mm")}${event.area ? " in " + event.area : "."}`)
-    //         title = "Upcoming events";
-    //         body = eventStrings.join('\n\n');
-    //     }
-
-    //     this.sendProperNotif(title, body);
-    // }
-
-    // async checkStatus() {
-    //     BackgroundFetch.status(status => {
-    //         switch (status) {
-    //             case BackgroundFetch.STATUS_RESTRICTED:
-    //                 console.log("BackgroundFetch restricted");
-    //                 break;
-    //             case BackgroundFetch.STATUS_DENIED:
-    //                 console.log("BackgroundFetch denied");
-    //                 break;
-    //             case BackgroundFetch.STATUS_AVAILABLE:
-    //                 console.log("BackgroundFetch is enabled");
-    //                 break;
-    //         }
-    //     });
-    // }
-
-    // localNotifs() {
-    //     console.log("Launching background fetch");
-    //     BackgroundFetch.configure(
-    //         {
-    //             minimumFetchInterval: 15, // <-- minutes (15 is minimum allowed)
-    //             // Android options
-    //             stopOnTerminate: false,
-    //             startOnBoot: true,
-    //             requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
-    //             requiresCharging: false, // Default
-    //             requiresDeviceIdle: false, // Default
-    //             requiresBatteryNotLow: false, // Default
-    //             requiresStorageNotLow: false // Default
-    //         },
-    //         () => {
-    //             console.log("[js] Received background-fetch event");
-    //             this.sendLocalAlerts();
-    //             BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
-    //         },
-    //         error => {
-    //             console.log("[js] RNBackgroundFetch failed to start");
-    //         }
-    //     );
-    // }
-
-    async checkPermissions() {
-        const enabled = await firebase.messaging().hasPermission();
-        if (enabled) {
-            console.log("Permissions Enabled");
-        } else {
-            console.log("Asking for permissions");
-            this.askPermissions();
-        }
-    }
-
-    async askPermissions() {
-        try {
-            await firebase.messaging().requestPermission();
-            console.log("Permissions enabled");
-        } catch (error) {
-            console.log("User rejected permissions");
-        }
-    }
-
-    // runNotifications() {
-    //     this.localNotifs();
-    //     this.remoteNotificationListener = firebase
-    //         .notifications()
-    //         .onNotification((notification) => {
-    //             // We don't need this - firebase is going to push the notification through anyway
-    //             // Process your notification as required
-    //             // const { title, body, id } = notification;
-    //             // if (!body) return;
-    //             // if (!id) {
-    //             //     this.sendProperNotif(title, body);
-    //             //     return;
-    //             // }
-    //             // this.sendEventAlert(title, body, id);
-    //         });
-    // }
-
-    // componentWillUnmount() {
-    //     this.remoteNotificationListener();
-    // }
-
-    // render() {
-    //     return this.props.children;
-    // }
+  // render() {
+  //     return this.props.children;
+  // }
 }
 
-
 class PushNotifService {
-
   constructor() {
     this.configure(() => {}, () => {});
 
@@ -229,11 +233,11 @@ class PushNotifService {
       popInitialNotification: true,
 
       /**
-        * (optional) default: true
-        * - Specified if permissions (ios) and token (android and ios) will requested or not,
-        * - if not, you must call PushNotificationsHandler.requestPermissions() later
-        */
-      requestPermissions: true,
+       * (optional) default: true
+       * - Specified if permissions (ios) and token (android and ios) will requested or not,
+       * - if not, you must call PushNotificationsHandler.requestPermissions() later
+       */
+      requestPermissions: true
     });
   }
 
@@ -241,7 +245,7 @@ class PushNotifService {
     this.lastId++;
     PushNotification.localNotification({
       /* Android Only Properties */
-      id: ''+this.lastId, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+      id: "" + this.lastId, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
       bigText: body, // (optional) default: "message" prop
       vibrate: true, // (optional) default: true
       vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
@@ -250,7 +254,7 @@ class PushNotifService {
       /* iOS and Android properties */
       title: title, // (optional)
       message: body, // (required)
-      number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+      number: "10" // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
     });
   }
 
