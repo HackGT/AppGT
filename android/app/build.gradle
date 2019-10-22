@@ -132,8 +132,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         missingDimensionStrategy 'react-native-camera', 'general'
-        versionCode 3
-        versionName "3.0"
+        versionCode 6
+        versionName "1.0.2"
         manifestPlaceholders = [
                 appAuthRedirectScheme: 'gt.hack.live'
         ]

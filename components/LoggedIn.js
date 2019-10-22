@@ -4,22 +4,18 @@ import {
   Modal as DefaultModal,
   TouchableOpacity,
   StyleSheet,
-  Image,
   TextInput,
-  Button
+  Vibration
 } from "react-native";
 import Modal from "react-native-modal";
-import QRCodeScanner from "react-native-qrcode-scanner";
+import {RNCamera} from "react-native-camera";
 import AsyncStorage from "@react-native-community/async-storage";
 import { styleguide } from "../styles";
 import { colors } from "../themes";
-import { StyledText } from "../components";
-import { faTimesCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
+import { StyledText, Location } from "../components";
+import { faTimes, faCamera, faSync, faSpinner} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-// TODO revamped UI
-// TODO list of completed/incomplete puzzles (instead of score)
-// TODO loading states
 const CHECK_ENDPOINT = "https://qa.hack.gt/check";
 const SCORE_ENDPOINT = "https://qa.hack.gt/score";
 
@@ -57,15 +53,15 @@ class LoggedIn extends Component<Props> {
     super(props);
     this.getScores();
     this.state = {
-      puzzle: {
-        slug: "hi"
-      },
+      puzzle: null,
       qr: false,
       formState: FORM_CLOSED,
       formMessage: "", // only used in feedback
       formInput: "",
       solvedQuestions: [],
-      done: false
+      done: false,
+      location: false,
+      load: false
     };
     AsyncStorage.getItem(
       "solvedQuestions",
@@ -101,8 +97,6 @@ class LoggedIn extends Component<Props> {
     return fetchQA(resString, CHECK_ENDPOINT)
       .then(res => {
         // schema: message, status (bool), answered, done
-        console.log("goodbye");
-
         const { status, message, answered: solvedQuestions, done } = res;
         this.setState({ formState: FORM_FEEDBACK, formMessage: message });
         if (!status) {
@@ -121,6 +115,7 @@ class LoggedIn extends Component<Props> {
   };
 
   getScores = () => {
+    console.log("Fetching");
     const resString = this.getPayload();
     return fetchQA(resString, SCORE_ENDPOINT)
       .then(res => {
@@ -138,16 +133,34 @@ class LoggedIn extends Component<Props> {
   };
 
   handleQRCode = e => {
+    Vibration.vibrate();
     this.setState({
       puzzle: JSON.parse(e.data),
       qr: false,
-      formState: FORM_SUBMIT
+      location: true
+      // formState: FORM_SUBMIT
     });
   };
 
   closeQR = () => {
     this.setState({ qr: false });
   };
+
+  closePuzzleModal = () => {
+    this.setState({
+      puzzle: null,
+      location: false
+    });
+  }
+
+  finalPuzzle = () => {
+    this.setState({
+      puzzle: {
+        slug: "final-stage-stage-5"
+      },
+      formState: FORM_SUBMIT
+    });
+  }
 
   render() {
     const {
@@ -156,21 +169,131 @@ class LoggedIn extends Component<Props> {
       qr,
       done,
       formMessage,
-      formInput
+      formInput,
+      location,
+      puzzle
     } = this.state;
 
     return (
 
       <View>
         <View style={styleguide.card}>
-          <StyledText style={styleguide.score}>
-            Puzzles solved: {solvedQuestions.length}
-          </StyledText>
-          {done && (
-            <StyledText>Save Beardell! Return to the Quest Board!</StyledText>
+          { solvedQuestions.length == 4 &&
+            (<View>
+              <StyledText>Dear hacker,  {"\n"}</StyledText>
+
+              <StyledText>The Queen heard of how you have helped the creatures of wonderland, and she has declared she will behead you! You must go back to safety. To escape, there is one last riddle you must solve. Go back to the quest board, and find the key to the exit: {"\n"}</StyledText>
+
+              <StyledText style={{fontStyle: "italic"}}>Spin a yarn, tell your tale</StyledText>
+              <StyledText style={{fontStyle: "italic"}}>of the colorful adventures you will keep without fail</StyledText>
+              <StyledText style={{fontStyle: "italic"}}>In a world of tangles and knots, it is easy to go astray</StyledText>
+              <StyledText style={{fontStyle: "italic"}}>Let your new found wisdom point the way{"\n"}</StyledText>
+
+              <StyledText>I wish you the best of luck!</StyledText>
+              <StyledText>Beardell</StyledText>
+
+              <TouchableOpacity
+                onPress={() => this.finalPuzzle()}
+                style={{
+                  marginTop: 10,
+                  ...styleguide.button,
+                }}
+              >
+                <StyledText style={{color: "white"}}>Input Answer</StyledText>
+              </TouchableOpacity>
+            </View>)
+          }
+          { location &&
+            <Location
+              puzzle={puzzle}
+              user={this.props.user}
+              closePuzzleModal={this.closePuzzleModal}
+              setSolvedQuestions={(solvedQuestions) => this.setState({solvedQuestions})}
+              setDone={(done) => this.setState({done})}
+            />
+          }
+          { done && (
+            <View>
+              <StyledText>Congratulations! You have successfully escaped the wrath of the Queen, and helped Beardell uncover the mysteries of Wonderland.{"\n"}</StyledText>
+              <StyledText>Go to Help Desk to receive your prize. Thanks for playing!</StyledText>
+            </View>
+          )}
+          {solvedQuestions.length == 0 && (
+            <View style={{flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({load: true});
+                  this.getScores()
+                    .then(() => {
+                      this.setState({load: false});
+                    });
+                }}
+                style={{width: 30, height: 30}}
+              >
+                <FontAwesomeIcon
+                  color="black"
+                  icon={faSync}
+                  size={20}
+                />
+              </TouchableOpacity>
+              <StyledText style={styleguide.score}>
+                {this.state.load ? "Loading score..." : "No puzzles solved yet :("}
+              </StyledText>
+            </View>
+          )}
+          {!done && solvedQuestions.length > 0 && (
+            <View>
+              <View style={{flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({load: true});
+                    this.getScores()
+                      .then(() => {
+                        this.setState({load: false});
+                      });
+                  }}
+                  style={{width: 30, height: 30}}
+                >
+                  <FontAwesomeIcon
+                    color="black"
+                    icon={faSync}
+                    size={20}
+                  />
+                </TouchableOpacity>
+                <StyledText style={styleguide.score}>
+                  {this.state.load ? "Loading score..." : "Puzzles solved:"}
+                </StyledText>
+              </View>
+              <View style={{justifyContent: "center", textAlign: "center", alignItems: "center"}}>
+                { solvedQuestions.indexOf("lobster-beach-stage-2") > -1 &&
+                  <View
+                    style={styleguide.LobButton}>
+                    <StyledText style={styleguide.LobText}>Lobster Beach</StyledText>
+                  </View>
+                }
+                { solvedQuestions.indexOf("rose-garden-stage-1") > -1 &&
+                  <View
+                    style={styleguide.RoseButton}>
+                    <StyledText style={styleguide.RoseText}>Rose Garden</StyledText>
+                  </View>
+                }
+                { solvedQuestions.indexOf("button-wall-stage-4") > -1 &&
+                  <View
+                    style={styleguide.ShroomButton}>
+                    <StyledText style={styleguide.ShroomText}>Mushroom Forest</StyledText>
+                  </View>
+                }
+                { solvedQuestions.indexOf("tea-party-stage-3") > -1 &&
+                  <View
+                    style={styleguide.TeaButton}>
+                    <StyledText style={styleguide.TeaText}>Tea Party</StyledText>
+                  </View>
+                }
+              </View>
+            </View>
           )}
         </View>
-        {!done && (
+        {solvedQuestions.length < 4 && (
           <View style={styleguide.card}>
             <StyledText style={{ padding: 10 }}>
               Where to next? Splash around Lobster Beach, wander in the Mushroom
@@ -183,7 +306,7 @@ class LoggedIn extends Component<Props> {
                 this.setState({qr: true});
               }}
             >
-              <View style={{ ...styleguide.button }}>
+              <View style={ styleguide.button }>
                 <StyledText
                   style={{
                     color: "white",
@@ -200,47 +323,50 @@ class LoggedIn extends Component<Props> {
                 animationType="slide"
                 transparent={false}
                 visible={qr}
+                style={{alignItems: "left", justifyContent: "left"}}
                 onRequestClose={this.closeQR}
               >
-                <QRCodeScanner
-                  onRead={this.handleQRCode}
-                  topContent={
-                    <StyledText style={styleguide.qr}>
-                      Scan the QR code!
-                    </StyledText>
-                  }
-                  bottomContent={
-                    <TouchableOpacity
-                      onPress={this.closeQR}
-                      style={styleguide.cancelButton}
-                    >
-                      <FontAwesomeIcon
-                        color="red"
-                        icon={faTimesCircle}
-                        size={30}
-                      />
-                    </TouchableOpacity>
-                  }
-                  topViewStyle={styles.qrTop}
-                  bottomViewStyle={{ paddingVertical: 10 }}
-                />
+                <RNCamera
+                  onBarCodeRead={this.handleQRCode}
+                  captureAudio={false}
+                  style={{flex: 0, alignItems: 'flex-start', justifyContent: 'flex-start', backgroundColor: 'transparent', height: "100%", width: "100%",}}
+                >
+                  <TouchableOpacity
+                    onPress={this.closeQR}
+                    style={{
+                      ...styleguide.cancelButton,
+                      position: "absolute",
+                      top: 8,
+                      left: 8,
+                      backgroundColor: "white",
+                      borderRadius: 25,
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      color="red"
+                      icon={faTimes}
+                      size={30}
+                    />
+                  </TouchableOpacity>
+                </RNCamera>
               </DefaultModal>
             </View>
-            <SubmissionModal
-              formState={formState}
-              formMessage={formMessage}
-              formInput={formInput}
-              setFormInput={formInput => this.setState({ formInput })}
-              onSubmit={this.sendInput}
-              closeModal={() =>
-                this.setState({
-                  formInput: "",
-                  formState: FORM_CLOSED
-                })
-              }
-            />
           </View>
+
         )}
+        <SubmissionModal
+          formState={formState}
+          formMessage={formMessage}
+          formInput={formInput}
+          setFormInput={formInput => this.setState({ formInput })}
+          onSubmit={this.sendInput}
+          closeModal={() =>
+            this.setState({
+              formInput: "",
+              formState: FORM_CLOSED
+            })
+          }
+        />
       </View>
     );
   }
