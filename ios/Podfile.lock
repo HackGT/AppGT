@@ -225,7 +225,8 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
+    - AppAuth
     - boost-for-react-native
     - Crashlytics
     - Fabric
@@ -239,8 +240,6 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - Protobuf
-  trunk:
-    - AppAuth
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -358,4 +357,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 09a0a067d3612d4ff9656d80e376ff73318d5705
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.7.4
