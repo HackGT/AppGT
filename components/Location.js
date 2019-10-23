@@ -180,6 +180,15 @@ class Location extends Component<Props> {
             </View>
 
 
+            <SubmissionSnippet
+              formState={formState}
+              formMessage={formMessage}
+              formInput={formInput}
+              setFormInput={formInput => this.setState({ formInput })}
+              onSubmit={this.sendInput}
+            />
+
+
             <TouchableOpacity
               onPress={() => this.setState({formState: FORM_SUBMIT})}
               style={{
@@ -191,91 +200,67 @@ class Location extends Component<Props> {
             </TouchableOpacity>
           </View>
         </Modal>
-        <SubmissionModal
-          formState={formState}
-          formMessage={formMessage}
-          formInput={formInput}
-          setFormInput={formInput => this.setState({ formInput })}
-          onSubmit={this.sendInput}
-          closeModal={() =>
-            this.setState({
-              formInput: "",
-              formState: FORM_CLOSED
-            })
-          }
-        />
       </View>
     )
   }
 }
 
-const SubmissionModal = ({
+const SubmissionSnippet = ({
   onSubmit,
   formState,
   formMessage,
   formInput,
   setFormInput,
-  closeModal
 }) => {
   return (
-    <Modal
-      isVisible={formState !== FORM_CLOSED}
-      hintInput={"Response"}
-      onBackButtonPress={closeModal}
-      onBackdropPress={closeModal}
-      closeDialog={() => {
-        this.setState({ formState: FORM_CLOSED });
-      }}
-    >
-      <View style={styles.content}>
-        {formState === FORM_SUBMIT && (
-          <View>
-            <View
+    <View style={styles.content}>
+      {formState === FORM_SUBMIT && (
+        <View>
+          <View
+            style={{
+              marginLeft: 8,
+              marginBottom: 8
+            }}
+          >
+            <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
+            <TextInput
+              value={formInput}
+              onChangeText={setFormInput}
               style={{
-                marginLeft: 8,
-                marginBottom: 8
+                borderBottomColor: colors.darkGrayText,
+                borderBottomWidth: 2
               }}
-            >
-              <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
-              <TextInput
-                value={formInput}
-                onChangeText={setFormInput}
-                style={{
-                  borderBottomColor: colors.darkGrayText,
-                  borderBottomWidth: 2
-                }}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={onSubmit}
-              style={
-                formInput.length === 0
-                  ? styleguide.buttonDisabled
-                  : styleguide.button
-              }
-              disabled={formInput.length === 0}
-            >
-              <StyledText style={{ color: "white" }}>Submit</StyledText>
-            </TouchableOpacity>
+            />
           </View>
-        )}
+          <TouchableOpacity
+            onPress={onSubmit}
+            style={
+              formInput.length === 0
+                ? styleguide.buttonDisabled
+                : styleguide.button
+            }
+            disabled={formInput.length === 0}
+          >
+            <StyledText style={{ color: "white" }}>Submit</StyledText>
+          </TouchableOpacity>
+        </View>
+      )}
 
-        {formState === FORM_LOADING && (
-          <View>
-            <StyledText>Checking your answer...</StyledText>
-          </View>
-        )}
+      {formState === FORM_LOADING && (
+        <View>
+          <StyledText>Checking your answer...</StyledText>
+        </View>
+      )}
 
-        {formState === FORM_FEEDBACK && (
-          <View>
-            <StyledText>{formMessage}</StyledText>
-            <TouchableOpacity onPress={closeModal} style={styleguide.button}>
-              <StyledText style={{ color: "white" }}>Close</StyledText>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    </Modal>
+      {formState === FORM_FEEDBACK && (
+        <View>
+          <StyledText>{formMessage}</StyledText>
+          <TouchableOpacity onPress={closeModal} style={styleguide.button}>
+            <StyledText style={{ color: "white" }}>Close</StyledText>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
   );
 };
 
