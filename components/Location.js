@@ -84,6 +84,15 @@ class Location extends Component<Props> {
     };
   }
 
+  reset = () => {
+    if (!!this.props.closePuzzleModal)
+      this.props.closePuzzleModal();
+    this.setState({
+      formState: FORM_CLOSED,
+      formMessage: "",
+      formInput: ""
+    });
+  }
 
   getPayload = (details = {}) => {
     const resBody = [];
@@ -110,8 +119,8 @@ class Location extends Component<Props> {
       .then(res => {
         // schema: message, status (bool), answered, done
         const { status, message, answered: solvedQuestions, done } = res;
-        this.setState({ formState: FORM_FEEDBACK, formMessage: message });
         if (!status) {
+          this.setState({ formState: FORM_FEEDBACK, formMessage: message });
           return;
         }
         setSolvedQuestions(solvedQuestions);
@@ -136,19 +145,19 @@ class Location extends Component<Props> {
       formInput,
     } = this.state;
 
-    const { puzzle, closePuzzleModal } = this.props;
-
+    const { puzzle, solvedQuestions } = this.props;
+    const completed = puzzle && solvedQuestions.includes(puzzle.slug);
     return(
       <View>
         <Modal
           isVisible={true}
-          onRequestClose={closePuzzleModal}
+          onRequestClose={this.reset}
           animationType="slide"
           transparent={false}
         >
           <View style={{width: "100%", height: "100%", backgroundColor: "white"}}>
             <TouchableOpacity
-              onPress={closePuzzleModal}
+              onPress={this.reset}
               style={{
                 zIndex: 1,
                 ...styleguide.cancelButton,
@@ -164,108 +173,97 @@ class Location extends Component<Props> {
             <View>
               <Image source={image} style={{width: "100%", height: 250, top: 0, marginBottom: 10}}/>
             </View>
-            <View style={{
-              margin: 10,
-            }}>
-              <StyledText style={{fontWeight: "bold"}}> {puzzle.title} </StyledText>
-              <StyledText> {puzzle.question} </StyledText>
-            </View>
-            <TouchableOpacity
-              onPress={() => this.setState({formState: FORM_SUBMIT})}
-              style={{
-                marginTop: 10,
-                ...styleguide.button,
-              }}
-            >
-              <StyledText style={{color: "white"}}>Input Answer</StyledText>
-            </TouchableOpacity>
+
+            {
+              this.state.formState !== FORM_SUBMIT && (
+              <View style={{
+                alignItems: "center",
+              }}>
+                <View style={{
+                  marginTop: 4,
+                  paddingHorizontal: 10
+                }}>
+                  <StyledText style={{fontWeight: "bold"}}> {puzzle.title} </StyledText>
+                  <StyledText> {puzzle.question} </StyledText>
+                </View>
+                { completed ? <StyledText style={{fontWeight: "bold"}}>Puzzle complete</StyledText> :
+                  <TouchableOpacity
+                  onPress={() => this.setState({formState: FORM_SUBMIT})}
+                  style={{
+                    marginTop: 10,
+                    ...styleguide.button,
+                  }}
+                  >
+                  <StyledText style={{color: "white"}}>Input Answer</StyledText>
+                </TouchableOpacity>
+                }
+              </View>
+              )
+            }
+            <SubmissionSnippet
+              formState={formState}
+              formMessage={formMessage}
+              formInput={formInput}
+              setFormInput={formInput => this.setState({ formInput })}
+              onSubmit={this.sendInput}
+            />
+
           </View>
         </Modal>
-        <SubmissionModal
-          formState={formState}
-          formMessage={formMessage}
-          formInput={formInput}
-          setFormInput={formInput => this.setState({ formInput })}
-          onSubmit={this.sendInput}
-          closeModal={() =>
-            this.setState({
-              formInput: "",
-              formState: FORM_CLOSED
-            })
-          }
-        />
       </View>
     )
   }
 }
 
-const SubmissionModal = ({
+const SubmissionSnippet = ({
   onSubmit,
   formState,
   formMessage,
   formInput,
   setFormInput,
-  closeModal
 }) => {
   return (
-    <Modal
-      isVisible={formState !== FORM_CLOSED}
-      hintInput={"Response"}
-      onBackButtonPress={closeModal}
-      onBackdropPress={closeModal}
-      closeDialog={() => {
-        this.setState({ formState: FORM_CLOSED });
-      }}
-    >
-      <View style={styles.content}>
-        {formState === FORM_SUBMIT && (
-          <View>
-            <View
+    <View style={styles.content}>
+      {formState === FORM_SUBMIT && (
+        <View>
+          <View
+            style={{
+              marginLeft: 8,
+              marginBottom: 8
+            }}
+          >
+            <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
+            <TextInput
+              value={formInput}
+              onChangeText={setFormInput}
               style={{
-                marginLeft: 8,
-                marginBottom: 8
+                borderBottomColor: colors.darkGrayText,
+                borderBottomWidth: 2
               }}
-            >
-              <StyledText style={{ fontWeight: "bold" }}>Answer:</StyledText>
-              <TextInput
-                value={formInput}
-                onChangeText={setFormInput}
-                style={{
-                  borderBottomColor: colors.darkGrayText,
-                  borderBottomWidth: 2
-                }}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={onSubmit}
-              style={
-                formInput.length === 0
-                  ? styleguide.buttonDisabled
-                  : styleguide.button
-              }
-              disabled={formInput.length === 0}
-            >
-              <StyledText style={{ color: "white" }}>Submit</StyledText>
-            </TouchableOpacity>
+            />
           </View>
-        )}
+          <TouchableOpacity
+            onPress={onSubmit}
+            style={
+              formInput.length === 0
+                ? styleguide.buttonDisabled
+                : styleguide.button
+            }
+            disabled={formInput.length === 0}
+          >
+            <StyledText style={{ color: "white" }}>Submit</StyledText>
+          </TouchableOpacity>
+        </View>
+      )}
 
-        {formState === FORM_LOADING && (
-          <View>
-            <StyledText>Checking your answer...</StyledText>
-          </View>
-        )}
+      {formState === FORM_LOADING && (
+        <StyledText>Checking your answer...</StyledText>
+      )}
 
-        {formState === FORM_FEEDBACK && (
-          <View>
-            <StyledText>{formMessage}</StyledText>
-            <TouchableOpacity onPress={closeModal} style={styleguide.button}>
-              <StyledText style={{ color: "white" }}>Close</StyledText>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    </Modal>
+      {formState === FORM_FEEDBACK && (
+          <StyledText>{formMessage}</StyledText>
+      )}
+    </View>
   );
 };
 
@@ -281,11 +279,12 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: "white",
     paddingHorizontal: 22,
-    paddingTop: 18,
+    paddingTop: 10,
     paddingBottom: 18,
     borderRadius: 8,
     borderColor: "rgba(0, 0, 0, 0.1)",
-    maxHeight: 600
+    maxHeight: 600,
+    justifyContent: "center"
   }
 });
 

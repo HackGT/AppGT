@@ -17,7 +17,7 @@ class ScavHunt extends Component<Props> {
         return (
             <ScrollView style={styleguide.wrapperView}>
                 <View style={styleguide.titleView}>
-                    <StyledText style={styleguide.title}>HackGT6: Scavenger Hunt</StyledText>
+                    <StyledText style={styleguide.title}>HackGT 6: Scavenger Hunt</StyledText>
                 </View>
                 <View style={styleguide.card}>
                     <StyledText style={{ fontWeight: "bold" }}>

@@ -12,6 +12,8 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
 
+      <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notifications" />
+
     <activity
         android:name=".SplashActivity"
         android:theme="@style/SplashTheme"

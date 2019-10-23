@@ -28,7 +28,7 @@ class Notifications extends Component<Props> {
       .getToken()
       .then(token => {
         // console.log("Token:");
-        console.log(token);
+        // console.log(token);
       });
 
     // Build a channel
@@ -44,7 +44,7 @@ class Notifications extends Component<Props> {
 
   subscribe(id) {
     if (!id) return;
-    console.log(`sub ${id}`);
+    // console.log(`sub ${id}`);
     firebase.messaging().subscribeToTopic(id);
   }
 
@@ -54,26 +54,27 @@ class Notifications extends Component<Props> {
   }
 
   sendProperNotif = (title, body) => {
-    const { appState } = this.state;
-    if (appState === "active") {
-      Alert.alert(title, body);
-    }
+    // console.log("got in app");
+    // const { appState } = this.state;
+    // if (appState === "active") {
+    Alert.alert(title, body);
+    // }
     //  else {
     //     this.pushNotif.sendPush(title, body);
     // }
   };
 
-  componentDidMount() {
-    AppState.addEventListener("change", this._handleAppStateChange);
-  }
+  // componentDidMount() {
+  //   AppState.addEventListener("change", this._handleAppStateChange);
+  // }
 
-  componentWillUnmount() {
-    AppState.removeEventListener("change", this._handleAppStateChange);
-  }
+  // componentWillUnmount() {
+  //   AppState.removeEventListener("change", this._handleAppStateChange);
+  // }
 
-  _handleAppStateChange = nextAppState => {
-    this.setState({ appState: nextAppState });
-  };
+  // _handleAppStateChange = nextAppState => {
+  //   this.setState({ appState: nextAppState });
+  // };
 
   // componentDidUpdate(prevProps) {
   //     const { eventData: oldData } = prevProps;
@@ -181,7 +182,7 @@ class Notifications extends Component<Props> {
     this.remoteNotificationListener = firebase
       .notifications()
       .onNotification(notification => {
-        console.log(`received ${notification}`);
+        // console.log(`on notif`);
         // Process your notification as required
         const { title, body } = notification;
         this.sendProperNotif(title, body);
@@ -192,10 +193,27 @@ class Notifications extends Component<Props> {
         // }
         // this.sendEventAlert(title, body, id);
       });
+    this.displayListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notif => {
+        // console.log('display');
+        const { title, body } = notification;
+        this.sendProperNotif(title, body);
+      })
+    this.messageListener = firebase
+      .messaging()
+      .onMessage(message => {
+        // console.log('message')
+        // console.log(message);
+        const { title, body } = message;
+        this.sendProperNotif(title, body);
+      })
   }
 
   componentWillUnmount() {
     this.remoteNotificationListener();
+    this.displayListener();
+    this.messageListener();
   }
 
   // render() {

@@ -115,7 +115,7 @@ class LoggedIn extends Component<Props> {
   };
 
   getScores = () => {
-    console.log("Fetching");
+    // console.log("Fetching");
     const resString = this.getPayload();
     return fetchQA(resString, SCORE_ENDPOINT)
       .then(res => {
@@ -209,6 +209,7 @@ class LoggedIn extends Component<Props> {
               user={this.props.user}
               closePuzzleModal={this.closePuzzleModal}
               setSolvedQuestions={(solvedQuestions) => this.setState({solvedQuestions})}
+              solvedQuestions={solvedQuestions}
               setDone={(done) => this.setState({done})}
             />
           }

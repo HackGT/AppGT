@@ -161,7 +161,9 @@ class ScheduleBase extends Component<Props> {
       >
         <View
           style={{
-            width: 50
+            width: 50,
+            justifyContent: "flex-start",
+            paddingTop: 4,
           }}
         >
           {shouldShowTime && (
@@ -283,8 +285,7 @@ class ScheduleBase extends Component<Props> {
                       <StyledText>No events found.</StyledText>
                       {isMySchedule && (
                         <StyledText>
-                          {" "}
-                          Star some events to get started!{" "}
+                          Star some events!
                         </StyledText>
                       )}
                     </View>
@@ -308,6 +309,7 @@ class ScheduleBase extends Component<Props> {
                       isModalVisible={isModalVisible}
                     />
                     <FlatList
+                      maxToRenderPerBatch={7}
                       data={joinedEvents}
                       keyExtractor={item => item.id}
                       renderItem={({ item, index }) => {
