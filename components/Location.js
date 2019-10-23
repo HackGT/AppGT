@@ -84,8 +84,10 @@ class Location extends Component<Props> {
     };
   }
 
-  reset() {
-    this.props.closePuzzleModal();
+  reset = () => {
+    console.log('please');
+    if (!!this.props.closePuzzleModal)
+      this.props.closePuzzleModal();
     this.setState({
       formState: FORM_CLOSED,
       formMessage: "",
@@ -118,8 +120,8 @@ class Location extends Component<Props> {
       .then(res => {
         // schema: message, status (bool), answered, done
         const { status, message, answered: solvedQuestions, done } = res;
-        this.setState({ formState: FORM_FEEDBACK, formMessage: message });
         if (!status) {
+          this.setState({ formState: FORM_FEEDBACK, formMessage: message });
           return;
         }
         setSolvedQuestions(solvedQuestions);
@@ -144,8 +146,8 @@ class Location extends Component<Props> {
       formInput,
     } = this.state;
 
-    const { puzzle } = this.props;
-
+    const { puzzle, solvedQuestions } = this.props;
+    const completed = puzzle && solvedQuestions.includes(puzzle.slug);
     return(
       <View>
         <Modal
@@ -156,7 +158,7 @@ class Location extends Component<Props> {
         >
           <View style={{width: "100%", height: "100%", backgroundColor: "white"}}>
             <TouchableOpacity
-              onPress={closePuzzleModal}
+              onPress={this.reset}
               style={{
                 zIndex: 1,
                 ...styleguide.cancelButton,
@@ -172,14 +174,33 @@ class Location extends Component<Props> {
             <View>
               <Image source={image} style={{width: "100%", height: 250, top: 0, marginBottom: 10}}/>
             </View>
-            <View style={{
-              margin: 10,
-            }}>
-              <StyledText style={{fontWeight: "bold"}}> {puzzle.title} </StyledText>
-              <StyledText> {puzzle.question} </StyledText>
-            </View>
 
-
+            {
+              this.state.formState !== FORM_SUBMIT && (
+              <View style={{
+                alignItems: "center",
+              }}>
+                <View style={{
+                  marginTop: 4,
+                  paddingHorizontal: 10
+                }}>
+                  <StyledText style={{fontWeight: "bold"}}> {puzzle.title} </StyledText>
+                  <StyledText> {puzzle.question} </StyledText>
+                </View>
+                { completed ? <StyledText style={{fontWeight: "bold"}}>Puzzle complete</StyledText> :
+                  <TouchableOpacity
+                  onPress={() => this.setState({formState: FORM_SUBMIT})}
+                  style={{
+                    marginTop: 10,
+                    ...styleguide.button,
+                  }}
+                  >
+                  <StyledText style={{color: "white"}}>Input Answer</StyledText>
+                </TouchableOpacity>
+                }
+              </View>
+              )
+            }
             <SubmissionSnippet
               formState={formState}
               formMessage={formMessage}
@@ -188,16 +209,6 @@ class Location extends Component<Props> {
               onSubmit={this.sendInput}
             />
 
-
-            <TouchableOpacity
-              onPress={() => this.setState({formState: FORM_SUBMIT})}
-              style={{
-                marginTop: 10,
-                ...styleguide.button,
-              }}
-            >
-              <StyledText style={{color: "white"}}>Input Answer</StyledText>
-            </TouchableOpacity>
           </View>
         </Modal>
       </View>
@@ -247,18 +258,11 @@ const SubmissionSnippet = ({
       )}
 
       {formState === FORM_LOADING && (
-        <View>
-          <StyledText>Checking your answer...</StyledText>
-        </View>
+        <StyledText>Checking your answer...</StyledText>
       )}
 
       {formState === FORM_FEEDBACK && (
-        <View>
           <StyledText>{formMessage}</StyledText>
-          <TouchableOpacity onPress={closeModal} style={styleguide.button}>
-            <StyledText style={{ color: "white" }}>Close</StyledText>
-          </TouchableOpacity>
-        </View>
       )}
     </View>
   );
@@ -276,11 +280,12 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: "white",
     paddingHorizontal: 22,
-    paddingTop: 18,
+    paddingTop: 10,
     paddingBottom: 18,
     borderRadius: 8,
     borderColor: "rgba(0, 0, 0, 0.1)",
-    maxHeight: 600
+    maxHeight: 600,
+    justifyContent: "center"
   }
 });
 

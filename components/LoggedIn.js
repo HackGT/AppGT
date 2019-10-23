@@ -209,6 +209,7 @@ class LoggedIn extends Component<Props> {
               user={this.props.user}
               closePuzzleModal={this.closePuzzleModal}
               setSolvedQuestions={(solvedQuestions) => this.setState({solvedQuestions})}
+              solvedQuestions={solvedQuestions}
               setDone={(done) => this.setState({done})}
             />
           }
