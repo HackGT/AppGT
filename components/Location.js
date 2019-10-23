@@ -85,7 +85,6 @@ class Location extends Component<Props> {
   }
 
   reset = () => {
-    console.log('please');
     if (!!this.props.closePuzzleModal)
       this.props.closePuzzleModal();
     this.setState({
