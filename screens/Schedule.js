@@ -285,8 +285,7 @@ class ScheduleBase extends Component<Props> {
                       <StyledText>No events found.</StyledText>
                       {isMySchedule && (
                         <StyledText>
-                          {" "}
-                          Star some events to get started!{" "}
+                          Star some events!
                         </StyledText>
                       )}
                     </View>

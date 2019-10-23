@@ -84,6 +84,14 @@ class Location extends Component<Props> {
     };
   }
 
+  reset() {
+    this.props.closePuzzleModal();
+    this.setState({
+      formState: FORM_CLOSED,
+      formMessage: "",
+      formInput: ""
+    });
+  }
 
   getPayload = (details = {}) => {
     const resBody = [];
@@ -136,13 +144,13 @@ class Location extends Component<Props> {
       formInput,
     } = this.state;
 
-    const { puzzle, closePuzzleModal } = this.props;
+    const { puzzle } = this.props;
 
     return(
       <View>
         <Modal
           isVisible={true}
-          onRequestClose={closePuzzleModal}
+          onRequestClose={this.reset}
           animationType="slide"
           transparent={false}
         >
@@ -170,6 +178,8 @@ class Location extends Component<Props> {
               <StyledText style={{fontWeight: "bold"}}> {puzzle.title} </StyledText>
               <StyledText> {puzzle.question} </StyledText>
             </View>
+
+
             <TouchableOpacity
               onPress={() => this.setState({formState: FORM_SUBMIT})}
               style={{
