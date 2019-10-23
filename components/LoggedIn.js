@@ -182,7 +182,7 @@ class LoggedIn extends Component<Props> {
             (<View>
               <StyledText>Dear hacker,  {"\n"}</StyledText>
 
-              <StyledText>The Queen heard of how you have helped the creatures of wonderland, and she has declared she will behead you! You must go back to safety. To escape, there is one last riddle you must solve. Go back to the quest board, and find the key to the exit: {"\n"}</StyledText>
+              <StyledText>The Queen heard of how you have helped the creatures of Wonderland, and she has declared she will behead you! You must go back to safety. To escape, there is one last riddle you must solve. Go back to the quest board, and find the key to the exit: {"\n"}</StyledText>
 
               <StyledText style={{fontStyle: "italic"}}>Spin a yarn, tell your tale</StyledText>
               <StyledText style={{fontStyle: "italic"}}>of the colorful adventures you will keep without fail</StyledText>
