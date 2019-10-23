@@ -125,7 +125,7 @@ class Location extends Component<Props> {
         }
         setSolvedQuestions(solvedQuestions);
         setDone(done);
-        this.setState({ solvedQuestions, done });
+        this.setState({ formState: FORM_FEEDBACK, solvedQuestions, done });
         AsyncStorage.setItem(
           "solvedQuestions",
           JSON.stringify(solvedQuestions)
