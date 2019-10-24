@@ -319,6 +319,7 @@ class LoggedIn extends Component<Props> {
                 <FontAwesomeIcon color="white" icon={faCamera} size={20} />
               </View>
             </TouchableOpacity>
+            
             <View style={{ marginTop: 22 }}>
               <DefaultModal
                 animationType="slide"
