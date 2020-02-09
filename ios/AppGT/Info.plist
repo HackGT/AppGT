@@ -56,8 +56,8 @@
 	<string>Allow for QR code scanning</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Used to verify scavenger hunt status. No data is shared, and all data is processed on device.</string>
+	<!-- <key>NSMicrophoneUsageDescription</key>
+	<string>Used to verify scavenger hunt status. No data is shared, and all data is processed on device.</string> -->
 	<key>UIAppFonts</key>
 	<array>
 		<string>SpaceMono-Bold.ttf</string>
