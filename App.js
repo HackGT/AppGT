@@ -24,7 +24,7 @@ import {
   faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { Home, Schedule, ScavHunt } from "./screens";
+import { Home, Schedule } from "./screens";
 import { CARD_KEYS } from "./screens/Home";
 import { populateEvents, UNSAFE_parseAsLocal } from "./screens/Schedule";
 import { NotifierService } from "./components";
@@ -65,9 +65,9 @@ const HomeStack = createStackNavigator({
 //   Notifications
 // }, { headerMode: "none" });
 
-const ScavHuntStack = createStackNavigator({
-  ScavHunt
-}, { headerMode: "none" });
+// const ScavHuntStack = createStackNavigator({
+//   ScavHunt
+// }, { headerMode: "none" });
 
 
 const TabBarComponent = (props) => (
@@ -81,7 +81,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Schedule: ScheduleStack,
-    ScavHunt: ScavHuntStack,
+    // ScavHunt: ScavHuntStack,
     // Notifications: NotificationsStack
   },
   {
@@ -96,9 +96,9 @@ const TabNavigator = createBottomTabNavigator(
           case "Schedule":
             icon = faCalendarDay;
             break;
-          case "ScavHunt":
-            icon = faKey;
-            break;
+          // case "ScavHunt":
+          //   icon = faKey;
+          //   break;
           default:
             icon = faQuestion;
         }

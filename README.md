@@ -42,4 +42,3 @@ This page contains the schedule of all the events during hackgt. This has the fe
 A major bug: this page of the app is relatively slow when clicking on different.
 A minor bug: the font is too large for some of the titles that the titles overlap to too many lines.
 
-#### Screen 3: "Scavenger Hunt"

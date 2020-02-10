@@ -107,7 +107,7 @@ class LoggedIn extends Component<Props> {
           "solvedQuestions",
           JSON.stringify(solvedQuestions)
         );
-        AsyncStorage.setItem("scavDone", JSON.stringify(done));
+        // AsyncStorage.setItem("scavDone", JSON.stringify(done));
       })
       .catch(error => {
         console.error(error);
@@ -125,7 +125,7 @@ class LoggedIn extends Component<Props> {
           "solvedQuestions",
           JSON.stringify(solvedQuestions)
         );
-        AsyncStorage.setItem("scavDone", JSON.stringify(done));
+        // AsyncStorage.setItem("scavDone", JSON.stringify(done));
       })
       .catch(error => {
         console.error(error);
