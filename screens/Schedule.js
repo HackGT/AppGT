@@ -258,7 +258,7 @@ class ScheduleBase extends Component<Props> {
                 }
                 eventData = eventData.filter(
                   item =>
-                    item.startTime.format("MM/DD") === DATES[dayIndex].date
+                    item.startTime && item.startTime.format("MM/DD") === DATES[dayIndex].date
                 );
                 const searchingFiltered = eventData.filter(item => {
                   return (
@@ -312,7 +312,7 @@ class ScheduleBase extends Component<Props> {
                         let shouldShowTime = index === 0;
                         if (index !== 0) {
                           if (
-                            searchingFiltered[index - 1].startTime.format(
+                            item.startTime && searchingFiltered[index - 1].startTime.format(
                               "HH:mm"
                             ) !== item.startTime.format("HH:mm")
                           ) {
