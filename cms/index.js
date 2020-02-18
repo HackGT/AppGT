@@ -48,7 +48,7 @@ const infoQuery = `
 
 const allQueries = [eventQuery, infoQuery].join("\n");
 
-const getCMSData = async (queryString) => {
+const getCMSData = async queryString => {
   return fetch("https://cms.hack.gt/graphql", {
     method: "POST",
     headers: {
@@ -68,7 +68,7 @@ const getCMSData = async (queryString) => {
       console.error(err);
       return false;
     });
-}
+};
 
 export const fetchInfoBlocks = getCMSData.bind(this, infoQuery);
 export const fetchEvents = getCMSData.bind(this, eventQuery);

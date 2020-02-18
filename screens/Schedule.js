@@ -29,9 +29,8 @@ import { styleguide } from "../styles";
 // TOOD fix scrollbar
 // TODO styling fix on button groups (probably going to have to roll own thing)
 const DATES = [
-  { date: "10/25", day: "Friday" },
-  { date: "10/26", day: "Saturday" },
-  { date: "10/27", day: "Sunday" }
+  { date: "02/28", day: "Friday" },
+  { date: "02/29", day: "Saturday" }
 ];
 
 export const populateEvents = data => {
@@ -159,7 +158,7 @@ class ScheduleBase extends Component<Props> {
           style={{
             width: 50,
             justifyContent: "flex-start",
-            paddingTop: 4,
+            paddingTop: 4
           }}
         >
           {shouldShowTime && (
@@ -258,7 +257,8 @@ class ScheduleBase extends Component<Props> {
                 }
                 eventData = eventData.filter(
                   item =>
-                    item.startTime && item.startTime.format("MM/DD") === DATES[dayIndex].date
+                    item.startTime &&
+                    item.startTime.format("MM/DD") === DATES[dayIndex].date
                 );
                 const searchingFiltered = eventData.filter(item => {
                   return (
@@ -280,9 +280,7 @@ class ScheduleBase extends Component<Props> {
                       />
                       <StyledText>No events found.</StyledText>
                       {isMySchedule && (
-                        <StyledText>
-                          Star some events!
-                        </StyledText>
+                        <StyledText>Star some events!</StyledText>
                       )}
                     </View>
                   );
@@ -312,7 +310,8 @@ class ScheduleBase extends Component<Props> {
                         let shouldShowTime = index === 0;
                         if (index !== 0) {
                           if (
-                            item.startTime && searchingFiltered[index - 1].startTime.format(
+                            item.startTime &&
+                            searchingFiltered[index - 1].startTime.format(
                               "HH:mm"
                             ) !== item.startTime.format("HH:mm")
                           ) {
