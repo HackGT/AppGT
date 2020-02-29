@@ -69,6 +69,14 @@ export function getEventsForDay(events, day) {
   });
 }
 
+export function getCurrentDayIndex(events) {
+  const todayString = moment()
+    .format("dddd")
+    .toLowerCase();
+
+  return getDaysForEvent(events).indexOf(todayString);
+}
+
 // adds timeblocks between new start times for events
 export function getTimeblocksForDay(events, day) {
   timeblocksEvents = [];
@@ -88,6 +96,18 @@ export function getTimeblocksForDay(events, day) {
   }
 
   return timeblocksEvents;
+}
+
+export function getCurrentEventIndex(events, day) {
+  const timeblocks = getTimeblocksForDay(events, day);
+
+  for (i = 0; i < timeblocks.length; i++) {
+    if (isEventHappeningNow(timeblocks[i])) {
+      return i;
+    }
+  }
+
+  return -1;
 }
 
 export function isEventHappeningNow(event) {

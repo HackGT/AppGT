@@ -1,18 +1,52 @@
 import React, { Component, createRef } from "react";
 
-import { TouchableOpacity, View, StyleSheet, FlatList } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  FlatList,
+  AppState,
+} from "react-native";
 import { CMSContext } from "../context";
 import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { ScheduleDayView } from "./ScheduleDayView";
 import { EventBottomSheet } from "./EventBottomSheet";
 import BackToTop from "../assets/ChevronUp";
-import { getEventsHappeningNow, getDaysForEvent } from "../cms/DataHandler";
+import {
+  getEventsHappeningNow,
+  getDaysForEvent,
+  getCurrentDayIndex,
+  getTimeblocksForDay,
+  getCurrentEventIndex,
+} from "../cms/DataHandler";
 
 export class ScheduleTab extends Component {
+  static contextType = CMSContext;
+
   state = {
     selectedEvent: null,
+    eventsHappenignNow: [],
   };
+
+  componentDidMount() {
+    this.refreshEventState();
+
+    // update time changes whenever app opens
+    AppState.addEventListener("change", (state) => {
+      if (state == "active") {
+        this.refreshEventState();
+      }
+    });
+  }
+
+  refreshEventState() {
+    const events = this.context.events;
+
+    this.setState({
+      eventsHappenignNow: getEventsHappeningNow(events),
+    });
+  }
 
   setSelectedEvent = (event) => {
     if (event) {
@@ -31,7 +65,8 @@ export class ScheduleTab extends Component {
     return (
       <CMSContext.Consumer>
         {({ events }) => {
-          const eventsHappeningNow = getEventsHappeningNow(events);
+          const eventsHappeningNow = this.state.eventsHappenignNow;
+
           const hasEventsNow = eventsHappeningNow.length > 0;
           const happeningNowView = (
             <View style={styles.headerDetail}>
@@ -62,7 +97,11 @@ export class ScheduleTab extends Component {
           );
 
           const daysForEvents = getDaysForEvent(events);
-          console.log(daysForEvents);
+          const currentDayIndex = getCurrentDayIndex(events);
+          const intialEventIndex = getCurrentEventIndex(
+            events,
+            daysForEvents[currentDayIndex]
+          );
 
           return (
             <View style={styles.underBackground}>
@@ -75,6 +114,8 @@ export class ScheduleTab extends Component {
               {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
               <ScheduleDayView
                 paddingHeight={hasEventsNow ? 190 : 40}
+                initialEventIndex={intialEventIndex}
+                initialDayIndex={currentDayIndex}
                 days={daysForEvents}
                 onSelectEvent={this.setSelectedEvent}
               />

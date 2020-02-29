@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import React from "react";
 import { fetchEvents, fetchInfoBlocks } from "./cms";
 import { CMSContext, AuthContext } from "./context";
-import { StatusBar } from "react-native";
+import { StatusBar, Text, View } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
@@ -190,6 +190,22 @@ export default class App extends React.Component {
 
   render() {
     const { events, infoBlocks, user } = this.state;
+
+    // TODO: fancy loading animation
+    if (events == null || events.length == 0) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <HackGTIcon />
+        </View>
+      );
+    }
 
     return (
       <CMSContext.Provider

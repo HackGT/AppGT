@@ -5,12 +5,11 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  ScrollView,
   FlatList,
 } from "react-native";
 import { CMSContext } from "../context";
 import { ScheduleEventCell } from "./ScheduleEventCell";
-import Svg, { Circle, parse } from "react-native-svg";
+import Svg, { Circle } from "react-native-svg";
 import { Dimensions } from "react-native";
 import SaturdayGray from "../assets/SaturdayGray";
 import SaturdayGradient from "../assets/SaturdayGradient";
@@ -22,14 +21,32 @@ import Underline from "../assets/UnderlineGradient";
 import { getTimeblocksForDay, isEventHappeningNow } from "../cms/DataHandler";
 
 export class ScheduleDayView extends Component {
+  static contextType = CMSContext;
+
   constructor(props) {
     super(props);
 
+    const dayIndex =
+      this.props.initialDayIndex == -1 ? 0 : this.props.initialDayIndex;
+
     this.state = {
-      dayIndex: 1,
+      dayIndex: dayIndex,
     };
 
+    this.tabListRef = React.createRef();
     this.scheduleListRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.tabListRef.current.scrollToIndex({
+      index: this.state.dayIndex,
+      animated: false,
+    });
+
+    this.scheduleListRef.current.scrollToIndex({
+      index: this.props.initialEventIndex,
+      animated: false,
+    });
   }
 
   tabContent = (day) => (
@@ -40,10 +57,19 @@ export class ScheduleDayView extends Component {
 
         return (
           <FlatList
+            ref={this.scheduleListRef}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: this.props.paddingHeight }}
             data={timeblocks}
             keyExtractor={(item, index) => (item && item.id ? item.id : index)}
+            onScrollToIndexFailed={(error) => {
+              setTimeout(() => {
+                this.scheduleListRef.current.scrollToIndex({
+                  index: error.index,
+                  animated: false,
+                });
+              }, 100);
+            }}
             renderItem={({ item, index }) => {
               if (item == null) {
                 return;
@@ -166,8 +192,8 @@ export class ScheduleDayView extends Component {
               <TouchableOpacity
                 key={i}
                 onPress={() => {
-                  if (this.scheduleListRef.current != null) {
-                    this.scheduleListRef.current.scrollToIndex({ index: i });
+                  if (this.tabListRef.current != null) {
+                    this.tabListRef.current.scrollToIndex({ index: i });
                     this.setState({ dayIndex: i });
                   }
                 }}
@@ -190,9 +216,8 @@ export class ScheduleDayView extends Component {
         {this.dayTabView(width)}
 
         <FlatList
-          ref={this.scheduleListRef}
+          ref={this.tabListRef}
           data={this.props.days}
-          initialScrollIndex={this.state.dayIndex}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled={true}
@@ -204,14 +229,13 @@ export class ScheduleDayView extends Component {
               ),
             });
           }}
-          onScrollToIndexFailed={(info) => {
-            const wait = new Promise((resolve) => setTimeout(resolve, 500));
-            wait.then(() => {
-              this.scheduleListRef.current.scrollToIndex({
-                index: this.state.dayIndex,
+          onScrollToIndexFailed={(error) => {
+            setTimeout(() => {
+              this.tabListRef.current.scrollToIndex({
+                index: error.index,
                 animated: false,
               });
-            });
+            }, 100);
           }}
           renderItem={({ item }) => {
             return (
