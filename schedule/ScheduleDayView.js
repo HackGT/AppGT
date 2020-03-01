@@ -19,6 +19,7 @@ import SundayGray from "../assets/SundayGray";
 import SundayGradient from "../assets/SundayGradient";
 import Underline from "../assets/UnderlineGradient";
 import { getTimeblocksForDay, isEventHappeningNow } from "../cms/DataHandler";
+import BackToTop from "../assets/ChevronUp";
 
 export class ScheduleDayView extends Component {
   static contextType = CMSContext;
@@ -210,8 +211,34 @@ export class ScheduleDayView extends Component {
     );
   };
 
+  backToTopButton = () => {
+    return (
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          right: 0,
+          bottom: this.props.paddingHeight - 15,
+        }}
+        onPress={() => {
+          if (this.scheduleListRef.current != null) {
+            this.scheduleListRef.current.scrollToIndex({
+              index: this.props.initialEventIndex,
+              animated: true,
+            });
+          }
+        }}
+      >
+        <BackToTop />
+      </TouchableOpacity>
+    );
+  };
+
   render() {
     const width = Dimensions.get("window").width;
+    // only show back to top button if the current tab is on the current day, and there are events
+    const shouldShowBackToTopButton =
+      this.state.dayIndex == this.props.initialDayIndex &&
+      this.props.initialEventIndex != -1;
 
     return (
       <View>
@@ -255,6 +282,8 @@ export class ScheduleDayView extends Component {
             );
           }}
         />
+
+        {shouldShowBackToTopButton && this.backToTopButton()}
       </View>
     );
   }

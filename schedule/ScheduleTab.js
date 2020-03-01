@@ -119,18 +119,6 @@ export class ScheduleTab extends Component {
                 days={daysForEvents}
                 onSelectEvent={this.setSelectedEvent}
               />
-
-              <TouchableOpacity
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: 0,
-                  opacity: hasEventsNow ? 1 : 0,
-                }}
-                // onPress={} TOOD: on press send to the current event, only show if what's happening now is not 0
-              >
-                <BackToTop />
-              </TouchableOpacity>
             </View>
           );
         }}
