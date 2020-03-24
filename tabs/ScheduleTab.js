@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {Animated, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title, Card, CardItem, Button, Container, Content, H1, H2, H3, Left, Right} from "native-base";
 
-const HEADER_HEIGHT = 300;
+const HEADER_HEIGHT = 150;
 const SCROLL_HEIGHT = 1;
 const BLUE = "#41D1FF";
 
@@ -53,7 +53,7 @@ export class ScheduleTab extends Component {
 
     return (
       <View>
-        <View>
+        {/* <View>
           <Header style={styles.headerTop} hasTabs>
             <Left>
             <Title>
@@ -69,7 +69,7 @@ export class ScheduleTab extends Component {
             </Button>
             </Right>
           </Header>
-        </View>
+        </View> */}
 
         <Animated.ScrollView
           stickyHeaderIndices={[0]} 

@@ -1,12 +1,68 @@
+import 'react-native-gesture-handler';
 import React from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
 import { ScheduleTab } from './tabs/ScheduleTab';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const App: () => React$Node = () => {
+// TODO: remove and replace with another tab. This is just a placeholder
+function SettingsScreen() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Placeholder for another future tab</Text>
+      </View>
+    );
+  }
+
+  function HackGTitle() {
+    return (
+      <Text>HackGT</Text>
+    );
+  }
+
+const SchdeuleStack = createStackNavigator();
+function SchdeuleStackScreen() {
   return (
-    <>
-      <ScheduleTab />
-    </>
+    <SchdeuleStack.Navigator>
+        <SchdeuleStack.Screen 
+        options={{
+            headerTitleAlign: "left",
+            headerTitle: props => <HackGTitle {...props} />,
+            headerRight: () => (
+              <Button
+                onPress={() => alert('Search')}
+                title="🔎"
+              />
+            ),
+          }}
+        name="HackGT">
+            {props => <ScheduleTab {...props} />}
+        </SchdeuleStack.Screen>
+    </SchdeuleStack.Navigator>
+  );
+}
+
+const SettingsStack = createStackNavigator();
+function SettingsStackScreen() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+      <SettingsStack.Screen name="SettingDetail" component={SettingsScreen} /> 
+    </SettingsStack.Navigator>
+  );
+}
+
+// for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+    return (
+        <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+          <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
   );
 };
-
-export default App;
