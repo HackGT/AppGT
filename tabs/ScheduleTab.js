@@ -2,6 +2,7 @@ import React, {Component} from "react";
 
 import {Animated, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title, Card, CardItem, Button, Container, Content, H1, H2, H3, Left, Right} from "native-base";
+import { ScrollView } from "react-native-gesture-handler";
 
 const HEADER_HEIGHT = 150;
 const SCROLL_HEIGHT = 1;
@@ -80,7 +81,20 @@ export class ScheduleTab extends Component {
 
             {/* TODO: Fade out and translate up when in future events, when in now/past events show */}
             <Animated.View style={styles.headerDetail}>
-              <Text>What's Happening Now</Text>
+                <Text>What's Happening Now</Text>
+                <ScrollView horizontal={true}>
+                    
+                    {new Array(20).fill(null).map((_, i) => <Item key={i}>
+                    <Card style={styles.cardHorizontalParent}>
+                        <CardItem style={styles.cardItem}>
+                            <Text>
+                            Item {i}
+                            </Text>
+                        </CardItem>
+                    </Card>
+                </Item>
+          )}
+                </ScrollView>
             </Animated.View>
 
           <Tabs
@@ -165,8 +179,12 @@ const styles = StyleSheet.create({
         backgroundColor: BLUE
       },
 
+      cardHorizontalParent: {
+          width: 200,
+        borderRadius: 10
+      },
       cardParent: {
-        width: "90%", 
+        width: "100%",
         borderRadius: 10
       },
       
