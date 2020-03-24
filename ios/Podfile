@@ -41,13 +41,3 @@ target 'AppGT' do
 
   use_native_modules!
 end
-
-target 'AppGT-tvOS' do
-  # Pods for AppGT-tvOS
-
-  target 'AppGT-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-end
