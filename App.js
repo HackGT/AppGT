@@ -8,37 +8,37 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Placeholder for another future tab</Text>
-      </View>
-    );
-  }
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Placeholder for another future tab</Text>
+    </View>
+  );
+}
 
-  function HackGTitle() {
-    return (
-      <Text>HackGT</Text>
-    );
-  }
+function HackGTitle() {
+  return (
+    <Text>HackGT</Text>
+  );
+}
 
 const SchdeuleStack = createStackNavigator();
 function SchdeuleStackScreen() {
   return (
     <SchdeuleStack.Navigator>
-        <SchdeuleStack.Screen 
+      <SchdeuleStack.Screen
         options={{
-            headerTitleAlign: "left",
-            headerTitle: props => <HackGTitle {...props} />,
-            headerRight: () => (
-              <Button
-                onPress={() => alert('Search')}
-                title="🔎"
-              />
-            ),
-          }}
+          headerTitleAlign: "left",
+          headerTitle: props => <HackGTitle {...props} />,
+          headerRight: () => (
+            <Button
+              onPress={() => alert('Search')}
+              title="🔎"
+            />
+          ),
+        }}
         name="HackGT">
-            {props => <ScheduleTab {...props} />}
-        </SchdeuleStack.Screen>
+        {props => <ScheduleTab {...props} />}
+      </SchdeuleStack.Screen>
     </SchdeuleStack.Navigator>
   );
 }
@@ -48,7 +48,7 @@ function SettingsStackScreen() {
   return (
     <SettingsStack.Navigator>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="SettingDetail" component={SettingsScreen} /> 
+      <SettingsStack.Screen name="SettingDetail" component={SettingsScreen} />
     </SettingsStack.Navigator>
   );
 }
@@ -57,12 +57,12 @@ function SettingsStackScreen() {
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-    return (
-        <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
-          <Tab.Screen name="Settings" component={SettingsStackScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };

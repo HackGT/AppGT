@@ -1,7 +1,7 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 
-import {Animated, Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import { Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title, Card, CardItem, Button, Container, Content, H1, H2, H3, Left, Right} from "native-base";
+import { Animated, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title, Card, CardItem, Button, Container, Content, H1, H2, H3, Left, Right } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 
 const HEADER_HEIGHT = 150;
@@ -21,21 +21,21 @@ export class ScheduleTab extends Component {
     outputRange: [1, 0],
   });
 
-  tabContent = (x, i) => <View style={{height: this.state.height}}>
-    <List onLayout={({nativeEvent: {layout: {height}}}) => {
+  tabContent = (x, i) => <View style={{ height: this.state.height }}>
+    <List onLayout={({ nativeEvent: { layout: { height } } }) => {
       this.heights[i] = height;
-      if (this.state.activeTab === i) this.setState({height})
+      if (this.state.activeTab === i) this.setState({ height })
     }}>
       {new Array(x).fill(null).map((_, i) => <Item key={i}>
-          <Card style={styles.cardParent}>
-            <CardItem style={styles.cardItem}>
-                <Text>
-                   Item {i}
-                </Text>
-            </CardItem>
-          </Card>
-          </Item>
-          )}
+        <Card style={styles.cardParent}>
+          <CardItem style={styles.cardItem}>
+            <Text>
+              Item {i}
+            </Text>
+          </CardItem>
+        </Card>
+      </Item>
+      )}
     </List></View>;
 
   heights = [500, 500];
@@ -46,7 +46,7 @@ export class ScheduleTab extends Component {
 
   constructor(props) {
     super(props);
-    this.nScroll.addListener(Animated.event([{value: this.scroll}], {useNativeDriver: false}));
+    this.nScroll.addListener(Animated.event([{ value: this.scroll }], { useNativeDriver: false }));
   }
 
   render() {
@@ -73,63 +73,63 @@ export class ScheduleTab extends Component {
         </View> */}
 
         <Animated.ScrollView
-          stickyHeaderIndices={[0]} 
-          scrollEventThrottle={5} 
-          showsVerticalScrollIndicator={false} 
-          onScroll={Animated.event([{nativeEvent: {contentOffset: {y: this.nScroll}}}], {useNativeDriver: true})}>
+          stickyHeaderIndices={[0]}
+          scrollEventThrottle={5}
+          showsVerticalScrollIndicator={false}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.nScroll } } }], { useNativeDriver: true })}>
 
 
-            {/* TODO: Fade out and translate up when in future events, when in now/past events show */}
-            <Animated.View style={styles.headerDetail}>
-                <Text>What's Happening Now</Text>
-                <ScrollView horizontal={true}>
-                    
-                    {new Array(20).fill(null).map((_, i) => <Item key={i}>
-                    <Card style={styles.cardHorizontalParent}>
-                        <CardItem style={styles.cardItem}>
-                            <Text>
-                            Item {i}
-                            </Text>
-                        </CardItem>
-                    </Card>
-                </Item>
-          )}
-                </ScrollView>
-            </Animated.View>
+          {/* TODO: Fade out and translate up when in future events, when in now/past events show */}
+          <Animated.View style={styles.headerDetail}>
+            <Text>What's Happening Now</Text>
+            <ScrollView horizontal={true}>
+
+              {new Array(20).fill(null).map((_, i) => <Item key={i}>
+                <Card style={styles.cardHorizontalParent}>
+                  <CardItem style={styles.cardItem}>
+                    <Text>
+                      Item {i}
+                    </Text>
+                  </CardItem>
+                </Card>
+              </Item>
+              )}
+            </ScrollView>
+          </Animated.View>
 
           <Tabs
             prerenderingSiblingsNumber={3}
-            onChangeTab={({i}) => {
-              this.setState({height: this.heights[i], activeTab: i})
+            onChangeTab={({ i }) => {
+              this.setState({ height: this.heights[i], activeTab: i })
             }}
-            renderTabBar={(props) => 
-            
-            <Animated.View
-              style={{ transform: [{translateY: this.tabY}], zIndex: 1, width: "100%", backgroundColor: "white"}}>
-              <ScrollableTab {...props} style={styles.headerScrollableTab}
-                             renderTab={(name, page, active, onPress, onLayout) => (
-                               <TouchableOpacity key={page}
-                                                 onPress={() => onPress(page)}
-                                                 onLayout={onLayout}
-                                                 activeOpacity={0.4}>
-                                 <Animated.View
-                                   style={styles.tabView}>
-                                   <TabHeading scrollable
-                                               style={styles.tabHeading}
-                                               active={active}>
-                                     <Animated.Text style={styles.tabText}>
-                                       {name}
-                                     </Animated.Text>
-                                   </TabHeading>
-                                 </Animated.View>
-                               </TouchableOpacity>
-                             )}
-                             underlineStyle={styles.tabUnderlineStyle}/>
-            </Animated.View>
+            renderTabBar={(props) =>
+
+              <Animated.View
+                style={{ transform: [{ translateY: this.tabY }], zIndex: 1, width: "100%", backgroundColor: "white" }}>
+                <ScrollableTab {...props} style={styles.headerScrollableTab}
+                  renderTab={(name, page, active, onPress, onLayout) => (
+                    <TouchableOpacity key={page}
+                      onPress={() => onPress(page)}
+                      onLayout={onLayout}
+                      activeOpacity={0.4}>
+                      <Animated.View
+                        style={styles.tabView}>
+                        <TabHeading scrollable
+                          style={styles.tabHeading}
+                          active={active}>
+                          <Animated.Text style={styles.tabText}>
+                            {name}
+                          </Animated.Text>
+                        </TabHeading>
+                      </Animated.View>
+                    </TouchableOpacity>
+                  )}
+                  underlineStyle={styles.tabUnderlineStyle} />
+              </Animated.View>
 
             }>
             <Tab heading="Friday">
-                {this.tabContent(30, 0)}
+              {this.tabContent(30, 0)}
             </Tab>
             <Tab heading="Saturday">
               {this.tabContent(15, 1)}
@@ -144,55 +144,55 @@ export class ScheduleTab extends Component {
 }
 
 const styles = StyleSheet.create({
-    headerTop: {
-        backgroundColor: "white"
-    },
-    headerTopText: {
-        color: BLUE, 
-        fontWeight: "bold"
-    },
-    
-    headerDetail: {
-        backgroundColor: "white", 
-        height: HEADER_HEIGHT
-    },
+  headerTop: {
+    backgroundColor: "white"
+  },
+  headerTopText: {
+    color: BLUE,
+    fontWeight: "bold"
+  },
 
-    headerScrollableTab: {
-        backgroundColor: "white"
-    },
+  headerDetail: {
+    backgroundColor: "white",
+    height: HEADER_HEIGHT
+  },
 
-    tabView: {
-        flex: 1,
-        height: 100,
-        backgroundColor: "white",
-      },
+  headerScrollableTab: {
+    backgroundColor: "white"
+  },
 
-      tabHeading: {
-            backgroundColor: "white",
-            width: "100%"
-      },
-     tabText: {
-        color: BLUE,
-        fontSize: 14
-      },
-      tabUnderlineStyle: {
-        backgroundColor: BLUE
-      },
+  tabView: {
+    flex: 1,
+    height: 100,
+    backgroundColor: "white",
+  },
 
-      cardHorizontalParent: {
-          width: 200,
-        borderRadius: 10
-      },
-      cardParent: {
-        width: "100%",
-        borderRadius: 10
-      },
-      
-      cardItem: { 
-          backgroundColor: "white", 
-          height: 100, 
-          borderColor: BLUE, 
-          borderWidth: 2, 
-          borderRadius: 10 
-        }
-  });
+  tabHeading: {
+    backgroundColor: "white",
+    width: "100%"
+  },
+  tabText: {
+    color: BLUE,
+    fontSize: 14
+  },
+  tabUnderlineStyle: {
+    backgroundColor: BLUE
+  },
+
+  cardHorizontalParent: {
+    width: 200,
+    borderRadius: 10
+  },
+  cardParent: {
+    width: "100%",
+    borderRadius: 10
+  },
+
+  cardItem: {
+    backgroundColor: "white",
+    height: 100,
+    borderColor: BLUE,
+    borderWidth: 2,
+    borderRadius: 10
+  }
+});
