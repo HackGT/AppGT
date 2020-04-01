@@ -5,6 +5,7 @@ import { ScheduleTab } from './tabs/ScheduleTab';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { fetchEvents, fetchInfoBlocks } from "./cms";
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
@@ -21,11 +22,11 @@ function HackGTitle() {
   );
 }
 
-const SchdeuleStack = createStackNavigator();
-function SchdeuleStackScreen() {
+const ScheduleStack = createStackNavigator();
+function ScheduleStackScreen() {
   return (
-    <SchdeuleStack.Navigator>
-      <SchdeuleStack.Screen
+    <ScheduleStack.Navigator>
+      <ScheduleStack.Screen
         options={{
           headerTitleAlign: "left",
           headerTitle: props => <HackGTitle {...props} />,
@@ -38,8 +39,8 @@ function SchdeuleStackScreen() {
         }}
         name="HackGT">
         {props => <ScheduleTab {...props} />}
-      </SchdeuleStack.Screen>
-    </SchdeuleStack.Navigator>
+      </ScheduleStack.Screen>
+    </ScheduleStack.Navigator>
   );
 }
 
@@ -57,10 +58,27 @@ function SettingsStackScreen() {
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+
+  const events = [];
+  fetchEvents().then(data => {
+    data.data.eventbases.forEach((base) => {
+      events.push(base);
+    })
+    console.log("the events: " + events);
+  })
+
+  const infoBlocks = [];
+  fetchInfoBlocks().then(data => {
+    data.data.infoblocks.forEach((block) => {
+      infoBlocks.push(block);
+    })
+    console.log("the infoblocks: " + infoBlocks);
+  })
+
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+        <Tab.Screen name="Schedule" component={ScheduleStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
