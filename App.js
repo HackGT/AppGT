@@ -1,24 +1,22 @@
-import 'react-native-gesture-handler';
-import React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { ScheduleTab } from './tabs/ScheduleTab';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import "react-native-gesture-handler";
+import React from "react";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { ScheduleTab } from "./tabs/ScheduleTab";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Placeholder for another future tab</Text>
     </View>
   );
 }
 
 function HackGTitle() {
-  return (
-    <Text>HackGT</Text>
-  );
+  return <Text>HackGT</Text>;
 }
 
 const SchdeuleStack = createStackNavigator();
@@ -28,16 +26,14 @@ function SchdeuleStackScreen() {
       <SchdeuleStack.Screen
         options={{
           headerTitleAlign: "left",
-          headerTitle: props => <HackGTitle {...props} />,
+          headerTitle: (props) => <HackGTitle {...props} />,
           headerRight: () => (
-            <Button
-              onPress={() => alert('Search')}
-              title="🔎"
-            />
+            <Button onPress={() => alert("Search")} title="🔎" />
           ),
         }}
-        name="HackGT">
-        {props => <ScheduleTab {...props} />}
+        name="HackGT"
+      >
+        {(props) => <ScheduleTab {...props} />}
       </SchdeuleStack.Screen>
     </SchdeuleStack.Navigator>
   );
@@ -65,4 +61,4 @@ export default function App() {
       </Tab.Navigator>
     </NavigationContainer>
   );
-};
+}
