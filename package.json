@@ -21,7 +21,9 @@
     "react-native-ionicons": "^5.0.0-beta",
     "react-native-reanimated": "^1.7.1",
     "react-native-safe-area-context": "^0.7.3",
-    "react-native-screens": "^2.4.0"
+    "react-native-screens": "^2.4.0",
+    "react-native-svg": "^12.0.3",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.19"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

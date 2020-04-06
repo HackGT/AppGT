@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, createRef, useRef } from "react";
 
 import {
   Animated,
+  Button,
   Text,
   TouchableOpacity,
   View,
@@ -18,6 +19,7 @@ import {
   CardItem,
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import BottomSheet from "reanimated-bottom-sheet";
 
 const HEADER_HEIGHT = 150;
 const SCROLL_HEIGHT = 1;
@@ -26,6 +28,10 @@ const BLUE = "#41D1FF";
 export class ScheduleTab extends Component {
   nScroll = new Animated.Value(0);
   scroll = new Animated.Value(0);
+  bs = createRef();
+  state = {
+    fall: new Animated.Value(1),
+  };
 
   tabY = this.nScroll.interpolate({
     inputRange: [0, SCROLL_HEIGHT, SCROLL_HEIGHT + 1],
@@ -49,13 +55,13 @@ export class ScheduleTab extends Component {
         }}
       >
         {new Array(x).fill(null).map((_, i) => (
-          <Item key={i}>
+          <TouchableOpacity key={i} onPress={() => this.bs.current.snapTo(0)}>
             <Card style={styles.cardParent}>
               <CardItem style={styles.cardItem}>
                 <Text>Item {i}</Text>
               </CardItem>
             </Card>
-          </Item>
+          </TouchableOpacity>
         ))}
       </List>
     </View>
@@ -74,11 +80,58 @@ export class ScheduleTab extends Component {
     );
   }
 
+  renderInner = () => (
+    <View style={styles.panel}>
+      <Text>
+        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+        praesentium voluptatum deleniti atque corrupti quos dolores et quas
+        molestias excepturi sint occaecati cupiditate non provident, similique
+        sunt in culpa qui officia deserunt mollitia animi, id est laborum et
+        dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
+        impedit quo minus id quod maxime placeat facere possimus, omnis voluptas
+        assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut
+        officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates
+        repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
+        tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias
+        consequatur aut perferendis doloribus asperiores repellat. At vero eos et
+        accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
+        voluptatum deleniti atque corrupti quos dolores. Itaque earum rerum hic
+        tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias
+        consequatur aut perferendis doloribus asperiores repellat.
+      </Text>
+      <TouchableOpacity style={styles.panelButton}>
+        <Text style={styles.panelButtonTitle}>✪ Add to Calendar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  renderHeader = () => (
+    <View style={styles.panelHeader}>
+      <View style={styles.panelPlaceholder} />
+      <View style={styles.panelHandle} />
+      <TouchableOpacity
+        style={styles.panelClose}
+        onPress={() => this.bs.current.snapTo(1)}
+      >
+        <Text>𝗫</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   render() {
     // TODO: if greater than a certain X, set SCROLL_HEIGHT to header height
 
     return (
       <View>
+        <BottomSheet
+          ref={this.bs}
+          snapPoints={[450, 0]}
+          renderContent={this.renderInner}
+          renderHeader={this.renderHeader}
+          initialSnap={1}
+          enabledGestureInteraction={false}
+        />
         {/* <View>
           <Header style={styles.headerTop} hasTabs>
             <Left>
@@ -111,13 +164,13 @@ export class ScheduleTab extends Component {
             <Text>What's Happening Now</Text>
             <ScrollView horizontal={true}>
               {new Array(20).fill(null).map((_, i) => (
-                <Item key={i}>
+                <TouchableOpacity key={i} onPress={this._onPressButton}>
                   <Card style={styles.cardHorizontalParent}>
                     <CardItem style={styles.cardItem}>
                       <Text>Item {i}</Text>
                     </CardItem>
                   </Card>
-                </Item>
+                </TouchableOpacity>
               ))}
             </ScrollView>
           </Animated.View>
@@ -142,7 +195,8 @@ export class ScheduleTab extends Component {
                   renderTab={(name, page, active, onPress, onLayout) => (
                     <TouchableOpacity
                       key={page}
-                      onPress={() => onPress(page)}
+                      // onPress={() => onPress(page)}
+                      onPress={this._onPressButton}
                       onLayout={onLayout}
                       activeOpacity={0.4}
                     >
@@ -224,5 +278,84 @@ const styles = StyleSheet.create({
     borderColor: BLUE,
     borderWidth: 2,
     borderRadius: 10,
+  },
+
+  panelContainer: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+
+  panel: {
+    paddingHorizontal: 20,
+    height: 600,
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+
+  panelHeader: {
+    backgroundColor: "#ffffff",
+    shadowColor: "#000000",
+    padding: 5,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    height: 35
+  },
+
+  panelPlaceholder: {
+    width: 31,
+    height: 31,
+    borderRadius: 100,
+    backgroundColor: "#ffffff",
+    marginBottom: 10,
+    alignSelf: "center",
+  },
+
+  panelHandle: {
+    width: 75,
+    height: 4,
+    borderRadius: 100,
+    backgroundColor: "#f2f2f2",
+    marginBottom: 10,
+    alignSelf: "center",
+  },
+
+  panelClose: {
+    width: 31,
+    height: 31,
+    borderRadius: 100,
+    backgroundColor: "#f2f2f2",
+    marginBottom: 10,
+    alignSelf: "center",
+    alignItems: "center",
+    alignContent: "center",
+    padding: 5
+  },
+
+  panelTitle: {
+    fontSize: 27,
+    height: 35,
+  },
+
+  panelButton: {
+    borderRadius: 5,
+    backgroundColor: "#41d1ff",
+    alignItems: "center",
+    justifyContent: 'center',
+    height: 42, 
+    width: 335
+  },
+
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "white",
   },
 });
