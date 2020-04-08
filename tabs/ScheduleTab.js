@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Animated, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { Header, List, ListItem as Item, ScrollableTab, Tab, TabHeading, Tabs, Title, Card, CardItem, Button, Container, Content, H1, H2, H3, Left, Right } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import { CMSContext } from '../context';
 
 const HEADER_HEIGHT = 150;
 const SCROLL_HEIGHT = 1;
@@ -21,22 +22,38 @@ export class ScheduleTab extends Component {
     outputRange: [1, 0],
   });
 
-  tabContent = (x, i) => <View style={{ height: this.state.height }}>
-    <List onLayout={({ nativeEvent: { layout: { height } } }) => {
-      this.heights[i] = height;
-      if (this.state.activeTab === i) this.setState({ height })
-    }}>
-      {new Array(x).fill(null).map((_, i) => <Item key={i}>
-        <Card style={styles.cardParent}>
-          <CardItem style={styles.cardItem}>
-            <Text>
-              Item {i}
-            </Text>
-          </CardItem>
-        </Card>
-      </Item>
-      )}
-    </List></View>;
+  tabContent = (i) => {
+    return(
+      <View style={{ height: this.state.height }}>
+        <CMSContext.Consumer>
+          { ({events, infoBlocks}) => {
+              const curLength = i === 0 ? events.length : infoBlocks.length;
+              const curData = i === 0 ? events : infoBlocks;
+              return (
+                <List onLayout={({ nativeEvent: { layout: { height } } }) => {
+                  this.heights[i] = height;
+                  if (this.state.activeTab === i) this.setState({ height })
+                }}>
+                  {new Array(curLength).fill(null).map((_, i) => <Item key={i}>
+                    <Card style={styles.cardParent}>
+                    {console.log(curLength)}
+                      <CardItem style={styles.cardItem}>
+                        <Text>
+                          {console.log(curData[i].title)}
+                          {i+1} Item {curData[i].title}
+                        </Text>
+                      </CardItem>
+                    </Card>
+                  </Item>
+                  )}
+                </List>
+              )
+            }
+          }
+        </CMSContext.Consumer>
+      </View>
+    );
+  }
 
   heights = [500, 500];
   state = {
@@ -51,7 +68,6 @@ export class ScheduleTab extends Component {
 
   render() {
     // TODO: if greater than a certain X, set SCROLL_HEIGHT to header height
-
     return (
       <View>
         {/* <View>
@@ -129,10 +145,10 @@ export class ScheduleTab extends Component {
 
             }>
             <Tab heading="Friday">
-              {this.tabContent(30, 0)}
+              {this.tabContent(0)}
             </Tab>
             <Tab heading="Saturday">
-              {this.tabContent(15, 1)}
+              {this.tabContent(1)}
             </Tab>
           </Tabs>
 

@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { fetchEvents, fetchInfoBlocks } from "./cms";
+import { CMSContext } from "./context";
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
@@ -76,11 +77,18 @@ export default function App() {
   })
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Schedule" component={ScheduleStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <CMSContext.Provider
+      value={{
+        events,
+        infoBlocks
+      }}
+    >
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Schedule" component={ScheduleStackScreen} />
+            <Tab.Screen name="Settings" component={SettingsStackScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+    </CMSContext.Provider>
   );
 };
