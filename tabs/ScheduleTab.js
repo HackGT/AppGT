@@ -124,7 +124,7 @@ export class ScheduleTab extends Component {
     // TODO: if greater than a certain X, set SCROLL_HEIGHT to header height
 
     return (
-      <View>
+      <View style={styles.underBackground}>
         <BottomSheet
           ref={this.bs}
           snapPoints={[450, 0]}
@@ -359,5 +359,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "bold",
     color: "white",
+  },
+
+  underBackground: {
+    backgroundColor: "white",
   },
 });
