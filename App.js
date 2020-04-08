@@ -7,7 +7,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import HackGTIcon from "./assets/HackGTIcon";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import {
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
@@ -26,14 +29,9 @@ function HackGTitle() {
 
 function SearchButton() {
   return (
-    <TouchableHighlight
-      activeOpacity={0.6}
-      underlayColor="white"
-      style={{ padding: 10 }}
-      onPress={() => alert("Pressed!")}
-    >
+    <TouchableOpacity style={{ padding: 10 }} onPress={() => alert("Pressed!")}>
       <SearchIcon />
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 }
 

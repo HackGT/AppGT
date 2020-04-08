@@ -83,22 +83,23 @@ export class ScheduleTab extends Component {
   renderInner = () => (
     <View style={styles.panel}>
       <Text>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
-        praesentium voluptatum deleniti atque corrupti quos dolores et quas
-        molestias excepturi sint occaecati cupiditate non provident, similique
-        sunt in culpa qui officia deserunt mollitia animi, id est laborum et
-        dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
-        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
-        impedit quo minus id quod maxime placeat facere possimus, omnis voluptas
-        assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut
-        officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates
-        repudiandae sint et molestiae non recusandae. Itaque earum rerum hic
-        tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias
-        consequatur aut perferendis doloribus asperiores repellat. At vero eos et
-        accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
-        voluptatum deleniti atque corrupti quos dolores. Itaque earum rerum hic
-        tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias
-        consequatur aut perferendis doloribus asperiores repellat.
+        At vero eos et accusamus et iusto odio dignissimos ducimus qui
+        blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
+        et quas molestias excepturi sint occaecati cupiditate non provident,
+        similique sunt in culpa qui officia deserunt mollitia animi, id est
+        laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
+        distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
+        cumque nihil impedit quo minus id quod maxime placeat facere possimus,
+        omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
+        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet
+        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque
+        earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
+        voluptatibus maiores alias consequatur aut perferendis doloribus
+        asperiores repellat. At vero eos et accusamus et iusto odio dignissimos
+        ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti
+        quos dolores. Itaque earum rerum hic tenetur a sapiente delectus, ut aut
+        reiciendis voluptatibus maiores alias consequatur aut perferendis
+        doloribus asperiores repellat.
       </Text>
       <TouchableOpacity style={styles.panelButton}>
         <Text style={styles.panelButtonTitle}>✪ Add to Calendar</Text>
@@ -132,6 +133,7 @@ export class ScheduleTab extends Component {
           initialSnap={1}
           enabledGestureInteraction={false}
         />
+
         {/* <View>
           <Header style={styles.headerTop} hasTabs>
             <Left>
@@ -306,7 +308,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    height: 35
+    height: 35,
   },
 
   panelPlaceholder: {
@@ -336,7 +338,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     alignContent: "center",
-    padding: 5
+    padding: 5,
   },
 
   panelTitle: {
@@ -348,9 +350,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#41d1ff",
     alignItems: "center",
-    justifyContent: 'center',
-    height: 42, 
-    width: 335
+    justifyContent: "center",
+    height: 42,
+    width: 335,
   },
 
   panelButtonTitle: {
