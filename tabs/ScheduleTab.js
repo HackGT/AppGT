@@ -49,14 +49,12 @@ export class ScheduleTab extends Component {
   });
 
   parse_date = t => {
-    console.log("t: " + t);
     // parse iso-formatted string as local time
     if (!t) return "";
     let localString = t;
     if (t.slice(-1).toLowerCase() === "z") {
       localString = t.slice(0, -1);
     }
-    console.log("string: " + localString) 
     return moment(localString);
   };
 
