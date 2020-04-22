@@ -72,6 +72,7 @@ export default class App extends React.Component {
     const events = this.state.events;
     const infoBlocks = this.state.infoBlocks;
 
+    console.log(events);
     return (
       <CMSContext.Provider
         value={{

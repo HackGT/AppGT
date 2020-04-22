@@ -29,6 +29,7 @@ import {
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import { CMSContext } from "../context";
+import moment from "moment";
 
 const HEADER_HEIGHT = 150;
 const SCROLL_HEIGHT = 1;
@@ -47,6 +48,18 @@ export class ScheduleTab extends Component {
     outputRange: [1, 0],
   });
 
+  parse_date = t => {
+    console.log("t: " + t);
+    // parse iso-formatted string as local time
+    if (!t) return "";
+    let localString = t;
+    if (t.slice(-1).toLowerCase() === "z") {
+      localString = t.slice(0, -1);
+    }
+    console.log("string: " + localString) 
+    return moment(localString);
+  };
+
   tabContent = (i) => {
     return (
       <View>
@@ -54,19 +67,31 @@ export class ScheduleTab extends Component {
           {({ events, infoBlocks }) => {
             const curLength = events.length;
             const curData = events;
+            
             return (
               <List>
-                {new Array(curLength).fill(null).map((_, i) => (
-                  <Item key={i}>
-                    <Card style={styles.cardParent}>
-                      <CardItem style={styles.cardItem}>
-                        <Text>
-                          {i + 1} Item {curData[i].title}
-                        </Text>
-                      </CardItem>
-                    </Card>
-                  </Item>
-                ))}
+                {
+                  new Array(curLength).fill(null).map((_, i) => 
+                  {
+                    const title = curData[i].title;
+                    const location = curData[i].area != null ? curData[i].area.name + " • " : "";
+                    const start = this.parse_date(curData[i].start_time).format("hh:mm");
+                    const end = this.parse_date(curData[i].end_time).format("hh:mm")
+                    return (
+                      <Item key={i}>
+                        <Card style={styles.cardParent}>
+                          <CardItem style={styles.cardItem}>
+                            <Text>
+                              {title}
+                            </Text>
+                            <Text>
+                              {location}{start} - {end}
+                            </Text>
+                          </CardItem>
+                        </Card>
+                      </Item>
+                    )})
+                }
               </List>
             );
           }}
@@ -230,6 +255,9 @@ const styles = StyleSheet.create({
   },
 
   cardItem: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-evenly",
     backgroundColor: "white",
     height: 100,
     borderColor: BLUE,
