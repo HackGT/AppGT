@@ -135,24 +135,6 @@ export class ScheduleTab extends Component {
           enabledGestureInteraction={false}
         />
 
-        {/* <View>
-          <Header style={styles.headerTop} hasTabs>
-            <Left>
-            <Title>
-              <Text style={styles.headerTopText}>
-                HackGT
-              </Text>
-            </Title>
-            </Left>
-
-            <Right>
-            <Button>
-                <Text>Search</Text>
-            </Button>
-            </Right>
-          </Header>
-        </View> */}
-
         <Animated.ScrollView
           stickyHeaderIndices={[0]}
           scrollEventThrottle={5}
@@ -165,10 +147,11 @@ export class ScheduleTab extends Component {
           {/* TODO: Fade out and translate up when in future events, when in now/past events show */}
           <Animated.View style={styles.headerDetail}>
             <View style={styles.headerContent}>
-              <WhatsHappeningNow />
+              <WhatsHappeningNow style={styles.headerText} />
               <ScrollView
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
+                contentContainerStyle={styles.headerHorizontalScroll}
               >
                 {new Array(20).fill(null).map((_, i) => (
                   <TouchableOpacity key={i} onPress={this._onPressButton}>
@@ -244,6 +227,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
+  headerText: {
+    left: 10,
+  },
+
   headerDetail: {
     backgroundColor: "white",
     height: HEADER_HEIGHT,
@@ -251,7 +238,10 @@ const styles = StyleSheet.create({
 
   headerContent: {
     top: 10,
-    left: 5,
+  },
+
+  headerHorizontalScroll: {
+    marginLeft: 5,
   },
 
   headerScrollableTab: {
@@ -278,11 +268,11 @@ const styles = StyleSheet.create({
 
   cardHorizontalParent: {
     width: 200,
-    borderRadius: 10,
+    borderRadius: 8,
   },
   cardParent: {
     width: "100%",
-    borderRadius: 10,
+    borderRadius: 8,
   },
 
   cardItem: {
@@ -290,7 +280,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderColor: BLUE,
     borderWidth: 2,
-    borderRadius: 10,
+    borderRadius: 8,
   },
 
   panelContainer: {
