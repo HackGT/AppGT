@@ -20,8 +20,9 @@ import {
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "reanimated-bottom-sheet";
+import WhatsHappeningNow from "../assets/HappeningNow";
 
-const HEADER_HEIGHT = 150;
+const HEADER_HEIGHT = 160;
 const SCROLL_HEIGHT = 1;
 const BLUE = "#41D1FF";
 
@@ -163,18 +164,23 @@ export class ScheduleTab extends Component {
         >
           {/* TODO: Fade out and translate up when in future events, when in now/past events show */}
           <Animated.View style={styles.headerDetail}>
-            <Text>What's Happening Now</Text>
-            <ScrollView horizontal={true}>
-              {new Array(20).fill(null).map((_, i) => (
-                <TouchableOpacity key={i} onPress={this._onPressButton}>
-                  <Card style={styles.cardHorizontalParent}>
-                    <CardItem style={styles.cardItem}>
-                      <Text>Item {i}</Text>
-                    </CardItem>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            <View style={styles.headerContent}>
+              <WhatsHappeningNow />
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+              >
+                {new Array(20).fill(null).map((_, i) => (
+                  <TouchableOpacity key={i} onPress={this._onPressButton}>
+                    <Card style={styles.cardHorizontalParent}>
+                      <CardItem style={styles.cardItem}>
+                        <Text>Item {i}</Text>
+                      </CardItem>
+                    </Card>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
           </Animated.View>
 
           <Tabs
@@ -241,6 +247,11 @@ const styles = StyleSheet.create({
   headerDetail: {
     backgroundColor: "white",
     height: HEADER_HEIGHT,
+  },
+
+  headerContent: {
+    top: 10,
+    left: 5,
   },
 
   headerScrollableTab: {
