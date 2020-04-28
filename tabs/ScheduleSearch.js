@@ -6,22 +6,53 @@ import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
 import { Card, CardItem, List } from "native-base";
-import BackIcon from "../assets/Back";
+import CancelIcon from "../assets/Cancel";
 
 export class ScheduleSearch extends Component {
-  render() {
+  filterButton = () => {
+    return (
+      <TouchableOpacity
+        style={styles.filterButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text>Filter</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  backButton = () => {
     const { navigation } = this.props;
 
     return (
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <CancelIcon />
+      </TouchableOpacity>
+    );
+  };
+
+  searchList = () => {
+    return (
+      <List>
+        {new Array(20).fill(null).map((_, i) => (
+          <TouchableOpacity key={i}>
+            <Card>
+              <CardItem>
+                <Text>Item {i}</Text>
+              </CardItem>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </List>
+    );
+  };
+
+  render() {
+    return (
       <SafeAreaView style={styles.background}>
         <View style={styles.searchHeader}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <BackIcon />
-          </TouchableOpacity>
-
           <SearchBar
             searchIcon={SearchIcon}
             containerStyle={styles.searchContainer}
@@ -30,20 +61,15 @@ export class ScheduleSearch extends Component {
             round
             placeholder="Search..."
           />
+
+          {this.backButton()}
         </View>
         <View style={styles.background}>
+          {/* {this.filterButton()} */}
+
           <ScrollView>
-            <List>
-              {new Array(20).fill(null).map((_, i) => (
-                <TouchableOpacity key={i}>
-                  <Card>
-                    <CardItem>
-                      <Text>Item {i}</Text>
-                    </CardItem>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </List>
+            {/* <Text style={{ fontSize: 24, left: 10 }}>Trending Topics</Text> */}
+            {this.searchList()}
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -60,16 +86,22 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
+  filterButton: {
+    height: 22,
+    width: 63,
+    left: 10,
+    backgroundColor: "#C866F5",
+    borderRadius: 10,
+  },
+
   searchHeader: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
   },
 
   searchContainer: {
     backgroundColor: "white",
-    width: "90%",
-    right: 10,
+    width: "80%",
     borderWidth: 0,
     borderTopColor: "white",
     borderBottomColor: "white",

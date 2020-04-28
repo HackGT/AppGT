@@ -8,13 +8,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import HackGTIcon from "./assets/HackGTIcon";
-import BackIcon from "./assets/Back";
 
-import {
-  TouchableHighlight,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
-import { SearchBar } from "react-native-elements";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
