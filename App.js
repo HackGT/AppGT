@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { View, StyleSheet, Button, Text } from "react-native";
+import { View, StyleSheet, Button, Text, StatusBar } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
 import { ScheduleSearch } from "./tabs/ScheduleSearch";
 import { NavigationContainer } from "@react-navigation/native";
@@ -55,16 +55,9 @@ function SchdeuleStackScreen({ navigation }) {
 
       <SchdeuleStack.Screen
         options={{
-          headerBackTitleVisible: false,
+          headerTransparent: true,
           headerTitle: "",
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{ padding: 10 }}
-              onPress={() => navigation.goBack()}
-            >
-              <BackIcon />
-            </TouchableOpacity>
-          ),
+          headerLeft: null,
         }}
         name="ScheduleSearch"
         component={ScheduleSearch}
@@ -89,6 +82,8 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
+      <StatusBar barStyle="dark-content" />
+
       <Tab.Navigator>
         <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
