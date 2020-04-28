@@ -2,11 +2,14 @@ import "react-native-gesture-handler";
 import React from "react";
 import { View, StyleSheet, Button, Text } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
+import { ScheduleSearch } from "./tabs/ScheduleSearch";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import HackGTIcon from "./assets/HackGTIcon";
+import BackIcon from "./assets/Back";
+
 import {
   TouchableHighlight,
   TouchableOpacity,
@@ -27,28 +30,37 @@ function HackGTitle() {
   return <HackGTIcon />;
 }
 
-function SearchButton() {
-  return (
-    <TouchableOpacity style={{ padding: 10 }} onPress={() => alert("Pressed!")}>
-      <SearchIcon />
-    </TouchableOpacity>
-  );
-}
-
 const SchdeuleStack = createStackNavigator();
-function SchdeuleStackScreen() {
+function SchdeuleStackScreen({ navigation }) {
   return (
     <SchdeuleStack.Navigator>
       <SchdeuleStack.Screen
         options={{
           headerTitleAlign: "left",
           headerTitle: (props) => <HackGTitle {...props} />,
-          headerRight: () => <SearchButton />,
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.navigate("ScheduleSearch")}
+            >
+              <SearchIcon />
+            </TouchableOpacity>
+          ),
         }}
         name="HackGT"
       >
         {(props) => <ScheduleTab {...props} />}
       </SchdeuleStack.Screen>
+
+      <SchdeuleStack.Screen
+        options={{
+          headerTransparent: true,
+          headerTitle: "",
+          headerBackImage: () => <BackIcon />,
+        }}
+        name="ScheduleSearch"
+        component={ScheduleSearch}
+      />
     </SchdeuleStack.Navigator>
   );
 }
