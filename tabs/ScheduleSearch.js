@@ -25,7 +25,7 @@ export class ScheduleSearch extends Component {
 
     return (
       <TouchableOpacity
-        style={styles.backButton}
+        style={styles.cancelButton}
         onPress={() => navigation.goBack()}
       >
         <CancelIcon />
@@ -51,7 +51,7 @@ export class ScheduleSearch extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.background}>
+      <SafeAreaView style={styles.safeArea}>
         <View style={styles.searchHeader}>
           <SearchBar
             searchIcon={SearchIcon}
@@ -78,11 +78,16 @@ export class ScheduleSearch extends Component {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+
   background: {
     backgroundColor: "white",
   },
 
-  backButton: {
+  cancelButton: {
     padding: 10,
   },
 

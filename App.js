@@ -77,7 +77,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
 
       <Tab.Navigator>
         <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
