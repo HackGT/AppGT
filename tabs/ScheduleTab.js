@@ -56,13 +56,18 @@ export class ScheduleTab extends Component {
         }}
       >
         {new Array(x).fill(null).map((_, i) => (
-          <TouchableOpacity key={i} onPress={() => this.bs.current.snapTo(0)}>
-            <Card style={styles.cardParent}>
-              <CardItem style={styles.cardItem}>
-                <Text>Item {i}</Text>
-              </CardItem>
-            </Card>
-          </TouchableOpacity>
+          <Item key={i}>
+            <TouchableOpacity
+              style={styles.cardParent}
+              onPress={() => this.bs.current.snapTo(0)}
+            >
+              <Card style={styles.cardParent}>
+                <CardItem style={styles.cardItem}>
+                  <Text>Item {i}</Text>
+                </CardItem>
+              </Card>
+            </TouchableOpacity>
+          </Item>
         ))}
       </List>
     </View>
@@ -279,7 +284,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 100,
     borderColor: BLUE,
-    borderWidth: 2,
+    borderWidth: 1.2,
     borderRadius: 8,
   },
 
