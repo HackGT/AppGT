@@ -14,6 +14,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from "react-native-gesture-handler";
+import { SearchBar } from "react-native-elements";
 
 // TODO: remove and replace with another tab. This is just a placeholder
 function SettingsScreen() {
@@ -54,9 +55,16 @@ function SchdeuleStackScreen({ navigation }) {
 
       <SchdeuleStack.Screen
         options={{
-          headerTransparent: true,
+          headerBackTitleVisible: false,
           headerTitle: "",
-          headerBackImage: () => <BackIcon />,
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <BackIcon />
+            </TouchableOpacity>
+          ),
         }}
         name="ScheduleSearch"
         component={ScheduleSearch}
