@@ -3,6 +3,7 @@ import React from "react";
 import { View, StyleSheet, Button, Text, StatusBar } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
 import { ScheduleSearch } from "./tabs/ScheduleSearch";
+import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -78,10 +79,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
-
       <Tab.Navigator>
         <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
+        {/* <Tab.Screen name="LoginOnboard" component={EvenOnboarding} /> */}
       </Tab.Navigator>
     </NavigationContainer>
   );
