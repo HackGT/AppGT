@@ -29,20 +29,25 @@ export class LoginOnboarding extends Component {
     const secondScreen = (
       <ContentInfo
         title="Personalize your event schedule"
-        subtitle="Favorite events that interest you to save them in your personal
-    schedule so you never miss them."
+        subtitles={[
+          "Favorite events that interest you to save them in your personal schedule so you never miss them.",
+        ]}
       />
     );
     const thirdScreen = (
       <ContentInfo
         title="Checkout Hardware"
-        subtitle="Order the hardware you need for your project, and then pick it up at the hardware desk."
+        subtitles={[
+          "Order the hardware you need for your project, and then pick it up at the hardware desk.",
+        ]}
       />
     );
     const forthScreen = (
       <ContentInfo
         title="Explore our event with Scavenger Hunt"
-        subtitle="Need a break from hacking? Complete our scavenger hunt for some sweet, sweet, swag."
+        subtitles={[
+          "Need a break from hacking? Complete our scavenger hunt for some sweet, sweet, swag.",
+        ]}
       />
     );
 

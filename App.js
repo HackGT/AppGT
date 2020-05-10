@@ -4,6 +4,7 @@ import { View, StyleSheet, Button, Text, StatusBar } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
 import { ScheduleSearch } from "./tabs/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
+import { EventOnboarding } from "./onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -84,7 +85,7 @@ export default function App() {
       >
         <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
         <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
-        {/* <Tab.Screen name="LoginOnboard" component={EvenOnboarding} /> */}
+        <Tab.Screen name="EventOnboard" component={EventOnboarding} />
       </Tab.Navigator>
     </NavigationContainer>
   );

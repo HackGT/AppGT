@@ -7,7 +7,9 @@ export class ContentInfo extends Component {
       <View style={styles.root} flexDirection="column">
         <Logo />
         <Text style={styles.textTitle}>{this.props.title}</Text>
-        <Text style={styles.textSubtitle}>{this.props.subtitle}</Text>
+        {this.props.subtitles.map((subtitle) => (
+          <Text style={styles.textSubtitle}>{subtitle}</Text>
+        ))}
       </View>
     );
   }
@@ -26,18 +28,18 @@ const styles = StyleSheet.create({
   },
 
   textTitle: {
-    top: 32,
+    marginTop: 32,
     fontSize: 24,
     marginLeft: 20,
     marginRight: 20,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#3F3F3F",
+    color: "black",
   },
 
   textSubtitle: {
-    top: 44,
-    color: "#3F3F3F",
+    marginTop: 12,
+    color: "black",
     marginLeft: 20,
     marginRight: 20,
     fontSize: 18,
