@@ -79,7 +79,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
-      <Tab.Navigator>
+      <Tab.Navigator
+        tabBarOptions={{ activeTintColor: "#41D1FF", tabBarVisible: false }}
+      >
         <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
         <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
         {/* <Tab.Screen name="LoginOnboard" component={EvenOnboarding} /> */}
