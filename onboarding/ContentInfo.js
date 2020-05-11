@@ -6,11 +6,12 @@ export class ContentInfo extends Component {
   render() {
     return (
       <View style={styles.root} flexDirection="column">
-        <Logo />
+        {this.props.image ? this.props.image : <Logo />}
         <Text style={styles.textTitle}>{this.props.title}</Text>
         {this.props.subtitles.map((subtitle) => (
           <Text style={styles.textSubtitle}>{subtitle}</Text>
         ))}
+        {this.props.button ? this.props.button : null}
       </View>
     );
   }

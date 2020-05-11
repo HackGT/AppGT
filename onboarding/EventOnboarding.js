@@ -1,10 +1,18 @@
 import React, { Component } from "react";
-import { Dimensions } from "react-native";
-import { ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Dimensions, Clipboard } from "react-native";
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { ContentInfo } from "./ContentInfo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../assets/Back";
 import ContinueButton from "../assets/ContinueButton";
+import QRCode from "react-native-qrcode-svg";
+import { Linking } from "react-native";
 
 export class EventOnboarding extends Component {
   constructor(props) {
@@ -16,37 +24,65 @@ export class EventOnboarding extends Component {
   }
 
   createScreens(width) {
+    // TODO: qr code should be generated from user used from this.context.user.id
+    const qrCode = (
+      <QRCode value="https://hack.gt" color="#2C8DDB" size={200} />
+    );
+
     const firstScreen = (
-      <ContentInfo
-        title="Welcome to [Event Name]"
-        subtitles={["We're glad you're here."]}
-      />
+      <View>
+        <ContentInfo
+          title="Welcome to [Event Name]"
+          subtitles={["We're glad you're here."]}
+        />
+      </View>
     );
 
     const secondScreen = (
       <ContentInfo
+        image={qrCode}
         title="Let’s check you in"
         subtitles={[
           "An organizer will scan your QR code to check you into [Event Name].",
         ]}
       />
     );
+
+    // TODO: openURL should pull from this.context.cms.slackURL
+    const slackButton = (
+      <TouchableOpacity
+        style={styles.joinSlack}
+        onPress={() => Linking.openURL("https://hack.gt")}
+      >
+        <Text style={styles.buttonText}>Join Slack</Text>
+      </TouchableOpacity>
+    );
     const thirdScreen = (
       <ContentInfo
         title="Questions? We're always available"
-        subtitles={[
-          "On Slack that is. Join our community in the [Event Name] Slack.",
-        ]}
+        subtitles={["Join our community in the [Event Name] Slack."]}
+        button={slackButton}
       />
+    );
+
+    const addGTPDToContacts = (
+      <TouchableOpacity
+        style={styles.contacts}
+        onPress={() => Clipboard.setString("(404) 894-2500")}
+      >
+        {/* TODO: create new contact automatically: https://www.npmjs.com/package/react-native-contacts */}
+        <Text style={styles.buttonText}>Copy to Clipboard</Text>
+      </TouchableOpacity>
     );
     const forthScreen = (
       <ContentInfo
-        title="Some important information"
+        title="Some Important Information"
         subtitles={[
           "In case of emergencies, contact the Georgia Tech police department.",
-          "GTPD: (999) 999-999.",
+          "GTPD: (404) 894-2500.",
           "If you ever have any questions or conerns, please visit help desk anytime at [help desk location].",
         ]}
+        button={addGTPDToContacts}
       />
     );
     const fifthScreen = (
@@ -83,7 +119,6 @@ export class EventOnboarding extends Component {
       );
     });
   }
-  scrollView = null;
 
   statusHeader() {
     const portionComplete = this.state.pageIndex / this.state.pageCount / 0.8;
@@ -183,5 +218,25 @@ const styles = StyleSheet.create({
     left: 10,
     height: 6,
     backgroundColor: "#F2F2F2",
+  },
+
+  joinSlack: {
+    top: 10,
+    backgroundColor: "#2C8DDB",
+    width: 100,
+    borderRadius: 10,
+  },
+
+  contacts: {
+    top: 10,
+    backgroundColor: "#2C8DDB",
+    width: 140,
+    borderRadius: 10,
+  },
+
+  buttonText: {
+    padding: 5,
+    textAlign: "center",
+    color: "white",
   },
 });
