@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Dimensions } from "react-native";
-import { Text, ScrollView, View, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, View, StyleSheet, TouchableOpacity } from "react-native";
 import { ContentInfo } from "./ContentInfo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../assets/Back";
@@ -85,55 +84,40 @@ export class EventOnboarding extends Component {
   }
   scrollView = null;
 
-  statusHeader(width) {
+  statusHeader() {
+    const portionComplete = this.state.pageIndex / this.state.pageCount / 0.8;
+
     return (
-      <View flexDirection="row">
+      <View flexDirection="row" style={styles.headerParent}>
         <View flex={0.1}>
           <TouchableOpacity
             onPress={() => {
               if (this.state.pageIndex - 1 >= 0) {
                 this.setState({ pageIndex: this.state.pageIndex - 1 });
-                this.updateScrollPosition(width);
               }
             }}
           >
-            <BackButton style={{ left: 8 }} />
+            <BackButton style={styles.backButton} />
           </TouchableOpacity>
         </View>
 
-        <View
-          flex={0.3}
-          style={{
-            top: 12,
-            left: 10,
-            height: 6,
-            backgroundColor: "#41D1FF",
-          }}
-        />
-        <View
-          flex={0.55}
-          style={{
-            top: 12,
-            left: 10,
-            height: 6,
-            backgroundColor: "#F2F2F2",
-          }}
-        />
+        <View flex={portionComplete} style={styles.completedPortion} />
+        <View flex={1 - portionComplete} style={styles.unfinishedPortion} />
       </View>
     );
   }
 
-  updateScrollPosition(width) {
-    const newHorizontalPosition = this.state.pageIndex * width;
-    this.scrollView.scrollTo({ x: newHorizontalPosition });
-  }
-
   render() {
     const screenWidth = Dimensions.get("window").width;
+    const newHorizontalPosition = this.state.pageIndex * screenWidth;
+
+    if (this.scrollView != null) {
+      this.scrollView.scrollTo({ x: newHorizontalPosition });
+    }
 
     return (
       <SafeAreaView style={styles.rootView}>
-        {this.statusHeader(screenWidth)}
+        {this.statusHeader()}
 
         <ScrollView
           style={styles.horizontalScroll}
@@ -149,9 +133,8 @@ export class EventOnboarding extends Component {
         <View style={styles.footer}>
           <TouchableOpacity
             onPress={() => {
-              if (this.state.pageIndex + 1 <= this.state.pageCount) {
+              if (this.state.pageIndex + 1 < this.state.pageCount) {
                 this.setState({ pageIndex: this.state.pageIndex + 1 });
-                this.updateScrollPosition(screenWidth);
               }
             }}
           >
@@ -177,5 +160,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     backgroundColor: "white",
+  },
+
+  headerParent: {
+    marginRight: 20,
+  },
+
+  backButton: {
+    left: 8,
+  },
+
+  completedPortion: {
+    top: 12,
+    left: 10,
+    height: 6,
+    backgroundColor: "#41D1FF",
+  },
+
+  unfinishedPortion: {
+    top: 12,
+    left: 10,
+    height: 6,
+    backgroundColor: "#F2F2F2",
   },
 });

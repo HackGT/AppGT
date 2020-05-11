@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Logo from "../assets/Logo";
+
 export class ContentInfo extends Component {
   render() {
     return (

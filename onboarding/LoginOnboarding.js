@@ -1,12 +1,17 @@
 import React, { Component } from "react";
 import { Dimensions } from "react-native";
-import { Text, ScrollView, View, StyleSheet } from "react-native";
+import {
+  Text,
+  ScrollView,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import ButtonBackground from "../assets/ButtonBackground";
 import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
 
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { ContentInfo } from "./ContentInfo";
 
 export class LoginOnboarding extends Component {

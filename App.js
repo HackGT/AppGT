@@ -13,15 +13,6 @@ import HackGTIcon from "./assets/HackGTIcon";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-// TODO: remove and replace with another tab. This is just a placeholder
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Placeholder for another future tab</Text>
-    </View>
-  );
-}
-
 // for details & examples on how to make gradients/SVGs https://github.com/react-native-community/react-native-svg
 
 function HackGTitle() {
@@ -60,16 +51,6 @@ function SchdeuleStackScreen({ navigation }) {
         component={ScheduleSearch}
       />
     </SchdeuleStack.Navigator>
-  );
-}
-
-const SettingsStack = createStackNavigator();
-function SettingsStackScreen() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="SettingDetail" component={SettingsScreen} />
-    </SettingsStack.Navigator>
   );
 }
 
