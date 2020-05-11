@@ -24,7 +24,7 @@ export class EventOnboarding extends Component {
   }
 
   createScreens(width) {
-    // TODO: qr code should be generated from user used from this.context.user.id
+    // TODO: qr code should be generated from user used from value=`user:${this.context.user.id}`
     const qrCode = (
       <QRCode value="https://hack.gt" color="#2C8DDB" size={200} />
     );
@@ -222,14 +222,14 @@ const styles = StyleSheet.create({
 
   joinSlack: {
     top: 10,
-    backgroundColor: "#2C8DDB",
+    backgroundColor: "#666666",
     width: 100,
     borderRadius: 10,
   },
 
   contacts: {
     top: 10,
-    backgroundColor: "#2C8DDB",
+    backgroundColor: "#666666",
     width: 140,
     borderRadius: 10,
   },
