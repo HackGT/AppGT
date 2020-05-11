@@ -58,9 +58,10 @@ export class LoginOnboarding extends Component {
 
     const screens = [firstScreen, secondScreen, thirdScreen, forthScreen];
 
-    return screens.map((content) => {
+    return screens.map((content, i) => {
       return (
         <View
+          key={i}
           style={{
             backgroundColor: "white",
             flex: 1,

@@ -66,9 +66,10 @@ export class EventOnboarding extends Component {
       fifthScreen,
     ];
 
-    return screens.map((content) => {
+    return screens.map((content, i) => {
       return (
         <View
+          key={i}
           style={{
             backgroundColor: "white",
             flex: 1,
