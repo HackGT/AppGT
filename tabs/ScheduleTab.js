@@ -73,8 +73,8 @@ export class ScheduleTab extends Component {
                   {
                     const title = curData[i].title;
                     const location = curData[i].area != null ? curData[i].area.name + " • " : "";
-                    const start = this.parse_date(curData[i].start_time).format("hh:mm");
-                    const end = this.parse_date(curData[i].end_time).format("hh:mm")
+                    const start = this.parse_date(curData[i].start_time).format("hh:mm A");
+                    const end = this.parse_date(curData[i].end_time).format("hh:mm A")
                     return (
                       <Item key={i}>
                         <Card style={styles.cardParent}>
