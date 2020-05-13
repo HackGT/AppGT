@@ -49,7 +49,7 @@ const infoQuery = `
 const allQueries = [eventQuery, infoQuery].join("\n");
 
 const getCMSData = async (queryString) => {
-  return fetch("https://cms.horizons.hack.gt/graphql", {
+  return fetch("https://cms.dev.hack.gt/graphql", {
     method: "POST",
     headers: {
       "Content-Type": `application/json`,
