@@ -1,53 +1,58 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { fetchEvents, fetchInfoBlocks } from "./cms";
+import { CMSContext } from "./context";
+import { View, StyleSheet, Button, Text, StatusBar } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
+import { ScheduleSearch } from "./tabs/ScheduleSearch";
+import { LoginOnboarding } from "./onboarding/LoginOnboarding";
+import { EventOnboarding } from "./onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { fetchEvents, fetchInfoBlocks } from "./cms";
-import { CMSContext } from "./context";
+import SearchIcon from "./assets/Search";
+import HackGTIcon from "./assets/HackGTIcon";
 
-// TODO: remove and replace with another tab. This is just a placeholder
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Placeholder for another future tab</Text>
-    </View>
-  );
-}
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+// for details & examples on how to make gradients/SVGs https://github.com/react-native-community/react-native-svg
 
 function HackGTitle() {
-  return <Text>HackGT</Text>;
+  return <HackGTIcon />;
 }
 
-const ScheduleStack = createStackNavigator();
-function ScheduleStackScreen() {
+const SchdeuleStack = createStackNavigator();
+function SchdeuleStackScreen({ navigation }) {
   return (
-    <ScheduleStack.Navigator>
-      <ScheduleStack.Screen
+    <SchdeuleStack.Navigator>
+      <SchdeuleStack.Screen
         options={{
           headerTitleAlign: "left",
           headerTitle: (props) => <HackGTitle {...props} />,
           headerRight: () => (
-            <Button onPress={() => alert("Search")} title="🔎" />
+            <TouchableOpacity
+              style={{ padding: 10 }}
+              onPress={() => navigation.navigate("ScheduleSearch")}
+            >
+              <SearchIcon />
+            </TouchableOpacity>
           ),
         }}
         name="HackGT"
       >
         {(props) => <ScheduleTab {...props} />}
-      </ScheduleStack.Screen>
-    </ScheduleStack.Navigator>
-  );
-}
+      </SchdeuleStack.Screen>
 
-const SettingsStack = createStackNavigator();
-function SettingsStackScreen() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="SettingDetail" component={SettingsScreen} />
-    </SettingsStack.Navigator>
+      <SchdeuleStack.Screen
+        options={{
+          headerTransparent: true,
+          headerTitle: "",
+          headerLeft: null,
+        }}
+        name="ScheduleSearch"
+        component={ScheduleSearch}
+      />
+    </SchdeuleStack.Navigator>
   );
 }
 
@@ -81,9 +86,13 @@ export default class App extends React.Component {
         }}
       >
         <NavigationContainer>
-          <Tab.Navigator>
-            <Tab.Screen name="Schedule" component={ScheduleStackScreen} />
-            <Tab.Screen name="Settings" component={SettingsStackScreen} />
+          <StatusBar backgroundColor="white" barStyle="dark-content" />
+          <Tab.Navigator
+            tabBarOptions={{ activeTintColor: "#41D1FF", tabBarVisible: false }}
+          >
+            <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+            <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
+            <Tab.Screen name="EventOnboard" component={EventOnboarding} />
           </Tab.Navigator>
         </NavigationContainer>
       </CMSContext.Provider>

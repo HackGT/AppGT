@@ -48,23 +48,23 @@ const infoQuery = `
 
 const allQueries = [eventQuery, infoQuery].join("\n");
 
-const getCMSData = async queryString => {
+const getCMSData = async (queryString) => {
   return fetch("https://cms.horizons.hack.gt/graphql", {
     method: "POST",
     headers: {
       "Content-Type": `application/json`,
-      Accept: `application/json`
+      Accept: `application/json`,
     },
     body: JSON.stringify({
       query: `query {
         ${queryString}
-      }`
-    })
+      }`,
+    }),
   })
-    .then(r => {
+    .then((r) => {
       return r.json();
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       return false;
     });
