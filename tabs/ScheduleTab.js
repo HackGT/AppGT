@@ -36,6 +36,9 @@ export class ScheduleTab extends Component {
   bs = createRef();
   state = {
     fall: new Animated.Value(1),
+    selectedEvent: null,
+    activeTab: 0,
+    height: 500,
   };
 
   tabY = this.nScroll.interpolate({
@@ -90,7 +93,10 @@ export class ScheduleTab extends Component {
                   <Item key={i}>
                     <TouchableOpacity
                       style={styles.cardParent}
-                      onPress={() => this.bs.current.snapTo(0)}
+                      onPress={() => {
+                        this.setState({ selectedEvent: curData[i] });
+                        this.bs.current.snapTo(1);
+                      }}
                     >
                       <Card style={styles.cardParent}>
                         <CardItem style={styles.cardItem}>
@@ -115,10 +121,6 @@ export class ScheduleTab extends Component {
   );
 
   heights = [500, 500];
-  state = {
-    activeTab: 0,
-    height: 500,
-  };
 
   constructor(props) {
     super(props);
@@ -129,25 +131,7 @@ export class ScheduleTab extends Component {
 
   renderInner = () => (
     <View style={styles.panel}>
-      <Text>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui
-        blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
-        et quas molestias excepturi sint occaecati cupiditate non provident,
-        similique sunt in culpa qui officia deserunt mollitia animi, id est
-        laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-        distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-        cumque nihil impedit quo minus id quod maxime placeat facere possimus,
-        omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet
-        ut et voluptates repudiandae sint et molestiae non recusandae. Itaque
-        earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-        voluptatibus maiores alias consequatur aut perferendis doloribus
-        asperiores repellat. At vero eos et accusamus et iusto odio dignissimos
-        ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti
-        quos dolores. Itaque earum rerum hic tenetur a sapiente delectus, ut aut
-        reiciendis voluptatibus maiores alias consequatur aut perferendis
-        doloribus asperiores repellat.
-      </Text>
+      <Text>{JSON.stringify(this.state.selectedEvent)}</Text>
       <TouchableOpacity style={styles.panelButton}>
         <Text style={styles.panelButtonTitle}>✪ Add to Calendar</Text>
       </TouchableOpacity>
@@ -160,7 +144,7 @@ export class ScheduleTab extends Component {
       <View style={styles.panelHandle} />
       <TouchableOpacity
         style={styles.panelClose}
-        onPress={() => this.bs.current.snapTo(1)}
+        onPress={() => this.bs.current.snapTo(0)}
       >
         <Text>𝗫</Text>
       </TouchableOpacity>
@@ -169,14 +153,15 @@ export class ScheduleTab extends Component {
 
   render() {
     // TODO: if greater than a certain X, set SCROLL_HEIGHT to header height
+
     return (
       <View style={styles.underBackground}>
         <BottomSheet
           ref={this.bs}
-          snapPoints={[450, 0]}
+          snapPoints={[0, 450]}
           renderContent={this.renderInner}
           renderHeader={this.renderHeader}
-          initialSnap={1}
+          initialSnap={0}
           enabledGestureInteraction={false}
         />
 
