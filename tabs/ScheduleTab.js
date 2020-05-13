@@ -9,15 +9,19 @@ import {
   StyleSheet,
 } from "react-native";
 import {
+  Header,
   List,
   ListItem as Item,
   ScrollableTab,
   Tab,
   TabHeading,
   Tabs,
+  Title,
   Card,
   CardItem,
 } from "native-base";
+import { CMSContext } from "../context";
+import moment from "moment";
 import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "reanimated-bottom-sheet";
 import WhatsHappeningNow from "../assets/HappeningNow";
@@ -43,33 +47,70 @@ export class ScheduleTab extends Component {
     outputRange: [1, 0],
   });
 
-  tabContent = (x, i) => (
+  parse_date = (t) => {
+    // parse iso-formatted string as local time
+    if (!t) return "";
+    let localString = t;
+    if (t.slice(-1).toLowerCase() === "z") {
+      localString = t.slice(0, -1);
+    }
+    return moment(localString);
+  };
+
+  tabContent = (i) => (
     <View style={{ height: this.state.height }}>
-      <List
-        onLayout={({
-          nativeEvent: {
-            layout: { height },
-          },
-        }) => {
-          this.heights[i] = height;
-          if (this.state.activeTab === i) this.setState({ height });
-        }}
-      >
-        {new Array(x).fill(null).map((_, i) => (
-          <Item key={i}>
-            <TouchableOpacity
-              style={styles.cardParent}
-              onPress={() => this.bs.current.snapTo(0)}
+      <CMSContext.Consumer>
+        {({ events, infoBlocks }) => {
+          const curLen = events.length;
+          const curData = events;
+
+          return (
+            <List
+              onLayout={({
+                nativeEvent: {
+                  layout: { height },
+                },
+              }) => {
+                this.heights[i] = height;
+                if (this.state.activeTab === i) this.setState({ height });
+              }}
             >
-              <Card style={styles.cardParent}>
-                <CardItem style={styles.cardItem}>
-                  <Text>Item {i}</Text>
-                </CardItem>
-              </Card>
-            </TouchableOpacity>
-          </Item>
-        ))}
-      </List>
+              {new Array(curLen).fill(null).map((_, i) => {
+                const title = curData[i].title;
+                const location =
+                  curData[i].area != null ? curData[i].area.name + " • " : "";
+                const start = this.parse_date(curData[i].start_time).format(
+                  "hh:mm A"
+                );
+                const end = this.parse_date(curData[i].end_time).format(
+                  "hh:mm A"
+                );
+
+                return (
+                  <Item key={i}>
+                    <TouchableOpacity
+                      style={styles.cardParent}
+                      onPress={() => this.bs.current.snapTo(0)}
+                    >
+                      <Card style={styles.cardParent}>
+                        <CardItem style={styles.cardItem}>
+                          <Text>
+                            {title}
+                            <Text>
+                              {location}
+                              {start} - {end}
+                            </Text>
+                          </Text>
+                        </CardItem>
+                      </Card>
+                    </TouchableOpacity>
+                  </Item>
+                );
+              })}
+            </List>
+          );
+        }}
+      </CMSContext.Consumer>
     </View>
   );
 
@@ -128,7 +169,6 @@ export class ScheduleTab extends Component {
 
   render() {
     // TODO: if greater than a certain X, set SCROLL_HEIGHT to header height
-
     return (
       <View style={styles.underBackground}>
         <BottomSheet
@@ -191,8 +231,7 @@ export class ScheduleTab extends Component {
                   renderTab={(name, page, active, onPress, onLayout) => (
                     <TouchableOpacity
                       key={page}
-                      // onPress={() => onPress(page)}
-                      onPress={this._onPressButton}
+                      onPress={() => onPress(page)}
                       onLayout={onLayout}
                       activeOpacity={0.4}
                     >
@@ -214,8 +253,8 @@ export class ScheduleTab extends Component {
               </Animated.View>
             )}
           >
-            <Tab heading="Friday">{this.tabContent(30, 0)}</Tab>
-            <Tab heading="Saturday">{this.tabContent(15, 1)}</Tab>
+            <Tab heading="Friday">{this.tabContent(0)}</Tab>
+            <Tab heading="Saturday">{this.tabContent(1)}</Tab>
           </Tabs>
         </Animated.ScrollView>
       </View>
@@ -281,6 +320,9 @@ const styles = StyleSheet.create({
   },
 
   cardItem: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-evenly",
     backgroundColor: "white",
     height: 100,
     borderColor: BLUE,

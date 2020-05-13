@@ -1,5 +1,7 @@
 import "react-native-gesture-handler";
 import React from "react";
+import { fetchEvents, fetchInfoBlocks } from "./cms";
+import { CMSContext } from "./context";
 import { View, StyleSheet, Button, Text, StatusBar } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
 import { ScheduleSearch } from "./tabs/ScheduleSearch";
@@ -57,17 +59,43 @@ function SchdeuleStackScreen({ navigation }) {
 // for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
 const Tab = createBottomTabNavigator();
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <StatusBar backgroundColor="white" barStyle="dark-content" />
-      <Tab.Navigator
-        tabBarOptions={{ activeTintColor: "#41D1FF", tabBarVisible: false }}
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { events: [], infoBlocks: [] };
+
+    fetchEvents().then((data) => {
+      this.setState({ events: data.data.eventbases });
+    });
+
+    fetchInfoBlocks().then((data) => {
+      this.setState({ infoBlocks: data.data.infoBlocks });
+    });
+  }
+
+  render() {
+    const events = this.state.events;
+    const infoBlocks = this.state.infoBlocks;
+
+    console.log(events);
+    return (
+      <CMSContext.Provider
+        value={{
+          events,
+          infoBlocks,
+        }}
       >
-        <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
-        <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
-        <Tab.Screen name="EventOnboard" component={EventOnboarding} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+        <NavigationContainer>
+          <StatusBar backgroundColor="white" barStyle="dark-content" />
+          <Tab.Navigator
+            tabBarOptions={{ activeTintColor: "#41D1FF", tabBarVisible: false }}
+          >
+            <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+            <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
+            <Tab.Screen name="EventOnboard" component={EventOnboarding} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </CMSContext.Provider>
+    );
+  }
 }
