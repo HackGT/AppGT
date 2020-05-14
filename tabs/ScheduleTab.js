@@ -25,6 +25,7 @@ import moment from "moment";
 import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "reanimated-bottom-sheet";
 import WhatsHappeningNow from "../assets/HappeningNow";
+import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
 
 const HEADER_HEIGHT = 160;
 const SCROLL_HEIGHT = 1;
@@ -61,63 +62,43 @@ export class ScheduleTab extends Component {
   };
 
   tabContent = (i) => (
-    <View style={{ height: this.state.height }}>
-      <CMSContext.Consumer>
-        {({ events, infoBlocks }) => {
-          const curLen = events.length;
-          const curData = events;
+    // <View style={{ height: this.state.height }}>
+    <CMSContext.Consumer>
+      {({ events, infoBlocks }) => {
+        const curLen = events.length;
+        const curData = events;
 
-          return (
-            <List
-              onLayout={({
-                nativeEvent: {
-                  layout: { height },
-                },
-              }) => {
-                this.heights[i] = height;
-                if (this.state.activeTab === i) this.setState({ height });
-              }}
-            >
-              {new Array(curLen).fill(null).map((_, i) => {
-                const title = curData[i].title;
-                const location =
-                  curData[i].area != null ? curData[i].area.name + " • " : "";
-                const start = this.parse_date(curData[i].start_time).format(
-                  "hh:mm A"
-                );
-                const end = this.parse_date(curData[i].end_time).format(
-                  "hh:mm A"
-                );
-
-                return (
-                  <Item key={i}>
-                    <TouchableOpacity
-                      style={styles.cardParent}
-                      onPress={() => {
-                        this.setState({ selectedEvent: curData[i] });
-                        this.bs.current.snapTo(1);
-                      }}
-                    >
-                      <Card style={styles.cardParent}>
-                        <CardItem style={styles.cardItem}>
-                          <Text>
-                            {title}
-                            <Text>
-                              {location}
-                              {start} - {end}
-                            </Text>
-                          </Text>
-                        </CardItem>
-                      </Card>
-                    </TouchableOpacity>
-                  </Item>
-                );
-              })}
-            </List>
-          );
-        }}
-      </CMSContext.Consumer>
-    </View>
+        return (
+          <List
+            onLayout={({
+              nativeEvent: {
+                layout: { height },
+              },
+            }) => {
+              this.heights[i] = height;
+              if (this.state.activeTab === i) this.setState({ height });
+            }}
+          >
+            {new Array(curLen).fill(null).map((_, i) => {
+              return (
+                <Item key={i}>
+                  <TouchableOpacity
+                    style={styles.cardParent}
+                    onPress={() => {
+                      this.setState({ selectedEvent: curData[i] });
+                      this.bs.current.snapTo(1);
+                    }}
+                  >
+                    <ScheduleEventCellVerticle event={curData[i]} />
+                  </TouchableOpacity>
+                </Item>
+              );
+            })}
+          </List>
+        );
+      }}
+    </CMSContext.Consumer>
+    // </View>
   );
 
   heights = [500, 500];
@@ -183,15 +164,30 @@ export class ScheduleTab extends Component {
                 horizontal={true}
                 contentContainerStyle={styles.headerHorizontalScroll}
               >
-                {new Array(20).fill(null).map((_, i) => (
-                  <TouchableOpacity key={i} onPress={this._onPressButton}>
-                    <Card style={styles.cardHorizontalParent}>
-                      <CardItem style={styles.cardItem}>
-                        <Text>Item {i}</Text>
-                      </CardItem>
-                    </Card>
-                  </TouchableOpacity>
-                ))}
+                <CMSContext.Consumer>
+                  {({ events, infoBlocks }) => {
+                    const curLen = events.length;
+                    const curData = events;
+
+                    return (
+                      <View flexDirection="row">
+                        {new Array(curLen).fill(null).map((_, i) => {
+                          return (
+                            <TouchableOpacity
+                              style={styles.cardHorizontalParent}
+                              onPress={() => {
+                                this.setState({ selectedEvent: curData[i] });
+                                this.bs.current.snapTo(1);
+                              }}
+                            >
+                              <ScheduleEventCellVerticle event={curData[i]} />
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </View>
+                    );
+                  }}
+                </CMSContext.Consumer>
               </ScrollView>
             </View>
           </Animated.View>
@@ -296,9 +292,12 @@ const styles = StyleSheet.create({
   },
 
   cardHorizontalParent: {
-    width: 200,
-    borderRadius: 8,
+    width: 300,
+    left: 5,
+    marginRight: 8,
+    marginTop: 15,
   },
+
   cardParent: {
     width: "100%",
     borderRadius: 8,

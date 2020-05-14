@@ -12,6 +12,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import HackGTIcon from "./assets/HackGTIcon";
+import AsyncStorage from "@react-native-community/async-storage";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -62,14 +63,45 @@ const Tab = createBottomTabNavigator();
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { events: [], infoBlocks: [] };
+    this.state = {
+      events: [],
+      infoBlocks: [],
+    };
+  }
 
-    fetchEvents().then((data) => {
-      this.setState({ events: data.data.eventbases });
+  componentDidMount() {
+    AsyncStorage.getItem("localEventData", (error, result) => {
+      if (result) {
+        console.log("Events found locally.");
+        this.setState({ events: JSON.parse(result) });
+      } else {
+        fetchEvents().then((data) => {
+          console.log("Fetched events from CMS.");
+          const fetchedEvents = data.data.eventbases;
+
+          this.setState({ events: fetchedEvents });
+
+          const localEventData = JSON.stringify(fetchedEvents);
+          AsyncStorage.setItem("localEventData", localEventData);
+        });
+      }
     });
 
-    fetchInfoBlocks().then((data) => {
-      this.setState({ infoBlocks: data.data.infoBlocks });
+    AsyncStorage.getItem("localInfoBlocksData", (error, result) => {
+      if (result) {
+        console.log("InfoBlocks found locally.");
+        this.setState({ events: JSON.parse(result) });
+      } else {
+        fetchInfoBlocks().then((data) => {
+          console.log("Fetched infoblocks from CMS.");
+          const fetchedInfoBlocks = data.data.infoBlocks;
+
+          this.setState({ infoBlocks: fetchedInfoBlocks });
+
+          const localInfoBlocks = JSON.stringify(fetchedInfoBlocks);
+          AsyncStorage.setItem("localInfoBlocksData", localInfoBlocks);
+        });
+      }
     });
   }
 
@@ -77,7 +109,6 @@ export default class App extends React.Component {
     const events = this.state.events;
     const infoBlocks = this.state.infoBlocks;
 
-    console.log(events);
     return (
       <CMSContext.Provider
         value={{
