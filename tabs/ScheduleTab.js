@@ -62,43 +62,42 @@ export class ScheduleTab extends Component {
   };
 
   tabContent = (i) => (
-    // <View style={{ height: this.state.height }}>
-    <CMSContext.Consumer>
-      {({ events, infoBlocks }) => {
-        const curLen = events.length;
-        const curData = events;
+    <View style={{ height: this.state.height }}>
+      <CMSContext.Consumer>
+        {({ events, infoBlocks }) => {
+          const curLen = events.length;
+          const curData = events;
 
-        return (
-          <List
-            onLayout={({
-              nativeEvent: {
-                layout: { height },
-              },
-            }) => {
-              this.heights[i] = height;
-              if (this.state.activeTab === i) this.setState({ height });
-            }}
-          >
-            {new Array(curLen).fill(null).map((_, i) => {
-              return (
-                <Item key={i}>
+          return (
+            <List
+              onLayout={({
+                nativeEvent: {
+                  layout: { height },
+                },
+              }) => {
+                this.heights[i] = height;
+                if (this.state.activeTab === i) this.setState({ height });
+              }}
+            >
+              {new Array(curLen).fill(null).map((_, i) => {
+                return (
                   <TouchableOpacity
                     style={styles.cardParent}
                     onPress={() => {
                       this.setState({ selectedEvent: curData[i] });
                       this.bs.current.snapTo(1);
+                      this.bs.current.snapTo(1);
                     }}
                   >
                     <ScheduleEventCellVerticle event={curData[i]} />
                   </TouchableOpacity>
-                </Item>
-              );
-            })}
-          </List>
-        );
-      }}
-    </CMSContext.Consumer>
-    // </View>
+                );
+              })}
+            </List>
+          );
+        }}
+      </CMSContext.Consumer>
+    </View>
   );
 
   heights = [500, 500];
@@ -125,7 +124,10 @@ export class ScheduleTab extends Component {
       <View style={styles.panelHandle} />
       <TouchableOpacity
         style={styles.panelClose}
-        onPress={() => this.bs.current.snapTo(0)}
+        onPress={() => {
+          this.bs.current.snapTo(0);
+          this.bs.current.snapTo(0);
+        }}
       >
         <Text>𝗫</Text>
       </TouchableOpacity>
@@ -177,6 +179,7 @@ export class ScheduleTab extends Component {
                               style={styles.cardHorizontalParent}
                               onPress={() => {
                                 this.setState({ selectedEvent: curData[i] });
+                                this.bs.current.snapTo(1);
                                 this.bs.current.snapTo(1);
                               }}
                             >
@@ -299,6 +302,7 @@ const styles = StyleSheet.create({
   },
 
   cardParent: {
+    padding: 8,
     width: "100%",
     borderRadius: 8,
   },

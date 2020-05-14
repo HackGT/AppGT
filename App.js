@@ -87,22 +87,22 @@ export default class App extends React.Component {
       }
     });
 
-    AsyncStorage.getItem("localInfoBlocksData", (error, result) => {
-      if (result) {
-        console.log("InfoBlocks found locally.");
-        this.setState({ events: JSON.parse(result) });
-      } else {
-        fetchInfoBlocks().then((data) => {
-          console.log("Fetched infoblocks from CMS.");
-          const fetchedInfoBlocks = data.data.infoBlocks;
+    // AsyncStorage.getItem("localInfoBlocksData", (error, result) => {
+    //   if (result) {
+    //     console.log("InfoBlocks found locally.");
+    //     this.setState({ events: JSON.parse(result) });
+    //   } else {
+    //     fetchInfoBlocks().then((data) => {
+    //       console.log("Fetched infoblocks from CMS.");
+    //       const fetchedInfoBlocks = data.data.infoBlocks;
 
-          this.setState({ infoBlocks: fetchedInfoBlocks });
+    //       this.setState({ infoBlocks: fetchedInfoBlocks });
 
-          const localInfoBlocks = JSON.stringify(fetchedInfoBlocks);
-          AsyncStorage.setItem("localInfoBlocksData", localInfoBlocks);
-        });
-      }
-    });
+    //       const localInfoBlocks = JSON.stringify(fetchedInfoBlocks);
+    //       AsyncStorage.setItem("localInfoBlocksData", localInfoBlocks);
+    //     });
+    //   }
+    // });
   }
 
   render() {
