@@ -69,7 +69,20 @@ export default class App extends React.Component {
     };
   }
 
-  componentDidMount() {
+  toggleStarred = (event) => {
+    const newEventsWithStar = this.state.events.slice();
+    const index = newEventsWithStar.indexOf(event);
+    const newEvent = newEventsWithStar[index];
+
+    if (index != -1) {
+      const newValue = newEvent.isStarred ? !newEvent.isStarred : true;
+      newEventsWithStar[index].isStarred = newValue;
+      this.setState({ events: newEventsWithStar });
+      AsyncStorage.setItem("localEventData", JSON.stringify(newEventsWithStar));
+    }
+  };
+
+  componentWillMount() {
     AsyncStorage.getItem("localEventData", (error, result) => {
       if (result) {
         console.log("Events found locally.");
@@ -104,12 +117,14 @@ export default class App extends React.Component {
   render() {
     const events = this.state.events;
     const infoBlocks = this.state.infoBlocks;
+    const toggleStar = this.toggleStarred;
 
     return (
       <CMSContext.Provider
         value={{
           events,
           infoBlocks,
+          toggleStar,
         }}
       >
         <NavigationContainer>

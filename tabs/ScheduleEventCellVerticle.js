@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import moment from "moment";
 import Svg, { Circle } from "react-native-svg";
 import StarOff from "../assets/StarOff";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import StarOn from "../assets/StarOn";
+import { CMSContext } from "../context";
 
 export class ScheduleEventCellVerticle extends Component {
   constructor(props) {
@@ -81,23 +82,30 @@ export class ScheduleEventCellVerticle extends Component {
     const location = event.area != null ? event.area.name + " • " : "";
     const start = this.parseDate(event.start_time).format("hh:mm A");
     const end = this.parseDate(event.end_time).format("hh:mm A");
+    const isStarred = event.isStarred;
 
     return (
-      <View style={styles.cardParent}>
-        <View style={this.createCardStyle()}>
-          <View style={styles.titleHeader}>
-            <Text style={styles.titleFont}>{title}</Text>
-            <TouchableOpacity onPress={() => alert("star")}>
-              <StarOff />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.subtitleFont}>
-            {location}
-            {start} - {end}
-          </Text>
-          {this.topicLabel()}
-        </View>
-      </View>
+      <CMSContext.Consumer>
+        {({ toggleStar }) => {
+          return (
+            <View style={styles.cardParent}>
+              <View style={this.createCardStyle()}>
+                <View style={styles.titleHeader}>
+                  <Text style={styles.titleFont}>{title}</Text>
+                  <TouchableOpacity onPress={() => toggleStar(event)}>
+                    {isStarred ? <StarOn /> : <StarOff />}
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.subtitleFont}>
+                  {location}
+                  {start} - {end}
+                </Text>
+                {this.topicLabel()}
+              </View>
+            </View>
+          );
+        }}
+      </CMSContext.Consumer>
     );
   }
 }
@@ -116,10 +124,12 @@ const styles = StyleSheet.create({
   titleFont: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#4F4F4F",
   },
 
   subtitleFont: {
     marginTop: 2,
+    color: "#4F4F4F",
   },
 
   footer: {
