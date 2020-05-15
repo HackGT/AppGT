@@ -79,7 +79,8 @@ export class ScheduleTab extends Component {
               {new Array(curLen).fill(null).map((_, i) => {
                 const radius = 7;
                 const size = radius * 2;
-                const highlightColor = i >= 4 && i < 8 ? "#41D1FF" : "#F2F2F2";
+                const highlighted = i >= 4 && i < 8;
+                const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
 
                 if (i % 4 == 0) {
                   return (
@@ -149,7 +150,10 @@ export class ScheduleTab extends Component {
                         this.bs.current.snapTo(1);
                       }}
                     >
-                      <ScheduleEventCellVerticle event={curData[i]} />
+                      <ScheduleEventCellVerticle
+                        event={curData[i]}
+                        highlighted={highlighted}
+                      />
                     </TouchableOpacity>
                   </View>
                 );
@@ -244,7 +248,10 @@ export class ScheduleTab extends Component {
                                 this.bs.current.snapTo(1);
                               }}
                             >
-                              <ScheduleEventCellVerticle event={curData[i]} />
+                              <ScheduleEventCellVerticle
+                                event={curData[i]}
+                                highlighted
+                              />
                             </TouchableOpacity>
                           );
                         })}

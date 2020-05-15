@@ -14,6 +14,27 @@ export class ScheduleEventCellVerticle extends Component {
     };
   }
 
+  createCardStyle = () => {
+    const style = {
+      padding: 17,
+      flexDirection: "column",
+      alignItems: "flex-start",
+      justifyContent: "space-evenly",
+      backgroundColor: "white",
+      height: 100,
+      borderColor: this.props.highlighted ? "#41D1FF" : "white",
+      borderWidth: 1.2,
+      borderRadius: 12,
+      elevation: 1, // android shadow
+      shadowColor: "black",
+      shadowOffset: { width: 0.5, height: 0.5 },
+      shadowOpacity: 0.1,
+      shadowRadius: 1.5,
+    };
+
+    return style;
+  };
+
   parseDate = (date) => {
     // parse iso-formatted string as local time
     if (!date) return "";
@@ -25,15 +46,25 @@ export class ScheduleEventCellVerticle extends Component {
   };
 
   topicLabel = () => {
+    // to be put into a class enum
+    const colors = ["#2CDACF", "#C866F5", "#786CEB", "#FF586C", "#FF8D28"];
     const radius = 6;
     const size = radius * 2;
+    const categoryColor = colors[Math.floor(Math.random() * colors.length)];
 
     return (
       <View flexDirection="row" style={styles.footer}>
         <Svg height={size} width={size} style={styles.footerTopic}>
-          <Circle cx={radius} cy={radius} r={radius} fill={"#C866F5"} />
+          <Circle cx={radius} cy={radius} r={radius} fill={categoryColor} />
         </Svg>
-        <Text style={styles.footerTopicText}>food</Text>
+        <Text
+          style={{
+            marginLeft: 7,
+            color: categoryColor,
+          }}
+        >
+          food
+        </Text>
         <View flexDirection="row" style={styles.footerTags}>
           {["#tag1", "#tag2", "#tag3"].map((tag) => {
             return <Text style={{ color: "#C3C3C3", margin: 5 }}>{tag}</Text>;
@@ -53,7 +84,7 @@ export class ScheduleEventCellVerticle extends Component {
 
     return (
       <View style={styles.cardParent}>
-        <View style={styles.cardItem}>
+        <View style={this.createCardStyle()}>
           <View style={styles.titleHeader}>
             <Text style={styles.titleFont}>{title}</Text>
             <TouchableOpacity onPress={() => alert("star")}>
@@ -99,29 +130,8 @@ const styles = StyleSheet.create({
     top: 2.5,
   },
 
-  footerTopicText: {
-    marginLeft: 7,
-    color: "#C866F5",
-  },
   footerTags: {
     marginLeft: 7,
     top: -5,
-  },
-
-  cardItem: {
-    padding: 17,
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-evenly",
-    backgroundColor: "white",
-    height: 100,
-    borderColor: "#41D1FF",
-    borderWidth: 1.2,
-    borderRadius: 12,
-    elevation: 1, // android shadow
-    shadowColor: "black",
-    shadowOffset: { width: 0.5, height: 0.5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 1.5,
   },
 });
