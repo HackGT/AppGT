@@ -78,9 +78,7 @@ export default class App extends React.Component {
         fetchEvents().then((data) => {
           console.log("Fetched events from CMS.");
           const fetchedEvents = data.data.eventbases;
-
           this.setState({ events: fetchedEvents });
-
           const localEventData = JSON.stringify(fetchedEvents);
           AsyncStorage.setItem("localEventData", localEventData);
         });
@@ -95,9 +93,7 @@ export default class App extends React.Component {
     //     fetchInfoBlocks().then((data) => {
     //       console.log("Fetched infoblocks from CMS.");
     //       const fetchedInfoBlocks = data.data.infoBlocks;
-
     //       this.setState({ infoBlocks: fetchedInfoBlocks });
-
     //       const localInfoBlocks = JSON.stringify(fetchedInfoBlocks);
     //       AsyncStorage.setItem("localInfoBlocksData", localInfoBlocks);
     //     });

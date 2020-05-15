@@ -1,24 +1,20 @@
-import React, { Component, createRef, useRef } from "react";
+import React, { Component, createRef } from "react";
 
 import {
   Animated,
-  Button,
   Text,
   TouchableOpacity,
   View,
   StyleSheet,
 } from "react-native";
 import {
-  Header,
   List,
   ListItem as Item,
   ScrollableTab,
   Tab,
   TabHeading,
   Tabs,
-  Title,
-  Card,
-  CardItem,
+  ListItem,
 } from "native-base";
 import { CMSContext } from "../context";
 import moment from "moment";
@@ -26,6 +22,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import BottomSheet from "reanimated-bottom-sheet";
 import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
+import Svg, { Circle } from "react-native-svg";
 
 const HEADER_HEIGHT = 160;
 const SCROLL_HEIGHT = 1;
@@ -69,7 +66,7 @@ export class ScheduleTab extends Component {
           const curData = events;
 
           return (
-            <List
+            <ScrollView
               onLayout={({
                 nativeEvent: {
                   layout: { height },
@@ -80,20 +77,84 @@ export class ScheduleTab extends Component {
               }}
             >
               {new Array(curLen).fill(null).map((_, i) => {
+                const radius = 7;
+                const size = radius * 2;
+                const highlightColor = i >= 4 && i < 8 ? "#41D1FF" : "#F2F2F2";
+
+                if (i % 4 == 0) {
+                  return (
+                    <View flexDirection="row" style={{ height: 40 }}>
+                      <View
+                        flexDirection="row"
+                        style={{
+                          width: "15%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          alignContent: "center",
+                        }}
+                      >
+                        <Svg height={size} width={size}>
+                          <Circle
+                            cx={radius}
+                            cy={radius}
+                            r={radius}
+                            fill={highlightColor}
+                          />
+                        </Svg>
+                      </View>
+                      <View
+                        style={{
+                          height: "80%",
+                          top: 5,
+                          width: 100,
+                          backgroundColor: "#F2F2F2",
+                          borderRadius: 8,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            padding: 6,
+                            textAlign: "center",
+                          }}
+                        >
+                          {i}:00 PM
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }
+
                 return (
-                  <TouchableOpacity
-                    style={styles.cardParent}
-                    onPress={() => {
-                      this.setState({ selectedEvent: curData[i] });
-                      this.bs.current.snapTo(1);
-                      this.bs.current.snapTo(1);
-                    }}
-                  >
-                    <ScheduleEventCellVerticle event={curData[i]} />
-                  </TouchableOpacity>
+                  <View flexDirection="row">
+                    <View
+                      flexDirection="row"
+                      style={{
+                        width: "15%",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <View
+                        style={{
+                          width: 1.5,
+                          height: "100%",
+                          backgroundColor: highlightColor,
+                        }}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.cardParent}
+                      onPress={() => {
+                        this.setState({ selectedEvent: curData[i] });
+                        this.bs.current.snapTo(1);
+                        this.bs.current.snapTo(1);
+                      }}
+                    >
+                      <ScheduleEventCellVerticle event={curData[i]} />
+                    </TouchableOpacity>
+                  </View>
                 );
               })}
-            </List>
+            </ScrollView>
           );
         }}
       </CMSContext.Consumer>
@@ -303,7 +364,7 @@ const styles = StyleSheet.create({
 
   cardParent: {
     padding: 8,
-    width: "100%",
+    width: "85%",
     borderRadius: 8,
   },
 
