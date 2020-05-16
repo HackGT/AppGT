@@ -101,37 +101,6 @@ export class ScheduleDayView extends Component {
 
   dayTabView = (width) => {
     return (
-      <View
-        flexDirection="row"
-        style={{
-          width: "100%",
-          marginTop: 5,
-          justifyContent: "center",
-        }}
-      >
-        {Array.from(new Array(this.state.days.length).keys()).map((i) => {
-          if (i == this.state.dayIndex) {
-            return <Underline width={(width * 0.9) / this.state.days.length} />;
-          } else {
-            return (
-              <View
-                style={{
-                  height: 3,
-                  width: (width * 0.9) / this.state.days.length,
-                  backgroundColor: "#F2F2F2",
-                }}
-              />
-            );
-          }
-        })}
-      </View>
-    );
-  };
-
-  render() {
-    const width = Dimensions.get("window").width;
-
-    return (
       <View>
         <View flexDirection="row" style={styles.daysParent}>
           {this.state.days.map((dayString, i) => {
@@ -161,6 +130,41 @@ export class ScheduleDayView extends Component {
             );
           })}
         </View>
+        <View
+          flexDirection="row"
+          style={{
+            width: "100%",
+            marginTop: 5,
+            justifyContent: "center",
+          }}
+        >
+          {Array.from(new Array(this.state.days.length).keys()).map((i) => {
+            if (i == this.state.dayIndex) {
+              return (
+                <Underline width={(width * 0.9) / this.state.days.length} />
+              );
+            } else {
+              return (
+                <View
+                  style={{
+                    height: 3,
+                    width: (width * 0.9) / this.state.days.length,
+                    backgroundColor: "#F2F2F2",
+                  }}
+                />
+              );
+            }
+          })}
+        </View>
+      </View>
+    );
+  };
+
+  render() {
+    const width = Dimensions.get("window").width;
+
+    return (
+      <View>
         {this.dayTabView(width)}
 
         <FlatList
