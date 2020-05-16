@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { CMSContext } from "../context";
 import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
@@ -23,7 +24,7 @@ export class ScheduleDayView extends Component {
   daysAvailable = ["friday", "saturday", "sunday"];
 
   state = {
-    dayIndex: 0,
+    dayIndex: 2,
     days: ["friday", "saturday", "sunday"],
   };
 
@@ -163,7 +164,13 @@ export class ScheduleDayView extends Component {
         </View>
         {this.dayTabView(width)}
 
-        <ScrollView
+        <FlatList
+          data={this.state.days}
+          initialScrollIndex={2}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
+          keyExtractor={({ item }) => item}
           onMomentumScrollEnd={(scrollData) => {
             this.setState({
               dayIndex: Math.round(
@@ -171,18 +178,19 @@ export class ScheduleDayView extends Component {
               ),
             });
           }}
-          scrollEventThrottle={50}
-          ref={(ref) => {
-            this.scrollView = ref;
+          onScrollToIndexFailed={(info) => {
+            const wait = new Promise((resolve) => setTimeout(resolve, 500));
+            wait.then(() => {
+              this.scrollView.scrollToIndex({
+                index: this.state.dayIndex,
+                animated: false,
+              });
+            });
           }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-        >
-          {this.state.days.map((day) => {
+          renderItem={({ item }) => {
             return (
               <View
-                key={day}
+                key={item.key}
                 style={{
                   backgroundColor: "white",
                   flex: 1,
@@ -194,8 +202,8 @@ export class ScheduleDayView extends Component {
                 {this.tabContent()}
               </View>
             );
-          })}
-        </ScrollView>
+          }}
+        />
       </View>
     );
   }

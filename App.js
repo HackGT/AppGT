@@ -82,7 +82,7 @@ export default class App extends React.Component {
     }
   };
 
-  componentWillMount() {
+  componentDidMount() {
     AsyncStorage.getItem("localEventData", (error, result) => {
       if (result) {
         console.log("Events found locally.");
