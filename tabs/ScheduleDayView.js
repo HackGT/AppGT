@@ -11,22 +11,33 @@ import { CMSContext } from "../context";
 import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
 import Svg, { Circle } from "react-native-svg";
 import { Dimensions } from "react-native";
+import SaturdayGray from "../assets/SaturdayGray";
+import SaturdayGradient from "../assets/SaturdayGradient";
+import FridayGray from "../assets/FridayGray";
+import FridayGradient from "../assets/FridayGradient";
+import SundayGray from "../assets/SundayGray";
+import SundayGradient from "../assets/SundayGradient";
+import Underline from "../assets/UnderlineGradient";
 
 export class ScheduleDayView extends Component {
+  daysAvailable = ["friday", "saturday", "sunday"];
+
+  state = {
+    dayIndex: 0,
+    days: ["friday", "saturday", "sunday"],
+  };
+
   constructor(props) {
     super(props);
   }
 
-  tabContent = (i) => (
+  tabContent = () => (
     <View>
       <CMSContext.Consumer>
         {({ events }) => {
-          const curLen = events.length;
-          const curData = events;
-
           return (
             <ScrollView>
-              {new Array(curLen).fill(null).map((_, i) => {
+              {new Array(events.length).fill(null).map((_, i) => {
                 const radius = 7;
                 const size = radius * 2;
                 const highlighted = i >= 4 && i < 8;
@@ -34,16 +45,8 @@ export class ScheduleDayView extends Component {
 
                 if (i % 4 == 0) {
                   return (
-                    <View flexDirection="row" style={{ height: 40 }}>
-                      <View
-                        flexDirection="row"
-                        style={{
-                          width: "15%",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          alignContent: "center",
-                        }}
-                      >
+                    <View key={i} flexDirection="row" style={{ height: 40 }}>
+                      <View flexDirection="row" style={styles.circleParent}>
                         <Svg height={size} width={size}>
                           <Circle
                             cx={radius}
@@ -53,23 +56,8 @@ export class ScheduleDayView extends Component {
                           />
                         </Svg>
                       </View>
-                      <View
-                        style={{
-                          height: "80%",
-                          top: 5,
-                          width: 100,
-                          backgroundColor: "#F2F2F2",
-                          borderRadius: 8,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            padding: 6,
-                            textAlign: "center",
-                          }}
-                        >
-                          {i}:00 PM
-                        </Text>
+                      <View style={styles.timeParent}>
+                        <Text style={styles.timeText}>{i}:00 PM</Text>
                       </View>
                     </View>
                   );
@@ -77,13 +65,7 @@ export class ScheduleDayView extends Component {
 
                 return (
                   <View flexDirection="row">
-                    <View
-                      flexDirection="row"
-                      style={{
-                        width: "15%",
-                        justifyContent: "center",
-                      }}
-                    >
+                    <View flexDirection="row" style={styles.lineParent}>
                       <View
                         style={{
                           width: 1.5,
@@ -95,13 +77,11 @@ export class ScheduleDayView extends Component {
                     <TouchableOpacity
                       style={styles.cardParent}
                       onPress={() => {
-                        this.setState({ selectedEvent: curData[i] });
-                        this.props.bs.current.snapTo(1);
-                        this.props.bs.current.snapTo(1);
+                        this.props.onSelectEvent(events[i]);
                       }}
                     >
                       <ScheduleEventCellVerticle
-                        event={curData[i]}
+                        event={events[i]}
                         highlighted={highlighted}
                       />
                     </TouchableOpacity>
@@ -115,43 +95,108 @@ export class ScheduleDayView extends Component {
     </View>
   );
 
+  dayTabView = (width) => {
+    return (
+      <View
+        flexDirection="row"
+        style={{
+          width: "100%",
+          marginTop: 5,
+          justifyContent: "center",
+        }}
+      >
+        {Array.from(new Array(this.state.days.length).keys()).map((i) => {
+          if (i == this.state.dayIndex) {
+            return <Underline width={(width * 0.9) / this.state.days.length} />;
+          } else {
+            return (
+              <View
+                style={{
+                  height: 3,
+                  width: (width * 0.9) / this.state.days.length,
+                  backgroundColor: "#F2F2F2",
+                }}
+              />
+            );
+          }
+        })}
+      </View>
+    );
+  };
+
   render() {
     const width = Dimensions.get("window").width;
-    // const newHorizontalPosition = this.state.pageIndex * screenWidth;
-
-    // if (this.scrollView != null) {
-    //   this.scrollView.scrollTo({ x: newHorizontalPosition });
-    // }
 
     return (
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled={true}
-      >
-        <View
-          style={{
-            backgroundColor: "white",
-            flex: 1,
-            width: width,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {this.tabContent(0)}
+      <View>
+        <View flexDirection="row" style={styles.daysParent}>
+          {this.state.days.map((dayString, i) => {
+            const isHighlight = this.state.dayIndex == i;
+            let button;
+
+            if (dayString == "friday") {
+              button = isHighlight ? <FridayGradient /> : <FridayGray />;
+            }
+            if (dayString == "saturday") {
+              button = isHighlight ? <SaturdayGradient /> : <SaturdayGray />;
+            }
+            if (dayString == "sunday") {
+              button = isHighlight ? <SundayGradient /> : <SundayGray />;
+            }
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  const newHorizontalPosition = i * width;
+
+                  if (this.scrollView != null) {
+                    this.scrollView.scrollTo({
+                      x: newHorizontalPosition,
+                    });
+                  }
+                }}
+              >
+                {button}
+              </TouchableOpacity>
+            );
+          })}
         </View>
-        <View
-          style={{
-            backgroundColor: "white",
-            flex: 1,
-            width: width,
-            justifyContent: "center",
-            alignItems: "center",
+        {this.dayTabView(width)}
+
+        <ScrollView
+          onMomentumScrollEnd={(scrollData) => {
+            this.setState({
+              dayIndex: Math.round(
+                scrollData.nativeEvent.contentOffset.x / width
+              ),
+            });
           }}
+          scrollEventThrottle={50}
+          ref={(ref) => {
+            this.scrollView = ref;
+          }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
         >
-          {this.tabContent(0)}
-        </View>
-      </ScrollView>
+          {this.state.days.map((day) => {
+            return (
+              <View
+                key={day}
+                style={{
+                  backgroundColor: "white",
+                  flex: 1,
+                  width: width,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {this.tabContent()}
+              </View>
+            );
+          })}
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -161,5 +206,36 @@ const styles = StyleSheet.create({
     padding: 8,
     width: "85%",
     borderRadius: 8,
+  },
+
+  circleParent: {
+    width: "15%",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+
+  timeParent: {
+    height: "80%",
+    top: 5,
+    width: 100,
+    backgroundColor: "#F2F2F2",
+    borderRadius: 8,
+  },
+
+  timeText: {
+    padding: 6,
+    textAlign: "center",
+  },
+
+  lineParent: {
+    width: "15%",
+    justifyContent: "center",
+  },
+
+  daysParent: {
+    marginTop: 5,
+    marginBottom: 5,
+    justifyContent: "space-evenly",
   },
 });

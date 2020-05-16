@@ -32,9 +32,17 @@ export class ScheduleTab extends Component {
     return moment(localString);
   };
 
-  constructor(props) {
-    super(props);
-  }
+  setSelectedEvent = (event) => {
+    if (event) {
+      this.setState({ selectedEvent: event });
+      this.bs.current.snapTo(1);
+      this.bs.current.snapTo(1);
+    } else {
+      this.setState({ selectedEvent: null });
+      this.bs.current.snapTo(0);
+      this.bs.current.snapTo(0);
+    }
+  };
 
   renderInner = () => (
     <View style={styles.panel}>
@@ -52,8 +60,7 @@ export class ScheduleTab extends Component {
       <TouchableOpacity
         style={styles.panelClose}
         onPress={() => {
-          this.bs.current.snapTo(0);
-          this.bs.current.snapTo(0);
+          this.setSelectedEvent();
         }}
       >
         <Text>𝗫</Text>
@@ -90,9 +97,7 @@ export class ScheduleTab extends Component {
                           <TouchableOpacity
                             style={styles.cardHorizontalParent}
                             onPress={() => {
-                              this.setState({ selectedEvent: events[i] });
-                              this.bs.current.snapTo(1);
-                              this.bs.current.snapTo(1);
+                              this.setSelectedEvent(events[i]);
                             }}
                           >
                             <ScheduleEventCellVerticle
@@ -110,7 +115,7 @@ export class ScheduleTab extends Component {
           </View>
         </View>
 
-        <ScheduleDayView bottomSheet={this.bs} />
+        <ScheduleDayView onSelectEvent={this.setSelectedEvent} />
       </View>
     );
   }
@@ -119,6 +124,7 @@ export class ScheduleTab extends Component {
 const styles = StyleSheet.create({
   headerText: {
     left: 10,
+    top: 10,
   },
 
   headerDetail: {
@@ -132,6 +138,7 @@ const styles = StyleSheet.create({
 
   headerHorizontalScroll: {
     marginLeft: 5,
+    marginTop: 5,
   },
 
   cardHorizontalParent: {
