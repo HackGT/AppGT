@@ -25,7 +25,7 @@ export class ScheduleDayView extends Component {
 
   // TODO: changing to just sat/sun breaks
   state = {
-    dayIndex: 1,
+    dayIndex: 0,
     days: ["friday", "saturday", "sunday"],
   };
 
@@ -180,15 +180,6 @@ export class ScheduleDayView extends Component {
               dayIndex: Math.round(
                 scrollData.nativeEvent.contentOffset.x / width
               ),
-            });
-          }}
-          onScrollToIndexFailed={(info) => {
-            const wait = new Promise((resolve) => setTimeout(resolve, 500));
-            wait.then(() => {
-              this.scheduleListRef.scrollToIndex({
-                index: this.state.dayIndex,
-                animated: false,
-              });
             });
           }}
           renderItem={({ item }) => {
