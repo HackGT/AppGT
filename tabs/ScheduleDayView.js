@@ -23,13 +23,16 @@ import Underline from "../assets/UnderlineGradient";
 export class ScheduleDayView extends Component {
   daysAvailable = ["friday", "saturday", "sunday"];
 
+  // TODO: changing to just sat/sun breaks
   state = {
-    dayIndex: 2,
+    dayIndex: 1,
     days: ["friday", "saturday", "sunday"],
   };
 
   constructor(props) {
     super(props);
+
+    this.scheduleListRef = React.createRef();
   }
 
   tabContent = () => (
@@ -148,12 +151,8 @@ export class ScheduleDayView extends Component {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  const newHorizontalPosition = i * width;
-
-                  if (this.scrollView != null) {
-                    this.scrollView.scrollTo({
-                      x: newHorizontalPosition,
-                    });
+                  if (this.scheduleListRef.current != null) {
+                    this.scheduleListRef.current.scrollToIndex({ index: i });
                   }
                 }}
               >
@@ -165,9 +164,10 @@ export class ScheduleDayView extends Component {
         {this.dayTabView(width)}
 
         <FlatList
+          ref={this.scheduleListRef}
           data={this.state.days}
-          initialScrollIndex={2}
-          horizontal={true}
+          initialScrollIndex={this.state.dayIndex}
+          horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled={true}
           keyExtractor={({ item }) => item}
@@ -181,7 +181,7 @@ export class ScheduleDayView extends Component {
           onScrollToIndexFailed={(info) => {
             const wait = new Promise((resolve) => setTimeout(resolve, 500));
             wait.then(() => {
-              this.scrollView.scrollToIndex({
+              this.scheduleListRef.scrollToIndex({
                 index: this.state.dayIndex,
                 animated: false,
               });

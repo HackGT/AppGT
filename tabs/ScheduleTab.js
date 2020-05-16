@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { CMSContext } from "../context";
 import moment from "moment";
@@ -83,35 +84,30 @@ export class ScheduleTab extends Component {
         <View style={styles.headerDetail}>
           <View style={styles.headerContent}>
             <WhatsHappeningNow style={styles.headerText} />
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              contentContainerStyle={styles.headerHorizontalScroll}
-            >
-              <CMSContext.Consumer>
-                {({ events }) => {
-                  return (
-                    <View flexDirection="row">
-                      {new Array(events.length).fill(null).map((_, i) => {
-                        return (
-                          <TouchableOpacity
-                            style={styles.cardHorizontalParent}
-                            onPress={() => {
-                              this.setSelectedEvent(events[i]);
-                            }}
-                          >
-                            <ScheduleEventCellVerticle
-                              event={events[i]}
-                              highlighted
-                            />
-                          </TouchableOpacity>
-                        );
-                      })}
-                    </View>
-                  );
-                }}
-              </CMSContext.Consumer>
-            </ScrollView>
+            <CMSContext.Consumer>
+              {({ events }) => {
+                return (
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={events}
+                    keyExtractor={({ item }) => item}
+                    renderItem={({ item }) => {
+                      return (
+                        <TouchableOpacity
+                          style={styles.cardHorizontalParent}
+                          onPress={() => {
+                            this.setSelectedEvent(item);
+                          }}
+                        >
+                          <ScheduleEventCellVerticle event={item} highlighted />
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                );
+              }}
+            </CMSContext.Consumer>
           </View>
         </View>
 
