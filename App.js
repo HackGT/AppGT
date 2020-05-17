@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { fetchEvents, fetchInfoBlocks } from "./cms";
-import { CMSContext } from "./context";
+import { CMSContext, AuthContext } from "./context";
 import { View, StyleSheet, Button, Text, StatusBar } from "react-native";
 import { ScheduleTab } from "./tabs/ScheduleTab";
 import { ScheduleSearch } from "./tabs/ScheduleSearch";
@@ -15,8 +15,21 @@ import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { authorize } from "react-native-app-auth";
 
 // for details & examples on how to make gradients/SVGs https://github.com/react-native-community/react-native-svg
+
+const authUrl = "https://login.hack.gt";
+
+const config = {
+  clientId: "7d1c11b30351e91d6517492c19a9a0185a6e4e6304f9826f96a76895534cf26f",
+  redirectUrl: "gt.hack.live://redirect",
+  clientSecret: "hackgt",
+  serviceConfiguration: {
+    authorizationEndpoint: `${authUrl}/oauth/authorize`,
+    tokenEndpoint: `${authUrl}/oauth/token`,
+  },
+};
 
 function HackGTitle() {
   return <HackGTIcon />;
@@ -66,6 +79,8 @@ export default class App extends React.Component {
     this.state = {
       events: [],
       infoBlocks: [],
+      user: null,
+      accessToken: null,
     };
   }
 
@@ -80,6 +95,57 @@ export default class App extends React.Component {
       this.setState({ events: newEventsWithStar });
       AsyncStorage.setItem("localEventData", JSON.stringify(newEventsWithStar));
     }
+  };
+
+  logout = async () => {
+    fetch(`${authUrl}/api/user/logout`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + this.state.accessToken,
+      },
+    }).then((response) => {
+      AsyncStorage.removeItem("accessToken");
+      AsyncStorage.removeItem("userData");
+      this.setState({ accessToken: "", user: null });
+    });
+  };
+
+  login = async () => {
+    try {
+      const result = await authorize(config);
+      this.setState({ accessToken: result.accessToken });
+      this.fetchUserDetails(result.accessToken);
+      AsyncStorage.setItem("accessToken", accessToken);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchUserDetails = async (accessToken) => {
+    fetch(`${authUrl}/api/user`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((userData) => {
+        const name = userData.nameParts;
+        const user = {
+          email: userData.email,
+          name: userData.name,
+          firstName: name.first,
+          preferredName: name.preferred,
+          lastName: name.last,
+          uuid: userData.uuid,
+        };
+
+        AsyncStorage.setItem("userData", JSON.stringify(user));
+
+        this.setState({ user: user });
+      });
   };
 
   componentDidMount() {
@@ -98,6 +164,11 @@ export default class App extends React.Component {
       }
     });
 
+    AsyncStorage.getItem(
+      "userData",
+      (error, result) => result && this.setState({ user: JSON.parse(result) })
+    );
+
     // AsyncStorage.getItem("localInfoBlocksData", (error, result) => {
     //   if (result) {
     //     console.log("InfoBlocks found locally.");
@@ -115,28 +186,37 @@ export default class App extends React.Component {
   }
 
   render() {
-    const events = this.state.events;
-    const infoBlocks = this.state.infoBlocks;
-    const toggleStar = this.toggleStarred;
+    const { events, infoBlocks, user } = this.state;
 
     return (
       <CMSContext.Provider
         value={{
           events,
           infoBlocks,
-          toggleStar,
+          toggleStar: this.toggleStarred,
         }}
       >
-        <NavigationContainer>
-          <StatusBar backgroundColor="white" barStyle="dark-content" />
-          <Tab.Navigator
-            tabBarOptions={{ activeTintColor: "#41D1FF", tabBarVisible: false }}
-          >
-            <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
-            <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
-            <Tab.Screen name="EventOnboard" component={EventOnboarding} />
-          </Tab.Navigator>
-        </NavigationContainer>
+        <AuthContext.Provider
+          value={{
+            user: this.state.user,
+            login: this.login,
+            logout: this.logout,
+          }}
+        >
+          <NavigationContainer>
+            <StatusBar backgroundColor="white" barStyle="dark-content" />
+            <Tab.Navigator
+              tabBarOptions={{
+                activeTintColor: "#41D1FF",
+                tabBarVisible: false,
+              }}
+            >
+              <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+              <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
+              <Tab.Screen name="EventOnboard" component={EventOnboarding} />
+            </Tab.Navigator>
+          </NavigationContainer>
+        </AuthContext.Provider>
       </CMSContext.Provider>
     );
   }

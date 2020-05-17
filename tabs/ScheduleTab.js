@@ -16,7 +16,6 @@ import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
 import { Dimensions } from "react-native";
 import { ScheduleDayView } from "./ScheduleDayView";
-
 export class ScheduleTab extends Component {
   bs = createRef();
   state = {

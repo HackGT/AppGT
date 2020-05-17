@@ -13,6 +13,7 @@ import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
 
 import { ContentInfo } from "./ContentInfo";
+import { AuthContext } from "../context";
 
 export class LoginOnboarding extends Component {
   constructor(props) {
@@ -102,36 +103,49 @@ export class LoginOnboarding extends Component {
     const screenWidth = Dimensions.get("window").width;
 
     return (
-      <View style={styles.rootView}>
-        <ScrollView
-          flex={0.8}
-          style={styles.horizontalScroll}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={(scrollData) => {
-            // update page indicator
-            this.setState({
-              pageIndex: Math.round(
-                scrollData.nativeEvent.contentOffset.x / screenWidth
-              ),
-            });
-          }}
-        >
-          {this.createScreens(screenWidth)}
-        </ScrollView>
+      <AuthContext.Consumer>
+        {({ login, user, logout }) => {
+          return (
+            <View style={styles.rootView}>
+              <ScrollView
+                flex={0.8}
+                style={styles.horizontalScroll}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                pagingEnabled={true}
+                onMomentumScrollEnd={(scrollData) => {
+                  // update page indicator
+                  this.setState({
+                    pageIndex: Math.round(
+                      scrollData.nativeEvent.contentOffset.x / screenWidth
+                    ),
+                  });
+                }}
+              >
+                {this.createScreens(screenWidth)}
+              </ScrollView>
 
-        <View style={styles.footer} flex={0.2}>
-          {this.indexIndicator()}
-          <TouchableOpacity onPress={() => alert("Login")}>
-            <ButtonBackground />
-          </TouchableOpacity>
+              <View style={styles.footer} flex={0.2}>
+                {this.indexIndicator()}
 
-          <TouchableOpacity onPress={() => alert("Login")}>
-            <Text style={styles.makeAccount}>Don't have an account?</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+                <TouchableOpacity onPress={() => login()}>
+                  <ButtonBackground />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => login()}>
+                  <Text style={styles.makeAccount}>Don't have an account?</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => logout()}>
+                  <Text style={styles.makeAccount}>
+                    Logout (for testing.) {user != null ? user.email : "None."}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }}
+      </AuthContext.Consumer>
     );
   }
 }
@@ -183,3 +197,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+LoginOnboarding.contextType = AuthContext;
