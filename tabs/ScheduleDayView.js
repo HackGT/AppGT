@@ -40,7 +40,7 @@ export class ScheduleDayView extends Component {
       <CMSContext.Consumer>
         {({ events }) => {
           return (
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               {new Array(events.length).fill(null).map((_, i) => {
                 const radius = 7;
                 const size = radius * 2;
@@ -236,8 +236,10 @@ const styles = StyleSheet.create({
   },
 
   timeText: {
-    padding: 6,
+    color: "#3F3F3F",
+    padding: 5,
     textAlign: "center",
+    fontFamily: "SpaceMono-Regular",
   },
 
   lineParent: {

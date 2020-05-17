@@ -62,13 +62,24 @@ export class ScheduleEventCellVerticle extends Component {
           style={{
             marginLeft: 7,
             color: categoryColor,
+            fontFamily: "SpaceMono-Regular",
           }}
         >
           food
         </Text>
         <View flexDirection="row" style={styles.footerTags}>
-          {["#tag1", "#tag2", "#tag3"].map((tag) => {
-            return <Text style={{ color: "#C3C3C3", margin: 5 }}>{tag}</Text>;
+          {["#ML", "#boba"].map((tag) => {
+            return (
+              <Text
+                style={{
+                  color: "#C3C3C3",
+                  margin: 5,
+                  fontFamily: "SpaceMono-Regular",
+                }}
+              >
+                {tag}
+              </Text>
+            );
           })}
         </View>
       </View>
@@ -120,16 +131,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
+    letterSpacing: 0.005,
   },
   titleFont: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#4F4F4F",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
   },
 
   subtitleFont: {
     marginTop: 2,
     color: "#4F4F4F",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
   },
 
   footer: {
@@ -137,7 +153,7 @@ const styles = StyleSheet.create({
   },
 
   footerTopic: {
-    top: 2.5,
+    top: 5,
   },
 
   footerTags: {

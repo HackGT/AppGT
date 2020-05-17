@@ -34,17 +34,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginLeft: 20,
     marginRight: 20,
-    fontWeight: "bold",
     textAlign: "center",
-    color: "black",
+    fontFamily: "SpaceMono-Bold",
+    letterSpacing: 0.05,
+    color: "#3F3F3F",
   },
 
   textSubtitle: {
     marginTop: 12,
-    color: "black",
     marginLeft: 20,
     marginRight: 20,
     fontSize: 18,
     textAlign: "center",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.05,
+    color: "#3F3F3F",
   },
 });

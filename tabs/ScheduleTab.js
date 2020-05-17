@@ -119,7 +119,7 @@ export class ScheduleTab extends Component {
 const styles = StyleSheet.create({
   headerText: {
     left: 10,
-    top: 10,
+    top: 6,
   },
 
   headerDetail: {

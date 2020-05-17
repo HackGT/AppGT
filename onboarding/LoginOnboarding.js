@@ -169,6 +169,8 @@ const styles = StyleSheet.create({
   makeAccount: {
     padding: 10,
     color: "#3F3F3F",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.05,
   },
 
   firstScreenLogo: {
@@ -189,12 +191,8 @@ const styles = StyleSheet.create({
   textTitle: {
     top: 42,
     fontSize: 24,
-    fontWeight: "bold",
-  },
-
-  textSubtitle: {
-    top: 54,
-    fontSize: 18,
+    fontFamily: "SpaceMono-Bold",
+    letterSpacing: 0.05,
   },
 });
 

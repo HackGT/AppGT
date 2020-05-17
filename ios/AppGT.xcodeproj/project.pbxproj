@@ -12,6 +12,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		C339156D28B3953539B30C3D /* libPods-AppGT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31788706E0C605AD2F5BA6F7 /* libPods-AppGT.a */; };
+		D43C2297AE68433596669C20 /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DC81AD731F24D12A01F250D /* SpaceMono-Bold.ttf */; };
+		E5A83FCCDCF84B598E3C7DD9 /* SpaceMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 72E1B80A459E4C21ACADB1FA /* SpaceMono-BoldItalic.ttf */; };
+		6E42FCE29BF5401DB6951EE3 /* SpaceMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 338DBBB8BA4649EE9D4DA918 /* SpaceMono-Italic.ttf */; };
+		5879527F8C5D437891D1890F /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 659DD4AC939D4D7C831EC6BB /* SpaceMono-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +56,10 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F0701D7DBEAF4D4BBC759521 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		F982BABDB7BD4322B4E44707 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		2DC81AD731F24D12A01F250D /* SpaceMono-Bold.ttf */ = {isa = PBXFileReference; name = "SpaceMono-Bold.ttf"; path = "../assets/fonts/SpaceMono-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		72E1B80A459E4C21ACADB1FA /* SpaceMono-BoldItalic.ttf */ = {isa = PBXFileReference; name = "SpaceMono-BoldItalic.ttf"; path = "../assets/fonts/SpaceMono-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		338DBBB8BA4649EE9D4DA918 /* SpaceMono-Italic.ttf */ = {isa = PBXFileReference; name = "SpaceMono-Italic.ttf"; path = "../assets/fonts/SpaceMono-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		659DD4AC939D4D7C831EC6BB /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +169,10 @@
 				3E0B51C193754988966A7A07 /* rubicon-icon-font.ttf */,
 				D7289818F6664B6F8F919EC3 /* SimpleLineIcons.ttf */,
 				E84A5F7137F54F4D8FF07574 /* Zocial.ttf */,
+				2DC81AD731F24D12A01F250D /* SpaceMono-Bold.ttf */,
+				72E1B80A459E4C21ACADB1FA /* SpaceMono-BoldItalic.ttf */,
+				338DBBB8BA4649EE9D4DA918 /* SpaceMono-Italic.ttf */,
+				659DD4AC939D4D7C831EC6BB /* SpaceMono-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -240,6 +252,10 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				D43C2297AE68433596669C20 /* SpaceMono-Bold.ttf in Resources */,
+				E5A83FCCDCF84B598E3C7DD9 /* SpaceMono-BoldItalic.ttf in Resources */,
+				6E42FCE29BF5401DB6951EE3 /* SpaceMono-Italic.ttf in Resources */,
+				5879527F8C5D437891D1890F /* SpaceMono-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

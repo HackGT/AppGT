@@ -71,7 +71,7 @@ export class EventOnboarding extends Component {
         onPress={() => Clipboard.setString("(404) 894-2500")}
       >
         {/* TODO: create new contact automatically: https://www.npmjs.com/package/react-native-contacts */}
-        <Text style={styles.buttonText}>Copy to Clipboard</Text>
+        <Text style={styles.buttonText}>Copy Contact</Text>
       </TouchableOpacity>
     );
     const forthScreen = (
@@ -238,5 +238,7 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: "center",
     color: "white",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
   },
 });
