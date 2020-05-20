@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   FlatList,
+  Modal,
 } from "react-native";
 import { CMSContext } from "../context";
 import moment from "moment";
@@ -15,6 +16,7 @@ import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
 import { ScheduleDayView } from "./ScheduleDayView";
 import X from "../assets/X";
 import Animated from "react-native-reanimated";
+import Svg, { Circle } from "react-native-svg";
 
 export class ScheduleTab extends Component {
   bs = createRef();
@@ -50,14 +52,68 @@ export class ScheduleTab extends Component {
     }
   };
 
-  renderInner = () => (
-    <View style={styles.panel}>
-      <Text>{JSON.stringify(this.state.selectedEvent)}</Text>
-      <TouchableOpacity style={styles.panelButton}>
-        <Text style={styles.panelButtonTitle}>✪ Add to Calendar</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  parseDate = (date) => {
+    // parse iso-formatted string as local time
+    if (!date) return "";
+    let localString = date;
+    if (date.slice(-1).toLowerCase() === "z") {
+      localString = date.slice(0, -1);
+    }
+    return moment(localString);
+  };
+
+  renderInner = () => {
+    if (this.state.selectedEvent != null) {
+      // TODO: this should be shared with a CMS data object
+      const event = this.state.selectedEvent;
+      const title = event.title;
+      const description = event.description;
+      const location = event.area != null ? event.area.name + " • " : "";
+      const start = this.parseDate(event.start_time).format("hh:mm A");
+      const end = this.parseDate(event.end_time).format("hh:mm A");
+      const isStarred = event.isStarred;
+      const colors = ["#2CDACF", "#C866F5", "#786CEB", "#FF586C", "#FF8D28"];
+      const radius = 6;
+      const size = radius * 2;
+      const categoryColor = colors[Math.floor(Math.random() * colors.length)];
+
+      return (
+        <View style={styles.panel}>
+          <Text style={styles.panelTitleText}>{title}</Text>
+          <Text
+            style={{
+              marginTop: 2,
+              color: "#4F4F4F",
+              fontFamily: "SpaceMono-Regular",
+              letterSpacing: 0.005,
+            }}
+          >
+            {location}
+            {start} - {end}
+          </Text>
+
+          <View flexDirection="row" style={styles.footer}>
+            <Svg height={size} width={size} style={{ top: 5 }}>
+              <Circle cx={radius} cy={radius} r={radius} fill={categoryColor} />
+            </Svg>
+            <Text
+              style={{
+                marginLeft: 7,
+                color: categoryColor,
+                fontFamily: "SpaceMono-Regular",
+              }}
+            >
+              food
+            </Text>
+          </View>
+          <Text style={styles.panelDescriptionText}>{description}</Text>
+          <TouchableOpacity style={styles.panelButton}>
+            <Text style={styles.panelButtonTitle}>Add to Calendar</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  };
 
   renderHeader = () => (
     <View>
@@ -96,7 +152,13 @@ export class ScheduleTab extends Component {
           }}
         >
           <View
-            pointerEvents={this.state.selectedEvent != null ? "none" : "auto"}
+            pointerEvents={
+              this.state.selectedEvent != null
+                ? Platform.OS === "android"
+                  ? "none"
+                  : this.pointerEvents
+                : "auto"
+            }
           >
             <View style={styles.headerDetail}>
               <View style={styles.headerContent}>
@@ -226,8 +288,19 @@ const styles = StyleSheet.create({
     color: "white",
   },
 
+  panelTitleText: {
+    fontFamily: "SpaceMono-Bold",
+    letterSpacing: 0.05,
+    fontSize: 16,
+  },
+
+  panelDescriptionText: {
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.05,
+  },
+
   underBackground: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "#2F2F2f",
   },
 });

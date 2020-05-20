@@ -67,21 +67,6 @@ export class ScheduleEventCellVerticle extends Component {
         >
           food
         </Text>
-        <View flexDirection="row" style={styles.footerTags}>
-          {["#ML", "#boba"].map((tag) => {
-            return (
-              <Text
-                style={{
-                  color: "#C3C3C3",
-                  margin: 5,
-                  fontFamily: "SpaceMono-Regular",
-                }}
-              >
-                {tag}
-              </Text>
-            );
-          })}
-        </View>
       </View>
     );
   };
@@ -103,7 +88,7 @@ export class ScheduleEventCellVerticle extends Component {
               <View style={this.createCardStyle()}>
                 <View style={styles.titleHeader}>
                   <Text
-                    numberOfLines={2}
+                    numberOfLines={1}
                     ellipsizeMode={"tail"}
                     style={styles.titleFont}
                   >
@@ -153,7 +138,6 @@ const styles = StyleSheet.create({
     color: "#4F4F4F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
-    lineHeight: 17,
     marginRight: 10,
   },
 
