@@ -102,12 +102,25 @@ export class ScheduleEventCellVerticle extends Component {
             <View style={styles.cardParent}>
               <View style={this.createCardStyle()}>
                 <View style={styles.titleHeader}>
-                  <Text style={styles.titleFont}>{title}</Text>
-                  <TouchableOpacity onPress={() => toggleStar(event)}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={"tail"}
+                    style={styles.titleFont}
+                  >
+                    {title}
+                  </Text>
+                  <TouchableOpacity
+                    style={{ width: "10%" }}
+                    onPress={() => toggleStar(event)}
+                  >
                     {isStarred ? <StarOn /> : <StarOff />}
                   </TouchableOpacity>
                 </View>
-                <Text style={styles.subtitleFont}>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode={"tail"}
+                  style={styles.subtitleFont}
+                >
                   {location}
                   {start} - {end}
                 </Text>
@@ -130,15 +143,18 @@ const styles = StyleSheet.create({
   titleHeader: {
     flexDirection: "row",
     width: "100%",
-    justifyContent: "space-between",
     letterSpacing: 0.005,
   },
+
   titleFont: {
     fontSize: 16,
+    width: "90%",
     fontWeight: "bold",
     color: "#4F4F4F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
+    lineHeight: 17,
+    marginRight: 10,
   },
 
   subtitleFont: {

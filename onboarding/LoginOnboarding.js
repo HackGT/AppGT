@@ -137,7 +137,7 @@ export class LoginOnboarding extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => logout()}>
-                  <Text style={styles.makeAccount}>
+                  <Text style={styles.toDelete}>
                     Logout (for testing.) {user != null ? user.email : "None."}
                   </Text>
                 </TouchableOpacity>
@@ -168,6 +168,12 @@ const styles = StyleSheet.create({
 
   makeAccount: {
     padding: 10,
+    color: "#3F3F3F",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.05,
+  },
+
+  toDelete: {
     color: "#3F3F3F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.05,

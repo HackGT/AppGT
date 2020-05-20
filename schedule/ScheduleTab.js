@@ -1,12 +1,10 @@
 import React, { Component, createRef } from "react";
 
 import {
-  Animated,
   Text,
   TouchableOpacity,
   View,
   StyleSheet,
-  ScrollView,
   FlatList,
 } from "react-native";
 import { CMSContext } from "../context";
@@ -14,10 +12,18 @@ import moment from "moment";
 import BottomSheet from "reanimated-bottom-sheet";
 import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
-import { Dimensions } from "react-native";
 import { ScheduleDayView } from "./ScheduleDayView";
+import X from "../assets/X";
+import Animated from "react-native-reanimated";
+
 export class ScheduleTab extends Component {
   bs = createRef();
+  fall = new Animated.Value(1);
+
+  static navigationOptions = {
+    title: "Welcome",
+  };
+
   state = {
     selectedEvent: null,
   };
@@ -54,16 +60,17 @@ export class ScheduleTab extends Component {
   );
 
   renderHeader = () => (
-    <View style={styles.panelHeader}>
-      <View style={styles.panelPlaceholder} />
-      <View style={styles.panelHandle} />
+    <View>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
+      </View>
       <TouchableOpacity
         style={styles.panelClose}
         onPress={() => {
           this.setSelectedEvent();
         }}
       >
-        <Text>𝗫</Text>
+        <X />
       </TouchableOpacity>
     </View>
   );
@@ -77,40 +84,56 @@ export class ScheduleTab extends Component {
           renderContent={this.renderInner}
           renderHeader={this.renderHeader}
           initialSnap={0}
-          enabledGestureInteraction={false}
+          enabledInnerScrolling={false}
+          overdragResistanceFactor={8}
+          callbackNode={this.fall}
         />
 
-        <View style={styles.headerDetail}>
-          <View style={styles.headerContent}>
-            <WhatsHappeningNow style={styles.headerText} />
-            <CMSContext.Consumer>
-              {({ events }) => {
-                return (
-                  <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    data={events}
-                    keyExtractor={({ item }) => item}
-                    renderItem={({ item }) => {
-                      return (
-                        <TouchableOpacity
-                          style={styles.cardHorizontalParent}
-                          onPress={() => {
-                            this.setSelectedEvent(item);
-                          }}
-                        >
-                          <ScheduleEventCellVerticle event={item} highlighted />
-                        </TouchableOpacity>
-                      );
-                    }}
-                  />
-                );
-              }}
-            </CMSContext.Consumer>
-          </View>
-        </View>
+        <Animated.View
+          style={{
+            alignItems: "center",
+            opacity: Animated.add(0.1, Animated.multiply(this.fall, 0.9)),
+          }}
+        >
+          <View
+            pointerEvents={this.state.selectedEvent != null ? "none" : "auto"}
+          >
+            <View style={styles.headerDetail}>
+              <View style={styles.headerContent}>
+                <WhatsHappeningNow style={styles.headerText} />
+                <CMSContext.Consumer>
+                  {({ events }) => {
+                    return (
+                      <FlatList
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        data={events}
+                        keyExtractor={({ item }) => item}
+                        renderItem={({ item }) => {
+                          return (
+                            <TouchableOpacity
+                              style={styles.cardHorizontalParent}
+                              onPress={() => {
+                                this.setSelectedEvent(item);
+                              }}
+                            >
+                              <ScheduleEventCellVerticle
+                                event={item}
+                                highlighted
+                              />
+                            </TouchableOpacity>
+                          );
+                        }}
+                      />
+                    );
+                  }}
+                </CMSContext.Consumer>
+              </View>
+            </View>
 
-        <ScheduleDayView onSelectEvent={this.setSelectedEvent} />
+            <ScheduleDayView onSelectEvent={this.setSelectedEvent} />
+          </View>
+        </Animated.View>
       </View>
     );
   }
@@ -155,33 +178,22 @@ const styles = StyleSheet.create({
   },
 
   panel: {
-    paddingHorizontal: 20,
+    padding: 20,
     height: 600,
-    backgroundColor: "#ffffff",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    backgroundColor: "white",
   },
 
   panelHeader: {
-    backgroundColor: "#ffffff",
-    shadowColor: "#000000",
+    backgroundColor: "white",
+    shadowColor: "white",
     padding: 5,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+    justifyContent: "center",
+    alignItems: "center",
     height: 35,
-  },
-
-  panelPlaceholder: {
-    width: 31,
-    height: 31,
-    borderRadius: 100,
-    backgroundColor: "#ffffff",
-    marginBottom: 10,
-    alignSelf: "center",
   },
 
   panelHandle: {
@@ -190,19 +202,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: "#f2f2f2",
     marginBottom: 10,
-    alignSelf: "center",
+    top: 5,
   },
 
   panelClose: {
-    width: 31,
-    height: 31,
-    borderRadius: 100,
-    backgroundColor: "#f2f2f2",
-    marginBottom: 10,
-    alignSelf: "center",
-    alignItems: "center",
-    alignContent: "center",
-    padding: 5,
+    margin: 10,
+    right: 0,
+    position: "absolute",
   },
 
   panelButton: {
@@ -221,6 +227,7 @@ const styles = StyleSheet.create({
   },
 
   underBackground: {
-    backgroundColor: "white",
+    flex: 1,
+    backgroundColor: "black",
   },
 });

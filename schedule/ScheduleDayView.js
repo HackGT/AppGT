@@ -101,7 +101,7 @@ export class ScheduleDayView extends Component {
 
   dayTabView = (width) => {
     return (
-      <View>
+      <View style={{ backgroundColor: "white" }}>
         <View flexDirection="row" style={styles.daysParent}>
           {this.state.days.map((dayString, i) => {
             const isHighlight = this.state.dayIndex == i;
@@ -136,6 +136,7 @@ export class ScheduleDayView extends Component {
             width: "100%",
             marginTop: 5,
             justifyContent: "center",
+            backgroundColor: "white",
           }}
         >
           {Array.from(new Array(this.state.days.length).keys()).map((i) => {
@@ -245,6 +246,7 @@ const styles = StyleSheet.create({
   lineParent: {
     width: "15%",
     justifyContent: "center",
+    backgroundColor: "white",
   },
 
   daysParent: {
