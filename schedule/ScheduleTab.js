@@ -105,10 +105,14 @@ export class ScheduleTab extends Component {
               food
             </Text>
           </View>
+
           <Text style={styles.panelDescriptionText}>{description}</Text>
-          <TouchableOpacity style={styles.panelButton}>
-            <Text style={styles.panelButtonTitle}>Add to Calendar</Text>
-          </TouchableOpacity>
+
+          <View style={styles.panelButtonCenterRoot}>
+            <TouchableOpacity style={styles.panelButton}>
+              <Text style={styles.panelButtonTitle}>Add to Calendar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       );
     }
@@ -213,28 +217,7 @@ const styles = StyleSheet.create({
     padding: 20,
     height: 600,
     backgroundColor: "white",
-  },
-
-  panelHeader: {
-    backgroundColor: "white",
-    shadowColor: "white",
-    padding: 5,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 35,
-  },
-
-  panelHandle: {
-    width: 75,
-    height: 4,
-    borderRadius: 100,
-    backgroundColor: "#f2f2f2",
-    marginBottom: 10,
-    top: 5,
   },
 
   panelClose: {
@@ -242,6 +225,15 @@ const styles = StyleSheet.create({
     right: 0,
     top: -20,
     position: "absolute",
+  },
+
+  panelButtonCenterRoot: {
+    position: "absolute",
+    backgroundColor: "red",
+    left: 0,
+    right: 0,
+    bottom: 30,
+    alignItems: "center",
   },
 
   panelButton: {
@@ -255,8 +247,9 @@ const styles = StyleSheet.create({
 
   panelButtonTitle: {
     fontSize: 17,
-    fontWeight: "bold",
     color: "white",
+    fontFamily: "SpaceMono-Bold",
+    letterSpacing: 0.05,
   },
 
   panelTitleText: {
