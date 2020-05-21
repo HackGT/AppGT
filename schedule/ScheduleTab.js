@@ -15,17 +15,10 @@ import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
 import { ScheduleDayView } from "./ScheduleDayView";
 import X from "../assets/X";
-import Animated from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 export class ScheduleTab extends Component {
-  bs = createRef();
-  fall = new Animated.Value(1);
-
-  static navigationOptions = {
-    title: "Welcome",
-  };
-
   state = {
     selectedEvent: null,
   };
@@ -43,12 +36,10 @@ export class ScheduleTab extends Component {
   setSelectedEvent = (event) => {
     if (event) {
       this.setState({ selectedEvent: event });
-      this.bs.current.snapTo(1);
-      this.bs.current.snapTo(1);
+      this.RBSheet.open();
     } else {
       this.setState({ selectedEvent: null });
-      this.bs.current.snapTo(0);
-      this.bs.current.snapTo(0);
+      this.RBSheet.close();
     }
   };
 
@@ -79,6 +70,14 @@ export class ScheduleTab extends Component {
 
       return (
         <View style={styles.panel}>
+          <TouchableOpacity
+            style={styles.panelClose}
+            onPress={() => {
+              this.setSelectedEvent();
+            }}
+          >
+            <X />
+          </TouchableOpacity>
           <Text style={styles.panelTitleText}>{title}</Text>
           <Text
             style={{
@@ -115,87 +114,58 @@ export class ScheduleTab extends Component {
     }
   };
 
-  renderHeader = () => (
-    <View>
-      <View style={styles.panelHeader}>
-        <View style={styles.panelHandle} />
-      </View>
-      <TouchableOpacity
-        style={styles.panelClose}
-        onPress={() => {
-          this.setSelectedEvent();
-        }}
-      >
-        <X />
-      </TouchableOpacity>
-    </View>
-  );
-
   render() {
     return (
       <View style={styles.underBackground}>
-        <BottomSheet
-          ref={this.bs}
-          snapPoints={[0, 450]}
-          renderContent={this.renderInner}
-          renderHeader={this.renderHeader}
-          initialSnap={0}
-          enabledInnerScrolling={false}
-          overdragResistanceFactor={8}
-          callbackNode={this.fall}
-        />
-
-        <Animated.View
-          style={{
-            alignItems: "center",
-            opacity: Animated.add(0.1, Animated.multiply(this.fall, 0.9)),
+        <RBSheet
+          ref={(ref) => {
+            this.RBSheet = ref;
+          }}
+          height={450}
+          openDuration={400}
+          closeDuration={300}
+          closeOnDragDown
+          customStyles={{
+            container: {
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            },
           }}
         >
-          <View
-            pointerEvents={
-              this.state.selectedEvent != null
-                ? Platform.OS === "android"
-                  ? "none"
-                  : this.pointerEvents
-                : "auto"
-            }
-          >
-            <View style={styles.headerDetail}>
-              <View style={styles.headerContent}>
-                <WhatsHappeningNow style={styles.headerText} />
-                <CMSContext.Consumer>
-                  {({ events }) => {
-                    return (
-                      <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        horizontal
-                        data={events}
-                        keyExtractor={({ item }) => item}
-                        renderItem={({ item }) => {
-                          return (
-                            <TouchableOpacity
-                              style={styles.cardHorizontalParent}
-                              onPress={() => {
-                                this.setSelectedEvent(item);
-                              }}
-                            >
-                              <ScheduleEventCellVerticle
-                                event={item}
-                                highlighted
-                              />
-                            </TouchableOpacity>
-                          );
-                        }}
-                      />
-                    );
-                  }}
-                </CMSContext.Consumer>
-              </View>
-            </View>
+          {this.renderInner()}
+        </RBSheet>
 
-            <ScheduleDayView onSelectEvent={this.setSelectedEvent} />
+        <View style={styles.headerDetail}>
+          <View style={styles.headerContent}>
+            <WhatsHappeningNow style={styles.headerText} />
+            <CMSContext.Consumer>
+              {({ events }) => {
+                return (
+                  <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={events}
+                    keyExtractor={({ item }) => item}
+                    renderItem={({ item }) => {
+                      return (
+                        <TouchableOpacity
+                          style={styles.cardHorizontalParent}
+                          onPress={() => {
+                            this.setSelectedEvent(item);
+                          }}
+                        >
+                          <ScheduleEventCellVerticle event={item} highlighted />
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                );
+              }}
+            </CMSContext.Consumer>
           </View>
-        </Animated.View>
+        </View>
+
+        <ScheduleDayView onSelectEvent={this.setSelectedEvent} />
       </View>
     );
   }
@@ -270,6 +240,7 @@ const styles = StyleSheet.create({
   panelClose: {
     margin: 10,
     right: 0,
+    top: -20,
     position: "absolute",
   },
 
