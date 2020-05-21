@@ -9,7 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import { CMSContext } from "../context";
-import { ScheduleEventCellVerticle } from "./ScheduleEventCellVerticle";
+import { ScheduleEventCell } from "./ScheduleEventCell";
 import Svg, { Circle } from "react-native-svg";
 import { Dimensions } from "react-native";
 import SaturdayGray from "../assets/SaturdayGray";
@@ -84,7 +84,7 @@ export class ScheduleDayView extends Component {
                         this.props.onSelectEvent(events[i]);
                       }}
                     >
-                      <ScheduleEventCellVerticle
+                      <ScheduleEventCell
                         event={events[i]}
                         highlighted={highlighted}
                       />

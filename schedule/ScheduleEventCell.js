@@ -5,8 +5,10 @@ import Svg, { Circle } from "react-native-svg";
 import StarOff from "../assets/StarOff";
 import StarOn from "../assets/StarOn";
 import { CMSContext } from "../context";
+import { EventTypeView } from "./EventTypeView";
+import { parseDate } from "../cms/DataHandler";
 
-export class ScheduleEventCellVerticle extends Component {
+export class ScheduleEventCell extends Component {
   constructor(props) {
     super(props);
 
@@ -36,48 +38,13 @@ export class ScheduleEventCellVerticle extends Component {
     return style;
   };
 
-  parseDate = (date) => {
-    // parse iso-formatted string as local time
-    if (!date) return "";
-    let localString = date;
-    if (date.slice(-1).toLowerCase() === "z") {
-      localString = date.slice(0, -1);
-    }
-    return moment(localString);
-  };
-
-  topicLabel = () => {
-    // to be put into a class enum
-    const colors = ["#2CDACF", "#C866F5", "#786CEB", "#FF586C", "#FF8D28"];
-    const radius = 6;
-    const size = radius * 2;
-    const categoryColor = colors[Math.floor(Math.random() * colors.length)];
-
-    return (
-      <View flexDirection="row" style={styles.footer}>
-        <Svg height={size} width={size} style={styles.footerTopic}>
-          <Circle cx={radius} cy={radius} r={radius} fill={categoryColor} />
-        </Svg>
-        <Text
-          style={{
-            marginLeft: 7,
-            color: categoryColor,
-            fontFamily: "SpaceMono-Regular",
-          }}
-        >
-          food
-        </Text>
-      </View>
-    );
-  };
-
   render() {
     const event = this.props.event;
 
     const title = event.title;
     const location = event.area != null ? event.area.name + " • " : "";
-    const start = this.parseDate(event.start_time).format("hh:mm A");
-    const end = this.parseDate(event.end_time).format("hh:mm A");
+    const start = parseDate(event.start_time).format("hh:mm A");
+    const end = parseDate(event.end_time).format("hh:mm A");
     const isStarred = event.isStarred;
 
     return (
@@ -109,7 +76,7 @@ export class ScheduleEventCellVerticle extends Component {
                   {location}
                   {start} - {end}
                 </Text>
-                {this.topicLabel()}
+                <EventTypeView eventType="food" />
               </View>
             </View>
           );
