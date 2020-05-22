@@ -94,7 +94,10 @@ export default class App extends React.Component {
       newEventsWithStar[index].isStarred = newValue;
       this.setState({ events: newEventsWithStar });
       AsyncStorage.setItem("localEventData", JSON.stringify(newEventsWithStar));
+      return newValue;
     }
+
+    return null;
   };
 
   logout = async () => {

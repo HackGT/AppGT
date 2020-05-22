@@ -9,6 +9,15 @@ import AddStarButton from "../assets/AddToCalendarButton";
 import { CMSContext } from "../context";
 
 export class EventBottomSheet extends Component {
+  constructor(props) {
+    super(props);
+
+    // must handle star state since event state doesn't re update the selected event
+    this.state = {
+      addStarButton: this.props.event ? this.props.event.isStarred : true,
+    };
+  }
+
   bottomSheetContent = () => {
     const event = this.props.event;
     const title = event.title;
@@ -16,7 +25,7 @@ export class EventBottomSheet extends Component {
     const location = event.area != null ? event.area.name + " • " : "";
     const start = parseDate(event.start_time).format("hh:mm A");
     const end = parseDate(event.end_time).format("hh:mm A");
-    const isStarred = event.isStarred;
+    const addStarButton = this.state.addStarButton;
 
     return (
       <View style={styles.panel}>
@@ -28,6 +37,7 @@ export class EventBottomSheet extends Component {
         >
           <X />
         </TouchableOpacity>
+
         <Text style={styles.panelTitleText}>{title}</Text>
         <Text style={styles.locationTimeText}>
           {location}
@@ -42,8 +52,14 @@ export class EventBottomSheet extends Component {
           <CMSContext.Consumer>
             {({ toggleStar }) => {
               return (
-                <TouchableOpacity onPress={() => toggleStar(this.props.event)}>
-                  {isStarred ? <RemoveStarButton /> : <AddStarButton />}
+                <TouchableOpacity
+                  onPress={() =>
+                    this.setState({
+                      addStarButton: !toggleStar(this.props.event),
+                    })
+                  }
+                >
+                  {addStarButton ? <AddStarButton /> : <RemoveStarButton />}
                 </TouchableOpacity>
               );
             }}
@@ -79,8 +95,9 @@ export class EventBottomSheet extends Component {
 
 const styles = StyleSheet.create({
   panel: {
-    padding: 20,
-    height: 600,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
     backgroundColor: "white",
     flex: 1,
   },
@@ -100,9 +117,9 @@ const styles = StyleSheet.create({
 
   panelButtonCenterRoot: {
     position: "absolute",
+    top: 350,
     left: 0,
     right: 0,
-    bottom: 30,
     alignItems: "center",
   },
 
