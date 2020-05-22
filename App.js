@@ -96,7 +96,6 @@ export default class App extends React.Component {
       AsyncStorage.setItem("localEventData", JSON.stringify(newEventsWithStar));
       return newValue;
     }
-
     return null;
   };
 

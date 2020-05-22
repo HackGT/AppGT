@@ -40,7 +40,7 @@ export class ScheduleDayView extends Component {
       <CMSContext.Consumer>
         {({ events }) => {
           return (
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView>
               {new Array(events.length).fill(null).map((_, i) => {
                 const radius = 7;
                 const size = radius * 2;
@@ -108,13 +108,54 @@ export class ScheduleDayView extends Component {
             let button;
 
             if (dayString == "friday") {
-              button = isHighlight ? <FridayGradient /> : <FridayGray />;
+              button = isHighlight ? (
+                <FridayGradient style={styles.dayTextGradient} />
+              ) : (
+                <FridayGray style={styles.dayTextGradient} />
+              );
             }
             if (dayString == "saturday") {
-              button = isHighlight ? <SaturdayGradient /> : <SaturdayGray />;
+              button = isHighlight ? (
+                <SaturdayGradient style={styles.dayTextGradient} />
+              ) : (
+                <SaturdayGray style={styles.dayTextGradient} />
+              );
             }
             if (dayString == "sunday") {
-              button = isHighlight ? <SundayGradient /> : <SundayGray />;
+              button = isHighlight ? (
+                <SundayGradient style={styles.dayTextGradient} />
+              ) : (
+                <SundayGray style={styles.dayTextGradient} />
+              );
+            }
+
+            var underline;
+            if (i == this.state.dayIndex) {
+              underline = (
+                <Underline
+                  style={{
+                    top: 7,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                  }}
+                  width={(width * 0.9) / this.state.days.length}
+                />
+              );
+            } else {
+              underline = (
+                <View
+                  style={{
+                    alignContent: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    top: 7,
+                    height: 3,
+                    width: (width * 0.9) / this.state.days.length,
+                    backgroundColor: "#F2F2F2",
+                  }}
+                />
+              );
             }
 
             return (
@@ -126,35 +167,9 @@ export class ScheduleDayView extends Component {
                 }}
               >
                 {button}
+                {underline}
               </TouchableOpacity>
             );
-          })}
-        </View>
-        <View
-          flexDirection="row"
-          style={{
-            width: "100%",
-            marginTop: 5,
-            justifyContent: "center",
-            backgroundColor: "white",
-          }}
-        >
-          {Array.from(new Array(this.state.days.length).keys()).map((i) => {
-            if (i == this.state.dayIndex) {
-              return (
-                <Underline width={(width * 0.9) / this.state.days.length} />
-              );
-            } else {
-              return (
-                <View
-                  style={{
-                    height: 3,
-                    width: (width * 0.9) / this.state.days.length,
-                    backgroundColor: "#F2F2F2",
-                  }}
-                />
-              );
-            }
           })}
         </View>
       </View>
@@ -250,8 +265,14 @@ const styles = StyleSheet.create({
   },
 
   daysParent: {
-    marginTop: 5,
-    marginBottom: 5,
-    justifyContent: "space-evenly",
+    marginBottom: 7,
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+
+  dayTextGradient: {
+    alignContent: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
 });

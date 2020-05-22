@@ -11,11 +11,6 @@ import { CMSContext } from "../context";
 export class EventBottomSheet extends Component {
   constructor(props) {
     super(props);
-
-    // must handle star state since event state doesn't re update the selected event
-    this.state = {
-      addStarButton: this.props.event ? this.props.event.isStarred : true,
-    };
   }
 
   bottomSheetContent = () => {
@@ -25,7 +20,8 @@ export class EventBottomSheet extends Component {
     const location = event.area != null ? event.area.name + " • " : "";
     const start = parseDate(event.start_time).format("hh:mm A");
     const end = parseDate(event.end_time).format("hh:mm A");
-    const addStarButton = this.state.addStarButton;
+    const addStarButton =
+      this.props.event.isStarred != null ? !this.props.event.isStarred : true;
 
     return (
       <View style={styles.panel}>
@@ -77,8 +73,8 @@ export class EventBottomSheet extends Component {
           this.RBSheet = ref;
         }}
         height={450}
-        openDuration={400}
-        closeDuration={300}
+        openDuration={250}
+        closeDuration={250}
         closeOnDragDown
         customStyles={{
           container: {

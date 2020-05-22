@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
 
   underBackground: {
     flex: 1,
-    backgroundColor: "#2F2F2f",
+    backgroundColor: "white",
   },
 });

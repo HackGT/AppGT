@@ -13,6 +13,7 @@ import BackButton from "../assets/Back";
 import ContinueButton from "../assets/ContinueButton";
 import QRCode from "react-native-qrcode-svg";
 import { Linking } from "react-native";
+import { AuthContext } from "../context";
 
 export class EventOnboarding extends Component {
   constructor(props) {
@@ -24,9 +25,14 @@ export class EventOnboarding extends Component {
   }
 
   createScreens(width) {
-    // TODO: qr code should be generated from user used from value=`user:${this.context.user.id}`
+    // TODO: test this
     const qrCode = (
-      <QRCode value="https://hack.gt" color="#2C8DDB" size={200} />
+      <AuthContext.Consumer>
+        {({ user }) => {
+          const id = user ? user.uuid : "Unknown UUID";
+          return <QRCode value={`user:${id}`} color="#2C8DDB" size={200} />;
+        }}
+      </AuthContext.Consumer>
     );
 
     const firstScreen = (
