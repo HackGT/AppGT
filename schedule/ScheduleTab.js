@@ -40,7 +40,9 @@ export class ScheduleTab extends Component {
                     showsHorizontalScrollIndicator={false}
                     horizontal
                     data={events}
-                    keyExtractor={({ item }) => item}
+                    keyExtractor={(item, index) =>
+                      item && item.id ? item.id : index
+                    }
                     renderItem={({ item }) => {
                       return (
                         <TouchableOpacity

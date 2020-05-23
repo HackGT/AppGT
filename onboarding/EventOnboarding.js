@@ -149,13 +149,17 @@ export class EventOnboarding extends Component {
     );
   }
 
-  render() {
+  componentDidUpdate() {
     const screenWidth = Dimensions.get("window").width;
-    const newHorizontalPosition = this.state.pageIndex * screenWidth;
 
+    const newHorizontalPosition = this.state.pageIndex * screenWidth;
     if (this.scrollView != null) {
       this.scrollView.scrollTo({ x: newHorizontalPosition });
     }
+  }
+
+  render() {
+    const screenWidth = Dimensions.get("window").width;
 
     return (
       <SafeAreaView style={styles.rootView}>

@@ -36,67 +36,75 @@ export class ScheduleDayView extends Component {
   }
 
   tabContent = () => (
-    <View>
-      <CMSContext.Consumer>
-        {({ events }) => {
-          return (
-            <ScrollView>
-              {new Array(events.length).fill(null).map((_, i) => {
-                const radius = 7;
-                const size = radius * 2;
-                const highlighted = i >= 4 && i < 8;
-                const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
+    <CMSContext.Consumer>
+      {({ events }) => {
+        return (
+          // <FlatList
 
-                if (i % 4 == 0) {
-                  return (
-                    <View key={i} flexDirection="row" style={{ height: 40 }}>
-                      <View flexDirection="row" style={styles.circleParent}>
-                        <Svg height={size} width={size}>
-                          <Circle
-                            cx={radius}
-                            cy={radius}
-                            r={radius}
-                            fill={highlightColor}
-                          />
-                        </Svg>
-                      </View>
-                      <View style={styles.timeParent}>
-                        <Text style={styles.timeText}>{i}:00 PM</Text>
-                      </View>
-                    </View>
-                  );
-                }
+          //   data={Array.from(new Array(100).keys())}
+          //   renderItem={({ item }) => (
+          //     <Text style={{ padding: 20 }}>{item}</Text>
+          //   )}
+          // />
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 190 }}
+          >
+            {new Array(events.length).fill(null).map((_, i) => {
+              const radius = 7;
+              const size = radius * 2;
+              const highlighted = i >= 4 && i < 8;
+              const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
 
+              if (i % 4 == 0) {
                 return (
-                  <View flexDirection="row">
-                    <View flexDirection="row" style={styles.lineParent}>
-                      <View
-                        style={{
-                          width: 1.5,
-                          height: "100%",
-                          backgroundColor: highlightColor,
-                        }}
-                      />
+                  <View key={i} flexDirection="row" style={{ height: 40 }}>
+                    <View flexDirection="row" style={styles.circleParent}>
+                      <Svg height={size} width={size}>
+                        <Circle
+                          cx={radius}
+                          cy={radius}
+                          r={radius}
+                          fill={highlightColor}
+                        />
+                      </Svg>
                     </View>
-                    <TouchableOpacity
-                      style={styles.cardParent}
-                      onPress={() => {
-                        this.props.onSelectEvent(events[i]);
-                      }}
-                    >
-                      <ScheduleEventCell
-                        event={events[i]}
-                        highlighted={highlighted}
-                      />
-                    </TouchableOpacity>
+                    <View style={styles.timeParent}>
+                      <Text style={styles.timeText}>{i}:00 PM</Text>
+                    </View>
                   </View>
                 );
-              })}
-            </ScrollView>
-          );
-        }}
-      </CMSContext.Consumer>
-    </View>
+              }
+
+              return (
+                <View key={i} flexDirection="row">
+                  <View flexDirection="row" style={styles.lineParent}>
+                    <View
+                      style={{
+                        width: 1.5,
+                        height: "100%",
+                        backgroundColor: highlightColor,
+                      }}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={styles.cardParent}
+                    onPress={() => {
+                      this.props.onSelectEvent(events[i]);
+                    }}
+                  >
+                    <ScheduleEventCell
+                      event={events[i]}
+                      highlighted={highlighted}
+                    />
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </ScrollView>
+        );
+      }}
+    </CMSContext.Consumer>
   );
 
   dayTabView = (width) => {
@@ -160,9 +168,11 @@ export class ScheduleDayView extends Component {
 
             return (
               <TouchableOpacity
+                key={i}
                 onPress={() => {
                   if (this.scheduleListRef.current != null) {
                     this.scheduleListRef.current.scrollToIndex({ index: i });
+                    this.setState({ dayIndex: i });
                   }
                 }}
               >
@@ -190,7 +200,7 @@ export class ScheduleDayView extends Component {
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled={true}
-          keyExtractor={({ item }) => item}
+          keyExtractor={(item) => item}
           onMomentumScrollEnd={(scrollData) => {
             this.setState({
               dayIndex: Math.round(
@@ -201,7 +211,7 @@ export class ScheduleDayView extends Component {
           onScrollToIndexFailed={(info) => {
             const wait = new Promise((resolve) => setTimeout(resolve, 500));
             wait.then(() => {
-              this.scheduleListRef.scrollToIndex({
+              this.scheduleListRef.current.scrollToIndex({
                 index: this.state.dayIndex,
                 animated: false,
               });
@@ -213,7 +223,7 @@ export class ScheduleDayView extends Component {
                 key={item.key}
                 style={{
                   backgroundColor: "white",
-                  flex: 1,
+                  // flex: 1,
                   width: width,
                   justifyContent: "center",
                   alignItems: "center",

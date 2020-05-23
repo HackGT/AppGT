@@ -84,7 +84,7 @@ export class LoginOnboarding extends Component {
     const bubbles = Array.from(new Array(this.state.pageCount).keys()).map(
       (i) => {
         return (
-          <Svg height={size + 14} width={size + 14}>
+          <Svg key={i} height={size + 14} width={size + 14}>
             <Circle
               cx={radius}
               cy={radius}
