@@ -23,7 +23,6 @@ import Underline from "../assets/UnderlineGradient";
 export class ScheduleDayView extends Component {
   daysAvailable = ["friday", "saturday", "sunday"];
 
-  // TODO: changing to just sat/sun breaks
   state = {
     dayIndex: 1,
     days: ["friday", "saturday", "sunday"],
@@ -39,26 +38,19 @@ export class ScheduleDayView extends Component {
     <CMSContext.Consumer>
       {({ events }) => {
         return (
-          // <FlatList
-
-          //   data={Array.from(new Array(100).keys())}
-          //   renderItem={({ item }) => (
-          //     <Text style={{ padding: 20 }}>{item}</Text>
-          //   )}
-          // />
-          <ScrollView
+          <FlatList
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 190 }}
-          >
-            {new Array(events.length).fill(null).map((_, i) => {
+            contentContainerStyle={styles.eventsScrollableContainer}
+            data={events}
+            keyExtractor={(item, index) => (item && item.id ? item.id : index)}
+            renderItem={({ item, index }) => {
               const radius = 7;
               const size = radius * 2;
-              const highlighted = i >= 4 && i < 8;
+              const highlighted = index >= 4 && index < 8;
               const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
-
-              if (i % 4 == 0) {
+              if (index % 4 == 0) {
                 return (
-                  <View key={i} flexDirection="row" style={{ height: 40 }}>
+                  <View key={index} flexDirection="row" style={{ height: 40 }}>
                     <View flexDirection="row" style={styles.circleParent}>
                       <Svg height={size} width={size}>
                         <Circle
@@ -70,14 +62,14 @@ export class ScheduleDayView extends Component {
                       </Svg>
                     </View>
                     <View style={styles.timeParent}>
-                      <Text style={styles.timeText}>{i}:00 PM</Text>
+                      <Text style={styles.timeText}>{index}:00 PM</Text>
                     </View>
                   </View>
                 );
               }
 
               return (
-                <View key={i} flexDirection="row">
+                <View key={index} flexDirection="row">
                   <View flexDirection="row" style={styles.lineParent}>
                     <View
                       style={{
@@ -90,18 +82,71 @@ export class ScheduleDayView extends Component {
                   <TouchableOpacity
                     style={styles.cardParent}
                     onPress={() => {
-                      this.props.onSelectEvent(events[i]);
+                      this.props.onSelectEvent(item);
                     }}
                   >
-                    <ScheduleEventCell
-                      event={events[i]}
-                      highlighted={highlighted}
-                    />
+                    <ScheduleEventCell event={item} highlighted={highlighted} />
                   </TouchableOpacity>
                 </View>
               );
-            })}
-          </ScrollView>
+            }}
+          />
+          // <ScrollView
+          //   showsVerticalScrollIndicator={false}
+          //   contentContainerStyle={styles.eventsScrollableContainer}
+          // >
+          //   {new Array(events.length).fill(null).map((_, i) => {
+          //     const radius = 7;
+          //     const size = radius * 2;
+          //     const highlighted = i >= 4 && i < 8;
+          //     const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
+
+          //     if (i % 4 == 0) {
+          //       return (
+          //         <View key={i} flexDirection="row" style={{ height: 40 }}>
+          //           <View flexDirection="row" style={styles.circleParent}>
+          //             <Svg height={size} width={size}>
+          //               <Circle
+          //                 cx={radius}
+          //                 cy={radius}
+          //                 r={radius}
+          //                 fill={highlightColor}
+          //               />
+          //             </Svg>
+          //           </View>
+          //           <View style={styles.timeParent}>
+          //             <Text style={styles.timeText}>{i}:00 PM</Text>
+          //           </View>
+          //         </View>
+          //       );
+          //     }
+
+          //     return (
+          //       <View key={i} flexDirection="row">
+          //         <View flexDirection="row" style={styles.lineParent}>
+          //           <View
+          //             style={{
+          //               width: 1.5,
+          //               height: "100%",
+          //               backgroundColor: highlightColor,
+          //             }}
+          //           />
+          //         </View>
+          //         <TouchableOpacity
+          //           style={styles.cardParent}
+          //           onPress={() => {
+          //             this.props.onSelectEvent(events[i]);
+          //           }}
+          //         >
+          //           <ScheduleEventCell
+          //             event={events[i]}
+          //             highlighted={highlighted}
+          //           />
+          //         </TouchableOpacity>
+          //       </View>
+          //     );
+          //   })}
+          // </ScrollView>
         );
       }}
     </CMSContext.Consumer>
@@ -244,6 +289,10 @@ const styles = StyleSheet.create({
     padding: 8,
     width: "85%",
     borderRadius: 8,
+  },
+
+  eventsScrollableContainer: {
+    paddingBottom: 190,
   },
 
   circleParent: {
