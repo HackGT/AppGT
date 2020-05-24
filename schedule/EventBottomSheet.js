@@ -7,7 +7,7 @@ import X from "../assets/X";
 import RemoveStarButton from "../assets/RemoveFromCalendarButton";
 import AddStarButton from "../assets/AddToCalendarButton";
 import { CMSContext } from "../context";
-import Markdown from "react-native-markdown-renderer";
+import FontMarkdown from "../components/FontMarkdown";
 
 export class EventBottomSheet extends Component {
   constructor(props) {
@@ -43,7 +43,7 @@ export class EventBottomSheet extends Component {
 
         <EventTypeView eventType="food" />
 
-        <Markdown style={markdownStyles}>{description}</Markdown>
+        <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
 
         <View style={styles.panelButtonCenterRoot}>
           <CMSContext.Consumer>
@@ -92,8 +92,8 @@ export class EventBottomSheet extends Component {
 
 const styles = StyleSheet.create({
   panel: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 15,
+    paddingRight: 15,
     paddingTop: 10,
     backgroundColor: "white",
     flex: 1,
@@ -130,101 +130,5 @@ const styles = StyleSheet.create({
     color: "#4F4F4F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
-  },
-});
-
-const markdownStyles = StyleSheet.create({
-  em: {
-    fontStyle: "italic",
-    fontFamily: "SpaceMono-Italic",
-  },
-  heading1: {
-    fontSize: 32,
-    fontFamily: "SpaceMono-Regular",
-  },
-  heading2: {
-    fontSize: 24,
-    fontFamily: "SpaceMono-Regular",
-  },
-  heading3: {
-    fontSize: 18,
-    fontFamily: "SpaceMono-Regular",
-  },
-  heading4: {
-    fontSize: 16,
-    fontFamily: "SpaceMono-Regular",
-  },
-  heading5: {
-    fontSize: 13,
-    fontFamily: "SpaceMono-Regular",
-  },
-  heading6: {
-    fontSize: 11,
-    fontFamily: "SpaceMono-Regular",
-  },
-  hr: {
-    backgroundColor: "#000000",
-    height: 1,
-    fontFamily: "SpaceMono-Regular",
-  },
-  listItem: {
-    flex: 1,
-    flexWrap: "wrap",
-    fontFamily: "SpaceMono-Regular",
-  },
-  listUnordered: {},
-
-  listUnorderedItem: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    fontFamily: "SpaceMono-Regular",
-  },
-  listUnorderedItemText: {
-    fontSize: 20,
-    lineHeight: 20,
-    fontFamily: "SpaceMono-Regular",
-  },
-  listOrderedItem: {
-    flexDirection: "row",
-    fontFamily: "SpaceMono-Regular",
-  },
-  listOrderedItemText: {
-    fontWeight: "bold",
-    lineHeight: 20,
-    fontFamily: "SpaceMono-Regular",
-  },
-  paragraph: {
-    marginTop: 10,
-    marginBottom: 10,
-    flexWrap: "wrap",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    fontFamily: "SpaceMono-Regular",
-  },
-  strong: {
-    fontFamily: "SpaceMono-Bold",
-  },
-  text: {
-    fontFamily: "SpaceMono-Regular",
-  },
-  strikethrough: {
-    textDecorationLine: "line-through",
-    fontFamily: "SpaceMono-Regular",
-  },
-  link: {
-    textDecorationLine: "underline",
-    fontFamily: "SpaceMono-Regular",
-  },
-  blocklink: {
-    flex: 1,
-    borderColor: "#000000",
-    borderBottomWidth: 1,
-    fontFamily: "SpaceMono-Regular",
-  },
-  u: {
-    borderColor: "#000000",
-    borderBottomWidth: 1,
-    fontFamily: "SpaceMono-Regular",
   },
 });
