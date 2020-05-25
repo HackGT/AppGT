@@ -9,6 +9,8 @@ export const colors = {
   none: "#C3C3C3",
 };
 
+export const daysAvailable = ["friday", "saturday", "sunday"];
+
 export function parseDate(date) {
   // parse iso-formatted string as local time
   if (!date) return "";
