@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import moment from "moment";
-import Svg, { Circle } from "react-native-svg";
 import StarOff from "../assets/StarOff";
 import StarOn from "../assets/StarOn";
 import { CMSContext } from "../context";

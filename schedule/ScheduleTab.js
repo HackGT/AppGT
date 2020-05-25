@@ -6,6 +6,8 @@ import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { ScheduleDayView } from "./ScheduleDayView";
 import { EventBottomSheet } from "./EventBottomSheet";
+import BackToTop from "../assets/ChevronUp";
+import { getEventsHappeningNow, getDaysForEvent } from "../cms/DataHandler";
 
 export class ScheduleTab extends Component {
   state = {
@@ -22,48 +24,73 @@ export class ScheduleTab extends Component {
     }
   };
 
+  scrollToNow() {}
+
   render() {
+    // TODO: only show back to top when needed and scroll to now
     return (
-      <View style={styles.underBackground}>
-        <EventBottomSheet
-          reference={(ref) => (this.RBSheet = ref)}
-          event={this.state.selectedEvent}
-        />
+      <CMSContext.Consumer>
+        {({ events }) => {
+          const eventsHappeningNow = getEventsHappeningNow(events);
+          const hasEventsNow = eventsHappeningNow.length > 0;
+          const happeningNowView = (
+            <View style={styles.headerDetail}>
+              <View style={styles.headerContent}>
+                <WhatsHappeningNow style={styles.headerText} />
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  data={eventsHappeningNow}
+                  keyExtractor={(item, index) =>
+                    item && item.id ? item.id : index
+                  }
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        style={styles.cardHorizontalParent}
+                        onPress={() => {
+                          this.setSelectedEvent(item);
+                        }}
+                      >
+                        <ScheduleEventCell event={item} highlighted />
+                      </TouchableOpacity>
+                    );
+                  }}
+                />
+              </View>
+            </View>
+          );
 
-        <View style={styles.headerDetail}>
-          <View style={styles.headerContent}>
-            <WhatsHappeningNow style={styles.headerText} />
-            <CMSContext.Consumer>
-              {({ events }) => {
-                return (
-                  <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    data={events}
-                    keyExtractor={(item, index) =>
-                      item && item.id ? item.id : index
-                    }
-                    renderItem={({ item }) => {
-                      return (
-                        <TouchableOpacity
-                          style={styles.cardHorizontalParent}
-                          onPress={() => {
-                            this.setSelectedEvent(item);
-                          }}
-                        >
-                          <ScheduleEventCell event={item} highlighted />
-                        </TouchableOpacity>
-                      );
-                    }}
-                  />
-                );
-              }}
-            </CMSContext.Consumer>
-          </View>
-        </View>
+          return (
+            <View style={styles.underBackground}>
+              <EventBottomSheet
+                reference={(ref) => (this.RBSheet = ref)}
+                event={this.state.selectedEvent}
+              />
 
-        <ScheduleDayView onSelectEvent={this.setSelectedEvent} />
-      </View>
+              {hasEventsNow ? happeningNowView : null}
+              {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
+              <ScheduleDayView
+                paddingHeight={hasEventsNow ? 190 : 40}
+                days={getDaysForEvent(events)}
+                onSelectEvent={this.setSelectedEvent}
+              />
+
+              <TouchableOpacity
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  bottom: 0,
+                  opacity: hasEventsNow ? 1 : 0,
+                }}
+                // onPress={} TOOD: on press send to the current event, only show if what's happening now is not 0
+              >
+                <BackToTop />
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </CMSContext.Consumer>
     );
   }
 }

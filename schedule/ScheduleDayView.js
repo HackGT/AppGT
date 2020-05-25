@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { CMSContext } from "../context";
 import { ScheduleEventCell } from "./ScheduleEventCell";
-import Svg, { Circle } from "react-native-svg";
+import Svg, { Circle, parse } from "react-native-svg";
 import { Dimensions } from "react-native";
 import SaturdayGray from "../assets/SaturdayGray";
 import SaturdayGradient from "../assets/SaturdayGradient";
@@ -19,17 +19,15 @@ import FridayGradient from "../assets/FridayGradient";
 import SundayGray from "../assets/SundayGray";
 import SundayGradient from "../assets/SundayGradient";
 import Underline from "../assets/UnderlineGradient";
+import { getTimeblocksForDay, isEventHappeningNow } from "../cms/DataHandler";
 
 export class ScheduleDayView extends Component {
-  daysAvailable = ["friday", "saturday", "sunday"];
-
-  state = {
-    dayIndex: 1,
-    days: ["friday", "saturday", "sunday"],
-  };
-
   constructor(props) {
     super(props);
+
+    this.state = {
+      dayIndex: 1,
+    };
 
     this.scheduleListRef = React.createRef();
   }
@@ -37,18 +35,27 @@ export class ScheduleDayView extends Component {
   tabContent = () => (
     <CMSContext.Consumer>
       {({ events }) => {
+        const currentDayString = this.props.days[this.state.dayIndex];
+        const timeblocks = getTimeblocksForDay(events, currentDayString);
+
         return (
           <FlatList
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.eventsScrollableContainer}
-            data={events}
+            contentContainerStyle={{ paddingBottom: this.props.paddingHeight }}
+            data={timeblocks}
             keyExtractor={(item, index) => (item && item.id ? item.id : index)}
             renderItem={({ item, index }) => {
+              if (item == null) {
+                return;
+              }
+
               const radius = 7;
               const size = radius * 2;
-              const highlighted = index >= 4 && index < 8;
+              const isHappeningNow = isEventHappeningNow(item);
+              const highlighted = isHappeningNow;
               const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
-              if (index % 4 == 0) {
+
+              if (item && item.time) {
                 return (
                   <View key={index} flexDirection="row" style={{ height: 40 }}>
                     <View flexDirection="row" style={styles.circleParent}>
@@ -62,7 +69,7 @@ export class ScheduleDayView extends Component {
                       </Svg>
                     </View>
                     <View style={styles.timeParent}>
-                      <Text style={styles.timeText}>{index}:00 PM</Text>
+                      <Text style={styles.timeText}>{item.time}</Text>
                     </View>
                   </View>
                 );
@@ -91,62 +98,6 @@ export class ScheduleDayView extends Component {
               );
             }}
           />
-          // <ScrollView
-          //   showsVerticalScrollIndicator={false}
-          //   contentContainerStyle={styles.eventsScrollableContainer}
-          // >
-          //   {new Array(events.length).fill(null).map((_, i) => {
-          //     const radius = 7;
-          //     const size = radius * 2;
-          //     const highlighted = i >= 4 && i < 8;
-          //     const highlightColor = highlighted ? "#41D1FF" : "#F2F2F2";
-
-          //     if (i % 4 == 0) {
-          //       return (
-          //         <View key={i} flexDirection="row" style={{ height: 40 }}>
-          //           <View flexDirection="row" style={styles.circleParent}>
-          //             <Svg height={size} width={size}>
-          //               <Circle
-          //                 cx={radius}
-          //                 cy={radius}
-          //                 r={radius}
-          //                 fill={highlightColor}
-          //               />
-          //             </Svg>
-          //           </View>
-          //           <View style={styles.timeParent}>
-          //             <Text style={styles.timeText}>{i}:00 PM</Text>
-          //           </View>
-          //         </View>
-          //       );
-          //     }
-
-          //     return (
-          //       <View key={i} flexDirection="row">
-          //         <View flexDirection="row" style={styles.lineParent}>
-          //           <View
-          //             style={{
-          //               width: 1.5,
-          //               height: "100%",
-          //               backgroundColor: highlightColor,
-          //             }}
-          //           />
-          //         </View>
-          //         <TouchableOpacity
-          //           style={styles.cardParent}
-          //           onPress={() => {
-          //             this.props.onSelectEvent(events[i]);
-          //           }}
-          //         >
-          //           <ScheduleEventCell
-          //             event={events[i]}
-          //             highlighted={highlighted}
-          //           />
-          //         </TouchableOpacity>
-          //       </View>
-          //     );
-          //   })}
-          // </ScrollView>
         );
       }}
     </CMSContext.Consumer>
@@ -156,7 +107,7 @@ export class ScheduleDayView extends Component {
     return (
       <View style={{ backgroundColor: "white" }}>
         <View flexDirection="row" style={styles.daysParent}>
-          {this.state.days.map((dayString, i) => {
+          {this.props.days.map((dayString, i) => {
             const isHighlight = this.state.dayIndex == i;
             let button;
 
@@ -192,7 +143,7 @@ export class ScheduleDayView extends Component {
                     justifyContent: "center",
                     alignSelf: "center",
                   }}
-                  width={(width * 0.9) / this.state.days.length}
+                  width={(width * 0.9) / this.props.days.length}
                 />
               );
             } else {
@@ -204,7 +155,7 @@ export class ScheduleDayView extends Component {
                     alignSelf: "center",
                     top: 7,
                     height: 3,
-                    width: (width * 0.9) / this.state.days.length,
+                    width: (width * 0.9) / this.props.days.length,
                     backgroundColor: "#F2F2F2",
                   }}
                 />
@@ -240,7 +191,7 @@ export class ScheduleDayView extends Component {
 
         <FlatList
           ref={this.scheduleListRef}
-          data={this.state.days}
+          data={this.props.days}
           initialScrollIndex={this.state.dayIndex}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -289,10 +240,6 @@ const styles = StyleSheet.create({
     padding: 8,
     width: "85%",
     borderRadius: 8,
-  },
-
-  eventsScrollableContainer: {
-    paddingBottom: 190,
   },
 
   circleParent: {

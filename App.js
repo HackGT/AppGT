@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
+import { sortEventsByStartTime } from "./cms/DataHandler";
 
 // for details & examples on how to make gradients/SVGs https://github.com/react-native-community/react-native-svg
 
@@ -154,12 +155,12 @@ export default class App extends React.Component {
     AsyncStorage.getItem("localEventData", (error, result) => {
       if (result) {
         console.log("Events found locally.");
-        this.setState({ events: JSON.parse(result) });
+        this.setState({ events: sortEventsByStartTime(JSON.parse(result)) });
       } else {
         fetchEvents().then((data) => {
           console.log("Fetched events from CMS.");
           const fetchedEvents = data.data.eventbases;
-          this.setState({ events: fetchedEvents });
+          this.setState({ events: sortEventsByStartTime(fetchedEvents) });
           const localEventData = JSON.stringify(fetchedEvents);
           AsyncStorage.setItem("localEventData", localEventData);
         });
