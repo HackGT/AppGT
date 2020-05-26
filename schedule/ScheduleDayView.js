@@ -32,10 +32,10 @@ export class ScheduleDayView extends Component {
     this.scheduleListRef = React.createRef();
   }
 
-  tabContent = () => (
+  tabContent = (day) => (
     <CMSContext.Consumer>
       {({ events }) => {
-        const currentDayString = this.props.days[this.state.dayIndex];
+        const currentDayString = day;
         const timeblocks = getTimeblocksForDay(events, currentDayString);
 
         return (
@@ -216,16 +216,15 @@ export class ScheduleDayView extends Component {
           renderItem={({ item }) => {
             return (
               <View
-                key={item.key}
+                key={item}
                 style={{
                   backgroundColor: "white",
-                  // flex: 1,
                   width: width,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                {this.tabContent()}
+                {this.tabContent(item)}
               </View>
             );
           }}

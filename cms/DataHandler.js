@@ -36,7 +36,7 @@ export function getDaysForEvent(events) {
     }
   }
 
-  return days.filter((dayString) => daysAvailable.indexOf(dayString) != -1);
+  return daysAvailable.filter((dayString) => days.indexOf(dayString) != -1);
 }
 
 export function getEventsHappeningNow(events) {

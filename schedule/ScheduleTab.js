@@ -61,6 +61,9 @@ export class ScheduleTab extends Component {
             </View>
           );
 
+          const daysForEvents = getDaysForEvent(events);
+          console.log(daysForEvents);
+
           return (
             <View style={styles.underBackground}>
               <EventBottomSheet
@@ -72,7 +75,7 @@ export class ScheduleTab extends Component {
               {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
               <ScheduleDayView
                 paddingHeight={hasEventsNow ? 190 : 40}
-                days={getDaysForEvent(events)}
+                days={daysForEvents}
                 onSelectEvent={this.setSelectedEvent}
               />
 
