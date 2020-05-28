@@ -43,10 +43,12 @@ export class ScheduleDayView extends Component {
       animated: false,
     });
 
-    this.scheduleListRef.current.scrollToIndex({
-      index: this.props.initialEventIndex,
-      animated: false,
-    });
+    if (this.props.initialEventIndex > 0) {
+      this.scheduleListRef.current.scrollToIndex({
+        index: this.props.initialEventIndex,
+        animated: false,
+      });
+    }
   }
 
   tabContent = (day) => (
