@@ -13,9 +13,11 @@ import BackButton from "../assets/Back";
 import ContinueButton from "../assets/ContinueButton";
 import QRCode from "react-native-qrcode-svg";
 import { Linking } from "react-native";
-import { AuthContext } from "../context";
+import { AuthContext, HackathonContext } from "../context";
 
 export class EventOnboarding extends Component {
+  static contextType = HackathonContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +27,9 @@ export class EventOnboarding extends Component {
   }
 
   createScreens(width) {
+    const hackathonName = this.context.hackathon.name;
+    const slackUrl = this.context.hackathon.slackUrl;
+
     // TODO: test this
     const qrCode = (
       <AuthContext.Consumer>
@@ -38,7 +43,7 @@ export class EventOnboarding extends Component {
     const firstScreen = (
       <View>
         <ContentInfo
-          title="Welcome to [Event Name]"
+          title={`Welcome to ${hackathonName}`}
           subtitles={["We're glad you're here."]}
         />
       </View>
@@ -49,16 +54,15 @@ export class EventOnboarding extends Component {
         image={qrCode}
         title="Let’s check you in"
         subtitles={[
-          "An organizer will scan your QR code to check you into [Event Name].",
+          `An organizer will scan your QR code to check you into ${hackathonName}.`,
         ]}
       />
     );
 
-    // TODO: openURL should pull from this.context.cms.slackURL
     const slackButton = (
       <TouchableOpacity
         style={styles.joinSlack}
-        onPress={() => Linking.openURL("https://hack.gt")}
+        onPress={() => Linking.openURL(`${slackUrl}`)}
       >
         <Text style={styles.buttonText}>Join Slack</Text>
       </TouchableOpacity>
@@ -66,7 +70,7 @@ export class EventOnboarding extends Component {
     const thirdScreen = (
       <ContentInfo
         title="Questions? We're always available"
-        subtitles={["Join our community in the [Event Name] Slack."]}
+        subtitles={[`Join our community in the ${hackathonName} Slack.`]}
         button={slackButton}
       />
     );

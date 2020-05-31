@@ -6,63 +6,74 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../assets/X";
 import RemoveStarButton from "../assets/RemoveFromCalendarButton";
 import AddStarButton from "../assets/AddToCalendarButton";
-import { CMSContext } from "../context";
+import { HackathonContext } from "../context";
 import FontMarkdown from "../components/FontMarkdown";
 
 export class EventBottomSheet extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   bottomSheetContent = () => {
     const event = this.props.event;
-    const title = event.title;
+    const title = event.name;
     const description = event.description;
-    const location = event.area != null ? event.area.name + " • " : "";
-    const start = parseDate(event.start_time).format("hh:mm A");
-    const end = parseDate(event.end_time).format("hh:mm A");
-    const addStarButton =
-      this.props.event.isStarred != null ? !this.props.event.isStarred : true;
+    const location =
+      event != null && event.location != null && event.location.name != null
+        ? event.location[0].name + " • "
+        : "";
+    const start = event.startTime;
+    const end = event.endTime;
+    const eventType =
+      event != null && event.type != null ? event.type.name : "none";
 
     return (
-      <View style={styles.panel}>
-        <TouchableOpacity
-          style={styles.panelClose}
-          onPress={() => {
-            this.RBSheet.close();
-          }}
-        >
-          <X />
-        </TouchableOpacity>
+      <HackathonContext.Consumer>
+        {({ starredIds }) => {
+          const addStarButton = starredIds.indexOf(event.id) == -1;
 
-        <Text style={styles.panelTitleText}>{title}</Text>
-        <Text style={styles.locationTimeText}>
-          {location}
-          {start} - {end}
-        </Text>
+          return (
+            <View style={styles.panel}>
+              <TouchableOpacity
+                style={styles.panelClose}
+                onPress={() => {
+                  this.RBSheet.close();
+                }}
+              >
+                <X />
+              </TouchableOpacity>
 
-        <EventTypeView eventType="food" />
+              <Text style={styles.panelTitleText}>{title}</Text>
+              <Text style={styles.locationTimeText}>
+                {location}
+                {start} - {end}
+              </Text>
 
-        <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
+              <EventTypeView eventType={eventType} />
 
-        <View style={styles.panelButtonCenterRoot}>
-          <CMSContext.Consumer>
-            {({ toggleStar }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() =>
-                    this.setState({
-                      addStarButton: !toggleStar(this.props.event),
-                    })
-                  }
-                >
-                  {addStarButton ? <AddStarButton /> : <RemoveStarButton />}
-                </TouchableOpacity>
-              );
-            }}
-          </CMSContext.Consumer>
-        </View>
-      </View>
+              <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
+
+              <View style={styles.panelButtonCenterRoot}>
+                <HackathonContext.Consumer>
+                  {({ toggleStar }) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() =>
+                          this.setState({
+                            addStarButton: !toggleStar(this.props.event),
+                          })
+                        }
+                      >
+                        {addStarButton ? (
+                          <AddStarButton />
+                        ) : (
+                          <RemoveStarButton />
+                        )}
+                      </TouchableOpacity>
+                    );
+                  }}
+                </HackathonContext.Consumer>
+              </View>
+            </View>
+          );
+        }}
+      </HackathonContext.Consumer>
     );
   };
 

@@ -7,12 +7,12 @@ import {
   FlatList,
   AppState,
 } from "react-native";
-import { CMSContext } from "../context";
+import { HackathonContext } from "../context";
 import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { ScheduleDayView } from "./ScheduleDayView";
 import { EventBottomSheet } from "./EventBottomSheet";
-import BackToTop from "../assets/ChevronUp";
+
 import {
   getEventsHappeningNow,
   getDaysForEvent,
@@ -22,11 +22,11 @@ import {
 } from "../cms/DataHandler";
 
 export class ScheduleTab extends Component {
-  static contextType = CMSContext;
+  static contextType = HackathonContext;
 
   state = {
     selectedEvent: null,
-    eventsHappenignNow: [],
+    eventsHappeningNow: [],
   };
 
   componentDidMount() {
@@ -41,10 +41,10 @@ export class ScheduleTab extends Component {
   }
 
   refreshEventState() {
-    const events = this.context.events;
+    const events = this.context.hackathon.events;
 
     this.setState({
-      eventsHappenignNow: getEventsHappeningNow(events),
+      eventsHappeningNow: getEventsHappeningNow(events),
     });
   }
 
@@ -58,15 +58,12 @@ export class ScheduleTab extends Component {
     }
   };
 
-  scrollToNow() {}
-
   render() {
-    // TODO: only show back to top when needed and scroll to now
     return (
-      <CMSContext.Consumer>
-        {({ events }) => {
-          const eventsHappeningNow = this.state.eventsHappenignNow;
-
+      <HackathonContext.Consumer>
+        {({ hackathon }) => {
+          const events = hackathon.events;
+          const eventsHappeningNow = this.state.eventsHappeningNow;
           const hasEventsNow = eventsHappeningNow.length > 0;
           const happeningNowView = (
             <View style={styles.headerDetail}>
@@ -122,7 +119,7 @@ export class ScheduleTab extends Component {
             </View>
           );
         }}
-      </CMSContext.Consumer>
+      </HackathonContext.Consumer>
     );
   }
 }

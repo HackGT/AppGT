@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import StarOff from "../assets/StarOff";
 import StarOn from "../assets/StarOn";
-import { CMSContext } from "../context";
+import { HackathonContext } from "../context";
 import { EventTypeView } from "./EventTypeView";
-import { parseDate } from "../cms/DataHandler";
 
 export class ScheduleEventCell extends Component {
   constructor(props) {
@@ -38,16 +37,21 @@ export class ScheduleEventCell extends Component {
 
   render() {
     const event = this.props.event;
-
-    const title = event.title;
-    const location = event.area != null ? event.area.name + " • " : "";
-    const start = parseDate(event.start_time).format("hh:mm A");
-    const end = parseDate(event.end_time).format("hh:mm A");
-    const isStarred = event.isStarred;
+    const eventType =
+      event != null && event.type != null ? event.type.name : "none";
+    const title = event.name;
+    const location =
+      event != null && event.location != null && event.location.name != null
+        ? event.location[0].name + " • "
+        : "";
+    const start = event.startTime;
+    const end = event.endTime;
 
     return (
-      <CMSContext.Consumer>
-        {({ toggleStar }) => {
+      <HackathonContext.Consumer>
+        {({ toggleStar, starredIds }) => {
+          const isStarred = starredIds.indexOf(event.id) != -1;
+
           return (
             <View style={styles.cardParent}>
               <View style={this.createCardStyle()}>
@@ -74,12 +78,12 @@ export class ScheduleEventCell extends Component {
                   {location}
                   {start} - {end}
                 </Text>
-                <EventTypeView eventType="food" />
+                <EventTypeView eventType={eventType} />
               </View>
             </View>
           );
         }}
-      </CMSContext.Consumer>
+      </HackathonContext.Consumer>
     );
   }
 }

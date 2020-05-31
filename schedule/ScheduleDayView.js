@@ -7,7 +7,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import { CMSContext } from "../context";
+import { HackathonContext } from "../context";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import Svg, { Circle } from "react-native-svg";
 import { Dimensions } from "react-native";
@@ -22,7 +22,7 @@ import { getTimeblocksForDay, isEventHappeningNow } from "../cms/DataHandler";
 import BackToTop from "../assets/ChevronUp";
 
 export class ScheduleDayView extends Component {
-  static contextType = CMSContext;
+  static contextType = HackathonContext;
 
   constructor(props) {
     super(props);
@@ -43,7 +43,6 @@ export class ScheduleDayView extends Component {
       index: this.state.dayIndex,
       animated: false,
     });
-
     if (this.props.initialEventIndex > 0) {
       this.scheduleListRef.current.scrollToIndex({
         index: this.props.initialEventIndex,
@@ -53,8 +52,9 @@ export class ScheduleDayView extends Component {
   }
 
   tabContent = (day) => (
-    <CMSContext.Consumer>
-      {({ events }) => {
+    <HackathonContext.Consumer>
+      {({ hackathon }) => {
+        const events = hackathon.events;
         const currentDayString = day;
         const timeblocks = getTimeblocksForDay(events, currentDayString);
 
@@ -129,7 +129,7 @@ export class ScheduleDayView extends Component {
           />
         );
       }}
-    </CMSContext.Consumer>
+    </HackathonContext.Consumer>
   );
 
   dayTabView = (width) => {

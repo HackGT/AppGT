@@ -1,8 +1,8 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { fetchEvents, fetchInfoBlocks } from "./cms";
-import { CMSContext, AuthContext } from "./context";
-import { StatusBar, Text, View } from "react-native";
+import { fetchHackathonData } from "./cms";
+import { HackathonContext, AuthContext } from "./context";
+import { StatusBar, View, Text } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
@@ -78,26 +78,51 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: [],
-      infoBlocks: [],
+      // event data
+      hackathon: null,
+      eventTypes: [],
+      faq: [],
+      starredIds: [],
+
+      // used for finding current state of screen for loading/login components
+      isFetchingData: true,
+      isFetchingLogin: true,
+
+      // login data
       user: null,
       accessToken: null,
     };
   }
 
   toggleStarred = (event) => {
-    const newEventsWithStar = this.state.events.slice();
-    const index = newEventsWithStar.indexOf(event);
-    const newEvent = newEventsWithStar[index];
+    const toggleEventId = event.id;
 
-    if (index != -1) {
-      const newValue = newEvent.isStarred ? !newEvent.isStarred : true;
-      newEventsWithStar[index].isStarred = newValue;
-      this.setState({ events: newEventsWithStar });
-      AsyncStorage.setItem("localEventData", JSON.stringify(newEventsWithStar));
-      return newValue;
+    function updateStorage() {
+      AsyncStorage.setItem("starredIds", JSON.stringify(this.state.starredIds));
     }
-    return null;
+
+    if (this.state.starredIds.indexOf(toggleEventId) != -1) {
+      // remove from starred state, then update storage
+      this.setState(
+        {
+          starredIds: this.state.starredIds.filter(
+            (id) => id !== toggleEventId
+          ),
+        },
+        updateStorage
+      );
+      return false;
+    } else {
+      // add to starred state, then update storage
+      this.setState(
+        (prevState) => ({
+          starredIds: [...prevState.starredIds, toggleEventId],
+        }),
+        updateStorage
+      );
+
+      return true;
+    }
   };
 
   logout = async () => {
@@ -152,47 +177,51 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    AsyncStorage.getItem("localEventData", (error, result) => {
-      if (result) {
-        console.log("Events found locally.");
-        this.setState({ events: sortEventsByStartTime(JSON.parse(result)) });
-      } else {
-        fetchEvents().then((data) => {
-          console.log("Fetched events from CMS.");
-          const fetchedEvents = data.data.eventbases;
-          this.setState({ events: sortEventsByStartTime(fetchedEvents) });
-          const localEventData = JSON.stringify(fetchedEvents);
-          AsyncStorage.setItem("localEventData", localEventData);
-        });
-      }
-    });
-
     AsyncStorage.getItem(
-      "userData",
-      (error, result) => result && this.setState({ user: JSON.parse(result) })
+      "starredIds",
+      (error, result) =>
+        result && this.setState({ starredIds: JSON.parse(result) })
     );
 
-    // AsyncStorage.getItem("localInfoBlocksData", (error, result) => {
-    //   if (result) {
-    //     console.log("InfoBlocks found locally.");
-    //     this.setState({ events: JSON.parse(result) });
-    //   } else {
-    //     fetchInfoBlocks().then((data) => {
-    //       console.log("Fetched infoblocks from CMS.");
-    //       const fetchedInfoBlocks = data.data.infoBlocks;
-    //       this.setState({ infoBlocks: fetchedInfoBlocks });
-    //       const localInfoBlocks = JSON.stringify(fetchedInfoBlocks);
-    //       AsyncStorage.setItem("localInfoBlocksData", localInfoBlocks);
-    //     });
-    //   }
-    // });
+    AsyncStorage.getItem("userData", (error, result) => {
+      if (result) {
+        this.setState({ user: JSON.parse(result) });
+      }
+      this.setState({ isFetchingLogin: false });
+    });
+
+    AsyncStorage.getItem("localHackathonData", (error, result) => {
+      if (result) {
+        console.log("Hackathon found locally.");
+        const hackathon = JSON.parse(result);
+
+        if (hackathon != null) {
+          this.setState({ hackathon: hackathon, isFetchingData: false });
+        }
+      }
+
+      fetchHackathonData().then((data) => {
+        const hackathons = data.data.allHackathons;
+        if (hackathons != null && hackathons.length != 0) {
+          console.log("Hackathon found remotely.");
+          const hackathon = hackathons[0];
+
+          AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
+          this.setState({ hackathon: hackathon, isFetchingData: false });
+        }
+      });
+    });
   }
 
   render() {
-    const { events, infoBlocks, user } = this.state;
+    const hackathon = this.state.hackathon;
+    const starredIds = this.state.starredIds;
 
-    // TODO: fancy loading animation
-    if (events == null || events.length == 0) {
+    const needsLogin = this.state.user == null;
+    const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
+
+    // TODO: when good, make cool animation
+    if (isLoading) {
       return (
         <View
           style={{
@@ -203,16 +232,31 @@ export default class App extends React.Component {
           }}
         >
           <HackGTIcon />
+          <Text>Loading...</Text>
         </View>
       );
     }
 
+    if (needsLogin) {
+      return (
+        <AuthContext.Provider
+          value={{
+            user: this.state.user,
+            login: this.login,
+            logout: this.logout,
+          }}
+        >
+          <LoginOnboarding />
+        </AuthContext.Provider>
+      );
+    }
+
     return (
-      <CMSContext.Provider
+      <HackathonContext.Provider
         value={{
-          events,
-          infoBlocks,
+          hackathon: hackathon,
           toggleStar: this.toggleStarred,
+          starredIds: starredIds,
         }}
       >
         <AuthContext.Provider
@@ -236,7 +280,7 @@ export default class App extends React.Component {
             </Tab.Navigator>
           </NavigationContainer>
         </AuthContext.Provider>
-      </CMSContext.Provider>
+      </HackathonContext.Provider>
     );
   }
 }

@@ -25,8 +25,8 @@ export function getDaysForEvent(events) {
   var days = [];
 
   for (event of events) {
-    if (event && event.start_time) {
-      const day = parseDate(event.start_time)
+    if (event && event.startDay) {
+      const day = parseDate(event.startDay)
         .format("dddd")
         .toLowerCase();
 
@@ -44,8 +44,12 @@ export function getEventsHappeningNow(events) {
 }
 
 export function sortEventsByStartTime(events) {
+  if (events == null) {
+    return events;
+  }
+
   return events.sort(function(a, b) {
-    return parseDate(a.start_time) - parseDate(b.start_time);
+    return parseDate(a.startDate) - parseDate(b.startDate);
   });
 }
 
@@ -58,9 +62,9 @@ export function getEventsForDay(events, day) {
 
   // converts event's start time to a day (saturday, sunday, etc) and sees if it matches the string
   return events.filter((event) => {
-    if (event && event.start_time) {
+    if (event && event.startDate) {
       return (
-        parseDate(event.start_time)
+        parseDate(event.startDate)
           .format("dddd")
           .toLowerCase() == day
       );
@@ -84,8 +88,8 @@ export function getTimeblocksForDay(events, day) {
 
   // go through all events for the current day, if there is a difference between the current event and last event, add a new time in between them
   for (event of getEventsForDay(events, day)) {
-    if (event && event.start_time) {
-      const startTimeString = parseDate(event.start_time).format("hh:mm A");
+    if (event && event.startDate) {
+      const startTimeString = event.startTime;
 
       if (startTimeString != lastStartTime) {
         timeblocksEvents.push({ time: startTimeString, event: event });
@@ -116,18 +120,18 @@ export function isEventHappeningNow(event) {
     event = event.event;
   }
 
-  if (event == null || event.start_time == null || event.end_time == null) {
+  if (event == null || event.startDate == null || event.endDate == null) {
     return false;
   }
 
   return (
-    parseDate(event.start_time)
+    parseDate(event.startDate)
       .format("dddd")
       .toLowerCase() ==
       moment()
         .format("dddd")
         .toLowerCase() &&
-    moment() > parseDate(event.start_time) &&
-    moment() < parseDate(event.end_time)
+    moment() > parseDate(event.startDate) &&
+    moment() < parseDate(event.endDate)
   );
 }
