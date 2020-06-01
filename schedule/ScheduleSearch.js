@@ -5,8 +5,10 @@ import { Text, View, StyleSheet, StatusBar } from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
-import { Card, CardItem, List } from "native-base";
+import { Card, CardItem, List, Button } from "native-base";
 import CancelIcon from "../assets/Cancel";
+import { authorize } from "react-native-app-auth";
+import { getCurrentDayIndex } from "../cms/DataHandler";
 
 export class ScheduleSearch extends Component {
   filterButton = () => {
@@ -64,14 +66,40 @@ export class ScheduleSearch extends Component {
 
           {this.backButton()}
         </View>
+        
         <View style={styles.background}>
-          {/* {this.filterButton()} */}
+          
+          {/* Filter Button */}
+          <View style={styles.filterContainer}>
+            <View style={styles.filterStyle}>
+              <Text style={styles.filterTextStyle}> Filter </Text>
+            </View>
+          </View>
+         
+          {/* Trending Topics */}
+          <Text style={{ fontFamily: 'Space Mono', fontWeight: 'bold', fontSize: 18, marginLeft: 15, marginTop: 10}}>
+            Trending Topics
+          </Text>
+         
+          {/*Tags */}
+          <View style={styles.container}>
+          {["#boba", "#ML", "#facebook", "#coffee"].map((value, i) => {
+            return <View style={styles.tagStyle}>
+              <Text style={styles.textStyle}> {value} </Text>
+            </View>;
+          })}
+          </View>
 
-          <ScrollView>
-            {/* <Text style={{ fontSize: 24, left: 10 }}>Trending Topics</Text> */}
-            {this.searchList()}
-          </ScrollView>
+          <View style={styles.container}>
+            {["#facebook", "#boba", "#coffee", "#ML"].map((value, i) => {
+              return <View style={styles.tagStyle}>
+                <Text style={styles.textStyle}> {value} </Text>
+              </View>;
+            })}
+          </View>
+
         </View>
+
       </SafeAreaView>
     );
   }
@@ -81,6 +109,38 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "white",
+  },
+
+  filterContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginLeft: 15,
+  },
+
+  filterStyle: {
+    backgroundColor: '#F9F9F9',
+    borderRadius: 50,
+  },
+
+  filterTextStyle: {
+    padding: 5,
+    color: "#C3C3C3",
+    fontFamily: "Space Mono",
+  },
+
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
+
+  textStyle: {
+    padding: 10,
+  },
+
+  tagStyle: {
+    backgroundColor: '#F2F2F2',
+    borderRadius: 50,
   },
 
   background: {
