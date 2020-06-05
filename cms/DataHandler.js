@@ -5,7 +5,7 @@ export const colors = {
   food: "#C866F5",
   workshop: "#786CEB",
   speaker: "#FF586C",
-  minievent: "#FF8D28",
+  "mini-event": "#FF8D28",
   none: "#C3C3C3",
 };
 
