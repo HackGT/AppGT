@@ -95,7 +95,7 @@ export class ScheduleTab extends Component {
 
           const daysForEvents = getDaysForEvent(events);
           const currentDayIndex = getCurrentDayIndex(events);
-          const intialEventIndex = getCurrentEventIndex(
+          const initialEventIndex = getCurrentEventIndex(
             events,
             daysForEvents[currentDayIndex]
           );
@@ -111,7 +111,7 @@ export class ScheduleTab extends Component {
               {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
               <ScheduleDayView
                 paddingHeight={hasEventsNow ? 190 : 40}
-                initialEventIndex={intialEventIndex}
+                initialEventIndex={initialEventIndex}
                 initialDayIndex={currentDayIndex}
                 days={daysForEvents}
                 onSelectEvent={this.setSelectedEvent}
