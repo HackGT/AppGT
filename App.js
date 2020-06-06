@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext } from "./context";
-import { StatusBar, View, Text, Animated } from "react-native";
+import { StatusBar, View, Text, Animated, Modal } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
@@ -91,10 +91,6 @@ export default class App extends React.Component {
       // login data
       user: null,
       accessToken: null,
-
-      // splash screen animation
-      splashOpacity: new Animated.Value(0),
-      splashScreenLoading: true,
     };
   }
 
@@ -210,18 +206,10 @@ export default class App extends React.Component {
           console.log("Hackathon found remotely.");
           const hackathon = hackathons[0];
 
-          Animated.timing(this.state.splashOpacity, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-
-          setTimeout(() => {
-            this.setState({ splashScreenLoading: false });
-          }, 100);
-
           AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
           this.setState({ hackathon: hackathon, isFetchingData: false });
+        } else {
+          // if still loading, present error asking for retry
         }
       });
     });
@@ -232,15 +220,23 @@ export default class App extends React.Component {
     const starredIds = this.state.starredIds;
 
     const needsLogin = this.state.user == null;
-    const isLoading =
-      this.state.isFetchingData ||
-      this.state.isFetchingLogin ||
-      this.state.splashScreenLoading;
+    const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
 
+    const splashGrowModal = (
+      <Modal animationType="none" transparent={true}>
+        <SplashScreen
+          grow={true}
+          onGrowDone={() => this.setState({ scheduleModal: true })}
+        />
+      </Modal>
+    );
+
+    // until app is done loading data, show the splash screen
     if (isLoading) {
-      return <SplashScreen opacity={this.state.splashOpacity} />;
+      return <SplashScreen />;
     }
 
+    // if user needs to login, do splash grow/fade out animation then show login
     if (needsLogin) {
       return (
         <AuthContext.Provider
@@ -250,11 +246,13 @@ export default class App extends React.Component {
             logout: this.logout,
           }}
         >
+          {!this.state.scheduleModal && splashGrowModal}
           <LoginOnboarding />
         </AuthContext.Provider>
       );
     }
 
+    // once logged in and all data is loaded, present full app after grow animation
     return (
       <HackathonContext.Provider
         value={{
@@ -270,6 +268,7 @@ export default class App extends React.Component {
             logout: this.logout,
           }}
         >
+          {!this.state.scheduleModal && splashGrowModal}
           <NavigationContainer>
             <StatusBar backgroundColor="white" barStyle="dark-content" />
             <Tab.Navigator
