@@ -118,14 +118,12 @@ const styles = StyleSheet.create({
   },
 
   filterStyle: {
-    backgroundColor: '#F9F9F9',
+    backgroundColor: '#F2F2F2',
     borderRadius: 50,
   },
 
   filterTextStyle: {
-    padding: 5,
-    color: "#C3C3C3",
-    fontFamily: "Space Mono",
+    padding: 10,
   },
 
   container: {
