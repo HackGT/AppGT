@@ -6,6 +6,6 @@
 
     <item
         android:drawable="@drawable/ic_logo"
-        android:gravity="center" />
+        android:gravity="center"/>
 
 </layer-list>

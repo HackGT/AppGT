@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -14,17 +14,17 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="BOr-If-zZZ">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                    <rect key="frame" x="112" y="112" width="256" height="256"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="256" id="1eN-p5-fE9"/>
+                        <constraint firstAttribute="height" constant="256" id="K68-GN-MgZ"/>
+                    </constraints>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="BOr-If-zZZ" secondAttribute="bottom" id="6n1-wF-Ofg"/>
-                <constraint firstItem="BOr-If-zZZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="TZt-3F-V5C"/>
                 <constraint firstItem="BOr-If-zZZ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="bcu-Jk-bWX"/>
                 <constraint firstItem="BOr-If-zZZ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="dY0-dj-kCm"/>
-                <constraint firstItem="BOr-If-zZZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mDS-0n-IxL"/>
-                <constraint firstAttribute="trailing" secondItem="BOr-If-zZZ" secondAttribute="trailing" id="zhy-6e-Qp7"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

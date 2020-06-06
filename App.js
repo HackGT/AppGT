@@ -6,6 +6,7 @@ import { StatusBar, View, Text } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
+import SplashScreen from "./SplashScreen";
 import { EventOnboarding } from "./onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -16,7 +17,6 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
-import { sortEventsByStartTime } from "./cms/DataHandler";
 
 // for details & examples on how to make gradients/SVGs https://github.com/react-native-community/react-native-svg
 
@@ -221,20 +221,8 @@ export default class App extends React.Component {
     const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
 
     // TODO: when good, make cool animation
-    if (isLoading) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          <HackGTIcon />
-          <Text>Loading...</Text>
-        </View>
-      );
+    if (true) {
+      return <SplashScreen />;
     }
 
     if (needsLogin) {
