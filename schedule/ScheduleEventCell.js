@@ -41,7 +41,10 @@ export class ScheduleEventCell extends Component {
       event != null && event.type != null ? event.type.name : "none";
     const title = event.name;
     const location =
-      event != null && event.location != null && event.location.name != null
+      event != null &&
+      event.location != null &&
+      event.location[0] != null &&
+      event.location[0].name != null
         ? event.location[0].name + " • "
         : "";
     const start = event.startTime;

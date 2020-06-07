@@ -15,7 +15,10 @@ export class EventBottomSheet extends Component {
     const title = event.name;
     const description = event.description;
     const location =
-      event != null && event.location != null && event.location.name != null
+      event != null &&
+      event.location != null &&
+      event.location[0] != null &&
+      event.location[0].name != null
         ? event.location[0].name + " • "
         : "";
     const start = event.startTime;
