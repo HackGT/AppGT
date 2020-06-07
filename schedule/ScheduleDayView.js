@@ -35,7 +35,7 @@ export class ScheduleDayView extends Component {
     };
 
     this.tabListRef = React.createRef();
-    this.scheduleListRef = React.createRef();
+    this.currentScheduleRef = React.createRef();
   }
 
   componentDidMount() {
@@ -44,10 +44,12 @@ export class ScheduleDayView extends Component {
       animated: false,
     });
     if (this.props.initialEventIndex > 0) {
-      this.scheduleListRef.current.scrollToIndex({
-        index: this.props.initialEventIndex,
-        animated: false,
-      });
+      if (this.currentScheduleRef != null) {
+        this.currentScheduleRef.scrollToIndex({
+          index: this.props.initialEventIndex,
+          animated: false,
+        });
+      }
     }
   }
 
@@ -60,14 +62,18 @@ export class ScheduleDayView extends Component {
 
         return (
           <FlatList
-            ref={this.scheduleListRef}
+            ref={(ref) => {
+              if (this.props.days[this.state.dayIndex] == currentDayString) {
+                this.currentScheduleRef = ref;
+              }
+            }}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: this.props.paddingHeight }}
             data={timeblocks}
             keyExtractor={(item, index) => (item && item.id ? item.id : index)}
             onScrollToIndexFailed={(error) => {
               setTimeout(() => {
-                this.scheduleListRef.current.scrollToIndex({
+                this.currentScheduleRef.scrollToIndex({
                   index: error.index,
                   animated: false,
                 });
@@ -220,8 +226,8 @@ export class ScheduleDayView extends Component {
           bottom: this.props.paddingHeight - 15,
         }}
         onPress={() => {
-          if (this.scheduleListRef.current != null) {
-            this.scheduleListRef.current.scrollToIndex({
+          if (this.currentScheduleRef != null) {
+            this.currentScheduleRef.scrollToIndex({
               index: this.props.initialEventIndex,
               animated: true,
             });
