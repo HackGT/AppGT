@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import { colors } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
 import SearchIcon from "../assets/Search";
@@ -91,6 +92,7 @@ export class ScheduleSearch extends Component {
             )}
           </TouchableOpacity>
 
+          {/* Exit Button */}
           <TouchableOpacity
             onPress={() => {
               this.setState({ showFilterMenu: false }),
@@ -106,167 +108,47 @@ export class ScheduleSearch extends Component {
             )}
           </TouchableOpacity>
 
-          {this.state.showFilterMenu && (
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 60,
-                left: 10,
-                position: 'absolute',
-                zIndex: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ backgroundColor: '#2CDACF', borderRadius: 50 }}
-              >
-                <Text
+          {/* Filter Menu */}
+          {this.state.showFilterMenu &&
+            Object.keys(colors).map(function(name, index) {
+              const color = colors[name];
+              return (
+                <View
                   style={{
-                    padding: 7,
-                    color: 'white',
-                    fontFamily: 'Space Mono',
+                    flexDirection: 'row',
+                    marginTop: 55,
+                    top: index * 45,
+                    left: 10,
+                    position: 'absolute',
+                    zIndex: 1,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
                   }}
                 >
-                  {' '}
-                  important{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {this.state.showFilterMenu && (
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 105,
-                left: 10,
-                position: 'absolute',
-                zIndex: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ backgroundColor: '#C866F5', borderRadius: 50 }}
-              >
-                <Text
-                  style={{
-                    padding: 7,
-                    color: 'white',
-                    fontFamily: 'Space Mono',
-                  }}
-                >
-                  {' '}
-                  food{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {this.state.showFilterMenu && (
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 150,
-                left: 10,
-                position: 'absolute',
-                zIndex: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ backgroundColor: '#FF586C', borderRadius: 50 }}
-              >
-                <Text
-                  style={{
-                    padding: 7,
-                    color: 'white',
-                    fontFamily: 'Space Mono',
-                  }}
-                >
-                  {' '}
-                  speaker{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {this.state.showFilterMenu && (
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 195,
-                left: 10,
-                position: 'absolute',
-                zIndex: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ backgroundColor: '#FF8D28', borderRadius: 50 }}
-              >
-                <Text
-                  style={{
-                    padding: 7,
-                    color: 'white',
-                    fontFamily: 'Space Mono',
-                  }}
-                >
-                  {' '}
-                  mini-event{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {this.state.showFilterMenu && (
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 240,
-                left: 10,
-                position: 'absolute',
-                zIndex: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ backgroundColor: '#786CEB', borderRadius: 50 }}
-              >
-                <Text
-                  style={{
-                    padding: 7,
-                    color: 'white',
-                    fontFamily: 'Space Mono',
-                  }}
-                >
-                  {' '}
-                  workshop{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {this.state.showFilterMenu && (
-            <View
-              style={{
-                flexDirection: 'row',
-                top: 285,
-                left: 10,
-                position: 'absolute',
-                zIndex: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ backgroundColor: '#C3C3C3', borderRadius: 50 }}
-              >
-                <Text
-                  style={{
-                    padding: 7,
-                    color: 'white',
-                    fontFamily: 'Space Mono',
-                  }}
-                >
-                  {' '}
-                  clear{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: color,
+                      borderRadius: 50,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        padding: 7,
+                        color: 'white',
+                        fontFamily: 'Space Mono',
+                      }}
+                    >
+                      {' '}
+                      {name}{' '}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
 
           {/* Trending Topics */}
           <Text
@@ -280,7 +162,7 @@ export class ScheduleSearch extends Component {
           >
             Trending Topics
           </Text>
-          
+
           {/*Tags */}
           <View style={styles.container}>
             {['#boba', '#ML', '#facebook', '#coffee'].map((value, i) => {
