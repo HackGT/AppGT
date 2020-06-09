@@ -1,12 +1,12 @@
 import moment from "moment";
 
 export const colors = {
-  important: "#2CDACF",
-  food: "#C866F5",
-  workshop: "#786CEB",
-  speaker: "#FF586C",
-  minievent: "#FF8D28",
-  none: "#C3C3C3",
+  important: '#2CDACF',
+  food: '#C866F5',
+  speaker: '#FF586C',
+  'mini-event': '#FF8D28',
+  workshop: '#786CEB',
+  clear: '#C3C3C3',
 };
 
 export const daysAvailable = ["friday", "saturday", "sunday"];
