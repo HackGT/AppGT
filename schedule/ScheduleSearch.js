@@ -165,16 +165,7 @@ export class ScheduleSearch extends Component {
 
           {/*Tags */}
           <View style={styles.container}>
-            {['#boba', '#ML', '#facebook', '#coffee'].map((value, i) => {
-              return (
-                <TouchableOpacity style={styles.tagStyle}>
-                  <Text style={styles.textStyle}> {value} </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View style={styles.container}>
-            {['#facebook', '#boba', '#coffee', '#ML'].map((value, i) => {
+            {['#boba', '#ML', '#facebook', '#coffee', "#facebook", '#boba', '#coffee', "#ML"].map((value, i) => {
               return (
                 <TouchableOpacity style={styles.tagStyle}>
                   <Text style={styles.textStyle}> {value} </Text>
@@ -227,8 +218,8 @@ const styles = StyleSheet.create({
 
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-around',
-    marginTop: 15,
   },
 
   textStyle: {
@@ -239,6 +230,7 @@ const styles = StyleSheet.create({
   tagStyle: {
     backgroundColor: '#F2F2F2',
     borderRadius: 50,
+    marginTop: 15,
   },
 
   background: {
