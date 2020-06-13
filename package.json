@@ -22,6 +22,7 @@
     "react-moment": "^0.9.7",
     "react-native": "0.61.5",
     "react-native-app-auth": "^5.1.2",
+    "react-native-dark-mode": "^0.2.2",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-ionicons": "^5.0.0-beta",

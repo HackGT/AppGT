@@ -13,7 +13,7 @@ import BackButton from "../assets/Back";
 import ContinueButton from "../assets/ContinueButton";
 import QRCode from "react-native-qrcode-svg";
 import { Linking } from "react-native";
-import { AuthContext, HackathonContext } from "../context";
+import { AuthContext, HackathonContext, ThemeContext } from "../context";
 
 export class EventOnboarding extends Component {
   static contextType = HackathonContext;
@@ -32,12 +32,23 @@ export class EventOnboarding extends Component {
 
     // TODO: test this
     const qrCode = (
-      <AuthContext.Consumer>
-        {({ user }) => {
-          const id = user ? user.uuid : "Unknown UUID";
-          return <QRCode value={`user:${id}`} color="#2C8DDB" size={200} />;
-        }}
-      </AuthContext.Consumer>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <AuthContext.Consumer>
+            {({ user }) => {
+              const id = user ? user.uuid : "Unknown UUID";
+              return (
+                <QRCode
+                  value={`user:${id}`}
+                  color={dynamicStyles.secondaryTintColor.color}
+                  size={200}
+                  backgroundColor="clear"
+                />
+              );
+            }}
+          </AuthContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
 
     const firstScreen = (
@@ -60,13 +71,18 @@ export class EventOnboarding extends Component {
     );
 
     const slackButton = (
-      <TouchableOpacity
-        style={styles.joinSlack}
-        onPress={() => Linking.openURL(`${slackUrl}`)}
-      >
-        <Text style={styles.buttonText}>Join Slack</Text>
-      </TouchableOpacity>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <TouchableOpacity
+            style={[dynamicStyles.primaryButtonBackground, styles.joinSlack]}
+            onPress={() => Linking.openURL(`${slackUrl}`)}
+          >
+            <Text style={styles.buttonText}>Join Slack</Text>
+          </TouchableOpacity>
+        )}
+      </ThemeContext.Consumer>
     );
+
     const thirdScreen = (
       <ContentInfo
         title="Questions? We're always available"
@@ -76,13 +92,17 @@ export class EventOnboarding extends Component {
     );
 
     const addGTPDToContacts = (
-      <TouchableOpacity
-        style={styles.contacts}
-        onPress={() => Clipboard.setString("(404) 894-2500")}
-      >
-        {/* TODO: create new contact automatically: https://www.npmjs.com/package/react-native-contacts */}
-        <Text style={styles.buttonText}>Copy Contact</Text>
-      </TouchableOpacity>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <TouchableOpacity
+            style={[dynamicStyles.primaryButtonBackground, styles.contacts]}
+            onPress={() => Clipboard.setString("(404) 894-2500")}
+          >
+            {/* TODO: create new contact automatically: https://www.npmjs.com/package/react-native-contacts */}
+            <Text style={styles.buttonText}>Copy Contact</Text>
+          </TouchableOpacity>
+        )}
+      </ThemeContext.Consumer>
     );
     const forthScreen = (
       <ContentInfo
@@ -113,19 +133,24 @@ export class EventOnboarding extends Component {
     ];
 
     return screens.map((content, i) => {
+      const screenBackground = {
+        flex: 1,
+        width: width,
+        justifyContent: "center",
+        alignItems: "center",
+      };
+
       return (
-        <View
-          key={i}
-          style={{
-            backgroundColor: "white",
-            flex: 1,
-            width: width,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {content}
-        </View>
+        <ThemeContext.Consumer>
+          {({ dynamicStyles }) => (
+            <View
+              key={i}
+              style={[dynamicStyles.backgroundColor, screenBackground]}
+            >
+              {content}
+            </View>
+          )}
+        </ThemeContext.Consumer>
       );
     });
   }
@@ -134,22 +159,38 @@ export class EventOnboarding extends Component {
     const portionComplete = this.state.pageIndex / this.state.pageCount / 0.8;
 
     return (
-      <View flexDirection="row" style={styles.headerParent}>
-        <View flex={0.1}>
-          <TouchableOpacity
-            onPress={() => {
-              if (this.state.pageIndex - 1 >= 0) {
-                this.setState({ pageIndex: this.state.pageIndex - 1 });
-              }
-            }}
-          >
-            <BackButton style={styles.backButton} />
-          </TouchableOpacity>
-        </View>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <View flexDirection="row" style={styles.headerParent}>
+            <View flex={0.1}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (this.state.pageIndex - 1 >= 0) {
+                    this.setState({ pageIndex: this.state.pageIndex - 1 });
+                  }
+                }}
+              >
+                <BackButton style={styles.backButton} />
+              </TouchableOpacity>
+            </View>
 
-        <View flex={portionComplete} style={styles.completedPortion} />
-        <View flex={1 - portionComplete} style={styles.unfinishedPortion} />
-      </View>
+            <View
+              flex={portionComplete}
+              style={[
+                dynamicStyles.tintBackgroundColor,
+                styles.completedPortion,
+              ]}
+            />
+            <View
+              flex={1 - portionComplete}
+              style={[
+                dynamicStyles.secondaryBackgroundColor,
+                styles.unfinishedPortion,
+              ]}
+            />
+          </View>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 
@@ -166,50 +207,50 @@ export class EventOnboarding extends Component {
     const screenWidth = Dimensions.get("window").width;
 
     return (
-      <SafeAreaView style={styles.rootView}>
-        {this.statusHeader()}
-
-        <ScrollView
-          style={styles.horizontalScroll}
-          ref={(ref) => (this.scrollView = ref)}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          scrollEnabled={false}
-        >
-          {this.createScreens(screenWidth)}
-        </ScrollView>
-
-        <View style={styles.footer}>
-          <TouchableOpacity
-            onPress={() => {
-              if (this.state.pageIndex + 1 < this.state.pageCount) {
-                this.setState({ pageIndex: this.state.pageIndex + 1 });
-              }
-            }}
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <SafeAreaView
+            style={[dynamicStyles.backgroundColor, styles.rootView]}
           >
-            <ContinueButton />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+            {this.statusHeader()}
+
+            <ScrollView
+              style={dynamicStyles.backgroundColor}
+              ref={(ref) => (this.scrollView = ref)}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              pagingEnabled={true}
+              scrollEnabled={false}
+            >
+              {this.createScreens(screenWidth)}
+            </ScrollView>
+
+            <View style={[dynamicStyles.backgroundColor, styles.footer]}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (this.state.pageIndex + 1 < this.state.pageCount) {
+                    this.setState({ pageIndex: this.state.pageIndex + 1 });
+                  }
+                }}
+              >
+                <ContinueButton />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
 
 const styles = StyleSheet.create({
   rootView: {
-    backgroundColor: "white",
     flex: 1,
-  },
-
-  horizontalScroll: {
-    backgroundColor: "white",
   },
 
   footer: {
     alignItems: "center",
     alignContent: "center",
-    backgroundColor: "white",
   },
 
   headerParent: {
@@ -224,26 +265,22 @@ const styles = StyleSheet.create({
     top: 12,
     left: 10,
     height: 6,
-    backgroundColor: "#41D1FF",
   },
 
   unfinishedPortion: {
     top: 12,
     left: 10,
     height: 6,
-    backgroundColor: "#F2F2F2",
   },
 
   joinSlack: {
     top: 10,
-    backgroundColor: "#666666",
     width: 100,
     borderRadius: 10,
   },
 
   contacts: {
     top: 10,
-    backgroundColor: "#666666",
     width: 140,
     borderRadius: 10,
   },

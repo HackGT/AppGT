@@ -13,7 +13,7 @@ import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
 
 import { ContentInfo } from "./ContentInfo";
-import { AuthContext } from "../context";
+import { AuthContext, ThemeContext } from "../context";
 
 export class LoginOnboarding extends Component {
   constructor(props) {
@@ -60,19 +60,24 @@ export class LoginOnboarding extends Component {
     const screens = [firstScreen, secondScreen, thirdScreen, forthScreen];
 
     return screens.map((content, i) => {
+      const screenBackground = {
+        flex: 1,
+        width: width,
+        justifyContent: "center",
+        alignItems: "center",
+      };
+
       return (
-        <View
-          key={i}
-          style={{
-            backgroundColor: "white",
-            flex: 1,
-            width: width,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {content}
-        </View>
+        <ThemeContext.Consumer>
+          {({ dynamicStyles }) => (
+            <View
+              key={i}
+              style={[dynamicStyles.backgroundColor, screenBackground]}
+            >
+              {content}
+            </View>
+          )}
+        </ThemeContext.Consumer>
       );
     });
   }
@@ -84,14 +89,22 @@ export class LoginOnboarding extends Component {
     const bubbles = Array.from(new Array(this.state.pageCount).keys()).map(
       (i) => {
         return (
-          <Svg key={i} height={size + 14} width={size + 14}>
-            <Circle
-              cx={radius}
-              cy={radius}
-              r={radius}
-              fill={i == this.state.pageIndex ? "#41D1FF" : "#F2F2F2"}
-            />
-          </Svg>
+          <ThemeContext.Consumer>
+            {({ dynamicStyles }) => (
+              <Svg key={i} height={size + 14} width={size + 14}>
+                <Circle
+                  cx={radius}
+                  cy={radius}
+                  r={radius}
+                  fill={
+                    i == this.state.pageIndex
+                      ? dynamicStyles.tintColor.color
+                      : dynamicStyles.secondaryBackgroundColor.backgroundColor
+                  }
+                />
+              </Svg>
+            )}
+          </ThemeContext.Consumer>
         );
       }
     );
@@ -103,49 +116,59 @@ export class LoginOnboarding extends Component {
     const screenWidth = Dimensions.get("window").width;
 
     return (
-      <AuthContext.Consumer>
-        {({ login, user, logout }) => {
-          return (
-            <View style={styles.rootView}>
-              <ScrollView
-                flex={0.8}
-                style={styles.horizontalScroll}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                pagingEnabled={true}
-                onMomentumScrollEnd={(scrollData) => {
-                  // update page indicator
-                  this.setState({
-                    pageIndex: Math.round(
-                      scrollData.nativeEvent.contentOffset.x / screenWidth
-                    ),
-                  });
-                }}
-              >
-                {this.createScreens(screenWidth)}
-              </ScrollView>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <AuthContext.Consumer>
+            {({ login, user, logout }) => {
+              return (
+                <View style={styles.rootView}>
+                  <ScrollView
+                    flex={0.8}
+                    style={dynamicStyles.backgroundColor}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    onMomentumScrollEnd={(scrollData) => {
+                      // update page indicator
+                      this.setState({
+                        pageIndex: Math.round(
+                          scrollData.nativeEvent.contentOffset.x / screenWidth
+                        ),
+                      });
+                    }}
+                  >
+                    {this.createScreens(screenWidth)}
+                  </ScrollView>
 
-              <View style={styles.footer} flex={0.2}>
-                {this.indexIndicator()}
+                  <View
+                    style={[dynamicStyles.backgroundColor, styles.footer]}
+                    flex={0.2}
+                  >
+                    {this.indexIndicator()}
 
-                <TouchableOpacity onPress={() => login()}>
-                  <ButtonBackground />
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={() => login()}>
+                      <ButtonBackground />
+                    </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => login()}>
-                  <Text style={styles.makeAccount}>Don't have an account?</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={() => login()}>
+                      <Text style={[dynamicStyles.text, styles.makeAccount]}>
+                        Don't have an account?
+                      </Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => logout()}>
-                  <Text style={styles.toDelete}>
-                    Logout (for testing.) {user != null ? user.email : "None."}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        }}
-      </AuthContext.Consumer>
+                    <TouchableOpacity onPress={() => logout()}>
+                      <Text style={[dynamicStyles.text, styles.toDelete]}>
+                        Logout (for testing.)
+                        {user != null ? user.email : "None."}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            }}
+          </AuthContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
@@ -156,25 +179,18 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  horizontalScroll: {
-    backgroundColor: "white",
-  },
-
   footer: {
     alignItems: "center",
     alignContent: "center",
-    backgroundColor: "white",
   },
 
   makeAccount: {
     padding: 10,
-    color: "#3F3F3F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.05,
   },
 
   toDelete: {
-    color: "#3F3F3F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.05,
   },

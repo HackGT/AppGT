@@ -62,6 +62,8 @@ export function getEventsForDay(events, day) {
 
   // converts event's start time to a day (saturday, sunday, etc) and sees if it matches the string
   return events.filter((event) => {
+    // TODO: just for testing
+    return true;
     if (event && event.startDate) {
       return (
         parseDate(event.startDate)
@@ -123,6 +125,9 @@ export function isEventHappeningNow(event) {
   if (event == null || event.startDate == null || event.endDate == null) {
     return false;
   }
+
+  // TODO: just for testing
+  return event.name === "Bob Ross Painting";
 
   return (
     parseDate(event.startDate)

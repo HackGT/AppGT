@@ -7,7 +7,7 @@ import {
   FlatList,
   AppState,
 } from "react-native";
-import { HackathonContext } from "../context";
+import { HackathonContext, ThemeContext } from "../context";
 import WhatsHappeningNow from "../assets/HappeningNow";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { ScheduleDayView } from "./ScheduleDayView";
@@ -17,7 +17,6 @@ import {
   getEventsHappeningNow,
   getDaysForEvent,
   getCurrentDayIndex,
-  getTimeblocksForDay,
   getCurrentEventIndex,
 } from "../cms/DataHandler";
 
@@ -60,66 +59,77 @@ export class ScheduleTab extends Component {
 
   render() {
     return (
-      <HackathonContext.Consumer>
-        {({ hackathon }) => {
-          const events = hackathon.events;
-          const eventsHappeningNow = this.state.eventsHappeningNow;
-          const hasEventsNow = eventsHappeningNow.length > 0;
-          const happeningNowView = (
-            <View style={styles.headerDetail}>
-              <View style={styles.headerContent}>
-                <WhatsHappeningNow style={styles.headerText} />
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                  data={eventsHappeningNow}
-                  keyExtractor={(item, index) =>
-                    item && item.id ? item.id : index
-                  }
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableOpacity
-                        style={styles.cardHorizontalParent}
-                        onPress={() => {
-                          this.setSelectedEvent(item);
-                        }}
-                      >
-                        <ScheduleEventCell event={item} highlighted />
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-            </View>
-          );
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <HackathonContext.Consumer>
+            {({ hackathon }) => {
+              const events = hackathon.events;
+              const eventsHappeningNow = this.state.eventsHappeningNow;
+              const hasEventsNow = eventsHappeningNow.length > 0;
+              const happeningNowView = (
+                <View
+                  style={[dynamicStyles.backgroundColor, styles.headerDetail]}
+                >
+                  <View style={styles.headerContent}>
+                    <WhatsHappeningNow style={styles.headerText} />
+                    <FlatList
+                      showsHorizontalScrollIndicator={false}
+                      horizontal
+                      data={eventsHappeningNow}
+                      keyExtractor={(item, index) =>
+                        item && item.id ? item.id : index
+                      }
+                      renderItem={({ item }) => {
+                        return (
+                          <TouchableOpacity
+                            style={styles.cardHorizontalParent}
+                            onPress={() => {
+                              this.setSelectedEvent(item);
+                            }}
+                          >
+                            <ScheduleEventCell event={item} highlighted />
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
+                  </View>
+                </View>
+              );
 
-          const daysForEvents = getDaysForEvent(events);
-          const currentDayIndex = getCurrentDayIndex(events);
-          const initialEventIndex = getCurrentEventIndex(
-            events,
-            daysForEvents[currentDayIndex]
-          );
+              const daysForEvents = getDaysForEvent(events);
+              const currentDayIndex = getCurrentDayIndex(events);
+              const initialEventIndex = getCurrentEventIndex(
+                events,
+                daysForEvents[currentDayIndex]
+              );
 
-          return (
-            <View style={styles.underBackground}>
-              <EventBottomSheet
-                reference={(ref) => (this.RBSheet = ref)}
-                event={this.state.selectedEvent}
-              />
+              return (
+                <View
+                  style={[
+                    dynamicStyles.backgroundColor,
+                    styles.underBackground,
+                  ]}
+                >
+                  <EventBottomSheet
+                    reference={(ref) => (this.RBSheet = ref)}
+                    event={this.state.selectedEvent}
+                  />
 
-              {hasEventsNow ? happeningNowView : null}
-              {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
-              <ScheduleDayView
-                paddingHeight={hasEventsNow ? 190 : 40}
-                initialEventIndex={initialEventIndex}
-                initialDayIndex={currentDayIndex}
-                days={daysForEvents}
-                onSelectEvent={this.setSelectedEvent}
-              />
-            </View>
-          );
-        }}
-      </HackathonContext.Consumer>
+                  {hasEventsNow ? happeningNowView : null}
+                  {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
+                  <ScheduleDayView
+                    paddingHeight={hasEventsNow ? 190 : 40}
+                    initialEventIndex={initialEventIndex}
+                    initialDayIndex={currentDayIndex}
+                    days={daysForEvents}
+                    onSelectEvent={this.setSelectedEvent}
+                  />
+                </View>
+              );
+            }}
+          </HackathonContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
@@ -131,7 +141,6 @@ const styles = StyleSheet.create({
   },
 
   headerDetail: {
-    backgroundColor: "white",
     height: 160,
   },
 
@@ -148,6 +157,5 @@ const styles = StyleSheet.create({
 
   underBackground: {
     flex: 1,
-    backgroundColor: "white",
   },
 });

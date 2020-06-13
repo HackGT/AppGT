@@ -1,11 +1,18 @@
 import { StyleSheet } from "react-native";
 import React, { Component } from "react";
 import Markdown from "react-native-markdown-renderer";
+import { ThemeContext } from "../context";
 
 export default class FontMarkdown extends Component {
   render() {
     return (
-      <Markdown style={this.markdownStyles}>{this.props.children}</Markdown>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <Markdown style={[dynamicStyles.text, this.markdownStyles]}>
+            {this.props.children}
+          </Markdown>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 

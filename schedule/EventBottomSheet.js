@@ -6,7 +6,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../assets/X";
 import RemoveStarButton from "../assets/RemoveFromCalendarButton";
 import AddStarButton from "../assets/AddToCalendarButton";
-import { HackathonContext } from "../context";
+import { HackathonContext, ThemeContext } from "../context";
 import FontMarkdown from "../components/FontMarkdown";
 
 export class EventBottomSheet extends Component {
@@ -27,56 +27,69 @@ export class EventBottomSheet extends Component {
       event != null && event.type != null ? event.type.name : "none";
 
     return (
-      <HackathonContext.Consumer>
-        {({ starredIds }) => {
-          const addStarButton = starredIds.indexOf(event.id) == -1;
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <HackathonContext.Consumer>
+            {({ starredIds }) => {
+              const addStarButton = starredIds.indexOf(event.id) == -1;
 
-          return (
-            <View style={styles.panel}>
-              <TouchableOpacity
-                style={styles.panelClose}
-                onPress={() => {
-                  this.RBSheet.close();
-                }}
-              >
-                <X />
-              </TouchableOpacity>
+              return (
+                <View style={[dynamicStyles.backgroundColor, styles.panel]}>
+                  <TouchableOpacity
+                    style={styles.panelClose}
+                    onPress={() => {
+                      this.RBSheet.close();
+                    }}
+                  >
+                    <X />
+                  </TouchableOpacity>
 
-              <Text style={styles.panelTitleText}>{title}</Text>
-              <Text style={styles.locationTimeText}>
-                {location}
-                {start} - {end}
-              </Text>
+                  <Text style={[dynamicStyles.text, styles.panelTitleText]}>
+                    {title}
+                  </Text>
+                  <Text
+                    style={[
+                      dynamicStyles.secondaryText,
+                      styles.locationTimeText,
+                    ]}
+                  >
+                    {location}
+                    {start} - {end}
+                  </Text>
 
-              <EventTypeView eventType={eventType} />
+                  <EventTypeView eventType={eventType} />
 
-              <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
+                  <FontMarkdown fontFamily="SpaceMono">
+                    {description}
+                  </FontMarkdown>
 
-              <View style={styles.panelButtonCenterRoot}>
-                <HackathonContext.Consumer>
-                  {({ toggleStar }) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.setState({
-                            addStarButton: !toggleStar(this.props.event),
-                          })
-                        }
-                      >
-                        {addStarButton ? (
-                          <AddStarButton />
-                        ) : (
-                          <RemoveStarButton />
-                        )}
-                      </TouchableOpacity>
-                    );
-                  }}
-                </HackathonContext.Consumer>
-              </View>
-            </View>
-          );
-        }}
-      </HackathonContext.Consumer>
+                  <View style={styles.panelButtonCenterRoot}>
+                    <HackathonContext.Consumer>
+                      {({ toggleStar }) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.setState({
+                                addStarButton: !toggleStar(this.props.event),
+                              })
+                            }
+                          >
+                            {addStarButton ? (
+                              <AddStarButton />
+                            ) : (
+                              <RemoveStarButton />
+                            )}
+                          </TouchableOpacity>
+                        );
+                      }}
+                    </HackathonContext.Consumer>
+                  </View>
+                </View>
+              );
+            }}
+          </HackathonContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
   };
 
@@ -109,7 +122,6 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     paddingTop: 10,
-    backgroundColor: "white",
     flex: 1,
   },
 
@@ -141,7 +153,6 @@ const styles = StyleSheet.create({
 
   locationTimeText: {
     marginTop: 2,
-    color: "#4F4F4F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
   },
