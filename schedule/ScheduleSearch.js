@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { HackathonContext, ThemeContext } from "../context";
 import { colors } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
@@ -61,120 +61,133 @@ export class ScheduleSearch extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.searchHeader}>
-          <SearchBar
-            searchIcon={SearchIcon}
-            containerStyle={styles.searchContainer}
-            inputContainerStyle={styles.inputContainer}
-            lightTheme
-            round
-            placeholder="Search..."
-          />
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <SafeAreaView style={styles.safeArea}>
+            <View style={styles.searchHeader}>
+              <SearchBar
+                searchIcon={SearchIcon}
+                containerStyle={styles.searchContainer}
+                inputContainerStyle={styles.inputContainer}
+                lightTheme
+                round
+                placeholder="Search..."
+              />
 
-          {this.backButton()}
-        </View>
+              {this.backButton()}
+            </View>
 
-        <View style={styles.background}>
-          {/* Filter Button */}
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({ showFilterMenu: true }),
-                this.setState({ exitFilter: true }),
-                this.setState({ showFilterButton: false });
-            }}
-            style={styles.filterContainer}
-          >
-            {this.state.showFilterButton && (
-              <View style={styles.filterStyle}>
-                <Text style={styles.filterTextStyle}> Filter </Text>
-              </View>
-            )}
-          </TouchableOpacity>
+            <View style={dynamicStyles.backgroundColor}>
+              {/* Filter Button */}
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({ showFilterMenu: true }),
+                    this.setState({ exitFilter: true }),
+                    this.setState({ showFilterButton: false });
+                }}
+                style={styles.filterContainer}
+              >
+                {this.state.showFilterButton && (
+                  <View style={styles.filterStyle}>
+                    <Text style={styles.filterTextStyle}> Filter </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
 
-          {/* Exit Button */}
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({ showFilterMenu: false }),
-                this.setState({ exitFilter: false }),
-                this.setState({ showFilterButton: true });
-            }}
-            style={styles.exitContainer}
-          >
-            {this.state.exitFilter && (
-              <View style={styles.exitStyle}>
-                <Text style={styles.exitTextStyle}> x </Text>
-              </View>
-            )}
-          </TouchableOpacity>
+              {/* Exit Button */}
+              <TouchableOpacity
+                onPress={() => {
+                  this.setState({ showFilterMenu: false }),
+                    this.setState({ exitFilter: false }),
+                    this.setState({ showFilterButton: true });
+                }}
+                style={styles.exitContainer}
+              >
+                {this.state.exitFilter && (
+                  <View style={styles.exitStyle}>
+                    <Text style={styles.exitTextStyle}> x </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
 
-          {/* Filter Menu */}
-          {this.state.showFilterMenu &&
-            Object.keys(colors).map(function(name, index) {
-              const color = colors[name];
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: 55,
-                    top: index * 45,
-                    left: 10,
-                    position: 'absolute',
-                    zIndex: 1,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: color,
-                      borderRadius: 50,
-                    }}
-                  >
-                    <Text
+              {/* Filter Menu */}
+              {this.state.showFilterMenu &&
+                Object.keys(colors).map(function(name, index) {
+                  const color = colors[name];
+                  return (
+                    <View
                       style={{
-                        padding: 7,
-                        color: 'white',
-                        fontFamily: 'Space Mono',
+                        flexDirection: "row",
+                        marginTop: 55,
+                        top: index * 45,
+                        left: 10,
+                        position: "absolute",
+                        zIndex: 1,
+                        shadowColor: "#000",
+                        shadowOffset: {
+                          width: 0,
+                          height: 2,
+                        },
+                        shadowOpacity: 0.25,
                       }}
                     >
-                      {' '}
-                      {name}{' '}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: color,
+                          borderRadius: 50,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            padding: 7,
+                            color: "white",
+                            fontFamily: "Space Mono",
+                          }}
+                        >
+                          {" "}
+                          {name}{" "}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
 
-          {/* Trending Topics */}
-          <Text
-            style={{
-              fontFamily: 'Space Mono',
-              fontWeight: 'bold',
-              fontSize: 18,
-              marginLeft: 15,
-              marginTop: 15,
-            }}
-          >
-            Trending Topics
-          </Text>
+              {/* Trending Topics */}
+              <Text
+                style={{
+                  fontFamily: "Space Mono",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  marginLeft: 15,
+                  marginTop: 15,
+                }}
+              >
+                Trending Topics
+              </Text>
 
-          {/*Tags */}
-          <View style={styles.container}>
-            {['#boba', '#ML', '#facebook', '#coffee', "#facebook", '#boba', '#coffee', "#ML"].map((value, i) => {
-              return (
-                <TouchableOpacity style={styles.tagStyle}>
-                  <Text style={styles.textStyle}> {value} </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-      </SafeAreaView>
+              {/*Tags */}
+              <View style={styles.container}>
+                {[
+                  "#boba",
+                  "#ML",
+                  "#facebook",
+                  "#coffee",
+                  "#facebook",
+                  "#boba",
+                  "#coffee",
+                  "#ML",
+                ].map((value, i) => {
+                  return (
+                    <TouchableOpacity style={styles.tagStyle}>
+                      <Text style={styles.textStyle}> {value} </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+          </SafeAreaView>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
@@ -182,7 +195,7 @@ export class ScheduleSearch extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 
   exitContainer: {
