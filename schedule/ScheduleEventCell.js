@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import StarOff from "../assets/StarOff";
 import StarOn from "../assets/StarOn";
-import { HackathonContext } from "../context";
+import { HackathonContext, ThemeContext } from "../context";
 import { EventTypeView } from "./EventTypeView";
 
 export class ScheduleEventCell extends Component {
@@ -20,9 +20,9 @@ export class ScheduleEventCell extends Component {
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "space-evenly",
-      backgroundColor: "white",
       height: 100,
-      borderColor: this.props.highlighted ? "#41D1FF" : "white",
+      // TODO: edit border color here
+      borderColor: this.props.highlighted ? "#41D1FF" : "#1A1919",
       borderWidth: 1.2,
       borderRadius: 12,
       elevation: 1, // android shadow
@@ -41,49 +41,61 @@ export class ScheduleEventCell extends Component {
       event != null && event.type != null ? event.type.name : "none";
     const title = event.name;
     const location =
-      event != null && event.location != null && event.location.name != null
+      event != null &&
+      event.location != null &&
+      event.location[0] != null &&
+      event.location[0].name != null
         ? event.location[0].name + " • "
         : "";
     const start = event.startTime;
     const end = event.endTime;
 
     return (
-      <HackathonContext.Consumer>
-        {({ toggleStar, starredIds }) => {
-          const isStarred = starredIds.indexOf(event.id) != -1;
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <HackathonContext.Consumer>
+            {({ toggleStar, starredIds }) => {
+              const isStarred = starredIds.indexOf(event.id) != -1;
 
-          return (
-            <View style={styles.cardParent}>
-              <View style={this.createCardStyle()}>
-                <View style={styles.titleHeader}>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode={"tail"}
-                    style={styles.titleFont}
+              return (
+                <View style={styles.cardParent}>
+                  <View
+                    style={[
+                      dynamicStyles.tritaryBackgroundColor,
+                      this.createCardStyle(),
+                    ]}
                   >
-                    {title}
-                  </Text>
-                  <TouchableOpacity
-                    style={{ width: "10%" }}
-                    onPress={() => toggleStar(event)}
-                  >
-                    {isStarred ? <StarOn /> : <StarOff />}
-                  </TouchableOpacity>
+                    <View style={styles.titleHeader}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode={"tail"}
+                        style={[dynamicStyles.text, styles.titleFont]}
+                      >
+                        {title}
+                      </Text>
+                      <TouchableOpacity
+                        style={{ width: "10%" }}
+                        onPress={() => toggleStar(event)}
+                      >
+                        {isStarred ? <StarOn /> : <StarOff />}
+                      </TouchableOpacity>
+                    </View>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode={"tail"}
+                      style={[dynamicStyles.secondaryText, styles.subtitleFont]}
+                    >
+                      {location}
+                      {start} - {end}
+                    </Text>
+                    <EventTypeView eventType={eventType} />
+                  </View>
                 </View>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode={"tail"}
-                  style={styles.subtitleFont}
-                >
-                  {location}
-                  {start} - {end}
-                </Text>
-                <EventTypeView eventType={eventType} />
-              </View>
-            </View>
-          );
-        }}
-      </HackathonContext.Consumer>
+              );
+            }}
+          </HackathonContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
@@ -104,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: "90%",
     fontWeight: "bold",
-    color: "#4F4F4F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
     marginRight: 10,
@@ -112,7 +123,6 @@ const styles = StyleSheet.create({
 
   subtitleFont: {
     marginTop: 2,
-    color: "#4F4F4F",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
   },

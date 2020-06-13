@@ -1,11 +1,12 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
-import { HackathonContext, AuthContext } from "./context";
-import { StatusBar, View, Text } from "react-native";
+import { HackathonContext, AuthContext, ThemeContext } from "./context";
+import { StatusBar, Modal } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
+import SplashScreen from "./SplashScreen";
 import { EventOnboarding } from "./onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -13,12 +14,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
-
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
-import { sortEventsByStartTime } from "./cms/DataHandler";
-
-// for details & examples on how to make gradients/SVGs https://github.com/react-native-community/react-native-svg
+import {
+  useDarkModeContext,
+  useDynamicStyleSheet,
+} from "react-native-dark-mode";
+import { dynamicStyles } from "./themes";
 
 const authUrl = "https://login.hack.gt";
 
@@ -38,6 +40,7 @@ function HackGTitle() {
 
 const SchdeuleStack = createStackNavigator();
 function SchdeuleStackScreen({ navigation }) {
+  const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
     <SchdeuleStack.Navigator>
       <SchdeuleStack.Screen
@@ -52,6 +55,7 @@ function SchdeuleStackScreen({ navigation }) {
               <SearchIcon />
             </TouchableOpacity>
           ),
+          headerStyle: dStyles.tabBarBackgroundColor,
         }}
         name="HackGT"
       >
@@ -74,7 +78,7 @@ function SchdeuleStackScreen({ navigation }) {
 // for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
 const Tab = createBottomTabNavigator();
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -208,6 +212,8 @@ export default class App extends React.Component {
 
           AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
           this.setState({ hackathon: hackathon, isFetchingData: false });
+        } else {
+          // if still loading, present error asking for retry
         }
       });
     });
@@ -220,23 +226,21 @@ export default class App extends React.Component {
     const needsLogin = this.state.user == null;
     const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
 
-    // TODO: when good, make cool animation
+    const splashGrowModal = (
+      <Modal animationType="none" transparent={true}>
+        <SplashScreen
+          grow={true}
+          onGrowDone={() => this.setState({ scheduleModal: true })}
+        />
+      </Modal>
+    );
+
+    // until app is done loading data, show the splash screen
     if (isLoading) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-          }}
-        >
-          <HackGTIcon />
-          <Text>Loading...</Text>
-        </View>
-      );
+      return <SplashScreen />;
     }
 
+    // if user needs to login, do splash grow/fade out animation then show login
     if (needsLogin) {
       return (
         <AuthContext.Provider
@@ -246,41 +250,62 @@ export default class App extends React.Component {
             logout: this.logout,
           }}
         >
+          {!this.state.scheduleModal && splashGrowModal}
           <LoginOnboarding />
         </AuthContext.Provider>
       );
     }
 
+    // once logged in and all data is loaded, present full app after grow animation
     return (
-      <HackathonContext.Provider
+      <ThemeContext.Provider
         value={{
-          hackathon: hackathon,
-          toggleStar: this.toggleStarred,
-          starredIds: starredIds,
+          theme: this.props.theme,
+          dynamicStyles: this.props.styles,
         }}
       >
-        <AuthContext.Provider
+        <HackathonContext.Provider
           value={{
-            user: this.state.user,
-            login: this.login,
-            logout: this.logout,
+            hackathon: hackathon,
+            toggleStar: this.toggleStarred,
+            starredIds: starredIds,
           }}
         >
-          <NavigationContainer>
-            <StatusBar backgroundColor="white" barStyle="dark-content" />
-            <Tab.Navigator
-              tabBarOptions={{
-                activeTintColor: "#41D1FF",
-                tabBarVisible: false,
-              }}
-            >
-              <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
-              <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
-              <Tab.Screen name="EventOnboard" component={EventOnboarding} />
-            </Tab.Navigator>
-          </NavigationContainer>
-        </AuthContext.Provider>
-      </HackathonContext.Provider>
+          <AuthContext.Provider
+            value={{
+              user: this.state.user,
+              login: this.login,
+              logout: this.logout,
+            }}
+          >
+            {!this.state.scheduleModal && splashGrowModal}
+            <NavigationContainer>
+              <StatusBar backgroundColor="white" barStyle="dark-content" />
+              <Tab.Navigator
+                tabBarOptions={{
+                  activeTintColor: "#41D1FF",
+                  tabBarVisible: false,
+                  style: this.props.styles.tabBarBackgroundColor,
+                }}
+              >
+                <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
+                <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
+                <Tab.Screen name="EventOnboard" component={EventOnboarding} />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </AuthContext.Provider>
+        </HackathonContext.Provider>
+      </ThemeContext.Provider>
     );
   }
+}
+
+export default withThemeHook(App);
+
+function withThemeHook(App) {
+  return function Hook(props) {
+    const theme = useDarkModeContext();
+    const styles = useDynamicStyleSheet(dynamicStyles);
+    return <App {...props} theme={theme} styles={styles} />;
+  };
 }
