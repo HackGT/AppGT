@@ -12,7 +12,6 @@ import { authorize } from "react-native-app-auth";
 import { getCurrentDayIndex } from "../cms/DataHandler";
 
 export class ScheduleSearch extends Component {
-
   filterButton = () => {
     return (
       <TouchableOpacity
@@ -57,18 +56,28 @@ export class ScheduleSearch extends Component {
     showFilterMenu: false,
     exitFilter: false,
     showFilterButton: true,
-  }
+  };
 
   render() {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
-          <SafeAreaView style={styles.safeArea}>
+          <SafeAreaView
+            style={[dynamicStyles.backgroundColor, styles.safeArea]}
+          >
             <View style={styles.searchHeader}>
               <SearchBar
                 searchIcon={SearchIcon}
-                containerStyle={styles.searchContainer}
-                inputContainerStyle={styles.inputContainer}
+                containerStyle={[
+                  styles.searchContainer,
+                  dynamicStyles.backgroundColor,
+                  dynamicStyles.searchBorderTopColor,
+                  dynamicStyles.searchBorderBottomColor,
+                ]}
+                inputContainerStyle={[
+                  styles.inputContainer,
+                  dynamicStyles.tritaryBackgroundColor,
+                ]}
                 lightTheme
                 round
                 placeholder="Search..."
@@ -88,8 +97,16 @@ export class ScheduleSearch extends Component {
                 style={styles.filterContainer}
               >
                 {this.state.showFilterButton && (
-                  <View style={styles.filterStyle}>
-                    <Text style={styles.filterTextStyle}> Filter </Text>
+                  <View
+                    style={[
+                      styles.filterStyle,
+                      dynamicStyles.tritaryBackgroundColor,
+                    ]}
+                  >
+                    <Text style={[styles.filterTextStyle, dynamicStyles.text]}>
+                      {" "}
+                      Filter{" "}
+                    </Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -104,8 +121,16 @@ export class ScheduleSearch extends Component {
                 style={styles.exitContainer}
               >
                 {this.state.exitFilter && (
-                  <View style={styles.exitStyle}>
-                    <Text style={styles.exitTextStyle}> x </Text>
+                  <View
+                    style={[
+                      styles.exitStyle,
+                      dynamicStyles.tritaryBackgroundColor,
+                    ]}
+                  >
+                    <Text style={[styles.exitTextStyle, dynamicStyles.text]}>
+                      {" "}
+                      x{" "}
+                    </Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -153,15 +178,7 @@ export class ScheduleSearch extends Component {
                 })}
 
               {/* Trending Topics */}
-              <Text
-                style={{
-                  fontFamily: "Space Mono",
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  marginLeft: 15,
-                  marginTop: 15,
-                }}
-              >
+              <Text style={[dynamicStyles.text, styles.trendingTopics]}>
                 Trending Topics
               </Text>
 
@@ -178,8 +195,16 @@ export class ScheduleSearch extends Component {
                   "#ML",
                 ].map((value, i) => {
                   return (
-                    <TouchableOpacity style={styles.tagStyle}>
-                      <Text style={styles.textStyle}> {value} </Text>
+                    <TouchableOpacity
+                      style={[
+                        styles.tagStyle,
+                        dynamicStyles.tritaryBackgroundColor,
+                      ]}
+                    >
+                      <Text style={[styles.textStyle, dynamicStyles.text]}>
+                        {" "}
+                        {value}{" "}
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -195,16 +220,24 @@ export class ScheduleSearch extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    // backgroundColor: "white",
+  },
+
+  trendingTopics: {
+    fontFamily: "Space Mono",
+    fontWeight: "bold",
+    fontSize: 18,
+    marginLeft: 15,
+    marginTop: 15,
   },
 
   exitContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginLeft: 10,
   },
 
   exitStyle: {
-    backgroundColor: '#F2F2F2',
+    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
     padding: 7,
   },
@@ -214,40 +247,40 @@ const styles = StyleSheet.create({
   },
 
   filterContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 15,
     marginLeft: 10,
   },
 
   filterStyle: {
-    backgroundColor: '#F2F2F2',
+    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
   },
 
   filterTextStyle: {
     padding: 7,
-    fontFamily: 'Space Mono',
+    fontFamily: "Space Mono",
   },
 
   container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
   },
 
   textStyle: {
     padding: 7,
-    fontFamily: 'Space Mono',
+    fontFamily: "Space Mono",
   },
 
   tagStyle: {
-    backgroundColor: '#F2F2F2',
+    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
     marginTop: 15,
   },
 
   background: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 
   cancelButton: {
@@ -258,25 +291,25 @@ const styles = StyleSheet.create({
     height: 22,
     width: 63,
     left: 10,
-    backgroundColor: '#C866F5',
+    backgroundColor: "#C866F5",
     borderRadius: 10,
   },
 
   searchHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   searchContainer: {
-    backgroundColor: 'white',
-    width: '80%',
+    // backgroundColor: 'white',
+    width: "80%",
     borderWidth: 0,
-    borderTopColor: 'white',
-    borderBottomColor: 'white',
+    // borderTopColor: 'white',
+    // borderBottomColor: 'white',
   },
 
   inputContainer: {
-    backgroundColor: '#F2F2F2',
+    // backgroundColor: "#F2F2F2",
     height: 41,
   },
 });
