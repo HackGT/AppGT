@@ -30,7 +30,7 @@ export const dynamicStyles = new DynamicStyleSheet({
   },
 
   primaryButtonBackground: {
-    backgroundColor: new DynamicValue("#666666", "#666666"),
+    backgroundColor: new DynamicValue("#666666", "#35383D"),
   },
 
   tritaryBackgroundColor: {
