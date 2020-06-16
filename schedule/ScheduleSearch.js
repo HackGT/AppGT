@@ -67,7 +67,13 @@ export class ScheduleSearch extends Component {
           >
             <View style={styles.searchHeader}>
               <SearchBar
-                searchIcon={SearchIcon}
+                searchIcon={
+                  <SearchIcon
+                    fill={
+                      dynamicStyles.secondaryBackgroundColor.backgroundColor
+                    }
+                  />
+                }
                 containerStyle={[
                   styles.searchContainer,
                   dynamicStyles.backgroundColor,
