@@ -52,7 +52,9 @@ function SchdeuleStackScreen({ navigation }) {
               style={{ padding: 10 }}
               onPress={() => navigation.navigate("ScheduleSearch")}
             >
-              <SearchIcon />
+              <SearchIcon
+                fill={dStyles.secondaryBackgroundColor.backgroundColor}
+              />
             </TouchableOpacity>
           ),
           headerStyle: dStyles.tabBarBackgroundColor,
@@ -283,7 +285,7 @@ class App extends React.Component {
               <StatusBar backgroundColor="white" barStyle="dark-content" />
               <Tab.Navigator
                 tabBarOptions={{
-                  activeTintColor: "#41D1FF",
+                  activeTintColor: this.props.styles.tintColor.color,
                   tabBarVisible: false,
                   style: this.props.styles.tabBarBackgroundColor,
                 }}

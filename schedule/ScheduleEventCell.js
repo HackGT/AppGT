@@ -14,17 +14,18 @@ export class ScheduleEventCell extends Component {
     };
   }
 
-  createCardStyle = () => {
+  createCardStyle = (dynamicStyles) => {
     const style = {
       padding: 17,
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "space-evenly",
       height: 100,
-      // TODO: edit border color here
-      borderColor: this.props.highlighted ? "#41D1FF" : "#1A1919",
-      borderWidth: 1.2,
+      borderWidth: 1.3,
       borderRadius: 12,
+      borderColor: this.props.highlighted
+        ? dynamicStyles.tintColor.color
+        : dynamicStyles.tritaryBackgroundColor.backgroundColor,
       elevation: 1, // android shadow
       shadowColor: "black",
       shadowOffset: { width: 0.5, height: 0.5 },
@@ -49,7 +50,6 @@ export class ScheduleEventCell extends Component {
         : "";
     const start = event.startTime;
     const end = event.endTime;
-
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
@@ -62,7 +62,7 @@ export class ScheduleEventCell extends Component {
                   <View
                     style={[
                       dynamicStyles.tritaryBackgroundColor,
-                      this.createCardStyle(),
+                      this.createCardStyle(dynamicStyles),
                     ]}
                   >
                     <View style={styles.titleHeader}>
@@ -77,7 +77,16 @@ export class ScheduleEventCell extends Component {
                         style={{ width: "10%" }}
                         onPress={() => toggleStar(event)}
                       >
-                        {isStarred ? <StarOn /> : <StarOff />}
+                        {isStarred ? (
+                          <StarOn fill={dynamicStyles.tintColor.color} />
+                        ) : (
+                          <StarOff
+                            fill={
+                              dynamicStyles.secondaryBackgroundColor
+                                .backgroundColor
+                            }
+                          />
+                        )}
                       </TouchableOpacity>
                     </View>
                     <Text
