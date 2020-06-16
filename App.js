@@ -245,16 +245,23 @@ class App extends React.Component {
     // if user needs to login, do splash grow/fade out animation then show login
     if (needsLogin) {
       return (
-        <AuthContext.Provider
+        <ThemeContext.Provider
           value={{
-            user: this.state.user,
-            login: this.login,
-            logout: this.logout,
+            theme: this.props.theme,
+            dynamicStyles: this.props.styles,
           }}
         >
-          {!this.state.scheduleModal && splashGrowModal}
-          <LoginOnboarding />
-        </AuthContext.Provider>
+          <AuthContext.Provider
+            value={{
+              user: this.state.user,
+              login: this.login,
+              logout: this.logout,
+            }}
+          >
+            {!this.state.scheduleModal && splashGrowModal}
+            <LoginOnboarding />
+          </AuthContext.Provider>
+        </ThemeContext.Provider>
       );
     }
 
