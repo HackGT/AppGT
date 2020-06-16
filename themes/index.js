@@ -11,6 +11,7 @@ export const dynamicStyles = new DynamicStyleSheet({
   text: {
     color: new DynamicValue("#3F3F3F", "white"),
   },
+
   secondaryText: {
     color: new DynamicValue("#4F4F4F", "#C2C2C2"),
   },
@@ -41,5 +42,13 @@ export const dynamicStyles = new DynamicStyleSheet({
     backgroundColor: new DynamicValue("white", "#171717"),
     shadowColor: new DynamicValue("white", "#666666"),
     borderTopColor: new DynamicValue("white", "#666666"),
+  },
+
+  searchBorderTopColor: {
+    borderTopColor: new DynamicValue("white", "black"),
+  },
+
+  searchBorderBottomColor: {
+    borderBottomColor: new DynamicValue("white", "black"),
   },
 });
