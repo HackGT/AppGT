@@ -106,7 +106,7 @@ export class ScheduleSearch extends Component {
                   <View
                     style={[
                       styles.filterStyle,
-                      dynamicStyles.tritaryBackgroundColor,
+                      dynamicStyles.searchBackgroundColor,
                     ]}
                   >
                     <Text style={[styles.filterTextStyle, dynamicStyles.text]}>
@@ -130,7 +130,7 @@ export class ScheduleSearch extends Component {
                   <View
                     style={[
                       styles.exitStyle,
-                      dynamicStyles.tritaryBackgroundColor,
+                      dynamicStyles.searchBackgroundColor,
                     ]}
                   >
                     <Text style={[styles.exitTextStyle, dynamicStyles.text]}>
@@ -204,7 +204,7 @@ export class ScheduleSearch extends Component {
                     <TouchableOpacity
                       style={[
                         styles.tagStyle,
-                        dynamicStyles.tritaryBackgroundColor,
+                        dynamicStyles.searchBackgroundColor,
                       ]}
                     >
                       <Text style={[styles.textStyle, dynamicStyles.text]}>

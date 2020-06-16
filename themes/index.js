@@ -51,4 +51,8 @@ export const dynamicStyles = new DynamicStyleSheet({
   searchBorderBottomColor: {
     borderBottomColor: new DynamicValue("white", "black"),
   },
+
+  searchBackgroundColor: {
+    backgroundColor: new DynamicValue("#F2F2F2", "#1A1919"),
+  },
 });
