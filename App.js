@@ -285,7 +285,7 @@ class App extends React.Component {
               <StatusBar backgroundColor="white" barStyle="dark-content" />
               <Tab.Navigator
                 tabBarOptions={{
-                  activeTintColor: "#41D1FF",
+                  activeTintColor: this.props.styles.tintColor.color,
                   tabBarVisible: false,
                   style: this.props.styles.tabBarBackgroundColor,
                 }}

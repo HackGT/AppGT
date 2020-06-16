@@ -34,14 +34,20 @@ export class EventBottomSheet extends Component {
               const addStarButton = starredIds.indexOf(event.id) == -1;
 
               return (
-                <View style={[dynamicStyles.backgroundColor, styles.panel]}>
+                <View
+                  style={[dynamicStyles.tritaryBackgroundColor, styles.panel]}
+                >
                   <TouchableOpacity
                     style={styles.panelClose}
                     onPress={() => {
                       this.RBSheet.close();
                     }}
                   >
-                    <X />
+                    <X
+                      fill={
+                        dynamicStyles.secondaryBackgroundColor.backgroundColor
+                      }
+                    />
                   </TouchableOpacity>
 
                   <Text style={[dynamicStyles.text, styles.panelTitleText]}>
@@ -75,7 +81,9 @@ export class EventBottomSheet extends Component {
                             }
                           >
                             {addStarButton ? (
-                              <AddStarButton />
+                              <AddStarButton
+                                fill={dynamicStyles.tintColor.color}
+                              />
                             ) : (
                               <RemoveStarButton />
                             )}
@@ -95,24 +103,34 @@ export class EventBottomSheet extends Component {
 
   render() {
     return (
-      <RBSheet
-        ref={(ref) => {
-          this.props.reference(ref);
-          this.RBSheet = ref;
-        }}
-        height={450}
-        openDuration={250}
-        closeDuration={250}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-          },
-        }}
-      >
-        {this.props.event != null ? this.bottomSheetContent() : null}
-      </RBSheet>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <RBSheet
+            ref={(ref) => {
+              this.props.reference(ref);
+              this.RBSheet = ref;
+            }}
+            height={450}
+            openDuration={250}
+            closeDuration={250}
+            closeOnDragDown
+            customStyles={{
+              container: {
+                backgroundColor:
+                  dynamicStyles.tritaryBackgroundColor.backgroundColor,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+              },
+              draggableIcon: {
+                backgroundColor:
+                  dynamicStyles.secondaryBackgroundColor.backgroundColor,
+              },
+            }}
+          >
+            {this.props.event != null ? this.bottomSheetContent() : null}
+          </RBSheet>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
