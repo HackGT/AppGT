@@ -170,7 +170,10 @@ export class EventOnboarding extends Component {
                   }
                 }}
               >
-                <BackButton style={styles.backButton} />
+                <BackButton
+                  style={styles.backButton}
+                  fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
+                />
               </TouchableOpacity>
             </View>
 

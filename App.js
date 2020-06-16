@@ -52,7 +52,9 @@ function SchdeuleStackScreen({ navigation }) {
               style={{ padding: 10 }}
               onPress={() => navigation.navigate("ScheduleSearch")}
             >
-              <SearchIcon />
+              <SearchIcon
+                fill={dStyles.secondaryBackgroundColor.backgroundColor}
+              />
             </TouchableOpacity>
           ),
           headerStyle: dStyles.tabBarBackgroundColor,
