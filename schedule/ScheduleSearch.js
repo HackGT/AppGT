@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
 import { colors } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
-import { Text, View, StyleSheet, StatusBar } from "react-native";
+import { FlatList, Text, View, StyleSheet, StatusBar } from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
@@ -52,175 +52,213 @@ export class ScheduleSearch extends Component {
     );
   };
 
-  state = {
-    showFilterMenu: false,
-    exitFilter: false,
-    showFilterButton: true,
-  };
+  constructor() {
+    super();
+    this.state = {
+      showFilterMenu: false,
+      exitFilter: false,
+      showFilterButton: true,
+    };
+  }
 
   render() {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
-          <SafeAreaView
-            style={[dynamicStyles.backgroundColor, styles.safeArea]}
-          >
-            <View style={styles.searchHeader}>
-              <SearchBar
-                searchIcon={
-                  <SearchIcon
-                    fill={
-                      dynamicStyles.secondaryBackgroundColor.backgroundColor
-                    }
-                  />
-                }
-                containerStyle={[
-                  styles.searchContainer,
+          <HackathonContext.Consumer>
+            {({ hackathon }) => {
+              <SafeAreaView
+                style={[
                   dynamicStyles.backgroundColor,
-                  dynamicStyles.searchBorderTopColor,
-                  dynamicStyles.searchBorderBottomColor,
+                  styles.safeArea,
                 ]}
-                inputContainerStyle={[
-                  styles.inputContainer,
-                  dynamicStyles.searchBackgroundColor,
-                ]}
-                lightTheme
-                round
-                placeholder="Search..."
-              />
-
-              {this.backButton()}
-            </View>
-
-            <View style={dynamicStyles.backgroundColor}>
-              {/* Filter Button */}
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ showFilterMenu: true }),
-                    this.setState({ exitFilter: true }),
-                    this.setState({ showFilterButton: false });
-                }}
-                style={styles.filterContainer}
               >
-                {this.state.showFilterButton && (
-                  <View
-                    style={[
-                      styles.filterStyle,
+                <View style={styles.searchHeader}>
+                  <SearchBar
+                    searchIcon={
+                      <SearchIcon
+                        fill={
+                          dynamicStyles.secondaryBackgroundColor
+                            .backgroundColor
+                        }
+                      />
+                    }
+                    containerStyle={[
+                      styles.searchContainer,
+                      dynamicStyles.backgroundColor,
+                      dynamicStyles.searchBorderTopColor,
+                      dynamicStyles.searchBorderBottomColor,
+                    ]}
+                    inputContainerStyle={[
+                      styles.inputContainer,
                       dynamicStyles.searchBackgroundColor,
                     ]}
-                  >
-                    <Text
-                      style={[styles.filterTextStyle, dynamicStyles.text]}
-                    >
-                      {" "}
-                      Filter{" "}
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
+                    lightTheme
+                    round
+                    placeholder="Search..."
+                  />
 
-              {/* Exit Button */}
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ showFilterMenu: false }),
-                    this.setState({ exitFilter: false }),
-                    this.setState({ showFilterButton: true });
-                }}
-                style={styles.exitContainer}
-              >
-                {this.state.exitFilter && (
-                  <View
-                    style={[
-                      styles.exitStyle,
-                      dynamicStyles.searchBackgroundColor,
-                    ]}
-                  >
-                    <Text
-                      style={[styles.exitTextStyle, dynamicStyles.text]}
-                    >
-                      {" "}
-                      x{" "}
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
+                  {this.backButton()}
+                </View>
 
-              {/* Filter Menu */}
-              {this.state.showFilterMenu &&
-                Object.keys(colors).map(function(name, index) {
-                  const color = colors[name];
-                  return (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        marginTop: 55,
-                        top: index * 45,
-                        left: 10,
-                        position: "absolute",
-                        zIndex: 1,
-                        shadowColor: "#000",
-                        shadowOffset: {
-                          width: 0,
-                          height: 2,
-                        },
-                        shadowOpacity: 0.25,
-                      }}
-                    >
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: color,
-                          borderRadius: 50,
-                        }}
+                <View style={dynamicStyles.backgroundColor}>
+                  {/* Filter Button */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ showFilterMenu: true }),
+                        this.setState({ exitFilter: true }),
+                        this.setState({
+                          showFilterButton: false,
+                        });
+                    }}
+                    style={styles.filterContainer}
+                  >
+                    {this.state.showFilterButton && (
+                      <View
+                        style={[
+                          styles.filterStyle,
+                          dynamicStyles.searchBackgroundColor,
+                        ]}
                       >
                         <Text
-                          style={{
-                            padding: 7,
-                            color: "white",
-                            fontFamily: "Space Mono",
-                          }}
+                          style={[
+                            styles.filterTextStyle,
+                            dynamicStyles.text,
+                          ]}
                         >
                           {" "}
-                          {name}{" "}
+                          Filter{" "}
                         </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
+                      </View>
+                    )}
+                  </TouchableOpacity>
 
-              {/* Trending Topics */}
-              <Text style={[dynamicStyles.text, styles.trendingTopics]}>
-                Trending Topics
-              </Text>
+                  {/* Exit Button */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ showFilterMenu: false }),
+                        this.setState({ exitFilter: false }),
+                        this.setState({ showFilterButton: true });
+                    }}
+                    style={styles.exitContainer}
+                  >
+                    {this.state.exitFilter && (
+                      <View
+                        style={[
+                          styles.exitStyle,
+                          dynamicStyles.searchBackgroundColor,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.exitTextStyle,
+                            dynamicStyles.text,
+                          ]}
+                        >
+                          {" "}
+                          x{" "}
+                        </Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
 
-              {/*Tags */}
-              <View style={styles.container}>
-                {[
-                  "#boba",
-                  "#ML",
-                  "#facebook",
-                  "#coffee",
-                  "#facebook",
-                  "#boba",
-                  "#coffee",
-                  "#ML",
-                ].map((value, i) => {
-                  return (
-                    <TouchableOpacity
-                      style={[
-                        styles.tagStyle,
-                        dynamicStyles.searchBackgroundColor,
-                      ]}
-                    >
-                      <Text style={[styles.textStyle, dynamicStyles.text]}>
-                        {" "}
-                        {value}{" "}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-          </SafeAreaView>
+                  {/* Filter Menu */}
+                  {this.state.showFilterMenu &&
+                    Object.keys(colors).map(function(
+                      name,
+                      index
+                    ) {
+                      const color = colors[name];
+                      return (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            marginTop: 55,
+                            top: index * 45,
+                            left: 10,
+                            position: "absolute",
+                            zIndex: 1,
+                            shadowColor: "#000",
+                            shadowOffset: {
+                              width: 0,
+                              height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: color,
+                              borderRadius: 50,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                padding: 7,
+                                color: "white",
+                                fontFamily: "Space Mono",
+                              }}
+                            >
+                              {" "}
+                              {name}{" "}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
+
+                  {/* Trending Topics */}
+                  <Text
+                    style={[
+                      dynamicStyles.text,
+                      styles.trendingTopics,
+                    ]}
+                  >
+                    Trending Topics
+                  </Text>
+
+                  {/*Tags */}
+                  <View style={styles.container}>
+                    {[
+                      "#boba",
+                      "#ML",
+                      "#facebook",
+                      "#coffee",
+                      "#facebook",
+                      "#boba",
+                      "#coffee",
+                      "#ML",
+                    ].map((value, i) => {
+                      return (
+                        <TouchableOpacity
+                          style={[
+                            styles.tagStyle,
+                            dynamicStyles.searchBackgroundColor,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.textStyle,
+                              dynamicStyles.text,
+                            ]}
+                          >
+                            {" "}
+                            {value}{" "}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                  <FlatList>
+                    data = {hackathon.events}
+                    renderItem={({ item, index }) => {
+                      return item.title
+                    }}
+                  </FlatList>
+                </View>
+              </SafeAreaView>
+            }}
+          </HackathonContext.Consumer>
         )}
       </ThemeContext.Consumer>
     );
