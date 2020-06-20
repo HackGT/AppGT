@@ -82,7 +82,7 @@ export class ScheduleSearch extends Component {
                 ]}
                 inputContainerStyle={[
                   styles.inputContainer,
-                  dynamicStyles.tritaryBackgroundColor,
+                  dynamicStyles.searchBackgroundColor,
                 ]}
                 lightTheme
                 round
@@ -109,7 +109,9 @@ export class ScheduleSearch extends Component {
                       dynamicStyles.searchBackgroundColor,
                     ]}
                   >
-                    <Text style={[styles.filterTextStyle, dynamicStyles.text]}>
+                    <Text
+                      style={[styles.filterTextStyle, dynamicStyles.text]}
+                    >
                       {" "}
                       Filter{" "}
                     </Text>
@@ -133,7 +135,9 @@ export class ScheduleSearch extends Component {
                       dynamicStyles.searchBackgroundColor,
                     ]}
                   >
-                    <Text style={[styles.exitTextStyle, dynamicStyles.text]}>
+                    <Text
+                      style={[styles.exitTextStyle, dynamicStyles.text]}
+                    >
                       {" "}
                       x{" "}
                     </Text>
