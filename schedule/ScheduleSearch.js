@@ -201,7 +201,7 @@ export class ScheduleSearch extends Component {
                                 width: 0,
                                 height: 2,
                               },
-                              shadowOpacity: 0.1,
+                              shadowOpacity: 0.25,
                             }}
                           >
                             <TouchableOpacity
@@ -293,12 +293,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginLeft: 15,
     marginRight: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
   },
 
   divider: {
