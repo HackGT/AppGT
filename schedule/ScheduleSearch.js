@@ -66,20 +66,16 @@ export class ScheduleSearch extends Component {
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
-            {({ hackathon }) => {
+            {({ hackathon }) => (
               <SafeAreaView
-                style={[
-                  dynamicStyles.backgroundColor,
-                  styles.safeArea,
-                ]}
+                style={[dynamicStyles.backgroundColor, styles.safeArea]}
               >
                 <View style={styles.searchHeader}>
                   <SearchBar
                     searchIcon={
                       <SearchIcon
                         fill={
-                          dynamicStyles.secondaryBackgroundColor
-                            .backgroundColor
+                          dynamicStyles.secondaryBackgroundColor.backgroundColor
                         }
                       />
                     }
@@ -121,10 +117,7 @@ export class ScheduleSearch extends Component {
                         ]}
                       >
                         <Text
-                          style={[
-                            styles.filterTextStyle,
-                            dynamicStyles.text,
-                          ]}
+                          style={[styles.filterTextStyle, dynamicStyles.text]}
                         >
                           {" "}
                           Filter{" "}
@@ -150,10 +143,7 @@ export class ScheduleSearch extends Component {
                         ]}
                       >
                         <Text
-                          style={[
-                            styles.exitTextStyle,
-                            dynamicStyles.text,
-                          ]}
+                          style={[styles.exitTextStyle, dynamicStyles.text]}
                         >
                           {" "}
                           x{" "}
@@ -164,10 +154,7 @@ export class ScheduleSearch extends Component {
 
                   {/* Filter Menu */}
                   {this.state.showFilterMenu &&
-                    Object.keys(colors).map(function(
-                      name,
-                      index
-                    ) {
+                    Object.keys(colors).map(function(name, index) {
                       const color = colors[name];
                       return (
                         <View
@@ -208,12 +195,7 @@ export class ScheduleSearch extends Component {
                     })}
 
                   {/* Trending Topics */}
-                  <Text
-                    style={[
-                      dynamicStyles.text,
-                      styles.trendingTopics,
-                    ]}
-                  >
+                  <Text style={[dynamicStyles.text, styles.trendingTopics]}>
                     Trending Topics
                   </Text>
 
@@ -236,12 +218,7 @@ export class ScheduleSearch extends Component {
                             dynamicStyles.searchBackgroundColor,
                           ]}
                         >
-                          <Text
-                            style={[
-                              styles.textStyle,
-                              dynamicStyles.text,
-                            ]}
-                          >
+                          <Text style={[styles.textStyle, dynamicStyles.text]}>
                             {" "}
                             {value}{" "}
                           </Text>
@@ -251,13 +228,16 @@ export class ScheduleSearch extends Component {
                   </View>
                   <FlatList>
                     data = {hackathon.events}
-                    renderItem={({ item, index }) => {
-                      return item.title
+                    renderItem =
+                    {({ item, index }) => {
+                      console.log(item.title);
+                      console.log(hackathon.events);
+                      return <Text>{item.title}</Text>;
                     }}
                   </FlatList>
                 </View>
               </SafeAreaView>
-            }}
+            )}
           </HackathonContext.Consumer>
         )}
       </ThemeContext.Consumer>
