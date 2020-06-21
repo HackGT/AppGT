@@ -10,6 +10,7 @@ import { Card, CardItem, List, Button } from "native-base";
 import CancelIcon from "../assets/Cancel";
 import { authorize } from "react-native-app-auth";
 import { getCurrentDayIndex } from "../cms/DataHandler";
+import { ScheduleEventCell } from "./ScheduleEventCell";
 
 export class ScheduleSearch extends Component {
   filterButton = () => {
@@ -58,15 +59,26 @@ export class ScheduleSearch extends Component {
       showFilterMenu: false,
       exitFilter: false,
       showFilterButton: true,
+      searchText: "",
     };
   }
 
+  searchEvents = (value) => {
+    this.setState({ searchText: value });
+  };
+
   render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <HackathonContext.Consumer>
-            {({ hackathon }) => (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <HackathonContext.Consumer>
+          {({ hackathon }) => {
+            const filteredEvents = hackathon.events.filter((event) => {
+              let eventLowerCase = event.title.toLowerCase();
+              return (
+                eventLowerCase.indexOf(this.state.searchText.trim().toLowerCase()) > -1
+              );
+            });
+            return (
               <SafeAreaView
                 style={[dynamicStyles.backgroundColor, styles.safeArea]}
               >
@@ -92,6 +104,7 @@ export class ScheduleSearch extends Component {
                     lightTheme
                     round
                     placeholder="Search..."
+                    onChangeText={(value) => this.searchEvents(value)}
                   />
 
                   {this.backButton()}
@@ -125,7 +138,6 @@ export class ScheduleSearch extends Component {
                       </View>
                     )}
                   </TouchableOpacity>
-
                   {/* Exit Button */}
                   <TouchableOpacity
                     onPress={() => {
@@ -151,7 +163,6 @@ export class ScheduleSearch extends Component {
                       </View>
                     )}
                   </TouchableOpacity>
-
                   {/* Filter Menu */}
                   {this.state.showFilterMenu &&
                     Object.keys(colors).map(function(name, index) {
@@ -193,12 +204,10 @@ export class ScheduleSearch extends Component {
                         </View>
                       );
                     })}
-
                   {/* Trending Topics */}
                   <Text style={[dynamicStyles.text, styles.trendingTopics]}>
                     Trending Topics
                   </Text>
-
                   {/*Tags */}
                   <View style={styles.container}>
                     {[
@@ -226,22 +235,23 @@ export class ScheduleSearch extends Component {
                       );
                     })}
                   </View>
-                  <FlatList>
-                    data = {hackathon.events}
-                    renderItem =
-                    {({ item, index }) => {
-                      console.log(item.title);
-                      console.log(hackathon.events);
-                      return <Text>{item.title}</Text>;
+
+                  <FlatList
+                    data={filteredEvents}
+                    renderItem={({ item, index }) => {
+                      return <ScheduleEventCell event={item} />;
                     }}
-                  </FlatList>
+                    keyExtractor={(item, index) =>
+                      item && item.id ? item.id : index
+                    }
+                  />
                 </View>
               </SafeAreaView>
-            )}
-          </HackathonContext.Consumer>
-        )}
-      </ThemeContext.Consumer>
-    );
+            );
+          }}
+        </HackathonContext.Consumer>
+      )}
+    </ThemeContext.Consumer>;
   }
 }
 
