@@ -289,7 +289,14 @@ class App extends React.Component {
           >
             {!this.state.scheduleModal && splashGrowModal}
             <NavigationContainer>
-              <StatusBar backgroundColor="white" barStyle="dark-content" />
+              <StatusBar
+                backgroundColor={
+                  this.props.styles.tabBarBackgroundColor.backgroundColor
+                }
+                barStyle={
+                  this.props.theme == "dark" ? "light-content" : "dark-content"
+                }
+              />
               <Tab.Navigator
                 tabBarOptions={{
                   activeTintColor: this.props.styles.tintColor.color,
