@@ -55,4 +55,8 @@ export const dynamicStyles = new DynamicStyleSheet({
   searchBackgroundColor: {
     backgroundColor: new DynamicValue("#F2F2F2", "#1A1919"),
   },
+
+  searchDividerColor: {
+    borderBottomColor: new DynamicValue("#C3C3C3", "#35383D"),
+  },
 });
