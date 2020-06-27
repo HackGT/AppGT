@@ -11,6 +11,7 @@ import CancelIcon from "../assets/Cancel";
 import { authorize } from "react-native-app-auth";
 import { getCurrentDayIndex } from "../cms/DataHandler";
 import { ScheduleEventCell } from "./ScheduleEventCell";
+import { EventBottomSheet } from "./EventBottomSheet";
 
 export class ScheduleSearch extends Component {
   filterButton = () => {
@@ -60,8 +61,19 @@ export class ScheduleSearch extends Component {
       exitFilter: false,
       showFilterButton: true,
       searchText: "",
+      selectedEvent: null,
     };
   }
+
+  setSelectedEvent = (event) => {
+    if (event) {
+      this.setState({ selectedEvent: event });
+      this.RBSheet.open();
+    } else {
+      this.setState({ selectedEvent: null });
+      this.RBSheet.close();
+    }
+  };
 
   searchEvents = (value) => {
     this.setState({ searchText: value });
@@ -264,14 +276,23 @@ export class ScheduleSearch extends Component {
                       data={filteredEvents}
                       renderItem={({ item, index }) => {
                         return (
-                          <View style={styles.flatList}>
+                          <TouchableOpacity
+                            style={styles.flatList}
+                            onPress={() => {
+                              this.setSelectedEvent(item);
+                            }}
+                          >
                             <ScheduleEventCell event={item} />
-                          </View>
+                          </TouchableOpacity>
                         );
                       }}
                       keyExtractor={(item, index) =>
                         item && item.id ? item.id : index
                       }
+                    />
+                    <EventBottomSheet
+                      reference={(ref) => (this.RBSheet = ref)}
+                      event={this.state.selectedEvent}
                     />
                   </View>
                 </SafeAreaView>
