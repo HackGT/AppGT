@@ -5,6 +5,7 @@ import {
   sortEventsByStartTime,
   getEventsForDay,
   getDaysForEvent,
+  daysAvailable,
 } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import { FlatList, Text, View, StyleSheet, StatusBar } from "react-native";
@@ -96,24 +97,29 @@ export class ScheduleSearch extends Component {
                 for (const event of sortEventsByStartTime(
                   getEventsForDay(hackathon.events, day)
                 )) {
+                  sortedEvents.push({
+                    day: day,
+                  });
                   sortedEvents.push(event);
                 }
               }
 
               const filteredEvents = sortedEvents.filter((event) => {
-                let eventNameLowerCase = event.name.toLowerCase();
-                let eventDescriptionLowerCase = "";
-                if (event.description != null) {
-                  eventDescriptionLowerCase = event.description.toLowerCase();
+                if (!(event in daysAvailable)) {
+                  let eventNameLowerCase = event.name.toLowerCase();
+                  let eventDescriptionLowerCase = "";
+                  if (event.description != null) {
+                    eventDescriptionLowerCase = event.description.toLowerCase();
+                  }
+                  return (
+                    eventNameLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    eventDescriptionLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    )
+                  );
                 }
-                return (
-                  eventNameLowerCase.includes(
-                    this.state.searchText.trim().toLowerCase()
-                  ) ||
-                  eventDescriptionLowerCase.includes(
-                    this.state.searchText.trim().toLowerCase()
-                  )
-                );
               });
               return (
                 <SafeAreaView
@@ -290,16 +296,20 @@ export class ScheduleSearch extends Component {
                     <FlatList
                       data={filteredEvents}
                       renderItem={({ item, index }) => {
-                        return (
-                          <TouchableOpacity
-                            style={styles.flatList}
-                            onPress={() => {
-                              this.setSelectedEvent(item);
-                            }}
-                          >
-                            <ScheduleEventCell event={item} />
-                          </TouchableOpacity>
-                        );
+                        if (item in daysAvailable) {
+                          return { day };
+                        } else {
+                          return (
+                            <TouchableOpacity
+                              style={styles.flatList}
+                              onPress={() => {
+                                this.setSelectedEvent(item);
+                              }}
+                            >
+                              <ScheduleEventCell event={item} />
+                            </TouchableOpacity>
+                          );
+                        }
                       }}
                       keyExtractor={(item, index) =>
                         item && item.id ? item.id : index
@@ -353,7 +363,6 @@ const styles = StyleSheet.create({
   },
 
   exitStyle: {
-    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
     padding: 7,
   },
@@ -369,7 +378,6 @@ const styles = StyleSheet.create({
   },
 
   filterStyle: {
-    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
   },
 
@@ -390,7 +398,6 @@ const styles = StyleSheet.create({
   },
 
   tagStyle: {
-    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
     marginTop: 15,
   },
@@ -417,15 +424,11 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    // backgroundColor: 'white',
     width: "80%",
     borderWidth: 0,
-    // borderTopColor: 'white',
-    // borderBottomColor: 'white',
   },
 
   inputContainer: {
-    // backgroundColor: "#F2F2F2",
     height: 41,
   },
 });
