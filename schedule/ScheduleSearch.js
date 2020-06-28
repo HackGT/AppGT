@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
-import { colors } from "../cms/DataHandler";
-import { sortEventsByStartTime } from "../cms/DataHandler";
+import {
+  colors,
+  sortEventsByStartTime,
+  getEventsForDay,
+  getDaysForEvent,
+} from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import { FlatList, Text, View, StyleSheet, StatusBar } from "react-native";
 import SearchIcon from "../assets/Search";
@@ -86,9 +90,17 @@ export class ScheduleSearch extends Component {
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
             {({ hackathon }) => {
-              const filteredEvents = sortEventsByStartTime(
-                hackathon.events
-              ).filter((event) => {
+              const sortedEvents = [];
+
+              for (const day of getDaysForEvent(hackathon.events)) {
+                for (const event of sortEventsByStartTime(
+                  getEventsForDay(hackathon.events, day)
+                )) {
+                  sortedEvents.push(event);
+                }
+              }
+
+              const filteredEvents = sortedEvents.filter((event) => {
                 let eventNameLowerCase = event.name.toLowerCase();
                 let eventDescriptionLowerCase = "";
                 if (event.description != null) {
