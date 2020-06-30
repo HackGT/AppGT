@@ -396,7 +396,6 @@ const styles = StyleSheet.create({
   dayText: {
     padding: 7,
     fontFamily: "Space Mono",
-    fontSize: 15,
   },
 
   filterContainer: {
