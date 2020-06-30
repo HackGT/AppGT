@@ -91,36 +91,33 @@ export class ScheduleSearch extends Component {
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
             {({ hackathon }) => {
-              const sortedEvents = [];
+              let sortedEvents = [...hackathon.events];
 
-              for (const day of getDaysForEvent(hackathon.events)) {
-                for (const event of sortEventsByStartTime(
-                  getEventsForDay(hackathon.events, day)
-                )) {
-                  sortedEvents.push({
-                    day: day,
-                  });
-                  sortedEvents.push(event);
+              sortedEvents = sortedEvents.filter((event) => {
+                let eventNameLowerCase = event.name.toLowerCase();
+                let eventDescriptionLowerCase = "";
+                if (event.description != null) {
+                  eventDescriptionLowerCase = event.description.toLowerCase();
+                }
+                return (
+                  eventNameLowerCase.includes(
+                    this.state.searchText.trim().toLowerCase()
+                  ) ||
+                  eventDescriptionLowerCase.includes(
+                    this.state.searchText.trim().toLowerCase()
+                  )
+                );
+              });
+
+              const events = [];
+
+              for (const day of getDaysForEvent(sortedEvents)) {
+                events.push({ day: day });
+                for (const event of getEventsForDay(sortedEvents, day)) {
+                  events.push(event);
                 }
               }
 
-              const filteredEvents = sortedEvents.filter((event) => {
-                if (!(event in daysAvailable)) {
-                  let eventNameLowerCase = event.name.toLowerCase();
-                  let eventDescriptionLowerCase = "";
-                  if (event.description != null) {
-                    eventDescriptionLowerCase = event.description.toLowerCase();
-                  }
-                  return (
-                    eventNameLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) ||
-                    eventDescriptionLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    )
-                  );
-                }
-              });
               return (
                 <SafeAreaView
                   style={[dynamicStyles.backgroundColor, styles.safeArea]}
@@ -294,10 +291,25 @@ export class ScheduleSearch extends Component {
                       style={[styles.divider, dynamicStyles.searchDividerColor]}
                     />
                     <FlatList
-                      data={filteredEvents}
+                      data={events}
                       renderItem={({ item, index }) => {
-                        if (item in daysAvailable) {
-                          return { day };
+                        if (item.day) {
+                          return (
+                            <View style={styles.dayContainer}>
+                              <View
+                                style={[
+                                  styles.dayStyle,
+                                  dynamicStyles.secondaryBackgroundColor,
+                                ]}
+                              >
+                                <Text
+                                  style={[styles.dayText, dynamicStyles.text]}
+                                >
+                                  {item.day}
+                                </Text>
+                              </View>
+                            </View>
+                          );
                         } else {
                           return (
                             <TouchableOpacity
@@ -369,6 +381,22 @@ const styles = StyleSheet.create({
 
   exitTextStyle: {
     fontSize: 16,
+  },
+
+  dayContainer: {
+    flexDirection: "row",
+    marginTop: 15,
+    marginLeft: 15,
+  },
+
+  dayStyle: {
+    borderRadius: 8,
+  },
+
+  dayText: {
+    padding: 7,
+    fontFamily: "Space Mono",
+    fontSize: 15,
   },
 
   filterContainer: {
