@@ -2,16 +2,18 @@ import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext } from "./context";
-import { StatusBar, Modal } from "react-native";
+import { StatusBar, Modal, View } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
-import SplashScreen from "./SplashScreen";
+import SplashScreen from "./components/SplashScreen";
 import { EventOnboarding } from "./onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
+import StarIcon from "./assets/StarLargeOn";
+
 import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -48,14 +50,23 @@ function SchdeuleStackScreen({ navigation }) {
           headerTitleAlign: "left",
           headerTitle: (props) => <HackGTitle {...props} />,
           headerRight: () => (
-            <TouchableOpacity
-              style={{ padding: 10 }}
-              onPress={() => navigation.navigate("ScheduleSearch")}
-            >
-              <SearchIcon
-                fill={dStyles.secondaryBackgroundColor.backgroundColor}
-              />
-            </TouchableOpacity>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ScheduleSearch")}
+              >
+                <StarIcon
+                  fill={dStyles.secondaryBackgroundColor.backgroundColor}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ paddingLeft: 10, paddingRight: 10 }}
+                onPress={() => navigation.navigate("ScheduleSearch")}
+              >
+                <SearchIcon
+                  fill={dStyles.secondaryBackgroundColor.backgroundColor}
+                />
+              </TouchableOpacity>
+            </View>
           ),
           headerStyle: dStyles.tabBarBackgroundColor,
         }}
@@ -239,7 +250,16 @@ class App extends React.Component {
 
     // until app is done loading data, show the splash screen
     if (isLoading) {
-      return <SplashScreen />;
+      return (
+        <ThemeContext.Provider
+          value={{
+            theme: this.props.theme,
+            dynamicStyles: this.props.styles,
+          }}
+        >
+          <SplashScreen />
+        </ThemeContext.Provider>
+      );
     }
 
     // if user needs to login, do splash grow/fade out animation then show login
