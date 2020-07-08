@@ -44,47 +44,49 @@ const SchdeuleStack = createStackNavigator();
 function SchdeuleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
-    <SchdeuleStack.Navigator>
-      <SchdeuleStack.Screen
-        options={{
-          headerTitleAlign: "left",
-          headerTitle: (props) => <HackGTitle {...props} />,
-          headerRight: () => (
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("ScheduleSearch")}
-              >
-                <StarIcon
-                  fill={dStyles.secondaryBackgroundColor.backgroundColor}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingLeft: 10, paddingRight: 10 }}
-                onPress={() => navigation.navigate("ScheduleSearch")}
-              >
-                <SearchIcon
-                  fill={dStyles.secondaryBackgroundColor.backgroundColor}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
-          headerStyle: dStyles.tabBarBackgroundColor,
-        }}
-        name="HackGT"
-      >
-        {(props) => <ScheduleTab {...props} />}
-      </SchdeuleStack.Screen>
+    <HackathonContext.Consumer>
+      {({ toggleIsStarSchedule }) => (
+        <SchdeuleStack.Navigator>
+          <SchdeuleStack.Screen
+            options={{
+              headerTitleAlign: "left",
+              headerTitle: (props) => <HackGTitle {...props} />,
+              headerRight: () => (
+                <View style={{ flexDirection: "row" }}>
+                  <TouchableOpacity onPress={toggleIsStarSchedule}>
+                    <StarIcon
+                      fill={dStyles.secondaryBackgroundColor.backgroundColor}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ paddingLeft: 10, paddingRight: 10 }}
+                    onPress={() => navigation.navigate("ScheduleSearch")}
+                  >
+                    <SearchIcon
+                      fill={dStyles.secondaryBackgroundColor.backgroundColor}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ),
+              headerStyle: dStyles.tabBarBackgroundColor,
+            }}
+            name="HackGT"
+          >
+            {(props) => <ScheduleTab {...props} />}
+          </SchdeuleStack.Screen>
 
-      <SchdeuleStack.Screen
-        options={{
-          headerTransparent: true,
-          headerTitle: "",
-          headerLeft: null,
-        }}
-        name="ScheduleSearch"
-        component={ScheduleSearch}
-      />
-    </SchdeuleStack.Navigator>
+          <SchdeuleStack.Screen
+            options={{
+              headerTransparent: true,
+              headerTitle: "",
+              headerLeft: null,
+            }}
+            name="ScheduleSearch"
+            component={ScheduleSearch}
+          />
+        </SchdeuleStack.Navigator>
+      )}
+    </HackathonContext.Consumer>
   );
 }
 
@@ -100,6 +102,7 @@ class App extends React.Component {
       eventTypes: [],
       faq: [],
       starredIds: [],
+      isStarSchedule: false,
 
       // used for finding current state of screen for loading/login components
       isFetchingData: true,
@@ -110,6 +113,16 @@ class App extends React.Component {
       accessToken: null,
     };
   }
+
+  toggleIsStarSchedule = () => {
+    this.setState({ isStarSchedule: !this.state.isStarSchedule }, () => {
+      AsyncStorage.setItem(
+        "isStarSchedule",
+        this.state.isStarSchedule == true ? "true" : "false"
+      );
+      console.log(this.state.isStarSchedule);
+    });
+  };
 
   toggleStarred = (event) => {
     const toggleEventId = event.id;
@@ -199,6 +212,12 @@ class App extends React.Component {
       (error, result) =>
         result && this.setState({ starredIds: JSON.parse(result) })
     );
+
+    AsyncStorage.getItem("isStarSchedule", (error, result) => {
+      result &&
+        this.setState({ isStarSchedule: result === "true" ? true : false });
+      console.log(this.state.isStarSchedule);
+    });
 
     AsyncStorage.getItem("userData", (error, result) => {
       if (result) {
@@ -298,6 +317,8 @@ class App extends React.Component {
             hackathon: hackathon,
             toggleStar: this.toggleStarred,
             starredIds: starredIds,
+            isStarSchedule: this.state.isStarSchedule,
+            toggleIsStarSchedule: this.toggleIsStarSchedule,
           }}
         >
           <AuthContext.Provider

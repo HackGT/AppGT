@@ -7,7 +7,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import { HackathonContext, ThemeContext } from "../context";
+import { ThemeContext } from "../context";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import Svg, { Circle } from "react-native-svg";
 import { Dimensions } from "react-native";
@@ -53,118 +53,100 @@ export class ScheduleDayView extends Component {
 
   tabContent = (day) => (
     <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <HackathonContext.Consumer>
-          {({ hackathon }) => {
-            const events = hackathon.events;
-            const currentDayString = day;
-            const timeblocks = getTimeblocksForDay(events, currentDayString);
+      {({ dynamicStyles }) => {
+        const events = this.props.events;
+        const currentDayString = day;
+        const timeblocks = getTimeblocksForDay(events, currentDayString);
 
-            return (
-              <FlatList
-                ref={(ref) => {
-                  if (
-                    this.props.days[this.state.dayIndex] == currentDayString
-                  ) {
-                    this.currentScheduleRef = ref;
-                  }
-                }}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                  paddingBottom: this.props.paddingHeight,
-                }}
-                data={timeblocks}
-                keyExtractor={(item, index) =>
-                  item && item.id ? item.id : index
-                }
-                onScrollToIndexFailed={(error) => {
-                  setTimeout(() => {
-                    this.currentScheduleRef.scrollToIndex({
-                      index: error.index,
-                      animated: false,
-                    });
-                  }, 100);
-                }}
-                renderItem={({ item, index }) => {
-                  if (item == null) {
-                    return;
-                  }
+        return (
+          <FlatList
+            ref={(ref) => {
+              if (this.props.days[this.state.dayIndex] == currentDayString) {
+                this.currentScheduleRef = ref;
+              }
+            }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: this.props.paddingHeight,
+            }}
+            data={timeblocks}
+            keyExtractor={(item, index) => (item && item.id ? item.id : index)}
+            onScrollToIndexFailed={(error) => {
+              setTimeout(() => {
+                this.currentScheduleRef.scrollToIndex({
+                  index: error.index,
+                  animated: false,
+                });
+              }, 100);
+            }}
+            renderItem={({ item, index }) => {
+              if (item == null) {
+                return;
+              }
 
-                  const radius = 7;
-                  const size = radius * 2;
-                  const isHappeningNow = isEventHappeningNow(item);
-                  const highlighted = isHappeningNow;
-                  const highlightColor = highlighted
-                    ? dynamicStyles.tintColor.color
-                    : dynamicStyles.secondaryBackgroundColor.backgroundColor;
+              const radius = 7;
+              const size = radius * 2;
+              const isHappeningNow = isEventHappeningNow(item);
+              const highlighted = isHappeningNow;
+              const highlightColor = highlighted
+                ? dynamicStyles.tintColor.color
+                : dynamicStyles.secondaryBackgroundColor.backgroundColor;
 
-                  if (item && item.time) {
-                    return (
-                      <View
-                        key={index}
-                        flexDirection="row"
-                        style={{ height: 40 }}
-                      >
-                        <View flexDirection="row" style={styles.circleParent}>
-                          <Svg height={size} width={size}>
-                            <Circle
-                              cx={radius}
-                              cy={radius}
-                              r={radius}
-                              fill={highlightColor}
-                            />
-                          </Svg>
-                        </View>
-                        <View
-                          style={[
-                            dynamicStyles.secondaryBackgroundColor,
-                            styles.timeParent,
-                          ]}
-                        >
-                          <Text style={[dynamicStyles.text, styles.timeText]}>
-                            {item.time}
-                          </Text>
-                        </View>
-                      </View>
-                    );
-                  }
-
-                  return (
-                    <View key={index} flexDirection="row">
-                      <View
-                        flexDirection="row"
-                        style={[
-                          dynamicStyles.backgroundColor,
-                          styles.lineParent,
-                        ]}
-                      >
-                        <View
-                          style={{
-                            width: 1.5,
-                            height: "100%",
-                            backgroundColor: highlightColor,
-                          }}
+              if (item && item.time) {
+                return (
+                  <View key={index} flexDirection="row" style={{ height: 40 }}>
+                    <View flexDirection="row" style={styles.circleParent}>
+                      <Svg height={size} width={size}>
+                        <Circle
+                          cx={radius}
+                          cy={radius}
+                          r={radius}
+                          fill={highlightColor}
                         />
-                      </View>
-                      <TouchableOpacity
-                        style={styles.cardParent}
-                        onPress={() => {
-                          this.props.onSelectEvent(item);
-                        }}
-                      >
-                        <ScheduleEventCell
-                          event={item}
-                          highlighted={highlighted}
-                        />
-                      </TouchableOpacity>
+                      </Svg>
                     </View>
-                  );
-                }}
-              />
-            );
-          }}
-        </HackathonContext.Consumer>
-      )}
+                    <View
+                      style={[
+                        dynamicStyles.secondaryBackgroundColor,
+                        styles.timeParent,
+                      ]}
+                    >
+                      <Text style={[dynamicStyles.text, styles.timeText]}>
+                        {item.time}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              }
+
+              return (
+                <View key={index} flexDirection="row">
+                  <View
+                    flexDirection="row"
+                    style={[dynamicStyles.backgroundColor, styles.lineParent]}
+                  >
+                    <View
+                      style={{
+                        width: 1.5,
+                        height: "100%",
+                        backgroundColor: highlightColor,
+                      }}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={styles.cardParent}
+                    onPress={() => {
+                      this.props.onSelectEvent(item);
+                    }}
+                  >
+                    <ScheduleEventCell event={item} highlighted={highlighted} />
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+          />
+        );
+      }}
     </ThemeContext.Consumer>
   );
 

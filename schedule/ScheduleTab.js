@@ -62,8 +62,8 @@ export class ScheduleTab extends Component {
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
-            {({ hackathon }) => {
-              const events = hackathon.events;
+            {({ hackathon, isStarSchedule, starredIds }) => {
+              let events = hackathon.events;
               const eventsHappeningNow = this.state.eventsHappeningNow;
               const hasEventsNow = eventsHappeningNow.length > 0;
               const happeningNowView = (
@@ -96,6 +96,12 @@ export class ScheduleTab extends Component {
                 </View>
               );
 
+              if (isStarSchedule) {
+                events = events.filter(
+                  (event) => starredIds.indexOf(event.id) != -1
+                );
+              }
+
               const daysForEvents = getDaysForEvent(events);
               const currentDayIndex = getCurrentDayIndex(events);
               const initialEventIndex = getCurrentEventIndex(
@@ -119,6 +125,7 @@ export class ScheduleTab extends Component {
                   {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
                   <ScheduleDayView
                     paddingHeight={hasEventsNow ? 190 : 40}
+                    events={events}
                     initialEventIndex={initialEventIndex}
                     initialDayIndex={currentDayIndex}
                     days={daysForEvents}
