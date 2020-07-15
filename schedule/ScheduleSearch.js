@@ -19,6 +19,7 @@ import { getCurrentDayIndex } from "../cms/DataHandler";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
 import { color } from "react-native-reanimated";
+import { DrawerLayoutAndroidComponent } from "react-native";
 
 export class ScheduleSearch extends Component {
   filterButton = () => {
@@ -96,8 +97,8 @@ export class ScheduleSearch extends Component {
       this.setState({
         exitFilter: false,
       });
-      filterName = name;
-      if (filterName === "clear") {
+      this.state.filterName = name;
+      if (this.state.filterName === "clear") {
         this.setState({
           showFilterButton: true,
         });
@@ -116,21 +117,53 @@ export class ScheduleSearch extends Component {
           <HackathonContext.Consumer>
             {({ hackathon }) => {
               let sortedEvents = [...hackathon.events];
+              var days = [
+                "sunday",
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+              ];
 
               sortedEvents = sortedEvents.filter((event) => {
+                var date = new Date(event.startDate);
+                var dayName = days[date.getDay()];
                 let eventNameLowerCase = event.name.toLowerCase();
                 let eventDescriptionLowerCase = "";
                 if (event.description != null) {
                   eventDescriptionLowerCase = event.description.toLowerCase();
                 }
-                return (
-                  eventNameLowerCase.includes(
-                    this.state.searchText.trim().toLowerCase()
-                  ) ||
-                  eventDescriptionLowerCase.includes(
-                    this.state.searchText.trim().toLowerCase()
-                  )
-                );
+                if (event.type.name === this.state.filterName) {
+                  return (
+                    (eventNameLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName) ||
+                    (eventDescriptionLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName) ||
+                    (dayName.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName)
+                  );
+                } else if (
+                  this.state.filterName === "" ||
+                  this.state.filterName === "clear"
+                ) {
+                  return (
+                    eventNameLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    eventDescriptionLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    dayName.includes(this.state.searchText.trim().toLowerCase())
+                  );
+                }
               });
 
               const events = [];
@@ -141,7 +174,6 @@ export class ScheduleSearch extends Component {
                   events.push(event);
                 }
               }
-
               return (
                 <SafeAreaView
                   style={[dynamicStyles.backgroundColor, styles.safeArea]}
@@ -180,7 +212,7 @@ export class ScheduleSearch extends Component {
                     {/* Filter Button */}
                     <View style={styles.filterContainer}>
                       {this.state.showFilterButton &&
-                        ((filterName = ""),
+                        ((this.state.filterName = ""),
                         (
                           <TouchableOpacity
                             style={[
@@ -213,32 +245,34 @@ export class ScheduleSearch extends Component {
                     </View>
                     {/* Exit Button */}
                     <View style={styles.exitContainer}>
-                      {this.state.exitFilter && (
-                        <TouchableOpacity
-                          style={[
-                            styles.exitStyle,
-                            dynamicStyles.searchBackgroundColor,
-                          ]}
-                          onPress={() => {
-                            this.setState({
-                              showFilterMenu: false,
-                            }),
+                      {this.state.exitFilter &&
+                        ((this.state.filterName = ""),
+                        (
+                          <TouchableOpacity
+                            style={[
+                              styles.exitStyle,
+                              dynamicStyles.searchBackgroundColor,
+                            ]}
+                            onPress={() => {
                               this.setState({
-                                exitFilter: false,
+                                showFilterMenu: false,
                               }),
-                              this.setState({
-                                showFilterButton: true,
-                              });
-                          }}
-                        >
-                          <Text
-                            style={[styles.exitTextStyle, dynamicStyles.text]}
+                                this.setState({
+                                  exitFilter: false,
+                                }),
+                                this.setState({
+                                  showFilterButton: true,
+                                });
+                            }}
                           >
-                            {" "}
-                            x{" "}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
+                            <Text
+                              style={[styles.exitTextStyle, dynamicStyles.text]}
+                            >
+                              {" "}
+                              x{" "}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
                     </View>
 
                     {/* Filter Type */}
@@ -246,15 +280,15 @@ export class ScheduleSearch extends Component {
                       {this.state.filterType && (
                         <TouchableOpacity
                           style={[
-                            filterName == "important"
+                            this.state.filterName === "important"
                               ? styles.important
-                              : filterName == "food"
+                              : this.state.filterName === "food"
                               ? styles.food
-                              : filterName == "speaker"
+                              : this.state.filterName === "speaker"
                               ? styles.speaker
-                              : filterName == "mini-event"
+                              : this.state.filterName === "mini-event"
                               ? styles.minievent
-                              : filterName == "workshop"
+                              : this.state.filterName === "workshop"
                               ? styles.workshop
                               : styles.none,
                           ]}
@@ -262,9 +296,18 @@ export class ScheduleSearch extends Component {
                             this.setState({
                               showFilterMenu: true,
                             });
+                            this.setState({
+                              exitFilter: true,
+                            });
+                            this.setState({
+                              filterType: false,
+                            });
                           }}
                         >
-                          <Text style={styles.filterText}> {filterName} </Text>
+                          <Text style={styles.filterText}>
+                            {" "}
+                            {this.state.filterName}{" "}
+                          </Text>
                         </TouchableOpacity>
                       )}
                     </View>
