@@ -18,6 +18,7 @@ import { authorize } from "react-native-app-auth";
 import { getCurrentDayIndex } from "../cms/DataHandler";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
+import { color } from "react-native-reanimated";
 
 export class ScheduleSearch extends Component {
   filterButton = () => {
@@ -68,6 +69,8 @@ export class ScheduleSearch extends Component {
       showFilterButton: true,
       searchText: "",
       selectedEvent: null,
+      filterType: false,
+      filterName: "",
     };
   }
 
@@ -86,6 +89,27 @@ export class ScheduleSearch extends Component {
   };
 
   render() {
+    hideFilterMenu = (name) => {
+      this.setState({
+        showFilterMenu: false,
+      });
+      this.setState({
+        exitFilter: false,
+      });
+      filterName = name;
+      if (filterName === "clear") {
+        this.setState({
+          showFilterButton: true,
+        });
+        this.setState({
+          filterType: false,
+        });
+      } else {
+        this.setState({
+          filterType: true,
+        });
+      }
+    };
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
@@ -154,55 +178,58 @@ export class ScheduleSearch extends Component {
 
                   <View style={dynamicStyles.backgroundColor}>
                     {/* Filter Button */}
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({
-                          showFilterMenu: true,
-                        }),
-                          this.setState({ exitFilter: true }),
-                          this.setState({
-                            showFilterButton: false,
-                          });
-                      }}
-                      style={styles.filterContainer}
-                    >
-                      {this.state.showFilterButton && (
-                        <View
-                          style={[
-                            styles.filterStyle,
-                            dynamicStyles.searchBackgroundColor,
-                          ]}
-                        >
-                          <Text
-                            style={[styles.filterTextStyle, dynamicStyles.text]}
+                    <View style={styles.filterContainer}>
+                      {this.state.showFilterButton &&
+                        ((filterName = ""),
+                        (
+                          <TouchableOpacity
+                            style={[
+                              styles.filterStyle,
+                              dynamicStyles.searchBackgroundColor,
+                            ]}
+                            onPress={() => {
+                              this.setState({
+                                showFilterMenu: true,
+                              }),
+                                this.setState({
+                                  exitFilter: true,
+                                }),
+                                this.setState({
+                                  showFilterButton: false,
+                                });
+                            }}
                           >
-                            {" "}
-                            Filter{" "}
-                          </Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
+                            <Text
+                              style={[
+                                styles.filterTextStyle,
+                                dynamicStyles.text,
+                              ]}
+                            >
+                              {" "}
+                              Filter{" "}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                    </View>
                     {/* Exit Button */}
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({
-                          showFilterMenu: false,
-                        }),
-                          this.setState({
-                            exitFilter: false,
-                          }),
-                          this.setState({
-                            showFilterButton: true,
-                          });
-                      }}
-                      style={styles.exitContainer}
-                    >
+                    <View style={styles.exitContainer}>
                       {this.state.exitFilter && (
-                        <View
+                        <TouchableOpacity
                           style={[
                             styles.exitStyle,
                             dynamicStyles.searchBackgroundColor,
                           ]}
+                          onPress={() => {
+                            this.setState({
+                              showFilterMenu: false,
+                            }),
+                              this.setState({
+                                exitFilter: false,
+                              }),
+                              this.setState({
+                                showFilterButton: true,
+                              });
+                          }}
                         >
                           <Text
                             style={[styles.exitTextStyle, dynamicStyles.text]}
@@ -210,9 +237,37 @@ export class ScheduleSearch extends Component {
                             {" "}
                             x{" "}
                           </Text>
-                        </View>
+                        </TouchableOpacity>
                       )}
-                    </TouchableOpacity>
+                    </View>
+
+                    {/* Filter Type */}
+                    <View style={styles.exitContainer}>
+                      {this.state.filterType && (
+                        <TouchableOpacity
+                          style={[
+                            filterName == "important"
+                              ? styles.important
+                              : filterName == "food"
+                              ? styles.food
+                              : filterName == "speaker"
+                              ? styles.speaker
+                              : filterName == "mini-event"
+                              ? styles.minievent
+                              : filterName == "workshop"
+                              ? styles.workshop
+                              : styles.none,
+                          ]}
+                          onPress={() => {
+                            this.setState({
+                              showFilterMenu: true,
+                            });
+                          }}
+                        >
+                          <Text style={styles.filterText}> {filterName} </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
                     {/* Filter Menu */}
                     {this.state.showFilterMenu &&
                       Object.keys(colors).map(function(name, index) {
@@ -235,6 +290,7 @@ export class ScheduleSearch extends Component {
                             }}
                           >
                             <TouchableOpacity
+                              onPress={this.hideFilterMenu.bind(this, name)}
                               style={{
                                 backgroundColor: color,
                                 borderRadius: 50,
@@ -347,6 +403,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  important: {
+    borderRadius: 50,
+    padding: 7,
+    backgroundColor: "#2CDACF",
+  },
+
+  food: {
+    borderRadius: 50,
+    padding: 7,
+    backgroundColor: "#C866F5",
+  },
+  speaker: {
+    borderRadius: 50,
+    padding: 7,
+    backgroundColor: "#FF586C",
+  },
+  minievent: {
+    borderRadius: 50,
+    padding: 7,
+    backgroundColor: "#FF8D28",
+  },
+  workshop: {
+    borderRadius: 50,
+    padding: 7,
+    backgroundColor: "#786CEB",
+  },
+
   flatList: {
     marginTop: 20,
     marginLeft: 15,
@@ -381,6 +464,12 @@ const styles = StyleSheet.create({
 
   exitTextStyle: {
     fontSize: 16,
+  },
+
+  filterText: {
+    fontSize: 14,
+    color: "white",
+    fontFamily: "Space Mono",
   },
 
   dayContainer: {
