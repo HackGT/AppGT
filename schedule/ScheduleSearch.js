@@ -174,6 +174,7 @@ export class ScheduleSearch extends Component {
                   events.push(event);
                 }
               }
+
               return (
                 <SafeAreaView
                   style={[dynamicStyles.backgroundColor, styles.safeArea]}
@@ -211,68 +212,61 @@ export class ScheduleSearch extends Component {
                   <View style={dynamicStyles.backgroundColor}>
                     {/* Filter Button */}
                     <View style={styles.filterContainer}>
-                      {this.state.showFilterButton &&
-                        ((this.state.filterName = ""),
-                        (
-                          <TouchableOpacity
-                            style={[
-                              styles.filterStyle,
-                              dynamicStyles.searchBackgroundColor,
-                            ]}
-                            onPress={() => {
+                      {this.state.showFilterButton && (
+                        <TouchableOpacity
+                          style={[
+                            styles.filterStyle,
+                            dynamicStyles.searchBackgroundColor,
+                          ]}
+                          onPress={() => {
+                            this.setState({
+                              showFilterMenu: true,
+                            }),
                               this.setState({
-                                showFilterMenu: true,
+                                exitFilter: true,
                               }),
-                                this.setState({
-                                  exitFilter: true,
-                                }),
-                                this.setState({
-                                  showFilterButton: false,
-                                });
-                            }}
+                              this.setState({
+                                showFilterButton: false,
+                              });
+                          }}
+                        >
+                          <Text
+                            style={[styles.filterTextStyle, dynamicStyles.text]}
                           >
-                            <Text
-                              style={[
-                                styles.filterTextStyle,
-                                dynamicStyles.text,
-                              ]}
-                            >
-                              {" "}
-                              Filter{" "}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
+                            {" "}
+                            Filter{" "}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                     {/* Exit Button */}
                     <View style={styles.exitContainer}>
-                      {this.state.exitFilter &&
-                        ((this.state.filterName = ""),
-                        (
-                          <TouchableOpacity
-                            style={[
-                              styles.exitStyle,
-                              dynamicStyles.searchBackgroundColor,
-                            ]}
-                            onPress={() => {
+                      {this.state.exitFilter && (
+                        <TouchableOpacity
+                          style={[
+                            styles.exitStyle,
+                            dynamicStyles.searchBackgroundColor,
+                          ]}
+                          onPress={() => {
+                            this.setState({
+                              showFilterMenu: false,
+                            }),
                               this.setState({
-                                showFilterMenu: false,
+                                exitFilter: false,
                               }),
-                                this.setState({
-                                  exitFilter: false,
-                                }),
-                                this.setState({
-                                  showFilterButton: true,
-                                });
-                            }}
+                              this.setState({
+                                showFilterButton: true,
+                              });
+                          }}
+                        >
+                          <Text
+                            style={[styles.exitTextStyle, dynamicStyles.text]}
                           >
-                            <Text
-                              style={[styles.exitTextStyle, dynamicStyles.text]}
-                            >
-                              {" "}
-                              x{" "}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
+                            {" "}
+                            x{" "}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
 
                     {/* Filter Type */}
