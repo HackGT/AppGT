@@ -1,25 +1,15 @@
 import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
-import {
-  colors,
-  sortEventsByStartTime,
-  getEventsForDay,
-  getDaysForEvent,
-  daysAvailable,
-} from "../cms/DataHandler";
+import { colors, getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
-import { FlatList, Text, View, StyleSheet, StatusBar } from "react-native";
+import { FlatList, Text, View, StyleSheet } from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
-import { Card, CardItem, List, Button } from "native-base";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Card, CardItem, List } from "native-base";
 import CancelIcon from "../assets/Cancel";
-import { authorize } from "react-native-app-auth";
-import { getCurrentDayIndex } from "../cms/DataHandler";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
-import { color } from "react-native-reanimated";
-import { DrawerLayoutAndroidComponent } from "react-native";
 
 export class ScheduleSearch extends Component {
   filterButton = () => {
@@ -248,15 +238,30 @@ export class ScheduleSearch extends Component {
                             dynamicStyles.searchBackgroundColor,
                           ]}
                           onPress={() => {
-                            this.setState({
-                              showFilterMenu: false,
-                            }),
+                            if (
+                              this.state.filterName != "clear" &&
+                              this.state.filterName != ""
+                            ) {
                               this.setState({
-                                exitFilter: false,
+                                filterType: true,
                               }),
+                                this.setState({
+                                  showFilterMenu: false,
+                                }),
+                                this.setState({
+                                  exitFilter: false,
+                                });
+                            } else {
                               this.setState({
                                 showFilterButton: true,
-                              });
+                              }),
+                                this.setState({
+                                  showFilterMenu: false,
+                                }),
+                                this.setState({
+                                  exitFilter: false,
+                                });
+                            }
                           }}
                         >
                           <Text
