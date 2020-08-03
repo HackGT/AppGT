@@ -62,6 +62,7 @@ export class ScheduleSearch extends Component {
       selectedEvent: null,
       filterType: false,
       filterName: "",
+      highlightedTags: [],
     };
   }
 
@@ -106,6 +107,7 @@ export class ScheduleSearch extends Component {
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
             {({ hackathon }) => {
+              let highlightedTagsCopy = [...this.state.highlightedTags];
               let sortedEvents = [...hackathon.events];
               var days = [
                 "sunday",
@@ -121,10 +123,18 @@ export class ScheduleSearch extends Component {
                 var date = new Date(event.startDate);
                 var dayName = days[date.getDay()];
                 let eventNameLowerCase = event.name.toLowerCase();
+                let result = event.tags.map((a) => a.name);
                 let eventDescriptionLowerCase = "";
+                let returnValue = false;
+
+                const found = result.some((r) =>
+                  this.state.highlightedTags.includes(r)
+                );
+
                 if (event.description != null) {
                   eventDescriptionLowerCase = event.description.toLowerCase();
                 }
+
                 if (event.type.name === this.state.filterName) {
                   return (
                     (eventNameLowerCase.includes(
@@ -155,6 +165,23 @@ export class ScheduleSearch extends Component {
                   );
                 }
               });
+
+              let tagArr = [];
+              for (event of sortedEvents) {
+                for (var { name } of event.tags) {
+                  tagArr.push(name);
+                }
+              }
+
+              counter = Object.create(null);
+              tagArr.forEach(function(tag) {
+                counter[tag] = (counter[tag] || 0) + 1;
+              });
+              tagArr.sort(function(x, y) {
+                return counter[y] - counter[x];
+              });
+
+              let uniquetagArr = [...new Set(tagArr)];
 
               const events = [];
 
@@ -358,21 +385,32 @@ export class ScheduleSearch extends Component {
                     </Text>
                     {/*Tags */}
                     <View style={styles.container}>
-                      {[
-                        "#boba",
-                        "#ML",
-                        "#facebook",
-                        "#coffee",
-                        "#facebook",
-                        "#boba",
-                        "#coffee",
-                        "#ML",
-                      ].map((value, i) => {
+                      {uniquetagArr.map((value, i) => {
                         return (
                           <TouchableOpacity
+                            onPress={() =>
+                              this.state.highlightedTags.includes(value)
+                                ? [
+                                    highlightedTagsCopy.splice(
+                                      highlightedTagsCopy.indexOf(value),
+                                      1
+                                    ),
+                                    this.setState({
+                                      highlightedTags: highlightedTagsCopy,
+                                    }),
+                                  ]
+                                : [
+                                    highlightedTagsCopy.push(value),
+                                    this.setState({
+                                      highlightedTags: highlightedTagsCopy,
+                                    }),
+                                  ]
+                            }
                             style={[
                               styles.tagStyle,
-                              dynamicStyles.searchBackgroundColor,
+                              this.state.highlightedTags.includes(value)
+                                ? dynamicStyles.tintBackgroundColor
+                                : dynamicStyles.searchBackgroundColor,
                             ]}
                           >
                             <Text
