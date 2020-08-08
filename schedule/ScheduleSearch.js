@@ -123,13 +123,7 @@ export class ScheduleSearch extends Component {
                 var date = new Date(event.startDate);
                 var dayName = days[date.getDay()];
                 let eventNameLowerCase = event.name.toLowerCase();
-                let result = event.tags.map((a) => a.name);
                 let eventDescriptionLowerCase = "";
-                let returnValue = false;
-
-                const found = result.some((r) =>
-                  this.state.highlightedTags.includes(r)
-                );
 
                 if (event.description != null) {
                   eventDescriptionLowerCase = event.description.toLowerCase();
@@ -182,6 +176,18 @@ export class ScheduleSearch extends Component {
               });
 
               let uniquetagArr = [...new Set(tagArr)];
+
+              sortedEvents = sortedEvents.filter((event) => {
+                let result = event.tags.map((a) => a.name);
+                let found = result.some((r) =>
+                  this.state.highlightedTags.includes(r)
+                );
+                if (this.state.highlightedTags.length != 0) {
+                  if (!found) {
+                    return false;
+                  }
+                }
+              });
 
               const events = [];
 
