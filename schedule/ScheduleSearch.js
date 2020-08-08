@@ -124,9 +124,14 @@ export class ScheduleSearch extends Component {
                 var dayName = days[date.getDay()];
                 let eventNameLowerCase = event.name.toLowerCase();
                 let eventDescriptionLowerCase = "";
+                let eventTypeLowerCase = "";
 
                 if (event.description != null) {
                   eventDescriptionLowerCase = event.description.toLowerCase();
+                }
+
+                if (event.type.name != null) {
+                  eventTypeLowerCase = event.type.name.toLowerCase();
                 }
 
                 if (event.type.name === this.state.filterName) {
@@ -136,6 +141,10 @@ export class ScheduleSearch extends Component {
                     ) &&
                       event.type.name === this.state.filterName) ||
                     (eventDescriptionLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName) ||
+                    (eventTypeLowerCase.includes(
                       this.state.searchText.trim().toLowerCase()
                     ) &&
                       event.type.name === this.state.filterName) ||
@@ -155,7 +164,12 @@ export class ScheduleSearch extends Component {
                     eventDescriptionLowerCase.includes(
                       this.state.searchText.trim().toLowerCase()
                     ) ||
-                    dayName.includes(this.state.searchText.trim().toLowerCase())
+                    dayName.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    eventTypeLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    )
                   );
                 }
               });
@@ -182,11 +196,13 @@ export class ScheduleSearch extends Component {
                 let found = result.some((r) =>
                   this.state.highlightedTags.includes(r)
                 );
+
                 if (this.state.highlightedTags.length != 0) {
                   if (!found) {
                     return false;
                   }
                 }
+                return true;
               });
 
               const events = [];
