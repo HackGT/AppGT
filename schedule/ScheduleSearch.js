@@ -10,19 +10,9 @@ import { Card, CardItem, List } from "native-base";
 import CancelIcon from "../assets/Cancel";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
+import FilterSelect from "../components/FilterSelect";
 
 export class ScheduleSearch extends Component {
-  filterButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.filterButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text>Filter</Text>
-      </TouchableOpacity>
-    );
-  };
-
   backButton = () => {
     const { navigation } = this.props;
 
@@ -36,30 +26,11 @@ export class ScheduleSearch extends Component {
     );
   };
 
-  searchList = () => {
-    return (
-      <List>
-        {new Array(20).fill(null).map((_, i) => (
-          <TouchableOpacity key={i}>
-            <Card>
-              <CardItem>
-                <Text>Item {i}</Text>
-              </CardItem>
-            </Card>
-          </TouchableOpacity>
-        ))}
-      </List>
-    );
-  };
-
   constructor() {
     super();
     this.state = {
-      showFilterMenu: false,
-      showFilterButton: true,
       searchText: "",
       selectedEvent: null,
-      filterType: false,
       filterName: "",
       highlightedTags: [],
     };
@@ -80,22 +51,6 @@ export class ScheduleSearch extends Component {
   };
 
   render() {
-    hideFilterMenu = (name) => {
-      this.setState({
-        showFilterMenu: false,
-      });
-      this.state.filterName = name;
-      if (this.state.filterName === "clear") {
-        this.setState({
-          showFilterButton: true,
-          filterType: false,
-        });
-      } else {
-        this.setState({
-          filterType: true,
-        });
-      }
-    };
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
@@ -104,13 +59,13 @@ export class ScheduleSearch extends Component {
               let highlightedTagsCopy = [...this.state.highlightedTags];
               let sortedEvents = [...hackathon.events];
               var days = [
-                "sunday",
-                "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday",
-                "saturday",
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
               ];
 
               sortedEvents = sortedEvents.filter((event) => {
@@ -243,141 +198,21 @@ export class ScheduleSearch extends Component {
                   </View>
 
                   <View style={dynamicStyles.backgroundColor}>
-                    {/* Filter Button */}
-                    <View style={styles.filterContainer}>
-                      {this.state.showFilterButton && (
-                        <TouchableOpacity
-                          style={[
-                            styles.filterStyle,
-                            dynamicStyles.searchBackgroundColor,
-                          ]}
-                          onPress={() => {
-                            this.setState({
-                              showFilterMenu: true,
-                              showFilterButton: false,
-                            });
-                          }}
-                        >
-                          <Text
-                            style={[styles.filterTextStyle, dynamicStyles.text]}
-                          >
-                            {" "}
-                            Filter{" "}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                    {/* Exit Button */}
-                    <View style={styles.exitContainer}>
-                      {this.state.showFilterMenu && (
-                        <TouchableOpacity
-                          style={[
-                            styles.exitStyle,
-                            dynamicStyles.searchBackgroundColor,
-                          ]}
-                          onPress={() => {
-                            if (
-                              this.state.filterName != "clear" &&
-                              this.state.filterName != ""
-                            ) {
-                              this.setState({
-                                filterType: true,
-                                showFilterMenu: false,
-                              });
-                            } else {
-                              this.setState({
-                                showFilterButton: true,
-                                showFilterMenu: false,
-                              });
-                            }
-                          }}
-                        >
-                          <Text
-                            style={[styles.exitTextStyle, dynamicStyles.text]}
-                          >
-                            {" "}
-                            x{" "}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                    {/* Filter Type */}
-                    <View style={styles.exitContainer}>
-                      {this.state.filterType && (
-                        <TouchableOpacity
-                          style={[
-                            this.state.filterName === "important"
-                              ? styles.important
-                              : this.state.filterName === "food"
-                              ? styles.food
-                              : this.state.filterName === "speaker"
-                              ? styles.speaker
-                              : this.state.filterName === "mini-event"
-                              ? styles.minievent
-                              : this.state.filterName === "workshop"
-                              ? styles.workshop
-                              : styles.none,
-                          ]}
-                          onPress={() => {
-                            this.setState({
-                              showFilterMenu: true,
-                              filterType: false,
-                            });
-                          }}
-                        >
-                          <Text style={styles.filterText}>
-                            {" "}
-                            {this.state.filterName}{" "}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                    {/* Filter Menu */}
-                    {this.state.showFilterMenu &&
-                      Object.keys(colors).map(function(name, index) {
-                        const color = colors[name];
-                        return (
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              marginTop: 55,
-                              top: index * 45,
-                              left: 10,
-                              position: "absolute",
-                              zIndex: 1,
-                              shadowColor: "#000",
-                              shadowOffset: {
-                                width: 0,
-                                height: 2,
-                              },
-                              shadowOpacity: 0.25,
-                            }}
-                          >
-                            <TouchableOpacity
-                              onPress={this.hideFilterMenu.bind(this, name)}
-                              style={{
-                                backgroundColor: color,
-                                borderRadius: 50,
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  padding: 7,
-                                  color: "white",
-                                  fontFamily: "Space Mono",
-                                }}
-                              >
-                                {" "}
-                                {name}{" "}
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        );
-                      })}
+                    <FilterSelect
+                      onSelectFilter={(newFilter) =>
+                        this.setState({
+                          filterName: newFilter,
+                          highlightedTags: [],
+                        })
+                      }
+                    />
                     {/* Trending Topics */}
-                    <Text style={[dynamicStyles.text, styles.trendingTopics]}>
-                      Trending Topics
-                    </Text>
+                    {uniquetagArr.length > 0 && (
+                      <Text style={[dynamicStyles.text, styles.trendingTopics]}>
+                        Trending Topics
+                      </Text>
+                    )}
+
                     {/*Tags */}
                     <View style={styles.container}>
                       <ScrollView
@@ -494,36 +329,10 @@ const styles = StyleSheet.create({
   },
 
   noEvents: {
-    marginLeft: 10,
+    marginLeft: 15,
+    marginTop: 10,
     fontFamily: "Space Mono",
     fontSize: 14,
-  },
-
-  important: {
-    borderRadius: 50,
-    padding: 7,
-    backgroundColor: "#2CDACF",
-  },
-
-  food: {
-    borderRadius: 50,
-    padding: 7,
-    backgroundColor: "#C866F5",
-  },
-  speaker: {
-    borderRadius: 50,
-    padding: 7,
-    backgroundColor: "#FF586C",
-  },
-  minievent: {
-    borderRadius: 50,
-    padding: 7,
-    backgroundColor: "#FF8D28",
-  },
-  workshop: {
-    borderRadius: 50,
-    padding: 7,
-    backgroundColor: "#786CEB",
   },
 
   flatList: {
@@ -534,8 +343,7 @@ const styles = StyleSheet.create({
 
   divider: {
     borderBottomWidth: 1,
-    marginTop: 25,
-    marginBottom: 10,
+    marginTop: 15,
     marginLeft: 15,
     marginRight: 15,
   },
@@ -545,27 +353,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     marginLeft: 15,
-    marginTop: 15,
-  },
-
-  exitContainer: {
-    flexDirection: "row",
-    marginLeft: 10,
-  },
-
-  exitStyle: {
-    borderRadius: 50,
-    padding: 7,
-  },
-
-  exitTextStyle: {
-    fontSize: 16,
-  },
-
-  filterText: {
-    fontSize: 14,
-    color: "white",
-    fontFamily: "Space Mono",
+    marginTop: 10,
   },
 
   dayContainer: {
@@ -579,21 +367,6 @@ const styles = StyleSheet.create({
   },
 
   dayText: {
-    padding: 7,
-    fontFamily: "Space Mono",
-  },
-
-  filterContainer: {
-    flexDirection: "row",
-    marginTop: 15,
-    marginLeft: 10,
-  },
-
-  filterStyle: {
-    borderRadius: 50,
-  },
-
-  filterTextStyle: {
     padding: 7,
     fontFamily: "Space Mono",
   },
