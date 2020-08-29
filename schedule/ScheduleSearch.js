@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
 import { colors, getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
-import { FlatList, Text, View, StyleSheet } from "react-native";
+import { FlatList, Text, ScrollView, View, StyleSheet } from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -56,7 +56,6 @@ export class ScheduleSearch extends Component {
     super();
     this.state = {
       showFilterMenu: false,
-      exitFilter: false,
       showFilterButton: true,
       searchText: "",
       selectedEvent: null,
@@ -85,15 +84,10 @@ export class ScheduleSearch extends Component {
       this.setState({
         showFilterMenu: false,
       });
-      this.setState({
-        exitFilter: false,
-      });
       this.state.filterName = name;
       if (this.state.filterName === "clear") {
         this.setState({
           showFilterButton: true,
-        });
-        this.setState({
           filterType: false,
         });
       } else {
@@ -260,13 +254,8 @@ export class ScheduleSearch extends Component {
                           onPress={() => {
                             this.setState({
                               showFilterMenu: true,
-                            }),
-                              this.setState({
-                                exitFilter: true,
-                              }),
-                              this.setState({
-                                showFilterButton: false,
-                              });
+                              showFilterButton: false,
+                            });
                           }}
                         >
                           <Text
@@ -280,7 +269,7 @@ export class ScheduleSearch extends Component {
                     </View>
                     {/* Exit Button */}
                     <View style={styles.exitContainer}>
-                      {this.state.exitFilter && (
+                      {this.state.showFilterMenu && (
                         <TouchableOpacity
                           style={[
                             styles.exitStyle,
@@ -293,23 +282,13 @@ export class ScheduleSearch extends Component {
                             ) {
                               this.setState({
                                 filterType: true,
-                              }),
-                                this.setState({
-                                  showFilterMenu: false,
-                                }),
-                                this.setState({
-                                  exitFilter: false,
-                                });
+                                showFilterMenu: false,
+                              });
                             } else {
                               this.setState({
                                 showFilterButton: true,
-                              }),
-                                this.setState({
-                                  showFilterMenu: false,
-                                }),
-                                this.setState({
-                                  exitFilter: false,
-                                });
+                                showFilterMenu: false,
+                              });
                             }
                           }}
                         >
@@ -322,7 +301,6 @@ export class ScheduleSearch extends Component {
                         </TouchableOpacity>
                       )}
                     </View>
-
                     {/* Filter Type */}
                     <View style={styles.exitContainer}>
                       {this.state.filterType && (
@@ -343,11 +321,6 @@ export class ScheduleSearch extends Component {
                           onPress={() => {
                             this.setState({
                               showFilterMenu: true,
-                            });
-                            this.setState({
-                              exitFilter: true,
-                            });
-                            this.setState({
                               filterType: false,
                             });
                           }}
@@ -407,84 +380,99 @@ export class ScheduleSearch extends Component {
                     </Text>
                     {/*Tags */}
                     <View style={styles.container}>
-                      {uniquetagArr.map((value, i) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() =>
-                              this.state.highlightedTags.includes(value)
-                                ? [
-                                    highlightedTagsCopy.splice(
-                                      highlightedTagsCopy.indexOf(value),
-                                      1
-                                    ),
-                                    this.setState({
-                                      highlightedTags: highlightedTagsCopy,
-                                    }),
-                                  ]
-                                : [
-                                    highlightedTagsCopy.push(value),
-                                    this.setState({
-                                      highlightedTags: highlightedTagsCopy,
-                                    }),
-                                  ]
-                            }
-                            style={[
-                              styles.tagStyle,
-                              this.state.highlightedTags.includes(value)
-                                ? dynamicStyles.tintBackgroundColor
-                                : dynamicStyles.searchBackgroundColor,
-                            ]}
-                          >
-                            <Text
-                              style={[styles.textStyle, dynamicStyles.text]}
+                      <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                      >
+                        {uniquetagArr.map((value, i) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() =>
+                                this.state.highlightedTags.includes(value)
+                                  ? [
+                                      highlightedTagsCopy.splice(
+                                        highlightedTagsCopy.indexOf(value),
+                                        1
+                                      ),
+                                      this.setState({
+                                        highlightedTags: highlightedTagsCopy,
+                                      }),
+                                    ]
+                                  : [
+                                      highlightedTagsCopy.push(value),
+                                      this.setState({
+                                        highlightedTags: highlightedTagsCopy,
+                                      }),
+                                    ]
+                              }
+                              style={[
+                                styles.tagStyle,
+                                this.state.highlightedTags.includes(value)
+                                  ? dynamicStyles.tintBackgroundColor
+                                  : dynamicStyles.searchBackgroundColor,
+                              ]}
                             >
-                              {" "}
-                              {value}{" "}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
+                              <Text
+                                style={[styles.textStyle, dynamicStyles.text]}
+                              >
+                                {" "}
+                                {value}{" "}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </ScrollView>
                     </View>
                     <View
                       style={[styles.divider, dynamicStyles.searchDividerColor]}
                     />
-                    <FlatList
-                      data={events}
-                      renderItem={({ item, index }) => {
-                        if (item.day) {
-                          return (
-                            <View style={styles.dayContainer}>
-                              <View
-                                style={[
-                                  styles.dayStyle,
-                                  dynamicStyles.secondaryBackgroundColor,
-                                ]}
-                              >
-                                <Text
-                                  style={[styles.dayText, dynamicStyles.text]}
+                    {events.length == 0 ? (
+                      <Text style={[styles.noEvents, dynamicStyles.text]}>
+                        {" "}
+                        No Events Found{" "}
+                      </Text>
+                    ) : (
+                      <FlatList
+                        data={events}
+                        renderItem={({ item, index }) => {
+                          if (item.day) {
+                            return (
+                              <View style={styles.dayContainer}>
+                                <View
+                                  style={[
+                                    styles.dayStyle,
+                                    dynamicStyles.secondaryBackgroundColor,
+                                  ]}
                                 >
-                                  {item.day}
-                                </Text>
+                                  <Text
+                                    style={[styles.dayText, dynamicStyles.text]}
+                                  >
+                                    {item.day}
+                                  </Text>
+                                </View>
                               </View>
-                            </View>
-                          );
-                        } else {
-                          return (
-                            <TouchableOpacity
-                              style={styles.flatList}
-                              onPress={() => {
-                                this.setSelectedEvent(item);
-                              }}
-                            >
-                              <ScheduleEventCell event={item} />
-                            </TouchableOpacity>
-                          );
+                            );
+                          } else {
+                            return (
+                              <TouchableOpacity
+                                style={styles.flatList}
+                                onPress={() => {
+                                  this.setSelectedEvent(item);
+                                }}
+                              >
+                                <ScheduleEventCell event={item} />
+                              </TouchableOpacity>
+                            );
+                          }
+                        }}
+                        contentContainerStyle={{
+                          paddingBottom: 220,
+                        }}
+                        keyExtractor={(item, index) =>
+                          item && item.id ? item.id : index
                         }
-                      }}
-                      keyExtractor={(item, index) =>
-                        item && item.id ? item.id : index
-                      }
-                    />
+                      />
+                    )}
                     <EventBottomSheet
                       reference={(ref) => (this.RBSheet = ref)}
                       event={this.state.selectedEvent}
@@ -503,6 +491,12 @@ export class ScheduleSearch extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+  },
+
+  noEvents: {
+    marginLeft: 10,
+    fontFamily: "Space Mono",
+    fontSize: 14,
   },
 
   important: {
@@ -540,7 +534,7 @@ const styles = StyleSheet.create({
 
   divider: {
     borderBottomWidth: 1,
-    marginTop: 30,
+    marginTop: 25,
     marginBottom: 10,
     marginLeft: 15,
     marginRight: 15,
@@ -618,6 +612,7 @@ const styles = StyleSheet.create({
   tagStyle: {
     borderRadius: 50,
     marginTop: 15,
+    marginLeft: 10,
   },
 
   background: {

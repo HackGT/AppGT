@@ -2,7 +2,7 @@ import { DynamicStyleSheet, DynamicValue } from "react-native-dark-mode";
 
 export const dynamicStyles = new DynamicStyleSheet({
   backgroundColor: {
-    backgroundColor: new DynamicValue("white", "black"),
+    backgroundColor: new DynamicValue("white", "#0F0F0F"),
   },
   secondaryBackgroundColor: {
     backgroundColor: new DynamicValue("#F2F2F2", "#35383D"),
@@ -45,11 +45,11 @@ export const dynamicStyles = new DynamicStyleSheet({
   },
 
   searchBorderTopColor: {
-    borderTopColor: new DynamicValue("white", "black"),
+    borderTopColor: new DynamicValue("white", "#0F0F0F"),
   },
 
   searchBorderBottomColor: {
-    borderBottomColor: new DynamicValue("white", "black"),
+    borderBottomColor: new DynamicValue("white", "#0F0F0F"),
   },
 
   searchBackgroundColor: {
