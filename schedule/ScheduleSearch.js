@@ -104,7 +104,7 @@ export class ScheduleSearch extends Component {
                   );
                 } else if (
                   this.state.filterName === "" ||
-                  this.state.filterName === "clear"
+                  this.state.filterName === null
                 ) {
                   return (
                     eventNameLowerCase.includes(
