@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   },
 
   noEvents: {
-    marginLeft: 15,
+    marginLeft: 10,
     marginTop: 10,
     fontFamily: "Space Mono",
     fontSize: 14,
