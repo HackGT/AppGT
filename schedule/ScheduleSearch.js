@@ -155,9 +155,18 @@ export class ScheduleSearch extends Component {
               });
 
               const events = [];
+              let eventDays = ["Friday", "Saturday", "Sunday"];
 
-              for (const day of getDaysForEvent(sortedEvents)) {
-                events.push({ day: day });
+              for (let day of getDaysForEvent(sortedEvents)) {
+                if (day == "friday") {
+                  events.push({ day: eventDays[0] });
+                }
+                if (day == "saturday") {
+                  events.push({ day: eventDays[1] });
+                }
+                if (day == "sunday") {
+                  events.push({ day: eventDays[2] });
+                }
                 for (const event of getEventsForDay(sortedEvents, day)) {
                   events.push(event);
                 }
@@ -248,7 +257,12 @@ export class ScheduleSearch extends Component {
                               ]}
                             >
                               <Text
-                                style={[styles.textStyle, dynamicStyles.text]}
+                                style={[
+                                  styles.textStyle,
+                                  this.state.highlightedTags.includes(value)
+                                    ? { color: "white" }
+                                    : dynamicStyles.text,
+                                ]}
                               >
                                 {" "}
                                 {value}{" "}
@@ -301,7 +315,7 @@ export class ScheduleSearch extends Component {
                           }
                         }}
                         contentContainerStyle={{
-                          paddingBottom: 220,
+                          paddingBottom: 200,
                         }}
                         keyExtractor={(item, index) =>
                           item && item.id ? item.id : index
