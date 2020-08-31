@@ -217,9 +217,28 @@ export class ScheduleSearch extends Component {
                     />
                     {/* Trending Topics */}
                     {uniquetagArr.length > 0 && (
-                      <Text style={[dynamicStyles.text, styles.trendingTopics]}>
-                        Trending Topics
-                      </Text>
+                      <View style={{ flexDirection: "row", display: "flex" }}>
+                        <Text
+                          style={[dynamicStyles.text, styles.trendingTopics]}
+                        >
+                          Trending Topics
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            this.setState({
+                              highlightedTags: [],
+                            })
+                          }
+                          style={[
+                            styles.clearButtonStyle,
+                            dynamicStyles.borderColor,
+                          ]}
+                        >
+                          <Text style={[dynamicStyles.text, styles.clear]}>
+                            clear
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     )}
 
                     {/*Tags */}
@@ -368,6 +387,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 15,
     marginTop: 10,
+    flex: 1,
+  },
+
+  clear: {
+    fontFamily: "Space Mono",
+    textAlign: "center",
+    paddingRight: 7,
+    paddingLeft: 7,
+  },
+
+  clearButtonStyle: {
+    marginRight: 15,
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 50,
   },
 
   dayContainer: {
