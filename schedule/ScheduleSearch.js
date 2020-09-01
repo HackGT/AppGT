@@ -2,10 +2,16 @@ import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
 import { colors, getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
-import { FlatList, Text, ScrollView, View, StyleSheet } from "react-native";
+import {
+  FlatList,
+  Text,
+  ScrollView,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Card, CardItem, List } from "native-base";
 import CancelIcon from "../assets/Cancel";
 import { ScheduleEventCell } from "./ScheduleEventCell";
