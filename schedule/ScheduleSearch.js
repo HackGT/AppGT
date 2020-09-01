@@ -2,22 +2,15 @@ import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
 import { colors, getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
-import {
-  FlatList,
-  Text,
-  ScrollView,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { FlatList, Text, ScrollView, View, StyleSheet } from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Card, CardItem, List } from "native-base";
 import CancelIcon from "../assets/Cancel";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
 import FilterSelect from "../components/FilterSelect";
-import TagScrollView from "../components/TagScrollView";
 
 export class ScheduleSearch extends Component {
   backButton = () => {
@@ -230,49 +223,76 @@ export class ScheduleSearch extends Component {
                         >
                           Trending Topics
                         </Text>
-                        <TouchableOpacity
-                          onPress={() =>
-                            this.setState({
-                              highlightedTags: [],
-                            })
-                          }
-                          style={[
-                            styles.clearButtonStyle,
-                            dynamicStyles.borderColor,
-                          ]}
-                        >
-                          <Text style={[dynamicStyles.text, styles.clear]}>
-                            clear
-                          </Text>
-                        </TouchableOpacity>
+                        {this.state.highlightedTags.length > 0 && (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.setState({
+                                highlightedTags: [],
+                              })
+                            }
+                            style={[
+                              styles.clearButtonStyle,
+                              dynamicStyles.borderColor,
+                            ]}
+                          >
+                            <Text style={[dynamicStyles.text, styles.clear]}>
+                              clear
+                            </Text>
+                          </TouchableOpacity>
+                        )}
                       </View>
                     )}
 
                     {/*Tags */}
-                    <View style={{ marginLeft: 10 }}>
-                      <TagScrollView
-                        style={{ padding: 10 }}
-                        tags={uniquetagArr}
-                        highlightedTags={this.state.highlightedTags}
-                        onPress={(tag) => {
-                          if (this.state.highlightedTags.includes(tag)) {
-                            highlightedTagsCopy.splice(
-                              highlightedTagsCopy.indexOf(tag),
-                              1
-                            );
-                            this.setState({
-                              highlightedTags: highlightedTagsCopy,
-                            });
-                          } else {
-                            highlightedTagsCopy.push(tag),
-                              this.setState({
-                                highlightedTags: highlightedTagsCopy,
-                              });
-                          }
-                        }}
-                      />
+                    <View style={styles.container}>
+                      <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                      >
+                        {uniquetagArr.map((value, i) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() =>
+                                this.state.highlightedTags.includes(value)
+                                  ? [
+                                      highlightedTagsCopy.splice(
+                                        highlightedTagsCopy.indexOf(value),
+                                        1
+                                      ),
+                                      this.setState({
+                                        highlightedTags: highlightedTagsCopy,
+                                      }),
+                                    ]
+                                  : [
+                                      highlightedTagsCopy.push(value),
+                                      this.setState({
+                                        highlightedTags: highlightedTagsCopy,
+                                      }),
+                                    ]
+                              }
+                              style={[
+                                styles.tagStyle,
+                                this.state.highlightedTags.includes(value)
+                                  ? dynamicStyles.tintBackgroundColor
+                                  : dynamicStyles.searchBackgroundColor,
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.textStyle,
+                                  this.state.highlightedTags.includes(value)
+                                    ? { color: "white" }
+                                    : dynamicStyles.text,
+                                ]}
+                              >
+                                {" "}
+                                {value}{" "}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </ScrollView>
                     </View>
-
                     <View
                       style={[styles.divider, dynamicStyles.searchDividerColor]}
                     />
