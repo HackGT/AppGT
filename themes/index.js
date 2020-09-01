@@ -12,6 +12,10 @@ export const dynamicStyles = new DynamicStyleSheet({
     color: new DynamicValue("#3F3F3F", "white"),
   },
 
+  borderColor: {
+    borderColor: new DynamicValue("#3F3F3F", "white"),
+  },
+
   secondaryText: {
     color: new DynamicValue("#4F4F4F", "#C2C2C2"),
   },
@@ -45,10 +49,18 @@ export const dynamicStyles = new DynamicStyleSheet({
   },
 
   searchBorderTopColor: {
-    borderTopColor: new DynamicValue("white", "black"),
+    borderTopColor: new DynamicValue("white", "#0F0F0F"),
   },
 
   searchBorderBottomColor: {
-    borderBottomColor: new DynamicValue("white", "black"),
+    borderBottomColor: new DynamicValue("white", "#0F0F0F"),
+  },
+
+  searchBackgroundColor: {
+    backgroundColor: new DynamicValue("#F2F2F2", "#1A1919"),
+  },
+
+  searchDividerColor: {
+    borderBottomColor: new DynamicValue("#C3C3C3", "#35383D"),
   },
 });

@@ -1,28 +1,25 @@
 import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
-import { colors } from "../cms/DataHandler";
+import { colors, getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
-import { Text, View, StyleSheet, StatusBar } from "react-native";
+import {
+  FlatList,
+  Text,
+  ScrollView,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
-import { Card, CardItem, List, Button } from "native-base";
+import { Card, CardItem, List } from "native-base";
 import CancelIcon from "../assets/Cancel";
-import { authorize } from "react-native-app-auth";
-import { getCurrentDayIndex } from "../cms/DataHandler";
+import { ScheduleEventCell } from "./ScheduleEventCell";
+import { EventBottomSheet } from "./EventBottomSheet";
+import FilterSelect from "../components/FilterSelect";
+import TagScrollView from "../components/TagScrollView";
 
 export class ScheduleSearch extends Component {
-  filterButton = () => {
-    return (
-      <TouchableOpacity
-        style={styles.filterButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text>Filter</Text>
-      </TouchableOpacity>
-    );
-  };
-
   backButton = () => {
     const { navigation } = this.props;
 
@@ -36,187 +33,306 @@ export class ScheduleSearch extends Component {
     );
   };
 
-  searchList = () => {
-    return (
-      <List>
-        {new Array(20).fill(null).map((_, i) => (
-          <TouchableOpacity key={i}>
-            <Card>
-              <CardItem>
-                <Text>Item {i}</Text>
-              </CardItem>
-            </Card>
-          </TouchableOpacity>
-        ))}
-      </List>
-    );
+  constructor() {
+    super();
+    this.state = {
+      searchText: "",
+      selectedEvent: null,
+      filterName: "",
+      highlightedTags: [],
+    };
+  }
+
+  setSelectedEvent = (event) => {
+    if (event) {
+      this.setState({ selectedEvent: event });
+      this.RBSheet.open();
+    } else {
+      this.setState({ selectedEvent: null });
+      this.RBSheet.close();
+    }
   };
 
-  state = {
-    showFilterMenu: false,
-    exitFilter: false,
-    showFilterButton: true,
+  searchEvents = (value) => {
+    this.setState({ searchText: value });
   };
 
   render() {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
-          <SafeAreaView
-            style={[dynamicStyles.backgroundColor, styles.safeArea]}
-          >
-            <View style={styles.searchHeader}>
-              <SearchBar
-                searchIcon={
-                  <SearchIcon
-                    fill={
-                      dynamicStyles.secondaryBackgroundColor.backgroundColor
-                    }
-                  />
+          <HackathonContext.Consumer>
+            {({ hackathon }) => {
+              let highlightedTagsCopy = [...this.state.highlightedTags];
+              let sortedEvents = [...hackathon.events];
+              var days = [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+              ];
+
+              sortedEvents = sortedEvents.filter((event) => {
+                var date = new Date(event.startDate);
+                var dayName = days[date.getDay()];
+                let eventNameLowerCase = event.name.toLowerCase();
+                let eventDescriptionLowerCase = "";
+                let eventTypeLowerCase = "";
+
+                if (event.description != null) {
+                  eventDescriptionLowerCase = event.description.toLowerCase();
                 }
-                containerStyle={[
-                  styles.searchContainer,
-                  dynamicStyles.backgroundColor,
-                  dynamicStyles.searchBorderTopColor,
-                  dynamicStyles.searchBorderBottomColor,
-                ]}
-                inputContainerStyle={[
-                  styles.inputContainer,
-                  dynamicStyles.tritaryBackgroundColor,
-                ]}
-                lightTheme
-                round
-                placeholder="Search..."
-              />
 
-              {this.backButton()}
-            </View>
+                if (event.type.name != null) {
+                  eventTypeLowerCase = event.type.name.toLowerCase();
+                }
 
-            <View style={dynamicStyles.backgroundColor}>
-              {/* Filter Button */}
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ showFilterMenu: true }),
-                    this.setState({ exitFilter: true }),
-                    this.setState({ showFilterButton: false });
-                }}
-                style={styles.filterContainer}
-              >
-                {this.state.showFilterButton && (
-                  <View
-                    style={[
-                      styles.filterStyle,
-                      dynamicStyles.tritaryBackgroundColor,
-                    ]}
-                  >
-                    <Text style={[styles.filterTextStyle, dynamicStyles.text]}>
-                      {" "}
-                      Filter{" "}
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-
-              {/* Exit Button */}
-              <TouchableOpacity
-                onPress={() => {
-                  this.setState({ showFilterMenu: false }),
-                    this.setState({ exitFilter: false }),
-                    this.setState({ showFilterButton: true });
-                }}
-                style={styles.exitContainer}
-              >
-                {this.state.exitFilter && (
-                  <View
-                    style={[
-                      styles.exitStyle,
-                      dynamicStyles.tritaryBackgroundColor,
-                    ]}
-                  >
-                    <Text style={[styles.exitTextStyle, dynamicStyles.text]}>
-                      {" "}
-                      x{" "}
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-
-              {/* Filter Menu */}
-              {this.state.showFilterMenu &&
-                Object.keys(colors).map(function(name, index) {
-                  const color = colors[name];
+                if (event.type.name === this.state.filterName) {
                   return (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        marginTop: 55,
-                        top: index * 45,
-                        left: 10,
-                        position: "absolute",
-                        zIndex: 1,
-                        shadowColor: "#000",
-                        shadowOffset: {
-                          width: 0,
-                          height: 2,
-                        },
-                        shadowOpacity: 0.25,
-                      }}
-                    >
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: color,
-                          borderRadius: 50,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            padding: 7,
-                            color: "white",
-                            fontFamily: "Space Mono",
-                          }}
-                        >
-                          {" "}
-                          {name}{" "}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+                    (eventNameLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName) ||
+                    (eventDescriptionLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName) ||
+                    (eventTypeLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName) ||
+                    (dayName.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) &&
+                      event.type.name === this.state.filterName)
                   );
-                })}
-
-              {/* Trending Topics */}
-              <Text style={[dynamicStyles.text, styles.trendingTopics]}>
-                Trending Topics
-              </Text>
-
-              {/*Tags */}
-              <View style={styles.container}>
-                {[
-                  "#boba",
-                  "#ML",
-                  "#facebook",
-                  "#coffee",
-                  "#facebook",
-                  "#boba",
-                  "#coffee",
-                  "#ML",
-                ].map((value, i) => {
+                } else if (
+                  this.state.filterName === "" ||
+                  this.state.filterName === null
+                ) {
                   return (
-                    <TouchableOpacity
-                      style={[
-                        styles.tagStyle,
-                        dynamicStyles.tritaryBackgroundColor,
+                    eventNameLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    eventDescriptionLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    dayName.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    ) ||
+                    eventTypeLowerCase.includes(
+                      this.state.searchText.trim().toLowerCase()
+                    )
+                  );
+                }
+              });
+
+              let tagArr = [];
+              for (event of sortedEvents) {
+                for (var { name } of event.tags) {
+                  tagArr.push(name);
+                }
+              }
+
+              counter = Object.create(null);
+              tagArr.forEach(function(tag) {
+                counter[tag] = (counter[tag] || 0) + 1;
+              });
+              tagArr.sort(function(x, y) {
+                return counter[y] - counter[x];
+              });
+
+              let uniquetagArr = [...new Set(tagArr)];
+
+              sortedEvents = sortedEvents.filter((event) => {
+                let result = event.tags.map((a) => a.name);
+                let found = result.some((r) =>
+                  this.state.highlightedTags.includes(r)
+                );
+
+                if (this.state.highlightedTags.length != 0) {
+                  if (!found) {
+                    return false;
+                  }
+                }
+                return true;
+              });
+
+              const events = [];
+              let eventDays = ["Friday", "Saturday", "Sunday"];
+
+              for (let day of getDaysForEvent(sortedEvents)) {
+                if (day == "friday") {
+                  events.push({ day: eventDays[0] });
+                }
+                if (day == "saturday") {
+                  events.push({ day: eventDays[1] });
+                }
+                if (day == "sunday") {
+                  events.push({ day: eventDays[2] });
+                }
+                for (const event of getEventsForDay(sortedEvents, day)) {
+                  events.push(event);
+                }
+              }
+
+              return (
+                <SafeAreaView
+                  style={[dynamicStyles.backgroundColor, styles.safeArea]}
+                >
+                  <View style={styles.searchHeader}>
+                    <SearchBar
+                      searchIcon={
+                        <SearchIcon
+                          fill={
+                            dynamicStyles.secondaryBackgroundColor
+                              .backgroundColor
+                          }
+                        />
+                      }
+                      containerStyle={[
+                        styles.searchContainer,
+                        dynamicStyles.backgroundColor,
+                        dynamicStyles.searchBorderTopColor,
+                        dynamicStyles.searchBorderBottomColor,
                       ]}
-                    >
-                      <Text style={[styles.textStyle, dynamicStyles.text]}>
+                      inputContainerStyle={[
+                        styles.inputContainer,
+                        dynamicStyles.searchBackgroundColor,
+                      ]}
+                      lightTheme
+                      round
+                      placeholder="Search..."
+                      onChangeText={(value) => this.searchEvents(value)}
+                      value={this.state.searchText}
+                    />
+
+                    {this.backButton()}
+                  </View>
+
+                  <View style={dynamicStyles.backgroundColor}>
+                    <FilterSelect
+                      onSelectFilter={(newFilter) =>
+                        this.setState({
+                          filterName: newFilter,
+                          highlightedTags: [],
+                        })
+                      }
+                    />
+                    {/* Trending Topics */}
+                    {uniquetagArr.length > 0 && (
+                      <View style={{ flexDirection: "row", display: "flex" }}>
+                        <Text
+                          style={[dynamicStyles.text, styles.trendingTopics]}
+                        >
+                          Trending Topics
+                        </Text>
+                        {this.state.highlightedTags.length > 0 && (
+                          <TouchableOpacity
+                            onPress={() =>
+                              this.setState({
+                                highlightedTags: [],
+                              })
+                            }
+                            style={[
+                              styles.clearButtonStyle,
+                              dynamicStyles.borderColor,
+                            ]}
+                          >
+                            <Text style={[dynamicStyles.text, styles.clear]}>
+                              clear
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    )}
+
+                    {/*Tags */}
+                    <View style={{ marginLeft: 10 }}>
+                      <TagScrollView
+                        style={{ padding: 10 }}
+                        tags={uniquetagArr}
+                        highlightedTags={this.state.highlightedTags}
+                        onPress={(tag) => {
+                          if (this.state.highlightedTags.includes(tag)) {
+                            highlightedTagsCopy.splice(
+                              highlightedTagsCopy.indexOf(tag),
+                              1
+                            );
+                            this.setState({
+                              highlightedTags: highlightedTagsCopy,
+                            });
+                          } else {
+                            highlightedTagsCopy.push(tag),
+                              this.setState({
+                                highlightedTags: highlightedTagsCopy,
+                              });
+                          }
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={[styles.divider, dynamicStyles.searchDividerColor]}
+                    />
+                    {events.length == 0 ? (
+                      <Text style={[styles.noEvents, dynamicStyles.text]}>
                         {" "}
-                        {value}{" "}
+                        No Events Found{" "}
                       </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-          </SafeAreaView>
+                    ) : (
+                      <FlatList
+                        data={events}
+                        renderItem={({ item, index }) => {
+                          if (item.day) {
+                            return (
+                              <View style={styles.dayContainer}>
+                                <View
+                                  style={[
+                                    styles.dayStyle,
+                                    dynamicStyles.secondaryBackgroundColor,
+                                  ]}
+                                >
+                                  <Text
+                                    style={[styles.dayText, dynamicStyles.text]}
+                                  >
+                                    {item.day}
+                                  </Text>
+                                </View>
+                              </View>
+                            );
+                          } else {
+                            return (
+                              <TouchableOpacity
+                                style={styles.flatList}
+                                onPress={() => {
+                                  this.setSelectedEvent(item);
+                                }}
+                              >
+                                <ScheduleEventCell event={item} />
+                              </TouchableOpacity>
+                            );
+                          }
+                        }}
+                        contentContainerStyle={{
+                          paddingBottom: 200,
+                        }}
+                        keyExtractor={(item, index) =>
+                          item && item.id ? item.id : index
+                        }
+                      />
+                    )}
+                    <EventBottomSheet
+                      reference={(ref) => (this.RBSheet = ref)}
+                      event={this.state.selectedEvent}
+                    />
+                  </View>
+                </SafeAreaView>
+              );
+            }}
+          </HackathonContext.Consumer>
         )}
       </ThemeContext.Consumer>
     );
@@ -226,7 +342,26 @@ export class ScheduleSearch extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    // backgroundColor: "white",
+  },
+
+  noEvents: {
+    marginLeft: 10,
+    marginTop: 10,
+    fontFamily: "Space Mono",
+    fontSize: 14,
+  },
+
+  flatList: {
+    marginTop: 20,
+    marginLeft: 15,
+    marginRight: 15,
+  },
+
+  divider: {
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 15,
+    marginRight: 15,
   },
 
   trendingTopics: {
@@ -234,36 +369,35 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     marginLeft: 15,
-    marginTop: 15,
+    marginTop: 10,
+    flex: 1,
   },
 
-  exitContainer: {
-    flexDirection: "row",
-    marginLeft: 10,
+  clear: {
+    fontFamily: "Space Mono",
+    textAlign: "center",
+    paddingRight: 7,
+    paddingLeft: 7,
   },
 
-  exitStyle: {
-    // backgroundColor: "#F2F2F2",
-    borderRadius: 50,
-    padding: 7,
-  },
-
-  exitTextStyle: {
-    fontSize: 16,
-  },
-
-  filterContainer: {
-    flexDirection: "row",
-    marginTop: 15,
-    marginLeft: 10,
-  },
-
-  filterStyle: {
-    // backgroundColor: "#F2F2F2",
+  clearButtonStyle: {
+    marginRight: 15,
+    marginTop: 10,
+    borderWidth: 1,
     borderRadius: 50,
   },
 
-  filterTextStyle: {
+  dayContainer: {
+    flexDirection: "row",
+    marginTop: 15,
+    marginLeft: 15,
+  },
+
+  dayStyle: {
+    borderRadius: 8,
+  },
+
+  dayText: {
     padding: 7,
     fontFamily: "Space Mono",
   },
@@ -280,9 +414,9 @@ const styles = StyleSheet.create({
   },
 
   tagStyle: {
-    // backgroundColor: "#F2F2F2",
     borderRadius: 50,
     marginTop: 15,
+    marginLeft: 10,
   },
 
   background: {
@@ -307,15 +441,11 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    // backgroundColor: 'white',
     width: "80%",
     borderWidth: 0,
-    // borderTopColor: 'white',
-    // borderBottomColor: 'white',
   },
 
   inputContainer: {
-    // backgroundColor: "#F2F2F2",
     height: 41,
   },
 });

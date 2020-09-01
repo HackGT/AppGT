@@ -14,6 +14,10 @@ const hackathonQuery = `
           endTime
           endDate
           description
+          tags {
+            id
+            name
+          }
           type {
               id
               name
