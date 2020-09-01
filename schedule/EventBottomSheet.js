@@ -8,6 +8,7 @@ import RemoveStarButton from "../assets/RemoveFromCalendarButton";
 import AddStarButton from "../assets/AddToCalendarButton";
 import { HackathonContext, ThemeContext } from "../context";
 import FontMarkdown from "../components/FontMarkdown";
+import TagScrollView from "../components/TagScrollView";
 
 export class EventBottomSheet extends Component {
   bottomSheetContent = () => {
@@ -32,6 +33,7 @@ export class EventBottomSheet extends Component {
           <HackathonContext.Consumer>
             {({ starredIds }) => {
               const addStarButton = starredIds.indexOf(event.id) == -1;
+              const eventTags = event.tags.map((tag) => tag.name);
 
               return (
                 <View
@@ -64,7 +66,7 @@ export class EventBottomSheet extends Component {
                   </Text>
 
                   <EventTypeView eventType={eventType} />
-
+                  <TagScrollView tags={eventTags} highlightedTags={eventTags} />
                   <FontMarkdown fontFamily="SpaceMono">
                     {description}
                   </FontMarkdown>
@@ -173,5 +175,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
+  },
+
+  tagTextStyle: {
+    padding: 7,
+    fontFamily: "Space Mono",
+  },
+
+  tagStyle: {
+    borderRadius: 50,
+    marginTop: 15,
+    marginLeft: 10,
   },
 });

@@ -97,7 +97,17 @@ export class ScheduleEventCell extends Component {
                       {location}
                       {start} - {end}
                     </Text>
-                    <EventTypeView eventType={eventType} />
+
+                    <View style={{ flexDirection: "row" }}>
+                      <EventTypeView eventType={eventType} />
+                      {event.tags.map((tag) => (
+                        <Text
+                          style={[dynamicStyles.secondaryText, styles.tagFont]}
+                        >
+                          {tag.name}
+                        </Text>
+                      ))}
+                    </View>
                   </View>
                 </View>
               );
@@ -136,16 +146,11 @@ const styles = StyleSheet.create({
     letterSpacing: 0.005,
   },
 
-  footer: {
-    top: 6,
-  },
-
-  footerTopic: {
-    top: 5,
-  },
-
-  footerTags: {
-    marginLeft: 7,
-    top: -5,
+  tagFont: {
+    marginTop: 2,
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
+    marginTop: -0.2,
+    marginLeft: 8,
   },
 });
