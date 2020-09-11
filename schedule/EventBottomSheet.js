@@ -33,7 +33,9 @@ export class EventBottomSheet extends Component {
           <HackathonContext.Consumer>
             {({ starredIds }) => {
               const addStarButton = starredIds.indexOf(event.id) == -1;
-              const eventTags = event.tags.map((tag) => tag.name);
+              const eventTags = event.tags
+                ? event.tags.map((tag) => tag.name)
+                : [];
 
               return (
                 <View

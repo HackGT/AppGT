@@ -100,13 +100,17 @@ export class ScheduleEventCell extends Component {
 
                     <View style={{ flexDirection: "row" }}>
                       <EventTypeView eventType={eventType} />
-                      {event.tags.map((tag) => (
-                        <Text
-                          style={[dynamicStyles.secondaryText, styles.tagFont]}
-                        >
-                          {tag.name}
-                        </Text>
-                      ))}
+                      {event.tags &&
+                        event.tags.map((tag) => (
+                          <Text
+                            style={[
+                              dynamicStyles.secondaryText,
+                              styles.tagFont,
+                            ]}
+                          >
+                            {tag.name}
+                          </Text>
+                        ))}
                     </View>
                   </View>
                 </View>

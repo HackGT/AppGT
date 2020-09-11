@@ -148,7 +148,7 @@ export class ScheduleSearch extends Component {
               let uniquetagArr = [...new Set(tagArr)];
 
               sortedEvents = sortedEvents.filter((event) => {
-                let result = event.tags.map((a) => a.name);
+                let result = event.tags && event.tags.map((a) => a.name);
                 let found = result.some((r) =>
                   this.state.highlightedTags.includes(r)
                 );
