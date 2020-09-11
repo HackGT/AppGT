@@ -9,12 +9,13 @@ export default class SplashScreen extends Component {
   };
 
   growAnimation = () => {
-    Animated.timing(this.state.opacity, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-      easing: Easing.ease,
-    }).start(() => this.props.onGrowDone());
+    // Animated.timing(this.state.opacity, {
+    //   toValue: 1,
+    //   duration: 500,
+    //   useNativeDriver: true,
+    //   easing: Easing.ease,
+    // }).start(() => this.props.onGrowDone());
+    this.props.onGrowDone();
   };
 
   componentDidMount() {

@@ -37,16 +37,18 @@ export class ScheduleDayView extends Component {
   }
 
   componentDidMount() {
-    this.tabListRef.current.scrollToIndex({
-      index: this.state.dayIndex,
-      animated: false,
-    });
-    if (this.props.initialEventIndex > 0) {
-      if (this.currentScheduleRef != null) {
-        this.currentScheduleRef.scrollToIndex({
-          index: this.props.initialEventIndex,
-          animated: false,
-        });
+    if (this.props.events.count > 0) {
+      this.tabListRef.current.scrollToIndex({
+        index: this.state.dayIndex,
+        animated: false,
+      });
+      if (this.props.initialEventIndex > 0) {
+        if (this.currentScheduleRef != null) {
+          this.currentScheduleRef.scrollToIndex({
+            index: this.props.initialEventIndex,
+            animated: false,
+          });
+        }
       }
     }
   }
@@ -269,6 +271,8 @@ export class ScheduleDayView extends Component {
       justifyContent: "center",
       alignItems: "center",
     };
+
+    // TODO: show no events found when no events
 
     return (
       <ThemeContext.Consumer>

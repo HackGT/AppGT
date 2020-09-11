@@ -252,6 +252,8 @@ class App extends React.Component {
   }
 
   render() {
+    const Stack = createStackNavigator();
+
     const hackathon = this.state.hackathon;
     const starredIds = this.state.starredIds;
 
@@ -338,17 +340,19 @@ class App extends React.Component {
                   this.props.theme == "dark" ? "light-content" : "dark-content"
                 }
               />
-              <Tab.Navigator
+
+              {/* TODO: when need tab bottom bar, convert "Stack." to "Tab." and remoe headerMode="none" and finally add different screens below */}
+              <Stack.Navigator
+                headerMode="none"
                 tabBarOptions={{
                   activeTintColor: this.props.styles.tintColor.color,
-                  tabBarVisible: false,
                   style: this.props.styles.tabBarBackgroundColor,
                 }}
               >
-                <Tab.Screen name="Schedule" component={SchdeuleStackScreen} />
-                <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
-                <Tab.Screen name="EventOnboard" component={EventOnboarding} />
-              </Tab.Navigator>
+                <Stack.Screen name="Schedule" component={SchdeuleStackScreen} />
+                {/* <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
+                <Tab.Screen name="EventOnboard" component={EventOnboarding} /> */}
+              </Stack.Navigator>
             </NavigationContainer>
           </AuthContext.Provider>
         </HackathonContext.Provider>
