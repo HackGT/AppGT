@@ -120,7 +120,6 @@ class App extends React.Component {
         "isStarSchedule",
         this.state.isStarSchedule == true ? "true" : "false"
       );
-      console.log(this.state.isStarSchedule);
     });
   };
 
@@ -213,6 +212,11 @@ class App extends React.Component {
         result && this.setState({ starredIds: JSON.parse(result) })
     );
 
+    AsyncStorage.getItem(
+      "pastEventOnboardID",
+      (error, result) => result && this.setState({ pastEventOnboardID: result })
+    );
+
     AsyncStorage.getItem("isStarSchedule", (error, result) => {
       result &&
         this.setState({ isStarSchedule: result === "true" ? true : false });
@@ -278,7 +282,10 @@ class App extends React.Component {
             dynamicStyles: this.props.styles,
           }}
         >
-          <SplashScreen />
+          <SplashScreen
+            grow={true}
+            onGrowDone={() => this.setState({ scheduleModal: true })}
+          />
         </ThemeContext.Provider>
       );
     }
@@ -305,6 +312,8 @@ class App extends React.Component {
         </ThemeContext.Provider>
       );
     }
+
+    const showEventOnboard = this.state.pastEventOnboardID !== hackathon.id;
 
     // once logged in and all data is loaded, present full app after grow animation
     return (
@@ -349,9 +358,18 @@ class App extends React.Component {
                   style: this.props.styles.tabBarBackgroundColor,
                 }}
               >
-                <Stack.Screen name="Schedule" component={SchdeuleStackScreen} />
-                {/* <Tab.Screen name="LoginOnboard" component={LoginOnboarding} />
-                <Tab.Screen name="EventOnboard" component={EventOnboarding} /> */}
+                <Stack.Screen
+                  name="Schedule"
+                  component={
+                    showEventOnboard ? EventOnboarding : SchdeuleStackScreen
+                  }
+                  initialParams={{
+                    onDone: () => {
+                      this.setState({ pastEventOnboardID: hackathon.id });
+                      AsyncStorage.setItem("pastEventOnboardID", hackathon.id);
+                    },
+                  }}
+                />
               </Stack.Navigator>
             </NavigationContainer>
           </AuthContext.Provider>

@@ -9,18 +9,22 @@ export default class SplashScreen extends Component {
   };
 
   growAnimation = () => {
-    // Animated.timing(this.state.opacity, {
-    //   toValue: 1,
-    //   duration: 500,
-    //   useNativeDriver: true,
-    //   easing: Easing.ease,
-    // }).start(() => this.props.onGrowDone());
+    Animated.timing(this.state.opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.ease,
+    }).start(() => this.props.onGrowDone());
     this.props.onGrowDone();
   };
 
   componentDidMount() {
     if (this.props.grow) {
       this.growAnimation();
+    } else {
+      if (this.props.onGrowDone) {
+        this.props.onGrowDone();
+      }
     }
   }
 
@@ -40,16 +44,16 @@ export default class SplashScreen extends Component {
                       outputRange: [1, 0],
                     })
                   : 1,
-                transform: [
-                  {
-                    scale: this.props.grow
-                      ? this.state.opacity.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [1, 20],
-                        })
-                      : 1,
-                  },
-                ],
+                // transform: [
+                //   {
+                //     scale: this.props.grow
+                //       ? this.state.opacity.interpolate({
+                //           inputRange: [0, 1],
+                //           outputRange: [1, 20],
+                //         })
+                //       : 1,
+                //   },
+                // ],
               },
               dynamicStyles.backgroundColor,
             ]}

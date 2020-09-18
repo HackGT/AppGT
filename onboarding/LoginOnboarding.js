@@ -20,44 +20,36 @@ export class LoginOnboarding extends Component {
     super(props);
     this.state = {
       pageIndex: 0,
-      pageCount: 4,
+      pageCount: 3,
     };
   }
 
   createScreens(width) {
-    const firstScreen = (
+    const hackgtLogo = (
       <View style={styles.firstScreenLogo}>
         <Logo />
         <LogoText style={styles.firstScreenLogoText} />
       </View>
     );
 
-    const secondScreen = (
+    const personalizeSchedule = (
       <ContentInfo
-        title="Personalize your event schedule"
+        title="Personalize your Event Schedule"
         subtitles={[
           "Favorite events that interest you to save them in your personal schedule so you never miss them.",
         ]}
       />
     );
-    const thirdScreen = (
+    const joinVirtually = (
       <ContentInfo
-        title="Checkout Hardware"
+        title="Join Virtually"
         subtitles={[
-          "Order the hardware you need for your project, and then pick it up at the hardware desk.",
-        ]}
-      />
-    );
-    const forthScreen = (
-      <ContentInfo
-        title="Explore our event with Scavenger Hunt"
-        subtitles={[
-          "Need a break from hacking? Complete our scavenger hunt for some sweet, sweet, swag.",
+          "Quickly access event join links, event information, and search for events that interest you. All in one place.",
         ]}
       />
     );
 
-    const screens = [firstScreen, secondScreen, thirdScreen, forthScreen];
+    const screens = [hackgtLogo, personalizeSchedule, joinVirtually];
 
     return screens.map((content, i) => {
       const screenBackground = {
@@ -156,12 +148,13 @@ export class LoginOnboarding extends Component {
                       </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => logout()}>
+                    {/* TOOD: logout button */}
+                    {/* <TouchableOpacity onPress={() => logout()}>
                       <Text style={[dynamicStyles.text, styles.toDelete]}>
                         Logout (for testing.)
                         {user != null ? user.email : "None."}
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 </View>
               );

@@ -22,7 +22,8 @@ export class EventOnboarding extends Component {
     super(props);
     this.state = {
       pageIndex: 0,
-      pageCount: 5,
+      pageCount: 4,
+      onDone: this.props.route.params.onDone,
     };
   }
 
@@ -51,7 +52,7 @@ export class EventOnboarding extends Component {
       </ThemeContext.Consumer>
     );
 
-    const firstScreen = (
+    const welcomeScreen = (
       <View>
         <ContentInfo
           title={`Welcome to ${hackathonName}`}
@@ -60,7 +61,8 @@ export class EventOnboarding extends Component {
       </View>
     );
 
-    const secondScreen = (
+    // TODO: add ability to customize onboarding in cms
+    const qrCodeScreen = (
       <ContentInfo
         image={qrCode}
         title="Let’s check you in"
@@ -77,16 +79,18 @@ export class EventOnboarding extends Component {
             style={[dynamicStyles.primaryButtonBackground, styles.joinSlack]}
             onPress={() => Linking.openURL(`${slackUrl}`)}
           >
-            <Text style={styles.buttonText}>Join Slack</Text>
+            <Text style={styles.buttonText}>Join</Text>
           </TouchableOpacity>
         )}
       </ThemeContext.Consumer>
     );
 
-    const thirdScreen = (
+    const joinCommunity = (
       <ContentInfo
         title="Questions? We're always available"
-        subtitles={[`Join our community in the ${hackathonName} Slack.`]}
+        subtitles={[
+          `Join our HackGT 7 community with staff, mentors, and other participants.`,
+        ]}
         button={slackButton}
       />
     );
@@ -104,33 +108,27 @@ export class EventOnboarding extends Component {
         )}
       </ThemeContext.Consumer>
     );
-    const forthScreen = (
+    const gtpdScreen = (
       <ContentInfo
         title="Some Important Information"
         subtitles={[
           "In case of emergencies, contact the Georgia Tech police department.",
           "GTPD: (404) 894-2500.",
-          "If you ever have any questions or conerns, please visit help desk anytime at [help desk location].",
+          "If you ever have any questions or conerns, please visit the help channel.",
         ]}
         button={addGTPDToContacts}
       />
     );
-    const fifthScreen = (
+    const happyHacking = (
       <ContentInfo
         title="Happy Hacking"
         subtitles={[
-          "We’re looking forward to seeing the amazing things you’ll build.",
+          "We’re looking forward to seeing the amazing things you’ll build!",
         ]}
       />
     );
 
-    const screens = [
-      firstScreen,
-      secondScreen,
-      thirdScreen,
-      forthScreen,
-      fifthScreen,
-    ];
+    const screens = [welcomeScreen, joinCommunity, gtpdScreen, happyHacking];
 
     return screens.map((content, i) => {
       const screenBackground = {
@@ -156,7 +154,7 @@ export class EventOnboarding extends Component {
   }
 
   statusHeader() {
-    const portionComplete = this.state.pageIndex / this.state.pageCount / 0.8;
+    const portionComplete = (this.state.pageIndex + 1) / this.state.pageCount;
 
     return (
       <ThemeContext.Consumer>
@@ -233,6 +231,9 @@ export class EventOnboarding extends Component {
                 onPress={() => {
                   if (this.state.pageIndex + 1 < this.state.pageCount) {
                     this.setState({ pageIndex: this.state.pageIndex + 1 });
+                  } else {
+                    // reached end, onboarding complete
+                    this.state.onDone();
                   }
                 }}
               >
