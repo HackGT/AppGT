@@ -67,8 +67,27 @@ export class EventBottomSheet extends Component {
                     {start} - {end}
                   </Text>
 
-                  <EventTypeView eventType={eventType} />
-                  <TagScrollView tags={eventTags} highlightedTags={eventTags} />
+                  <View style={{ flexDirection: "row" }}>
+                    <EventTypeView eventType={eventType} />
+                    {event.tags &&
+                      event.tags.map((tag) => (
+                        <Text
+                          style={[dynamicStyles.secondaryText, styles.tagFont]}
+                        >
+                          {tag.name}
+                        </Text>
+                      ))}
+                  </View>
+
+                  <TouchableOpacity
+                    style={[
+                      dynamicStyles.secondaryBackgroundColor,
+                      styles.joinEvent,
+                    ]}
+                  >
+                    <Text style={styles.buttonText}>Join</Text>
+                  </TouchableOpacity>
+
                   <FontMarkdown fontFamily="SpaceMono">
                     {description}
                   </FontMarkdown>
@@ -188,5 +207,27 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginTop: 15,
     marginLeft: 10,
+  },
+
+  tagFont: {
+    marginTop: 2,
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
+    marginTop: -0.2,
+    marginLeft: 8,
+  },
+
+  joinEvent: {
+    top: 5,
+    width: 60,
+    borderRadius: 10,
+  },
+
+  buttonText: {
+    padding: 5,
+    textAlign: "center",
+    color: "white",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
   },
 });

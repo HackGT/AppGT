@@ -44,16 +44,6 @@ export default class SplashScreen extends Component {
                       outputRange: [1, 0],
                     })
                   : 1,
-                // transform: [
-                //   {
-                //     scale: this.props.grow
-                //       ? this.state.opacity.interpolate({
-                //           inputRange: [0, 1],
-                //           outputRange: [1, 20],
-                //         })
-                //       : 1,
-                //   },
-                // ],
               },
               dynamicStyles.backgroundColor,
             ]}

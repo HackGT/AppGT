@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   AppState,
+  Text,
 } from "react-native";
 import { HackathonContext, ThemeContext } from "../context";
 import WhatsHappeningNow from "../assets/HappeningNow";
@@ -109,6 +110,24 @@ export class ScheduleTab extends Component {
                 daysForEvents[currentDayIndex]
               );
 
+              if (isStarSchedule && starredIds.length === 0) {
+                return (
+                  <Text
+                    style={[styles.noEventsText, dynamicStyles.backgroundColor]}
+                  >
+                    You have no starred events.
+                  </Text>
+                );
+              } else if (events.length == 0) {
+                return (
+                  <Text
+                    style={[styles.noEventsText, dynamicStyles.backgroundColor]}
+                  >
+                    No events found.
+                  </Text>
+                );
+              }
+
               return (
                 <View
                   style={[
@@ -164,5 +183,16 @@ const styles = StyleSheet.create({
 
   underBackground: {
     flex: 1,
+  },
+
+  noEventsText: {
+    fontSize: 14,
+    paddingTop: 8,
+    color: "white",
+    textAlign: "center",
+    textAlignVertical: "center",
+    justifyContent: "center",
+    flex: 1,
+    fontFamily: "Space Mono",
   },
 });
