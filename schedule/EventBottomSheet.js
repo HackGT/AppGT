@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { EventTypeView } from "./EventTypeView";
-import { parseDate } from "../cms/DataHandler";
 import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../assets/X";
 import RemoveStarButton from "../assets/RemoveFromCalendarButton";
 import AddStarButton from "../assets/AddToCalendarButton";
 import { HackathonContext, ThemeContext } from "../context";
 import FontMarkdown from "../components/FontMarkdown";
-import TagScrollView from "../components/TagScrollView";
+import { Linking } from "react-native";
 
 export class EventBottomSheet extends Component {
   bottomSheetContent = () => {
@@ -79,11 +78,13 @@ export class EventBottomSheet extends Component {
                       ))}
                   </View>
 
+                  {/* TODO: only show if has event.link */}
                   <TouchableOpacity
                     style={[
                       dynamicStyles.secondaryBackgroundColor,
                       styles.joinEvent,
                     ]}
+                    onPress={() => Linking.openURL(`https://2020.hack.gt`)}
                   >
                     <Text style={styles.buttonText}>Join</Text>
                   </TouchableOpacity>
