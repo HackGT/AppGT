@@ -25,7 +25,7 @@
 		07103F088B21EB62DB332FBD /* Pods-AppGT-AppGTTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-AppGTTests.release.xcconfig"; path = "Target Support Files/Pods-AppGT-AppGTTests/Pods-AppGT-AppGTTests.release.xcconfig"; sourceTree = "<group>"; };
 		0A3A684B78764B4697769AFB /* SpaceMono-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-BoldItalic.ttf"; path = "../assets/fonts/SpaceMono-BoldItalic.ttf"; sourceTree = "<group>"; };
 		0B4986BBB98FB17B90C9BA45 /* Pods-AppGT-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOS/Pods-AppGT-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* AppGT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppGT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* HackGT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackGT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppGT/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = AppGT/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AppGT/Images.xcassets; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* AppGT.app */,
+				13B07F961A680F5B00A75B9A /* HackGT.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -183,7 +183,7 @@
 			);
 			name = AppGT;
 			productName = AppGT;
-			productReference = 13B07F961A680F5B00A75B9A /* AppGT.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* HackGT.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -332,7 +332,7 @@
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = AppGT/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/AppGT/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.2;
@@ -342,7 +342,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = gt.hack.AppGT;
-				PRODUCT_NAME = AppGT;
+				PRODUCT_NAME = HackGT;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -357,7 +357,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
-				INFOPLIST_FILE = AppGT/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/AppGT/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.2;
@@ -367,7 +367,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = gt.hack.AppGT;
-				PRODUCT_NAME = AppGT;
+				PRODUCT_NAME = HackGT;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
