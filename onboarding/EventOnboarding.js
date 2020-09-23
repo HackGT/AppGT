@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     alignContent: "center",
+    bottom: 16,
   },
 
   headerParent: {
