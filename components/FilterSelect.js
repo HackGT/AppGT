@@ -48,7 +48,7 @@ export default class FilterSelect extends Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                {Object.keys(colors).map(function(name, index) {
+                {Object.keys(colors).map(function (name, index) {
                   const color = colors[name];
                   return (
                     <View
@@ -68,7 +68,7 @@ export default class FilterSelect extends Component {
                       }}
                     >
                       <TouchableOpacity
-                        onPress={this.hideFilterMenu.bind(this, name)}
+                        onPress={hideFilterMenu.bind(this, name)}
                         style={{
                           backgroundColor: color,
                           borderRadius: 50,
@@ -78,7 +78,7 @@ export default class FilterSelect extends Component {
                           style={{
                             padding: 7,
                             color: "white",
-                            fontFamily: "Space Mono",
+                            fontFamily: "SpaceMono-Regular",
                           }}
                         >
                           {" "}
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: 14,
     color: "white",
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 
   exitStyle: {
@@ -185,6 +185,6 @@ const styles = StyleSheet.create({
 
   filterTextStyle: {
     padding: 7,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 });

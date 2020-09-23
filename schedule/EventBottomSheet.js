@@ -86,7 +86,11 @@ export class EventBottomSheet extends Component {
                     ]}
                     onPress={() => Linking.openURL(`https://2020.hack.gt`)}
                   >
-                    <Text style={styles.buttonText}>Join</Text>
+                    <Text
+                      style={[dynamicStyles.secondaryText, styles.buttonText]}
+                    >
+                      Join
+                    </Text>
                   </TouchableOpacity>
 
                   <FontMarkdown fontFamily="SpaceMono">
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
 
   tagTextStyle: {
     padding: 7,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 
   tagStyle: {
@@ -227,7 +231,6 @@ const styles = StyleSheet.create({
   buttonText: {
     padding: 5,
     textAlign: "center",
-    color: "white",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
   },

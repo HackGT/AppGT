@@ -193,6 +193,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     justifyContent: "center",
     flex: 1,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 });

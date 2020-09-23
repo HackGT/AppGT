@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Card, CardItem, List } from "native-base";
 import CancelIcon from "../assets/Cancel";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
@@ -138,10 +137,10 @@ export class ScheduleSearch extends Component {
               }
 
               counter = Object.create(null);
-              tagArr.forEach(function(tag) {
+              tagArr.forEach(function (tag) {
                 counter[tag] = (counter[tag] || 0) + 1;
               });
-              tagArr.sort(function(x, y) {
+              tagArr.sort(function (x, y) {
                 return counter[y] - counter[x];
               });
 
@@ -347,7 +346,7 @@ const styles = StyleSheet.create({
   noEvents: {
     marginLeft: 10,
     marginTop: 10,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
     fontSize: 14,
   },
 
@@ -365,8 +364,7 @@ const styles = StyleSheet.create({
   },
 
   trendingTopics: {
-    fontFamily: "Space Mono",
-    fontWeight: "bold",
+    fontFamily: "SpaceMono-Bold",
     fontSize: 18,
     marginLeft: 15,
     marginTop: 10,
@@ -374,7 +372,7 @@ const styles = StyleSheet.create({
   },
 
   clear: {
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
     textAlign: "center",
     paddingRight: 7,
     paddingLeft: 7,
@@ -399,7 +397,7 @@ const styles = StyleSheet.create({
 
   dayText: {
     padding: 7,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 
   container: {
@@ -410,7 +408,7 @@ const styles = StyleSheet.create({
 
   textStyle: {
     padding: 7,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 
   tagStyle: {

@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 
   textStyle: {
     padding: 7,
-    fontFamily: "Space Mono",
+    fontFamily: "SpaceMono-Regular",
   },
 
   tagStyle: {
