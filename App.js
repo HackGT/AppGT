@@ -14,7 +14,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import StarIcon from "./assets/StarLargeOn";
-
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faInfoCircle,
+  faCoffee,
+  faCalendarDay,
+  faCalculator,
+  faCalendar,
+} from "@fortawesome/free-solid-svg-icons";
 import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -397,23 +404,28 @@ class App extends React.Component {
                 tabBarOptions={{
                   activeTintColor: this.props.styles.tintColor.color,
                   style: this.props.styles.tabBarBackgroundColor,
+                  showLabel: false,
                 }}
                 screenOptions={({ route }) => ({
                   tabBarIcon: ({ focused, color, size }) => {
-                    let iconName;
-                    console.log(route.name);
-                    // if (route.name === "Home") {
-                    //   iconName = focused
-                    //     ? "ios-information-circle"
-                    //     : "ios-information-circle-outline";
-                    // } else if (route.name === "Settings") {
-                    //   iconName = focused ? "ios-list-box" : "ios-list";
-                    // }
+                    let icon;
+                    const selectedColor = focused
+                      ? this.props.styles.tintColor.color
+                      : "white";
 
-                    // // You can return any component that you like here!
-                    // return (
-                    //   <Ionicons name={iconName} size={size} color={color} />
-                    // );
+                    if (route.name === "Schedule") {
+                      icon = faCalendar;
+                    } else if (route.name === "Information") {
+                      icon = faInfoCircle;
+                    }
+
+                    return (
+                      <FontAwesomeIcon
+                        color={selectedColor}
+                        icon={icon}
+                        size={26}
+                      />
+                    );
                   },
                 })}
               >
