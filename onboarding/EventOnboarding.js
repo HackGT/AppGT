@@ -9,6 +9,19 @@ import {
 } from "react-native";
 import { ContentInfo } from "./ContentInfo";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faUsers,
+  faCalendarCheck,
+  faInfo,
+  faInfoCircle,
+  faQuestionCircle,
+  faQuestion,
+  faLifeRing,
+  faPhone,
+  faExclamation,
+  faKeyboard,
+} from "@fortawesome/free-solid-svg-icons";
 import BackButton from "../assets/Back";
 import ContinueButton from "../assets/ContinueButton";
 import QRCode from "react-native-qrcode-svg";
@@ -85,72 +98,103 @@ export class EventOnboarding extends Component {
       </ThemeContext.Consumer>
     );
 
-    const joinCommunity = (
-      <ContentInfo
-        title="Questions? We're always available"
-        subtitles={[
-          `Join our HackGT 7 community with staff, mentors, and other participants.`,
-        ]}
-        button={slackButton}
-      />
-    );
+    const screenBackground = {
+      flex: 1,
+      width: width,
+      justifyContent: "center",
+      alignItems: "center",
+    };
 
-    const addGTPDToContacts = (
+    return (
       <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <TouchableOpacity
-            style={[dynamicStyles.primaryButtonBackground, styles.contacts]}
-            onPress={() => Clipboard.setString("(404) 894-2500")}
-          >
-            {/* TODO: create new contact automatically: https://www.npmjs.com/package/react-native-contacts */}
-            <Text style={styles.buttonText}>Copy Contact</Text>
-          </TouchableOpacity>
-        )}
+        {({ dynamicStyles }) => {
+          const joinCommunity = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faLifeRing}
+                  size={60}
+                />
+              }
+              title="Questions? We're always available"
+              subtitles={[
+                `Join our HackGT 7 community with staff, mentors, and other participants.`,
+              ]}
+              button={slackButton}
+            />
+          );
+
+          const addGTPDToContacts = (
+            <ThemeContext.Consumer>
+              {({ dynamicStyles }) => (
+                <TouchableOpacity
+                  style={[
+                    dynamicStyles.primaryButtonBackground,
+                    styles.contacts,
+                  ]}
+                  onPress={() => Clipboard.setString("(404) 894-2500")}
+                >
+                  {/* TODO: create new contact automatically: https://www.npmjs.com/package/react-native-contacts */}
+                  <Text style={styles.buttonText}>Copy Contact</Text>
+                </TouchableOpacity>
+              )}
+            </ThemeContext.Consumer>
+          );
+          const gtpdScreen = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faExclamation}
+                  size={60}
+                />
+              }
+              title="Some Important Information"
+              subtitles={[
+                "In case of emergencies, contact the Georgia Tech police department.",
+                "GTPD: (404) 894-2500.",
+                "If you ever have any questions or conerns, please visit the help channel.",
+              ]}
+              button={addGTPDToContacts}
+            />
+          );
+          const happyHacking = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faKeyboard}
+                  size={60}
+                />
+              }
+              title="Happy Hacking"
+              subtitles={[
+                "We’re looking forward to seeing the amazing things you’ll build!",
+              ]}
+            />
+          );
+
+          const screens = [
+            welcomeScreen,
+            joinCommunity,
+            gtpdScreen,
+            happyHacking,
+          ];
+
+          return screens.map((content, i) => {
+            return (
+              <View
+                key={i}
+                style={[dynamicStyles.backgroundColor, screenBackground]}
+              >
+                {content}
+              </View>
+            );
+          });
+        }}
       </ThemeContext.Consumer>
     );
-    const gtpdScreen = (
-      <ContentInfo
-        title="Some Important Information"
-        subtitles={[
-          "In case of emergencies, contact the Georgia Tech police department.",
-          "GTPD: (404) 894-2500.",
-          "If you ever have any questions or conerns, please visit the help channel.",
-        ]}
-        button={addGTPDToContacts}
-      />
-    );
-    const happyHacking = (
-      <ContentInfo
-        title="Happy Hacking"
-        subtitles={[
-          "We’re looking forward to seeing the amazing things you’ll build!",
-        ]}
-      />
-    );
-
-    const screens = [welcomeScreen, joinCommunity, gtpdScreen, happyHacking];
-
-    return screens.map((content, i) => {
-      const screenBackground = {
-        flex: 1,
-        width: width,
-        justifyContent: "center",
-        alignItems: "center",
-      };
-
-      return (
-        <ThemeContext.Consumer>
-          {({ dynamicStyles }) => (
-            <View
-              key={i}
-              style={[dynamicStyles.backgroundColor, screenBackground]}
-            >
-              {content}
-            </View>
-          )}
-        </ThemeContext.Consumer>
-      );
-    });
   }
 
   statusHeader() {
