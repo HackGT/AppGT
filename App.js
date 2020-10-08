@@ -15,13 +15,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
 import StarIcon from "./assets/StarLargeOn";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faInfoCircle,
-  faCoffee,
-  faCalendarDay,
-  faCalculator,
-  faCalendar,
-} from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -411,7 +405,7 @@ class App extends React.Component {
                     let icon;
                     const selectedColor = focused
                       ? this.props.styles.tintColor.color
-                      : "white";
+                      : this.props.styles.text.color;
 
                     if (route.name === "Schedule") {
                       icon = faCalendar;

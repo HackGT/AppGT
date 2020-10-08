@@ -36,6 +36,7 @@ export class EventBottomSheet extends Component {
                 ? event.tags.map((tag) => tag.name)
                 : [];
 
+              console.log("t" + event.url);
               return (
                 <View
                   style={[dynamicStyles.tritaryBackgroundColor, styles.panel]}
@@ -79,19 +80,19 @@ export class EventBottomSheet extends Component {
                   </View>
 
                   {/* TODO: only show if has event.link */}
-                  <TouchableOpacity
-                    style={[
-                      dynamicStyles.secondaryBackgroundColor,
-                      styles.joinEvent,
-                    ]}
-                    onPress={() => Linking.openURL(`https://2020.hack.gt`)}
-                  >
-                    <Text
-                      style={[dynamicStyles.secondaryText, styles.buttonText]}
+                  {event.url !== null ? (
+                    <TouchableOpacity
+                      style={[
+                        dynamicStyles.secondaryBackgroundColor,
+                        styles.joinEvent,
+                      ]}
+                      onPress={() => Linking.openURL(event.url)}
                     >
-                      Join
-                    </Text>
-                  </TouchableOpacity>
+                      <Text style={[dynamicStyles.text, styles.buttonText]}>
+                        Join
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
 
                   <FontMarkdown fontFamily="SpaceMono">
                     {description}

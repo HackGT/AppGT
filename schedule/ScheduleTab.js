@@ -113,7 +113,11 @@ export class ScheduleTab extends Component {
               if (isStarSchedule && starredIds.length === 0) {
                 return (
                   <Text
-                    style={[styles.noEventsText, dynamicStyles.backgroundColor]}
+                    style={[
+                      dynamicStyles.text,
+                      styles.noEventsText,
+                      dynamicStyles.backgroundColor,
+                    ]}
                   >
                     You have no starred events.
                   </Text>
@@ -121,7 +125,11 @@ export class ScheduleTab extends Component {
               } else if (events.length == 0) {
                 return (
                   <Text
-                    style={[styles.noEventsText, dynamicStyles.backgroundColor]}
+                    style={[
+                      dynamicStyles.text,
+                      styles.noEventsText,
+                      dynamicStyles.backgroundColor,
+                    ]}
                   >
                     No events found.
                   </Text>
@@ -188,7 +196,6 @@ const styles = StyleSheet.create({
   noEventsText: {
     fontSize: 14,
     paddingTop: 8,
-    color: "white",
     textAlign: "center",
     textAlignVertical: "center",
     justifyContent: "center",

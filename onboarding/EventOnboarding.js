@@ -229,11 +229,11 @@ export class EventOnboarding extends Component {
             <View style={[dynamicStyles.backgroundColor, styles.footer]}>
               <TouchableOpacity
                 onPress={() => {
-                  if (this.state.pageIndex + 1 < this.state.pageCount) {
+                  if (this.state.pageIndex < this.state.pageCount) {
                     this.setState({ pageIndex: this.state.pageIndex + 1 });
                   } else {
                     // reached end, onboarding complete
-                    this.state.onDone();
+                    this.props.route.params.onDone();
                   }
                 }}
               >

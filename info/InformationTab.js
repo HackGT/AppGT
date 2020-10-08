@@ -19,14 +19,20 @@ export class InformationTab extends Component {
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
             {({ faq, hackathon }) => {
+              let faqCopy = [...faq];
               let faqList = [];
-              for (i in faq) {
+              // sort faq based on priority so important questions come first
+              faqCopy.sort(function (a, b) {
+                return parseFloat(a.index) - parseFloat(b.index);
+              });
+
+              for (i in faqCopy) {
                 faqList.push(
                   <FontMarkdown fontFamily="SpaceMono">
-                    **{faq[i].question}**
+                    **{faqCopy[i].question}**
                   </FontMarkdown>,
                   <FontMarkdown fontFamily="SpaceMono">
-                    {faq[i].answer}
+                    {faqCopy[i].answer}
                   </FontMarkdown>
                 );
               }

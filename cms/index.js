@@ -7,6 +7,7 @@ const hackathonQuery = `
       events(orderBy: "startDate") {
           id
           name
+          url
           startDay
           startTime
           startDate
@@ -46,6 +47,7 @@ const hackathonQuery = `
       id
       question
       answer
+      index
   }
 `;
 

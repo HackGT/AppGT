@@ -10,12 +10,15 @@ import {
 import Svg, { Circle } from "react-native-svg";
 import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
-
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faUsers, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentInfo } from "./ContentInfo";
 import { AuthContext, ThemeContext } from "../context";
 import { GradientButton } from "../components/GradientButton";
 
 export class LoginOnboarding extends Component {
+  static contextType = ThemeContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,46 +35,60 @@ export class LoginOnboarding extends Component {
       </View>
     );
 
-    const personalizeSchedule = (
-      <ContentInfo
-        title="Personalize your Event Schedule"
-        subtitles={[
-          "Favorite events that interest you to save them in your personal schedule so you never miss them.",
-        ]}
-      />
-    );
-    const joinVirtually = (
-      <ContentInfo
-        title="Join Virtually"
-        subtitles={[
-          "Quickly access event join links, event information, and search for events that interest you. All in one place.",
-        ]}
-      />
-    );
+    return (
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => {
+          const screenBackground = {
+            flex: 1,
+            width: width,
+            justifyContent: "center",
+            alignItems: "center",
+          };
 
-    const screens = [hackgtLogo, personalizeSchedule, joinVirtually];
+          const personalizeSchedule = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faCalendarCheck}
+                  size={60}
+                />
+              }
+              title="Personalize your Event Schedule"
+              subtitles={[
+                "Favorite events that interest you to save them in your personal schedule so you never miss them.",
+              ]}
+            />
+          );
+          const joinVirtually = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faUsers}
+                  size={60}
+                />
+              }
+              title="Join Virtually"
+              subtitles={[
+                "Quickly access event join links, event information, and search for events that interest you. All in one place.",
+              ]}
+            />
+          );
 
-    return screens.map((content, i) => {
-      const screenBackground = {
-        flex: 1,
-        width: width,
-        justifyContent: "center",
-        alignItems: "center",
-      };
+          const screens = [hackgtLogo, personalizeSchedule, joinVirtually];
 
-      return (
-        <ThemeContext.Consumer>
-          {({ dynamicStyles }) => (
+          return screens.map((content, i) => (
             <View
               key={i}
               style={[dynamicStyles.backgroundColor, screenBackground]}
             >
               {content}
             </View>
-          )}
-        </ThemeContext.Consumer>
-      );
-    });
+          ));
+        }}
+      </ThemeContext.Consumer>
+    );
   }
 
   // render the dots indicating which page user is on

@@ -44,8 +44,8 @@ export const dynamicStyles = new DynamicStyleSheet({
 
   tabBarBackgroundColor: {
     backgroundColor: new DynamicValue("white", "#171717"),
-    shadowColor: new DynamicValue("white", "#666666"),
-    borderTopColor: new DynamicValue("white", "#666666"),
+    shadowColor: new DynamicValue("#D3D3D3", "#666666"),
+    borderTopColor: new DynamicValue("#D3D3D3", "#666666"),
   },
 
   searchBorderTopColor: {
