@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import ButtonBackground from "../assets/ButtonBackground";
 import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
 
 import { ContentInfo } from "./ContentInfo";
 import { AuthContext, ThemeContext } from "../context";
+import { GradientButton } from "../components/GradientButton";
 
 export class LoginOnboarding extends Component {
   constructor(props) {
@@ -138,15 +138,17 @@ export class LoginOnboarding extends Component {
                   >
                     {this.indexIndicator()}
 
-                    <TouchableOpacity onPress={() => login()}>
-                      <ButtonBackground />
-                    </TouchableOpacity>
+                    <GradientButton
+                      text="Get Started"
+                      onPress={() => login()}
+                    ></GradientButton>
 
-                    <TouchableOpacity onPress={() => login()}>
+                    {/* TODO: put back login stuff */}
+                    {/* <TouchableOpacity onPress={() => login()}>
                       <Text style={[dynamicStyles.text, styles.makeAccount]}>
                         Don't have an account?
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     {/* TOOD: logout button */}
                     {/* <TouchableOpacity onPress={() => logout()}>

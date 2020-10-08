@@ -4,6 +4,7 @@ import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext } from "./context";
 import { StatusBar, Modal, View } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
+import { InformationTab } from "./info/InformationTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -41,6 +42,8 @@ function HackGTitle() {
 }
 
 const SchdeuleStack = createStackNavigator();
+const InformationStack = createStackNavigator();
+
 function SchdeuleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
@@ -87,6 +90,24 @@ function SchdeuleStackScreen({ navigation }) {
         </SchdeuleStack.Navigator>
       )}
     </HackathonContext.Consumer>
+  );
+}
+
+function InformationStackScreen({ navigation }) {
+  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  return (
+    <InformationStack.Navigator>
+      <InformationStack.Screen
+        options={{
+          headerTitleAlign: "left",
+          headerTitle: (props) => <HackGTitle {...props} />,
+          headerStyle: dStyles.tabBarBackgroundColor,
+        }}
+        name="HackGT"
+      >
+        {(props) => <InformationTab {...props} />}
+      </InformationStack.Screen>
+    </InformationStack.Navigator>
   );
 }
 
@@ -230,6 +251,16 @@ class App extends React.Component {
       this.setState({ isFetchingLogin: false });
     });
 
+    AsyncStorage.getItem("localFAQData", (error, result) => {
+      if (result) {
+        const faq = JSON.parse(result);
+
+        if (faq != null) {
+          this.setState({ faq: faq });
+        }
+      }
+    });
+
     AsyncStorage.getItem("localHackathonData", (error, result) => {
       if (result) {
         console.log("Hackathon found locally.");
@@ -242,12 +273,20 @@ class App extends React.Component {
 
       fetchHackathonData().then((data) => {
         const hackathons = data.data.allHackathons;
+        const faq = data.data.allFAQs;
+
         if (hackathons != null && hackathons.length != 0) {
           console.log("Hackathon found remotely.");
           const hackathon = hackathons[0];
 
           AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
-          this.setState({ hackathon: hackathon, isFetchingData: false });
+          AsyncStorage.setItem("localFAQData", JSON.stringify(faq));
+
+          this.setState({
+            faq: faq,
+            hackathon: hackathon,
+            isFetchingData: false,
+          });
         } else {
           // if still loading, present error asking for retry
         }
@@ -259,6 +298,7 @@ class App extends React.Component {
     const Stack = createStackNavigator();
 
     const hackathon = this.state.hackathon;
+    const faq = this.state.faq;
     const starredIds = this.state.starredIds;
 
     const needsLogin = this.state.user == null;
@@ -326,6 +366,7 @@ class App extends React.Component {
         <HackathonContext.Provider
           value={{
             hackathon: hackathon,
+            faq: faq,
             toggleStar: this.toggleStarred,
             starredIds: starredIds,
             isStarSchedule: this.state.isStarSchedule,
@@ -351,12 +392,30 @@ class App extends React.Component {
               />
 
               {/* TODO: when need tab bottom bar, convert "Stack." to "Tab." and remoe headerMode="none" and finally add different screens below */}
-              <Stack.Navigator
-                headerMode="none"
+              <Tab.Navigator
+                // headerMode="none"
                 tabBarOptions={{
                   activeTintColor: this.props.styles.tintColor.color,
                   style: this.props.styles.tabBarBackgroundColor,
                 }}
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    console.log(route.name);
+                    // if (route.name === "Home") {
+                    //   iconName = focused
+                    //     ? "ios-information-circle"
+                    //     : "ios-information-circle-outline";
+                    // } else if (route.name === "Settings") {
+                    //   iconName = focused ? "ios-list-box" : "ios-list";
+                    // }
+
+                    // // You can return any component that you like here!
+                    // return (
+                    //   <Ionicons name={iconName} size={size} color={color} />
+                    // );
+                  },
+                })}
               >
                 <Stack.Screen
                   name="Schedule"
@@ -370,7 +429,11 @@ class App extends React.Component {
                     },
                   }}
                 />
-              </Stack.Navigator>
+                <Stack.Screen
+                  name="Information"
+                  component={InformationStackScreen}
+                />
+              </Tab.Navigator>
             </NavigationContainer>
           </AuthContext.Provider>
         </HackathonContext.Provider>

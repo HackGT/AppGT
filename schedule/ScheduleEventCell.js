@@ -4,6 +4,7 @@ import StarOff from "../assets/StarOff";
 import StarOn from "../assets/StarOn";
 import { HackathonContext, ThemeContext } from "../context";
 import { EventTypeView } from "./EventTypeView";
+import { Card } from "../components/Card";
 
 export class ScheduleEventCell extends Component {
   constructor(props) {
@@ -13,28 +14,6 @@ export class ScheduleEventCell extends Component {
       isStarred: false,
     };
   }
-
-  createCardStyle = (dynamicStyles) => {
-    const style = {
-      padding: 17,
-      flexDirection: "column",
-      alignItems: "flex-start",
-      justifyContent: "space-evenly",
-      height: 100,
-      borderWidth: 1.3,
-      borderRadius: 12,
-      borderColor: this.props.highlighted
-        ? dynamicStyles.tintColor.color
-        : dynamicStyles.tritaryBackgroundColor.backgroundColor,
-      elevation: 1, // android shadow
-      shadowColor: "black",
-      shadowOffset: { width: 0.5, height: 0.5 },
-      shadowOpacity: 0.1,
-      shadowRadius: 1.5,
-    };
-
-    return style;
-  };
 
   render() {
     const event = this.props.event;
@@ -58,62 +37,52 @@ export class ScheduleEventCell extends Component {
               const isStarred = starredIds.indexOf(event.id) != -1;
 
               return (
-                <View style={styles.cardParent}>
-                  <View
-                    style={[
-                      dynamicStyles.tritaryBackgroundColor,
-                      this.createCardStyle(dynamicStyles),
-                    ]}
-                  >
-                    <View style={styles.titleHeader}>
-                      <Text
-                        numberOfLines={1}
-                        ellipsizeMode={"tail"}
-                        style={[dynamicStyles.text, styles.titleFont]}
-                      >
-                        {title}
-                      </Text>
-                      <TouchableOpacity
-                        style={{ width: "10%" }}
-                        onPress={() => toggleStar(event)}
-                      >
-                        {isStarred ? (
-                          <StarOn fill={dynamicStyles.tintColor.color} />
-                        ) : (
-                          <StarOff
-                            fill={
-                              dynamicStyles.secondaryBackgroundColor
-                                .backgroundColor
-                            }
-                          />
-                        )}
-                      </TouchableOpacity>
-                    </View>
+                <Card>
+                  <View style={styles.titleHeader}>
                     <Text
                       numberOfLines={1}
                       ellipsizeMode={"tail"}
-                      style={[dynamicStyles.secondaryText, styles.subtitleFont]}
+                      style={[dynamicStyles.text, styles.titleFont]}
                     >
-                      {location}
-                      {start} - {end}
+                      {title}
                     </Text>
-
-                    <View style={{ flexDirection: "row" }}>
-                      <EventTypeView eventType={eventType} />
-                      {event.tags &&
-                        event.tags.map((tag) => (
-                          <Text
-                            style={[
-                              dynamicStyles.secondaryText,
-                              styles.tagFont,
-                            ]}
-                          >
-                            {tag.name}
-                          </Text>
-                        ))}
-                    </View>
+                    <TouchableOpacity
+                      style={{ width: "10%" }}
+                      onPress={() => toggleStar(event)}
+                    >
+                      {isStarred ? (
+                        <StarOn fill={dynamicStyles.tintColor.color} />
+                      ) : (
+                        <StarOff
+                          fill={
+                            dynamicStyles.secondaryBackgroundColor
+                              .backgroundColor
+                          }
+                        />
+                      )}
+                    </TouchableOpacity>
                   </View>
-                </View>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode={"tail"}
+                    style={[dynamicStyles.secondaryText, styles.subtitleFont]}
+                  >
+                    {location}
+                    {start} - {end}
+                  </Text>
+
+                  <View style={{ flexDirection: "row" }}>
+                    <EventTypeView eventType={eventType} />
+                    {event.tags &&
+                      event.tags.map((tag) => (
+                        <Text
+                          style={[dynamicStyles.secondaryText, styles.tagFont]}
+                        >
+                          {tag.name}
+                        </Text>
+                      ))}
+                  </View>
+                </Card>
               );
             }}
           </HackathonContext.Consumer>
@@ -124,11 +93,6 @@ export class ScheduleEventCell extends Component {
 }
 
 const styles = StyleSheet.create({
-  cardParent: {
-    width: "100%",
-    borderRadius: 8,
-  },
-
   titleHeader: {
     flexDirection: "row",
     width: "100%",
