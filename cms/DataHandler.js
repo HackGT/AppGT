@@ -105,7 +105,7 @@ export function isEventHappeningNow(event) {
     return false;
   }
 
-  // TODO: just for testing
+  // just for testing
   // return event.name === "Bob Ross Painting";
 
   return (

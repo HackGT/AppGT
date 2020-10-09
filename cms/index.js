@@ -61,8 +61,8 @@ const hackathonQuery = `
 `;
 
 const getHackathonData = async (queryString) => {
-  return fetch("https://keystone.dev.hack.gt/admin/api", {
-    // return fetch("https://cms.hack.gt/admin/api", {
+  // return fetch("https://keystone.dev.hack.gt/admin/api", {
+  return fetch("https://cms.hack.gt/admin/api", {
     method: "POST",
     headers: {
       "Content-Type": `application/json`,

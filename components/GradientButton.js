@@ -24,6 +24,7 @@ export class GradientButton extends Component {
                 right: 0,
                 fontSize: 18,
                 fontFamily: "SpaceMono-Regular",
+                letterSpacing: 0.005,
               }}
             >
               {this.props.text}

@@ -80,7 +80,6 @@ export class EventBottomSheet extends Component {
                       ))}
                   </View>
 
-                  {/* TODO: only show if has event.link */}
                   {event.url !== null ? (
                     <TouchableOpacity
                       style={[

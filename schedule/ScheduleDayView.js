@@ -272,8 +272,6 @@ export class ScheduleDayView extends Component {
       alignItems: "center",
     };
 
-    // TODO: show no events found when no events
-
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
