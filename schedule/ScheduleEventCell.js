@@ -18,7 +18,9 @@ export class ScheduleEventCell extends Component {
   render() {
     const event = this.props.event;
     const eventType =
-      event != null && event.type != null ? event.type.name : "none";
+      event != null && event.type != null
+        ? event.type
+        : { name: "none", color: "gray" };
     const title = event.name;
     const location =
       event != null &&

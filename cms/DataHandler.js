@@ -1,14 +1,5 @@
 import moment from "moment";
 
-export const colors = {
-  important: "#2CDACF",
-  food: "#C866F5",
-  speaker: "#FF586C",
-  "mini-event": "#FF8D28",
-  workshop: "#786CEB",
-  clear: "#C3C3C3",
-};
-
 export const daysAvailable = ["friday", "saturday", "sunday"];
 
 export function parseDate(date) {
@@ -26,9 +17,7 @@ export function getDaysForEvent(events) {
 
   for (event of events) {
     if (event && event.startDay) {
-      const day = parseDate(event.startDay)
-        .format("dddd")
-        .toLowerCase();
+      const day = parseDate(event.startDay).format("dddd").toLowerCase();
 
       if (days.indexOf(day) == -1) {
         days.push(day);
@@ -48,35 +37,27 @@ export function sortEventsByStartTime(events) {
     return events;
   }
 
-  return events.sort(function(a, b) {
+  return events.sort(function (a, b) {
     return parseDate(a.startDate) - parseDate(b.startDate);
   });
 }
 
 export function getEventsForDay(events, day) {
   if (day == null) {
-    day = moment()
-      .format("dddd")
-      .toLowerCase();
+    day = moment().format("dddd").toLowerCase();
   }
 
   // converts event's start time to a day (saturday, sunday, etc) and sees if it matches the string
   return events.filter((event) => {
     if (event && event.startDate) {
-      return (
-        parseDate(event.startDate)
-          .format("dddd")
-          .toLowerCase() == day
-      );
+      return parseDate(event.startDate).format("dddd").toLowerCase() == day;
     }
     return false;
   });
 }
 
 export function getCurrentDayIndex(events) {
-  const todayString = moment()
-    .format("dddd")
-    .toLowerCase();
+  const todayString = moment().format("dddd").toLowerCase();
 
   return getDaysForEvent(events).indexOf(todayString);
 }
@@ -128,12 +109,8 @@ export function isEventHappeningNow(event) {
   // return event.name === "Bob Ross Painting";
 
   return (
-    parseDate(event.startDate)
-      .format("dddd")
-      .toLowerCase() ==
-      moment()
-        .format("dddd")
-        .toLowerCase() &&
+    parseDate(event.startDate).format("dddd").toLowerCase() ==
+      moment().format("dddd").toLowerCase() &&
     moment() > parseDate(event.startDate) &&
     moment() < parseDate(event.endDate)
   );

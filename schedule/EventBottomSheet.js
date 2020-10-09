@@ -24,7 +24,9 @@ export class EventBottomSheet extends Component {
     const start = event.startTime;
     const end = event.endTime;
     const eventType =
-      event != null && event.type != null ? event.type.name : "none";
+      event != null && event.type != null
+        ? event.type
+        : { name: "none", color: "gray" };
 
     return (
       <ThemeContext.Consumer>
@@ -36,7 +38,6 @@ export class EventBottomSheet extends Component {
                 ? event.tags.map((tag) => tag.name)
                 : [];
 
-              console.log("t" + event.url);
               return (
                 <View
                   style={[dynamicStyles.tritaryBackgroundColor, styles.panel]}

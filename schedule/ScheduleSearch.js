@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { HackathonContext, ThemeContext } from "../context";
-import { colors, getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
+import { getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import {
   FlatList,
   Text,
-  ScrollView,
   View,
   StyleSheet,
   TouchableOpacity,
@@ -37,7 +36,7 @@ export class ScheduleSearch extends Component {
     this.state = {
       searchText: "",
       selectedEvent: null,
-      filterName: "",
+      filterItem: null,
       highlightedTags: [],
     };
   }
@@ -80,38 +79,41 @@ export class ScheduleSearch extends Component {
                 let eventNameLowerCase = event.name.toLowerCase();
                 let eventDescriptionLowerCase = "";
                 let eventTypeLowerCase = "";
+                const name =
+                  event.type && event.type.name ? event.type.name : null;
 
                 if (event.description != null) {
                   eventDescriptionLowerCase = event.description.toLowerCase();
                 }
 
-                if (event.type.name != null) {
-                  eventTypeLowerCase = event.type.name.toLowerCase();
+                if (name != null) {
+                  eventTypeLowerCase = name.toLowerCase();
                 }
 
-                if (event.type.name === this.state.filterName) {
+                const filterName =
+                  this.state.filterItem == null
+                    ? null
+                    : this.state.filterItem.name;
+                if (name === filterName) {
                   return (
                     (eventNameLowerCase.includes(
                       this.state.searchText.trim().toLowerCase()
                     ) &&
-                      event.type.name === this.state.filterName) ||
+                      name === filterName) ||
                     (eventDescriptionLowerCase.includes(
                       this.state.searchText.trim().toLowerCase()
                     ) &&
-                      event.type.name === this.state.filterName) ||
+                      name === filterName) ||
                     (eventTypeLowerCase.includes(
                       this.state.searchText.trim().toLowerCase()
                     ) &&
-                      event.type.name === this.state.filterName) ||
+                      name === filterName) ||
                     (dayName.includes(
                       this.state.searchText.trim().toLowerCase()
                     ) &&
-                      event.type.name === this.state.filterName)
+                      name === filterName)
                   );
-                } else if (
-                  this.state.filterName === "" ||
-                  this.state.filterName === null
-                ) {
+                } else if (filterName === null) {
                   return (
                     eventNameLowerCase.includes(
                       this.state.searchText.trim().toLowerCase()
@@ -216,7 +218,7 @@ export class ScheduleSearch extends Component {
                     <FilterSelect
                       onSelectFilter={(newFilter) =>
                         this.setState({
-                          filterName: newFilter,
+                          filterItem: newFilter,
                           highlightedTags: [],
                         })
                       }
