@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { HackathonContext, ThemeContext } from "../context";
 import { Card } from "../components/Card";
@@ -18,7 +19,55 @@ export class InformationTab extends Component {
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
-            {({ faq, hackathon }) => {
+            {({ blocks, faq, hackathon }) => {
+              // create button blocks for "Join Slack", "View Event site", etc
+              const buttonBlock = blocks.find(
+                (e) => e.slug && e.slug === "info-button-links"
+              );
+
+              headerButtons = [];
+
+              if (buttonBlock && buttonBlock.content) {
+                const buttonJSON = JSON.parse(buttonBlock.content);
+                if (buttonJSON) {
+                  headerButtons = buttonJSON.map((button) => {
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.joinEvent,
+                          {
+                            borderColor: dynamicStyles.tintColor.color,
+                          },
+                        ]}
+                        onPress={() => {
+                          Linking.openURL(button.url).catch((err) => {
+                            if (err) {
+                              if (button.backupURL) {
+                                Linking.openURL(button.backupURL).catch((err) =>
+                                  Alert.alert(
+                                    "Redirect Error",
+                                    "The link you selected cannot be opened."
+                                  )
+                                );
+                              } else {
+                                Alert.alert(
+                                  "Redirect Error",
+                                  "The link you selected cannot be opened."
+                                );
+                              }
+                            }
+                          });
+                        }}
+                      >
+                        <Text style={[dynamicStyles.text, styles.buttonText]}>
+                          {button.title}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  });
+                }
+              }
+
               let faqCopy = [...faq];
               let faqList = [];
               // sort faq based on priority so important questions come first
@@ -39,51 +88,17 @@ export class InformationTab extends Component {
 
               return (
                 <ScrollView style={[dynamicStyles.backgroundColor]}>
-                  <Text style={[dynamicStyles.text, styles.trendingTopics]}>
+                  <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
                     {"Welcome to " + hackathon.name}
                   </Text>
 
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignContent: "center",
-                      marginLeft: 15,
-                      marginRight: 15,
-                    }}
-                  >
-                    <TouchableOpacity
-                      style={[
-                        styles.joinEvent,
-                        {
-                          borderColor: dynamicStyles.tintColor.color,
-                        },
-                      ]}
-                      onPress={() => Linking.openURL(`https://2020.hack.gt`)}
-                    >
-                      <Text style={[dynamicStyles.text, styles.buttonText]}>
-                        Open Slack
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[
-                        styles.joinEvent,
-                        {
-                          borderColor: dynamicStyles.tintColor.color,
-                        },
-                      ]}
-                      onPress={() => Linking.openURL(`https://2020.hack.gt`)}
-                    >
-                      <Text style={[dynamicStyles.text, styles.buttonText]}>
-                        View Event Site
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+                  <View style={styles.headerButtons}>{headerButtons}</View>
 
-                  <Text style={[dynamicStyles.text, styles.trendingTopics]}>
+                  <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
                     Frequently Asked Questions
                   </Text>
 
-                  <View style={{ marginLeft: 15, marginRight: 15 }}>
+                  <View style={styles.faqList}>
                     <Card>{faqList}</Card>
                   </View>
                 </ScrollView>
@@ -97,6 +112,19 @@ export class InformationTab extends Component {
 }
 
 const styles = StyleSheet.create({
+  headerButtons: {
+    flexDirection: "row",
+    alignContent: "center",
+    marginLeft: 15,
+    marginRight: 15,
+    flex: 1,
+  },
+
+  faqList: {
+    marginLeft: 15,
+    marginRight: 15,
+  },
+
   joinEvent: {
     margin: 5,
     borderRadius: 10,
@@ -111,7 +139,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.005,
   },
 
-  trendingTopics: {
+  welcomeHeader: {
     fontFamily: "SpaceMono-Bold",
     fontSize: 18,
     marginLeft: 20,

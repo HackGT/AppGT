@@ -13,7 +13,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchIcon from "./assets/Search";
-import StarIcon from "./assets/StarLargeOn";
+import StarOnIcon from "./assets/StarLargeOn";
+import StarOffIcon from "./assets/StarLargeOff";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faInfoCircle, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import HackGTIcon from "./assets/HackGTIcon";
@@ -49,7 +50,7 @@ function SchdeuleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
     <HackathonContext.Consumer>
-      {({ toggleIsStarSchedule }) => (
+      {({ isStarSchedule, toggleIsStarSchedule }) => (
         <SchdeuleStack.Navigator>
           <SchdeuleStack.Screen
             options={{
@@ -58,9 +59,15 @@ function SchdeuleStackScreen({ navigation }) {
               headerRight: () => (
                 <View style={{ flexDirection: "row" }}>
                   <TouchableOpacity onPress={toggleIsStarSchedule}>
-                    <StarIcon
-                      fill={dStyles.secondaryBackgroundColor.backgroundColor}
-                    />
+                    {isStarSchedule ? (
+                      <StarOnIcon
+                        fill={dStyles.secondaryBackgroundColor.backgroundColor}
+                      />
+                    ) : (
+                      <StarOffIcon
+                        fill={dStyles.secondaryBackgroundColor.backgroundColor}
+                      />
+                    )}
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{ paddingLeft: 10, paddingRight: 10 }}
@@ -123,6 +130,7 @@ class App extends React.Component {
       hackathon: null,
       eventTypes: [],
       faq: [],
+      blocks: [],
       starredIds: [],
       isStarSchedule: false,
 
@@ -262,6 +270,16 @@ class App extends React.Component {
       }
     });
 
+    AsyncStorage.getItem("localBlockData", (error, result) => {
+      if (result) {
+        const blocks = JSON.parse(result);
+
+        if (blocks != null) {
+          this.setState({ blocks: blocks });
+        }
+      }
+    });
+
     AsyncStorage.getItem("localHackathonData", (error, result) => {
       if (result) {
         console.log("Hackathon found locally.");
@@ -275,6 +293,7 @@ class App extends React.Component {
       fetchHackathonData().then((data) => {
         const hackathons = data.data.allHackathons;
         const faq = data.data.allFAQs;
+        const blocks = data.data.allBlocks;
 
         if (hackathons != null && hackathons.length != 0) {
           console.log("Hackathon found remotely.");
@@ -282,9 +301,11 @@ class App extends React.Component {
 
           AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
           AsyncStorage.setItem("localFAQData", JSON.stringify(faq));
+          AsyncStorage.setItem("localBlockData", JSON.stringify(blocks));
 
           this.setState({
             faq: faq,
+            blocks: blocks,
             hackathon: hackathon,
             isFetchingData: false,
           });
@@ -301,6 +322,7 @@ class App extends React.Component {
     const hackathon = this.state.hackathon;
     const faq = this.state.faq;
     const starredIds = this.state.starredIds;
+    const blocks = this.state.blocks;
 
     const needsLogin = this.state.user == null;
     const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
@@ -368,6 +390,7 @@ class App extends React.Component {
           value={{
             hackathon: hackathon,
             faq: faq,
+            blocks: blocks,
             toggleStar: this.toggleStarred,
             starredIds: starredIds,
             isStarSchedule: this.state.isStarSchedule,

@@ -49,6 +49,13 @@ const hackathonQuery = `
       answer
       index
   }
+
+  allBlocks {
+    id
+    slug
+    content
+    usage
+  }
 `;
 
 const getHackathonData = async (queryString) => {
