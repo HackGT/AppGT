@@ -1,6 +1,7 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import React, { Component } from "react";
 import { ThemeContext, HackathonContext } from "../context";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default class FilterSelect extends Component {
   constructor() {
@@ -13,7 +14,7 @@ export default class FilterSelect extends Component {
 
   render() {
     hideFilterMenu = (item) => {
-      newFilter = item.name === "clear" ? null : item;
+      let newFilter = item.name === "clear" ? null : item;
 
       this.setState({
         showMenu: false,
