@@ -142,6 +142,9 @@ class App extends React.Component {
       // login data
       user: null,
       accessToken: null,
+
+      // TODO: temporay, onboarding login should show when user is null. login is disabled so remove this whn fixed
+      skipOnboarding: false,
     };
   }
 
@@ -198,16 +201,21 @@ class App extends React.Component {
     });
   };
 
-  login = async () => {
-    try {
-      const result = await authorize(config);
-      this.setState({ accessToken: result.accessToken });
-      this.fetchUserDetails(result.accessToken);
-      AsyncStorage.setItem("accessToken", accessToken);
-    } catch (error) {
-      console.log(error);
-    }
+  login = () => {
+    this.setState({ skipOnboarding: true });
+    AsyncStorage.setItem("skipOnboarding", "true");
   };
+
+  // login = async () => {
+  //   try {
+  //     const result = await authorize(config);
+  //     this.setState({ accessToken: result.accessToken });
+  //     this.fetchUserDetails(result.accessToken);
+  //     AsyncStorage.setItem("accessToken", accessToken);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   fetchUserDetails = async (accessToken) => {
     fetch(`${authUrl}/api/user`, {
@@ -237,6 +245,12 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    AsyncStorage.getItem("skipOnboarding", (error, result) => {
+      console.log(error);
+      result &&
+        this.setState({ skipOnboarding: result === "true" ? true : false });
+    });
+
     AsyncStorage.getItem(
       "starredIds",
       (error, result) =>
@@ -338,7 +352,8 @@ class App extends React.Component {
     const blocks = this.state.blocks;
     const eventTypes = this.state.eventTypes;
 
-    const needsLogin = this.state.user == null;
+    // TODO: login re-enable
+    const needsLogin = this.state.skipOnboarding == false; // this.state.user == null;
     const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
 
     const splashGrowModal = (
@@ -461,18 +476,30 @@ class App extends React.Component {
                   },
                 })}
               >
-                <Stack.Screen
-                  name="Schedule"
-                  component={
-                    showEventOnboard ? EventOnboarding : SchdeuleStackScreen
-                  }
-                  initialParams={{
-                    onDone: () => {
-                      this.setState({ pastEventOnboardID: hackathon.id });
-                      AsyncStorage.setItem("pastEventOnboardID", hackathon.id);
-                    },
-                  }}
-                />
+                {showEventOnboard ? (
+                  <Stack.Screen
+                    name="Schedule"
+                    children={() => (
+                      <EventOnboarding
+                        onDone={() => {
+                          this.setState({ pastEventOnboardID: hackathon.id });
+                          AsyncStorage.setItem(
+                            "pastEventOnboardID",
+                            hackathon.id
+                          );
+                        }}
+                      ></EventOnboarding>
+                    )}
+                  ></Stack.Screen>
+                ) : (
+                  <Stack.Screen
+                    name="Schedule"
+                    component={
+                      showEventOnboard ? EventOnboarding : SchdeuleStackScreen
+                    }
+                  />
+                )}
+
                 <Stack.Screen
                   name="Information"
                   component={InformationStackScreen}

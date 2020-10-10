@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
 
   panelClose: {
-    margin: 10,
+    padding: 10,
     right: 0,
     top: -20,
     position: "absolute",

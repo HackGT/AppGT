@@ -36,7 +36,6 @@ export class EventOnboarding extends Component {
     this.state = {
       pageIndex: 0,
       pageCount: 4,
-      onDone: this.props.route.params.onDone,
     };
   }
 
@@ -273,11 +272,11 @@ export class EventOnboarding extends Component {
             <View style={[dynamicStyles.backgroundColor, styles.footer]}>
               <TouchableOpacity
                 onPress={() => {
-                  if (this.state.pageIndex < this.state.pageCount) {
+                  if (this.state.pageIndex < this.state.pageCount - 1) {
                     this.setState({ pageIndex: this.state.pageIndex + 1 });
                   } else {
                     // reached end, onboarding complete
-                    this.props.route.params.onDone();
+                    this.props.onDone();
                   }
                 }}
               >
