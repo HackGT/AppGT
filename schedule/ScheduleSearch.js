@@ -441,7 +441,8 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    width: "80%",
+    width: Platform.OS === "ios" ? "80%" : "100%",
+    // width: "80%",
     borderWidth: 0,
   },
 
