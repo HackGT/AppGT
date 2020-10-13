@@ -12,6 +12,7 @@ import {
 import SearchIcon from "../assets/Search";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CancelIcon from "../assets/Cancel";
+import X from "../assets/X";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
 import FilterSelect from "../components/FilterSelect";
@@ -204,6 +205,7 @@ export class ScheduleSearch extends Component {
                         styles.inputContainer,
                         dynamicStyles.searchBackgroundColor,
                       ]}
+                      clearIcon={null}
                       lightTheme
                       round
                       placeholder="Search..."

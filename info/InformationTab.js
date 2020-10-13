@@ -19,10 +19,14 @@ export class InformationTab extends Component {
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
-            {({ blocks, faq, hackathon }) => {
+            {({ hackathon }) => {
               // create button blocks for "Join Slack", "View Event site", etc
-              const buttonBlock = blocks.find(
+              const buttonBlock = hackathon.blocks.find(
                 (e) => e.slug && e.slug === "info-button-links"
+              );
+
+              const faqBlock = hackathon.blocks.find(
+                (e) => e.slug && e.slug === "info-faq"
               );
 
               headerButtons = [];
@@ -68,23 +72,27 @@ export class InformationTab extends Component {
                 }
               }
 
-              let faqCopy = [...faq];
-              let faqList = [];
-              // sort faq based on priority so important questions come first
-              faqCopy.sort(function (a, b) {
-                return parseFloat(a.index) - parseFloat(b.index);
-              });
+              let infoBlocks = hackathon.blocks.filter(
+                (e) => e.slug && e.slug === "info-faq"
+              );
 
-              for (i in faqCopy) {
-                faqList.push(
-                  <FontMarkdown fontFamily="SpaceMono">
-                    **{faqCopy[i].question}**
-                  </FontMarkdown>,
-                  <FontMarkdown fontFamily="SpaceMono">
-                    {faqCopy[i].answer}
-                  </FontMarkdown>
-                );
-              }
+              // let faqCopy = [...hackathon.faqs];
+              // let faqList = [];
+              // // sort faq based on priority so important questions come first
+              // faqCopy.sort(function (a, b) {
+              //   return parseFloat(a.index) - parseFloat(b.index);
+              // });
+
+              // for (i in faqCopy) {
+              //   faqList.push(
+              //     <FontMarkdown fontFamily="SpaceMono">
+              //       **{faqCopy[i].question}**
+              //     </FontMarkdown>,
+              //     <FontMarkdown fontFamily="SpaceMono">
+              //       {faqCopy[i].answer}
+              //     </FontMarkdown>
+              //   );
+              // }
 
               return (
                 <ScrollView style={[dynamicStyles.backgroundColor]}>
@@ -94,13 +102,21 @@ export class InformationTab extends Component {
 
                   <View style={styles.headerButtons}>{headerButtons}</View>
 
-                  <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                    Frequently Asked Questions
-                  </Text>
+                  {infoBlocks.map((block, i) => (
+                    <View>
+                      <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+                        {block.name}
+                      </Text>
 
-                  <View style={styles.faqList}>
-                    <Card>{faqList}</Card>
-                  </View>
+                      <View style={styles.faqList}>
+                        <Card>
+                          <FontMarkdown fontFamily="SpaceMono">
+                            {block.content}
+                          </FontMarkdown>
+                        </Card>
+                      </View>
+                    </View>
+                  ))}
                 </ScrollView>
               );
             }}

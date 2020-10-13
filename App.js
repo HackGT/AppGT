@@ -129,9 +129,7 @@ class App extends React.Component {
       // event data
       hackathon: null,
       eventTypes: [],
-      faq: [],
       types: [],
-      blocks: [],
       starredIds: [],
       isStarSchedule: false,
 
@@ -275,31 +273,11 @@ class App extends React.Component {
       this.setState({ isFetchingLogin: false });
     });
 
-    AsyncStorage.getItem("localFAQData", (error, result) => {
-      if (result) {
-        const faq = JSON.parse(result);
-
-        if (faq != null) {
-          this.setState({ faq: faq });
-        }
-      }
-    });
-
     AsyncStorage.getItem("localEventTypeData", (error, result) => {
       if (result) {
         const eventTypes = JSON.parse(result);
         if (eventTypes != null) {
           this.setState({ eventTypes: eventTypes });
-        }
-      }
-    });
-
-    AsyncStorage.getItem("localBlockData", (error, result) => {
-      if (result) {
-        const blocks = JSON.parse(result);
-
-        if (blocks != null) {
-          this.setState({ blocks: blocks });
         }
       }
     });
@@ -316,8 +294,6 @@ class App extends React.Component {
 
       fetchHackathonData().then((data) => {
         const hackathons = data.data.allHackathons;
-        const faq = data.data.allFAQs;
-        const blocks = data.data.allBlocks;
         const eventTypes = data.data.allTypes;
 
         if (hackathons != null && hackathons.length != 0) {
@@ -325,13 +301,9 @@ class App extends React.Component {
           const hackathon = hackathons[0];
 
           AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
-          AsyncStorage.setItem("localFAQData", JSON.stringify(faq));
-          AsyncStorage.setItem("localBlockData", JSON.stringify(blocks));
           AsyncStorage.setItem("localTypeData", JSON.stringify(eventTypes));
 
           this.setState({
-            faq: faq,
-            blocks: blocks,
             eventTypes: eventTypes,
             hackathon: hackathon,
             isFetchingData: false,
@@ -347,9 +319,7 @@ class App extends React.Component {
     const Stack = createStackNavigator();
 
     const hackathon = this.state.hackathon;
-    const faq = this.state.faq;
     const starredIds = this.state.starredIds;
-    const blocks = this.state.blocks;
     const eventTypes = this.state.eventTypes;
 
     // TODO: login re-enable
@@ -418,8 +388,6 @@ class App extends React.Component {
         <HackathonContext.Provider
           value={{
             hackathon: hackathon,
-            faq: faq,
-            blocks: blocks,
             eventTypes: eventTypes,
             toggleStar: this.toggleStarred,
             starredIds: starredIds,

@@ -11,14 +11,7 @@ import { ContentInfo } from "./ContentInfo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  faUsers,
-  faCalendarCheck,
-  faInfo,
-  faInfoCircle,
-  faQuestionCircle,
-  faQuestion,
   faLifeRing,
-  faPhone,
   faExclamation,
   faKeyboard,
 } from "@fortawesome/free-solid-svg-icons";

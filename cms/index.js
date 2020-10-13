@@ -1,5 +1,5 @@
 const hackathonQuery = `
-  allHackathons(where: { isActive: true }) {
+  allHackathons {
       id
       name
       slackUrl
@@ -31,11 +31,17 @@ const hackathonQuery = `
           }
       }
       blocks {
-          id
-          name
-          slug
-          content
-          usage
+        id
+        name
+        slug
+        content
+        usage
+      }
+      faqs {
+        id
+        question
+        answer
+        index
       }
   }
   
@@ -43,20 +49,6 @@ const hackathonQuery = `
       id
       name
       color
-  }
-  
-  allFAQs {
-      id
-      question
-      answer
-      index
-  }
-
-  allBlocks {
-    id
-    slug
-    content
-    usage
   }
 `;
 

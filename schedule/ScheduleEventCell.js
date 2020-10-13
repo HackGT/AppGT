@@ -42,7 +42,7 @@ export class ScheduleEventCell extends Component {
                 <Card>
                   <View style={styles.titleHeader}>
                     <Text
-                      numberOfLines={1}
+                      style={styles.flexWrap}
                       ellipsizeMode={"tail"}
                       style={[dynamicStyles.text, styles.titleFont]}
                     >
@@ -64,8 +64,9 @@ export class ScheduleEventCell extends Component {
                       )}
                     </TouchableOpacity>
                   </View>
+
                   <Text
-                    numberOfLines={1}
+                    style={styles.flexWrap}
                     ellipsizeMode={"tail"}
                     style={[dynamicStyles.secondaryText, styles.subtitleFont]}
                   >
@@ -122,5 +123,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.005,
     marginTop: -0.2,
     marginLeft: 8,
+  },
+
+  wrappable: {
+    flexWrap: "wrap",
   },
 });
