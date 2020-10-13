@@ -144,11 +144,11 @@ export class EventOnboarding extends Component {
               }
               title="Some Important Information"
               subtitles={[
-                "In case of emergencies, contact the Georgia Tech police department.",
-                "GTPD: (404) 894-2500.",
-                "If you ever have any questions or conerns, please visit the help channel.",
+                // "In case of emergencies, contact the Georgia Tech police department.",
+                // "GTPD: (404) 894-2500.",
+                "If you ever have any questions or concerns, please visit the help channel on slack or email hello@hack.gt.",
               ]}
-              button={addGTPDToContacts}
+              // button={addGTPDToContacts}
             />
           );
           const happyHacking = (
