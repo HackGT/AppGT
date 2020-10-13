@@ -28,7 +28,7 @@ export class EventOnboarding extends Component {
     super(props);
     this.state = {
       pageIndex: 0,
-      pageCount: 4,
+      pageCount: 3,
     };
   }
 
@@ -167,12 +167,7 @@ export class EventOnboarding extends Component {
             />
           );
 
-          const screens = [
-            welcomeScreen,
-            joinCommunity,
-            gtpdScreen,
-            happyHacking,
-          ];
+          const screens = [welcomeScreen, joinCommunity, happyHacking];
 
           return screens.map((content, i) => {
             return (
