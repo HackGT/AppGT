@@ -64,7 +64,7 @@ export default class FilterSelect extends Component {
                           style={{
                             flexDirection: "row",
                             marginTop: 55,
-                            top: index * 45,
+                            top: index * 40,
                             left: 10,
                             position: "absolute",
                             zIndex: 1,
