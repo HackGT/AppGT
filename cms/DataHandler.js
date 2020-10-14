@@ -4,7 +4,7 @@ export const daysAvailable = ["friday", "saturday", "sunday"];
 
 // TODO: in cms, dates are stored in UTC+00 which isn't EST, so manually convert date for now
 function turnToEst(date) {
-  return moment(date).subtract(-4, "hours");
+  return moment.utc(date).subtract(-4, "hours").tz("America/New_York");
 }
 
 export function getDaysForEvent(events) {
@@ -39,7 +39,7 @@ export function sortEventsByStartTime(events) {
 
 export function getEventsForDay(events, day) {
   if (day == null) {
-    day = moment().format("dddd").toLowerCase();
+    day = moment().tz("America/New_York").format("dddd").toLowerCase();
   }
 
   // converts event's start time to a day (saturday, sunday, etc) and sees if it matches the string
@@ -52,7 +52,10 @@ export function getEventsForDay(events, day) {
 }
 
 export function getCurrentDayIndex(events) {
-  const todayString = moment().format("dddd").toLowerCase();
+  const todayString = moment()
+    .tz("America/New_York")
+    .format("dddd")
+    .toLowerCase();
 
   return getDaysForEvent(events).indexOf(todayString);
 }
@@ -102,10 +105,10 @@ export function isEventHappeningNow(event) {
 
   const estStart = turnToEst(event.startDate);
   const estEnd = turnToEst(event.endDate);
-  
+
   return (
     estStart.format("dddd").toLowerCase() ==
-      moment().format("dddd").toLowerCase() &&
+      moment().tz("America/New_York").format("dddd").toLowerCase() &&
     moment() > estStart &&
     moment() < estEnd
   );
