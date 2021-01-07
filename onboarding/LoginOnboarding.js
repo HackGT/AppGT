@@ -8,72 +8,87 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import ButtonBackground from "../assets/ButtonBackground";
 import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
-
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faUsers, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentInfo } from "./ContentInfo";
+import { AuthContext, ThemeContext } from "../context";
+import { GradientButton } from "../components/GradientButton";
 
 export class LoginOnboarding extends Component {
+  static contextType = ThemeContext;
+
   constructor(props) {
     super(props);
     this.state = {
       pageIndex: 0,
-      pageCount: 4,
+      pageCount: 3,
     };
   }
 
   createScreens(width) {
-    const firstScreen = (
+    const hackgtLogo = (
       <View style={styles.firstScreenLogo}>
         <Logo />
         <LogoText style={styles.firstScreenLogoText} />
       </View>
     );
 
-    const secondScreen = (
-      <ContentInfo
-        title="Personalize your event schedule"
-        subtitles={[
-          "Favorite events that interest you to save them in your personal schedule so you never miss them.",
-        ]}
-      />
-    );
-    const thirdScreen = (
-      <ContentInfo
-        title="Checkout Hardware"
-        subtitles={[
-          "Order the hardware you need for your project, and then pick it up at the hardware desk.",
-        ]}
-      />
-    );
-    const forthScreen = (
-      <ContentInfo
-        title="Explore our event with Scavenger Hunt"
-        subtitles={[
-          "Need a break from hacking? Complete our scavenger hunt for some sweet, sweet, swag.",
-        ]}
-      />
-    );
-
-    const screens = [firstScreen, secondScreen, thirdScreen, forthScreen];
-
-    return screens.map((content, i) => {
-      return (
-        <View
-          key={i}
-          style={{
-            backgroundColor: "white",
+    return (
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => {
+          const screenBackground = {
             flex: 1,
             width: width,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
-          {content}
-        </View>
-      );
-    });
+          };
+
+          const personalizeSchedule = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faCalendarCheck}
+                  size={60}
+                />
+              }
+              title="Personalize your Event Schedule"
+              subtitles={[
+                "Favorite events that interest you to save them in your personal schedule so you never miss them.",
+              ]}
+            />
+          );
+          const joinVirtually = (
+            <ContentInfo
+              image={
+                <FontAwesomeIcon
+                  color={dynamicStyles.tintColor.color}
+                  icon={faUsers}
+                  size={60}
+                />
+              }
+              title="Join Virtually"
+              subtitles={[
+                "Quickly access event join links, event information, and search for events that interest you. All in one place.",
+              ]}
+            />
+          );
+
+          const screens = [hackgtLogo, personalizeSchedule, joinVirtually];
+
+          return screens.map((content, i) => (
+            <View
+              key={i}
+              style={[dynamicStyles.backgroundColor, screenBackground]}
+            >
+              {content}
+            </View>
+          ));
+        }}
+      </ThemeContext.Consumer>
+    );
   }
 
   // render the dots indicating which page user is on
@@ -83,14 +98,22 @@ export class LoginOnboarding extends Component {
     const bubbles = Array.from(new Array(this.state.pageCount).keys()).map(
       (i) => {
         return (
-          <Svg height={size + 14} width={size + 14}>
-            <Circle
-              cx={radius}
-              cy={radius}
-              r={radius}
-              fill={i == this.state.pageIndex ? "#41D1FF" : "#F2F2F2"}
-            />
-          </Svg>
+          <ThemeContext.Consumer>
+            {({ dynamicStyles }) => (
+              <Svg key={i} height={size + 14} width={size + 14}>
+                <Circle
+                  cx={radius}
+                  cy={radius}
+                  r={radius}
+                  fill={
+                    i == this.state.pageIndex
+                      ? dynamicStyles.tintColor.color
+                      : dynamicStyles.secondaryBackgroundColor.backgroundColor
+                  }
+                />
+              </Svg>
+            )}
+          </ThemeContext.Consumer>
         );
       }
     );
@@ -102,36 +125,62 @@ export class LoginOnboarding extends Component {
     const screenWidth = Dimensions.get("window").width;
 
     return (
-      <View style={styles.rootView}>
-        <ScrollView
-          flex={0.8}
-          style={styles.horizontalScroll}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={(scrollData) => {
-            // update page indicator
-            this.setState({
-              pageIndex: Math.round(
-                scrollData.nativeEvent.contentOffset.x / screenWidth
-              ),
-            });
-          }}
-        >
-          {this.createScreens(screenWidth)}
-        </ScrollView>
+      <ThemeContext.Consumer>
+        {({ dynamicStyles }) => (
+          <AuthContext.Consumer>
+            {({ login, user, logout }) => {
+              return (
+                <View style={styles.rootView}>
+                  <ScrollView
+                    flex={0.8}
+                    style={dynamicStyles.backgroundColor}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    pagingEnabled={true}
+                    onMomentumScrollEnd={(scrollData) => {
+                      // update page indicator
+                      this.setState({
+                        pageIndex: Math.round(
+                          scrollData.nativeEvent.contentOffset.x / screenWidth
+                        ),
+                      });
+                    }}
+                  >
+                    {this.createScreens(screenWidth)}
+                  </ScrollView>
 
-        <View style={styles.footer} flex={0.2}>
-          {this.indexIndicator()}
-          <TouchableOpacity onPress={() => alert("Login")}>
-            <ButtonBackground />
-          </TouchableOpacity>
+                  <View
+                    style={[dynamicStyles.backgroundColor, styles.footer]}
+                    flex={0.2}
+                  >
+                    {this.indexIndicator()}
 
-          <TouchableOpacity onPress={() => alert("Login")}>
-            <Text style={styles.makeAccount}>Don't have an account?</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+                    <GradientButton
+                      text="Get Started"
+                      onPress={() => login()}
+                    ></GradientButton>
+
+                    {/* TODO: put back login stuff */}
+                    {/* <TouchableOpacity onPress={() => login()}>
+                      <Text style={[dynamicStyles.text, styles.makeAccount]}>
+                        Don't have an account?
+                      </Text>
+                    </TouchableOpacity> */}
+
+                    {/* TOOD: logout button */}
+                    {/* <TouchableOpacity onPress={() => logout()}>
+                      <Text style={[dynamicStyles.text, styles.toDelete]}>
+                        Logout (for testing.)
+                        {user != null ? user.email : "None."}
+                      </Text>
+                    </TouchableOpacity> */}
+                  </View>
+                </View>
+              );
+            }}
+          </AuthContext.Consumer>
+        )}
+      </ThemeContext.Consumer>
     );
   }
 }
@@ -142,19 +191,20 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  horizontalScroll: {
-    backgroundColor: "white",
-  },
-
   footer: {
     alignItems: "center",
     alignContent: "center",
-    backgroundColor: "white",
   },
 
   makeAccount: {
     padding: 10,
-    color: "#3F3F3F",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.05,
+  },
+
+  toDelete: {
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.05,
   },
 
   firstScreenLogo: {
@@ -175,11 +225,9 @@ const styles = StyleSheet.create({
   textTitle: {
     top: 42,
     fontSize: 24,
-    fontWeight: "bold",
-  },
-
-  textSubtitle: {
-    top: 54,
-    fontSize: 18,
+    fontFamily: "SpaceMono-Bold",
+    letterSpacing: 0.05,
   },
 });
+
+LoginOnboarding.contextType = AuthContext;
