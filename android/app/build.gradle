@@ -1,4 +1,6 @@
 apply plugin: "com.android.application"
+// firebase 
+apply plugin: 'com.google.gms.google-services' // <- Add this line
 
 import com.android.build.OutputFile
 

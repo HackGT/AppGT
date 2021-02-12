@@ -4,8 +4,11 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+// Notifications
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
+// Firebase
+#import <Firebase.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -37,6 +40,10 @@ static void InitializeFlipper(UIApplication *application) {
   // Define UNUserNotificationCenter (see link below)
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
+  // Firebase
+  if ([FIRApp defaultApp] == nil) {
+    [FIRApp configure];
+  }
   // ---
   
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
