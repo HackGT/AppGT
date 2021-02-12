@@ -34,6 +34,7 @@
 		187AE479EF1147F2A68657C7 /* SpaceMono-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Bold.ttf"; path = "../assets/fonts/SpaceMono-Bold.ttf"; sourceTree = "<group>"; };
 		1C428E304686A631FF9E86AB /* Pods-AppGT-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOSTests/Pods-AppGT-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2C1302889E55AF6CFE12942D /* Pods-AppGT-AppGTTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-AppGTTests.debug.xcconfig"; path = "Target Support Files/Pods-AppGT-AppGTTests/Pods-AppGT-AppGTTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4368E45325D614EA00D9838F /* HackGT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HackGT.entitlements; path = AppGT/HackGT.entitlements; sourceTree = "<group>"; };
 		4FAF25C873A84C4A89ACDCE5 /* SpaceMono-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Italic.ttf"; path = "../assets/fonts/SpaceMono-Italic.ttf"; sourceTree = "<group>"; };
 		6077885D15165913C92ED622 /* libPods-AppGT-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6354C7CB3996DC0B202548C7 /* libPods-AppGT.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +82,7 @@
 		13B07FAE1A68108700A75B9A /* AppGT */ = {
 			isa = PBXGroup;
 			children = (
+				4368E45325D614EA00D9838F /* HackGT.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -361,6 +363,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AppGT/HackGT.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
 				ENABLE_BITCODE = NO;
@@ -387,6 +390,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AppGT/HackGT.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VG8HJ8DZBZ;
 				INFOPLIST_FILE = "$(SRCROOT)/AppGT/Info.plist";
