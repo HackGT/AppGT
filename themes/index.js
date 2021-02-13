@@ -12,6 +12,10 @@ export const dynamicStyles = new DynamicStyleSheet({
     color: new DynamicValue("#3F3F3F", "white"),
   },
 
+  filterText: {
+    color: new DynamicValue("white", "#0F0F0F"),
+  },
+
   borderColor: {
     borderColor: new DynamicValue("#3F3F3F", "white"),
   },

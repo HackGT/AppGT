@@ -114,10 +114,23 @@ export default class FilterSelect extends Component {
                           });
                         }}
                       >
-                        <Text style={styles.filterText}>
-                          {" "}
-                          {this.state.filterType.name}{" "}
-                        </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text style={styles.filterText}>
+                            {" "}
+                            {this.state.filterType.name}{" "}
+                          </Text>
+                          <TouchableOpacity>
+                            <View>
+                              <Text style={[dynamicStyles.filterText]}>x</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
                       </TouchableOpacity>
                     </View>
                   );
