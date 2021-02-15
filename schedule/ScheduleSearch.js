@@ -225,6 +225,7 @@ export class ScheduleSearch extends Component {
                         })
                       }
                     />
+
                     {/* Trending Topics */}
                     {uniquetagArr.length > 0 && (
                       <View style={{ flexDirection: "row", display: "flex" }}>
@@ -252,7 +253,6 @@ export class ScheduleSearch extends Component {
                         )}
                       </View>
                     )}
-
                     {/*Tags */}
                     <View style={{ marginLeft: 10 }}>
                       <TagScrollView

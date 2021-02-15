@@ -1,7 +1,6 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import React, { Component } from "react";
 import { ThemeContext, HackathonContext } from "../context";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default class FilterSelect extends Component {
   constructor() {
@@ -32,7 +31,7 @@ export default class FilterSelect extends Component {
           <ThemeContext.Consumer>
             {({ dynamicStyles }) => {
               const filterList = [...eventTypes];
-              filterList.push({ name: "clear", color: "#C3C3C3" });
+              // filterList.push({ name: "clear", color: "#C3C3C3" });
 
               if (this.state.showMenu) {
                 return (
@@ -125,10 +124,12 @@ export default class FilterSelect extends Component {
                             {" "}
                             {this.state.filterType.name}{" "}
                           </Text>
-                          <TouchableOpacity>
-                            <View>
-                              <Text style={[dynamicStyles.filterText]}>x</Text>
-                            </View>
+                          <TouchableOpacity
+                            onPress={() => {
+                              hideFilterMenu({ name: "clear" });
+                            }}
+                          >
+                            <Text style={[dynamicStyles.filterText]}>x</Text>
                           </TouchableOpacity>
                         </View>
                       </TouchableOpacity>

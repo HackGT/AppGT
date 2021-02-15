@@ -14,6 +14,8 @@ export const dynamicStyles = new DynamicStyleSheet({
 
   filterText: {
     color: new DynamicValue("white", "#0F0F0F"),
+    fontSize: 15,
+    paddingRight: 5,
   },
 
   borderColor: {
