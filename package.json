@@ -24,7 +24,7 @@
     "react-moment": "^0.9.7",
     "react-native": "0.63.2",
     "react-native-app-auth": "^6.0.0",
-    "react-native-dark-mode": "^0.2.2",
+    "react-native-dynamic": "^1.0.0",
     "react-native-elements": "^2.3.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-markdown-renderer": "^3.2.8",

@@ -1,66 +1,131 @@
-import { DynamicStyleSheet, DynamicValue } from "react-native-dark-mode";
+export const dynamicStyles = {
+  light: {
+    backgroundColor: {
+      backgroundColor: "white",
+    },
+    secondaryBackgroundColor: {
+      backgroundColor: "#F2F2F2",
+    },
 
-export const dynamicStyles = new DynamicStyleSheet({
-  backgroundColor: {
-    backgroundColor: new DynamicValue("white", "#0F0F0F"),
-  },
-  secondaryBackgroundColor: {
-    backgroundColor: new DynamicValue("#F2F2F2", "#35383D"),
+    text: {
+      color: "#3F3F3F",
+    },
+
+    borderColor: {
+      borderColor: "#3F3F3F",
+    },
+
+    secondaryText: {
+      color: "#4F4F4F",
+    },
+
+    tintColor: {
+      color: "#41D1FF",
+    },
+    tintBackgroundColor: {
+      backgroundColor: "#41D1FF",
+    },
+
+    secondaryTintColor: {
+      color: "#2C8DDB",
+    },
+    secondaryTintBackgroundColor: {
+      backgroundColor: "#41D1FF",
+    },
+
+    primaryButtonBackground: {
+      backgroundColor: "#666666",
+    },
+
+    tritaryBackgroundColor: {
+      backgroundColor: "white",
+    },
+
+    tabBarBackgroundColor: {
+      backgroundColor: "white",
+      shadowColor: "#D3D3D3",
+      borderTopColor: "#D3D3D3",
+    },
+
+    searchBorderTopColor: {
+      borderTopColor: "white",
+    },
+
+    searchBorderBottomColor: {
+      borderBottomColor: "white",
+    },
+
+    searchBackgroundColor: {
+      backgroundColor: "#F2F2F2",
+    },
+
+    searchDividerColor: {
+      borderBottomColor: "#C3C3C3",
+    },
   },
 
-  text: {
-    color: new DynamicValue("#3F3F3F", "white"),
-  },
+  dark: {
+    backgroundColor: {
+      backgroundColor: "white",
+    },
+    secondaryBackgroundColor: {
+      backgroundColor: "#F2F2F2",
+    },
 
-  borderColor: {
-    borderColor: new DynamicValue("#3F3F3F", "white"),
-  },
+    text: {
+      color: "#3F3F3F",
+    },
 
-  secondaryText: {
-    color: new DynamicValue("#4F4F4F", "#C2C2C2"),
-  },
+    borderColor: {
+      borderColor: "#3F3F3F",
+    },
 
-  tintColor: {
-    color: new DynamicValue("#41D1FF", "#2C8DDB"),
-  },
-  tintBackgroundColor: {
-    backgroundColor: new DynamicValue("#41D1FF", "#2C8DDB"),
-  },
+    secondaryText: {
+      color: "#4F4F4F",
+    },
 
-  secondaryTintColor: {
-    color: new DynamicValue("#2C8DDB", "#2C8DDB"),
-  },
-  secondaryTintBackgroundColor: {
-    backgroundColor: new DynamicValue("#41D1FF", "#2C8DDB"),
-  },
+    tintColor: {
+      color: "#41D1FF",
+    },
+    tintBackgroundColor: {
+      backgroundColor: "#41D1FF",
+    },
 
-  primaryButtonBackground: {
-    backgroundColor: new DynamicValue("#666666", "#35383D"),
-  },
+    secondaryTintColor: {
+      color: "#2C8DDB",
+    },
+    secondaryTintBackgroundColor: {
+      backgroundColor: "#41D1FF",
+    },
 
-  tritaryBackgroundColor: {
-    backgroundColor: new DynamicValue("white", "#1A1919"),
-  },
+    primaryButtonBackground: {
+      backgroundColor: "#666666",
+    },
 
-  tabBarBackgroundColor: {
-    backgroundColor: new DynamicValue("white", "#171717"),
-    shadowColor: new DynamicValue("#D3D3D3", "#666666"),
-    borderTopColor: new DynamicValue("#D3D3D3", "#666666"),
-  },
+    tritaryBackgroundColor: {
+      backgroundColor: "white",
+    },
 
-  searchBorderTopColor: {
-    borderTopColor: new DynamicValue("white", "#0F0F0F"),
-  },
+    tabBarBackgroundColor: {
+      backgroundColor: "white",
+      shadowColor: "#D3D3D3",
+      borderTopColor: "#D3D3D3",
+    },
 
-  searchBorderBottomColor: {
-    borderBottomColor: new DynamicValue("white", "#0F0F0F"),
-  },
+    searchBorderTopColor: {
+      borderTopColor: "white",
+    },
 
-  searchBackgroundColor: {
-    backgroundColor: new DynamicValue("#F2F2F2", "#1A1919"),
-  },
+    searchBorderBottomColor: {
+      borderBottomColor: "white",
+    },
 
-  searchDividerColor: {
-    borderBottomColor: new DynamicValue("#C3C3C3", "#35383D"),
+    searchBackgroundColor: {
+      backgroundColor: "#F2F2F2",
+    },
+
+    searchDividerColor: {
+      borderBottomColor: "#C3C3C3",
+    },
   },
-});
+};

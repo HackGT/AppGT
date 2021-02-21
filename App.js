@@ -21,11 +21,8 @@ import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
-import {
-  useDarkModeContext,
-  useDynamicStyleSheet,
-} from "react-native-dark-mode";
-import { dynamicStyles } from "./themes";
+import { useDarkMode, useDynamicValue } from "react-native-dynamic";
+import { dynamicStyles, getDynamicColor } from "./themes";
 
 const authUrl = "https://login.hack.gt";
 
@@ -47,7 +44,7 @@ const SchdeuleStack = createStackNavigator();
 const InformationStack = createStackNavigator();
 
 function SchdeuleStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useDynamicValue(dynamicStyles);
   return (
     <HackathonContext.Consumer>
       {({ isStarSchedule, toggleIsStarSchedule }) => (
@@ -102,7 +99,7 @@ function SchdeuleStackScreen({ navigation }) {
 }
 
 function InformationStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useDynamicValue(dynamicStyles);
   return (
     <InformationStack.Navigator>
       <InformationStack.Screen
@@ -323,6 +320,7 @@ class App extends React.Component {
     const eventTypes = this.state.eventTypes;
 
     dStyles = this.props.styles;
+
     // attempt to load custom theme style from CMS to replace default
     if (hackathon != null) {
       const appTheme = hackathon.blocks.find(
@@ -331,9 +329,8 @@ class App extends React.Component {
 
       if (appTheme != null) {
         try {
-          // TODO: need a way to change this and load new DynamicStyles black/white
-          dStyles = JSON.parse(appTheme);
-          // variable dynamicStyles must also be set
+          // TODO: need a way to change this and load new DynamicStyles black/white, right now it only loads "light"
+          dStyles = JSON.parse(appTheme.content);
         } catch (e) {
           // keep this.props.styles and ignore error
         }
@@ -500,9 +497,14 @@ class App extends React.Component {
 export default withThemeHook(App);
 
 function withThemeHook(App) {
+  function getThemeAndStyle(newStyle) {
+    const theme = useDarkMode();
+    const styles = useDynamicValue(newStyle);
+    return { theme, styles };
+  }
+
   return function Hook(props) {
-    const theme = useDarkModeContext();
-    const styles = useDynamicStyleSheet(dynamicStyles);
+    const { theme, styles } = getThemeAndStyle(dynamicStyles);
     return <App {...props} theme={theme} styles={styles} />;
   };
 }
