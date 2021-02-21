@@ -322,6 +322,24 @@ class App extends React.Component {
     const starredIds = this.state.starredIds;
     const eventTypes = this.state.eventTypes;
 
+    dStyles = this.props.styles;
+    // attempt to load custom theme style from CMS to replace default
+    if (hackathon != null) {
+      const appTheme = hackathon.blocks.find(
+        (e) => e.slug && e.slug === "app-theme"
+      );
+
+      if (appTheme != null) {
+        try {
+          // TODO: need a way to change this and load new DynamicStyles black/white
+          dStyles = JSON.parse(appTheme);
+          // variable dynamicStyles must also be set
+        } catch (e) {
+          // keep this.props.styles and ignore error
+        }
+      }
+    }
+
     // TODO: login re-enable
     const needsLogin = this.state.skipOnboarding == false; // this.state.user == null;
     const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
@@ -341,7 +359,7 @@ class App extends React.Component {
         <ThemeContext.Provider
           value={{
             theme: this.props.theme,
-            dynamicStyles: this.props.styles,
+            dynamicStyles: dStyles,
           }}
         >
           <SplashScreen
@@ -358,7 +376,7 @@ class App extends React.Component {
         <ThemeContext.Provider
           value={{
             theme: this.props.theme,
-            dynamicStyles: this.props.styles,
+            dynamicStyles: dStyles,
           }}
         >
           <AuthContext.Provider
@@ -382,7 +400,7 @@ class App extends React.Component {
       <ThemeContext.Provider
         value={{
           theme: this.props.theme,
-          dynamicStyles: this.props.styles,
+          dynamicStyles: dStyles,
         }}
       >
         <HackathonContext.Provider
@@ -405,9 +423,7 @@ class App extends React.Component {
             {!this.state.scheduleModal && splashGrowModal}
             <NavigationContainer>
               <StatusBar
-                backgroundColor={
-                  this.props.styles.tabBarBackgroundColor.backgroundColor
-                }
+                backgroundColor={dStyles.tabBarBackgroundColor.backgroundColor}
                 barStyle={
                   this.props.theme == "dark" ? "light-content" : "dark-content"
                 }
@@ -417,16 +433,16 @@ class App extends React.Component {
               <Tab.Navigator
                 // headerMode="none"
                 tabBarOptions={{
-                  activeTintColor: this.props.styles.tintColor.color,
-                  style: this.props.styles.tabBarBackgroundColor,
+                  activeTintColor: dStyles.tintColor.color,
+                  style: dStyles.tabBarBackgroundColor,
                   showLabel: false,
                 }}
                 screenOptions={({ route }) => ({
                   tabBarIcon: ({ focused, color, size }) => {
                     let icon;
                     const selectedColor = focused
-                      ? this.props.styles.tintColor.color
-                      : this.props.styles.text.color;
+                      ? dStyles.tintColor.color
+                      : dStyles.text.color;
 
                     if (route.name === "Schedule") {
                       icon = faCalendar;
