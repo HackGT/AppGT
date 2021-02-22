@@ -24,7 +24,8 @@ export function getDaysForEvent(events) {
 }
 
 export function getEventsHappeningNow(events) {
-  return getEventsForDay(events).filter((event) => isEventHappeningNow(event));
+  //return getEventsForDay(events).filter((event) => isEventHappeningNow(event));
+  return events;
 }
 
 export function sortEventsByStartTime(events) {
