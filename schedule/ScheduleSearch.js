@@ -24,6 +24,7 @@ export class ScheduleSearch extends Component {
 
     return (
       <TouchableOpacity
+        disabled={this.state.filterMenuOpen}
         style={styles.cancelButton}
         onPress={() => navigation.goBack()}
       >
@@ -39,6 +40,7 @@ export class ScheduleSearch extends Component {
       selectedEvent: null,
       filterItem: null,
       highlightedTags: [],
+      filterMenuOpen: false,
     };
   }
 
@@ -206,6 +208,7 @@ export class ScheduleSearch extends Component {
                         dynamicStyles.searchBackgroundColor,
                       ]}
                       clearIcon={null}
+                      disabled={this.state.filterMenuOpen}
                       lightTheme
                       round
                       placeholder="Search..."
@@ -224,6 +227,11 @@ export class ScheduleSearch extends Component {
                           highlightedTags: [],
                         })
                       }
+                      onFilterMenuChange={(isOpen) =>
+                        this.setState({
+                          filterMenuOpen: isOpen,
+                        })
+                      }
                     />
 
                     {/* Trending Topics */}
@@ -236,6 +244,7 @@ export class ScheduleSearch extends Component {
                         </Text>
                         {this.state.highlightedTags.length > 0 && (
                           <TouchableOpacity
+                            disabled={this.state.filterMenuOpen}
                             onPress={() =>
                               this.setState({
                                 highlightedTags: [],
@@ -256,6 +265,8 @@ export class ScheduleSearch extends Component {
                     {/*Tags */}
                     <View style={{ marginLeft: 10 }}>
                       <TagScrollView
+                        scroll={!this.state.filterMenuOpen}
+                        disabled={this.state.filterMenuOpen}
                         style={{ padding: 10 }}
                         tags={uniquetagArr}
                         highlightedTags={this.state.highlightedTags}
@@ -288,6 +299,7 @@ export class ScheduleSearch extends Component {
                     ) : (
                       <FlatList
                         data={events}
+                        scrollEnabled={!this.state.filterMenuOpen}
                         renderItem={({ item, index }) => {
                           if (item.day) {
                             return (
@@ -309,6 +321,7 @@ export class ScheduleSearch extends Component {
                           } else {
                             return (
                               <TouchableOpacity
+                                disabled={this.state.filterMenuOpen}
                                 style={styles.flatList}
                                 onPress={() => {
                                   this.setSelectedEvent(item);

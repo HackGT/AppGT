@@ -20,6 +20,8 @@ export default class FilterSelect extends Component {
         filterType: newFilter,
       });
 
+      this.props.onFilterMenuChange(false);
+
       if (this.props.onSelectFilter) {
         this.props.onSelectFilter(newFilter);
       }
@@ -44,6 +46,7 @@ export default class FilterSelect extends Component {
                         ]}
                         onPress={() => {
                           this.setState({ showMenu: false });
+                          this.props.onFilterMenuChange(false);
                         }}
                       >
                         <Text
@@ -111,6 +114,7 @@ export default class FilterSelect extends Component {
                           this.setState({
                             showMenu: true,
                           });
+                          this.props.onFilterMenuChange(true);
                         }}
                       >
                         <View
@@ -147,6 +151,7 @@ export default class FilterSelect extends Component {
                           this.setState({
                             showMenu: true,
                           });
+                          this.props.onFilterMenuChange(true);
                         }}
                       >
                         <Text
