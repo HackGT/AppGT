@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext } from "./context";
-import { StatusBar, Modal, View } from "react-native";
+import { StatusBar, Modal, View, Clipboard } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { InformationTab } from "./info/InformationTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
@@ -216,7 +216,30 @@ class App extends React.Component {
       AsyncStorage.setItem("starredIds", JSON.stringify(this.state.starredIds));
     }
 
-    if (this.state.starredIds.indexOf(toggleEventId) != -1) {
+    isNowStarred = this.state.starredIds.indexOf(toggleEventId) == -1;
+
+    if (isNowStarred) {
+      // schedule notification for 15 min before
+      PushNotification.localNotificationSchedule({
+        id: toggleEventId, // ID used to cancel event
+        message: event.name + " is starting in 15 minutes! ",
+        date: new Date(Date.parse(event.startDate) - 15 * 60 * 1000), // schedule it for its time - 15 minutes
+      });
+
+
+      // add to starred state, then update storage
+      this.setState(
+        (prevState) => ({
+          starredIds: [...prevState.starredIds, toggleEventId],
+        }),
+        updateStorage
+      );
+
+      return true;
+    } else {
+      // cancel notification if previously starred
+      PushNotification.cancelLocalNotifications({ id: toggleEventId });
+
       // remove from starred state, then update storage
       this.setState(
         {
@@ -227,16 +250,6 @@ class App extends React.Component {
         updateStorage
       );
       return false;
-    } else {
-      // add to starred state, then update storage
-      this.setState(
-        (prevState) => ({
-          starredIds: [...prevState.starredIds, toggleEventId],
-        }),
-        updateStorage
-      );
-
-      return true;
     }
   };
 
