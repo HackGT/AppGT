@@ -88,7 +88,11 @@ export class ScheduleTab extends Component {
                               this.setSelectedEvent(item);
                             }}
                           >
-                            <ScheduleEventCell event={item} highlighted />
+                            <ScheduleEventCell
+                              event={item}
+                              highlighted
+                              truncateText
+                            />
                           </TouchableOpacity>
                         );
                       }}
@@ -151,7 +155,7 @@ export class ScheduleTab extends Component {
                   {hasEventsNow ? happeningNowView : null}
                   {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
                   <ScheduleDayView
-                    paddingHeight={hasEventsNow ? 190 : 40}
+                    paddingHeight={hasEventsNow ? 160 : 40}
                     events={events}
                     initialEventIndex={initialEventIndex}
                     initialDayIndex={currentDayIndex}

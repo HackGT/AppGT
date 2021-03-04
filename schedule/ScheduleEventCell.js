@@ -37,11 +37,11 @@ export class ScheduleEventCell extends Component {
           <HackathonContext.Consumer>
             {({ toggleStar, starredIds }) => {
               const isStarred = starredIds.indexOf(event.id) != -1;
-
               return (
-                <Card>
+                <Card highlighted={this.props.highlighted}>
                   <View style={styles.titleHeader}>
                     <Text
+                      numberOfLines={this.props.truncateText ? 1 : null}
                       style={styles.flexWrap}
                       ellipsizeMode={"tail"}
                       style={[dynamicStyles.text, styles.titleFont]}
@@ -66,6 +66,7 @@ export class ScheduleEventCell extends Component {
                   </View>
 
                   <Text
+                    numberOfLines={this.props.truncateText ? 1 : null}
                     style={styles.flexWrap}
                     ellipsizeMode={"tail"}
                     style={[dynamicStyles.secondaryText, styles.subtitleFont]}
