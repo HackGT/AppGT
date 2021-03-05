@@ -23,6 +23,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
+import { turnToEst } from "./cms/DataHandler";
 import {
   useDarkModeContext,
   useDynamicStyleSheet,
@@ -223,9 +224,8 @@ class App extends React.Component {
       PushNotification.localNotificationSchedule({
         id: toggleEventId, // ID used to cancel event
         message: event.name + " is starting in 15 minutes! ",
-        date: new Date(Date.parse(event.startDate) - 15 * 60 * 1000), // schedule it for its time - 15 minutes
+        date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
       });
-
 
       // add to starred state, then update storage
       this.setState(

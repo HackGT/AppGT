@@ -3,7 +3,7 @@ import moment, { utc } from "moment-timezone";
 export const daysAvailable = ["friday", "saturday", "sunday"];
 
 // TODO: in cms, dates are stored in UTC+00 which isn't EST, so manually convert date for now
-function turnToEst(date) {
+export function turnToEst(date) {
   return moment.utc(date).subtract(-4, "hours").tz("America/New_York");
 }
 
