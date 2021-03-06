@@ -29,6 +29,8 @@ import {
   useDynamicStyleSheet,
 } from "react-native-dark-mode";
 import { dynamicStyles } from "./themes";
+import firebase from "@react-native-firebase/app";
+import messaging from "@react-native-firebase/messaging";
 
 const authUrl = "https://login.hack.gt";
 
@@ -180,6 +182,20 @@ const Tab = createBottomTabNavigator();
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    // setup firebase notification support
+    firebase.messaging().subscribeToTopic("all");
+    // alert(firebase.messaging().getToken());
+
+    PushNotification.createChannel(
+      {
+        channelId: "hackgt-channel",
+        channelName: "HackGT Channel",
+        channelDescription: "For all your HackGT needs",
+      },
+      (created) => console.log(`createChannel returned '${created}'`)
+    );
+
     this.state = {
       // event data
       hackathon: null,
@@ -218,13 +234,15 @@ class App extends React.Component {
     }
 
     isNowStarred = this.state.starredIds.indexOf(toggleEventId) == -1;
+    alert(parseInt(toggleEventId.replace(/\D/g, "").substring(1, 5)));
 
     if (isNowStarred) {
       // schedule notification for 15 min before
       PushNotification.localNotificationSchedule({
-        id: toggleEventId, // ID used to cancel event
+        channelId: "hackgt-channel",
+        id: parseInt(toggleEventId.replace(/\D/g, "").substring(1, 5)), // map string into a unique id for cancellation
         message: event.name + " is starting in 15 minutes! ",
-        date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
+        date: new Date(Date.now() + 3 * 1000), // schedule it for its time - 15 minutes
       });
 
       // add to starred state, then update storage
@@ -238,7 +256,9 @@ class App extends React.Component {
       return true;
     } else {
       // cancel notification if previously starred
-      PushNotification.cancelLocalNotifications({ id: toggleEventId });
+      PushNotification.cancelLocalNotifications({
+        id: parseInt(toggleEventId.replace(/\D/g, "").substring(1, 5)),
+      });
 
       // remove from starred state, then update storage
       this.setState(
