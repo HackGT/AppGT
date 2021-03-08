@@ -234,15 +234,17 @@ class App extends React.Component {
     }
 
     isNowStarred = this.state.starredIds.indexOf(toggleEventId) == -1;
-    alert(parseInt(toggleEventId.replace(/\D/g, "").substring(1, 5)));
+
+    let eventIdNumber = toggleEventId.replace(/\D/g, "").substring(1, 5);
+    eventIdNumber = Number.parseInt(eventIdNumber);
 
     if (isNowStarred) {
       // schedule notification for 15 min before
       PushNotification.localNotificationSchedule({
         channelId: "hackgt-channel",
-        id: parseInt(toggleEventId.replace(/\D/g, "").substring(1, 5)), // map string into a unique id for cancellation
+        id: eventIdNumber + "", // map string into a unique id for cancellation
         message: event.name + " is starting in 15 minutes! ",
-        date: new Date(Date.now() + 3 * 1000), // schedule it for its time - 15 minutes
+        date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
       });
 
       // add to starred state, then update storage
@@ -257,7 +259,7 @@ class App extends React.Component {
     } else {
       // cancel notification if previously starred
       PushNotification.cancelLocalNotifications({
-        id: parseInt(toggleEventId.replace(/\D/g, "").substring(1, 5)),
+        id: eventIdNumber + "",
       });
 
       // remove from starred state, then update storage
