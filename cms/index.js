@@ -1,5 +1,6 @@
 const hackathonQuery = `
-  allHackathons {
+  allHackathons(where: { isUsedForMobileApp: true }) {
+      isUsedForMobileApp
       id
       name
       slackUrl

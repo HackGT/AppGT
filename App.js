@@ -382,6 +382,11 @@ class App extends React.Component {
       }
 
       fetchHackathonData().then((data) => {
+        // no response back, just return
+        if (data == null || data.data == null) {
+          return;
+        }
+
         const hackathons = data.data.allHackathons;
         const eventTypes = data.data.allTypes;
 
