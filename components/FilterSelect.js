@@ -21,6 +21,8 @@ export default class FilterSelect extends Component {
         filterType: newFilter,
       });
 
+      this.props.onFilterMenuChange(false);
+
       if (this.props.onSelectFilter) {
         this.props.onSelectFilter(newFilter);
       }
@@ -32,7 +34,7 @@ export default class FilterSelect extends Component {
           <ThemeContext.Consumer>
             {({ dynamicStyles }) => {
               const filterList = [...eventTypes];
-              filterList.push({ name: "clear", color: "#C3C3C3" });
+              // filterList.push({ name: "clear", color: "#C3C3C3" });
 
               if (this.state.showMenu) {
                 return (
@@ -45,6 +47,7 @@ export default class FilterSelect extends Component {
                         ]}
                         onPress={() => {
                           this.setState({ showMenu: false });
+                          this.props.onFilterMenuChange(false);
                         }}
                       >
                         <Text
@@ -112,12 +115,28 @@ export default class FilterSelect extends Component {
                           this.setState({
                             showMenu: true,
                           });
+                          this.props.onFilterMenuChange(true);
                         }}
                       >
-                        <Text style={styles.filterText}>
-                          {" "}
-                          {this.state.filterType.name}{" "}
-                        </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text style={styles.filterText}>
+                            {" "}
+                            {this.state.filterType.name}{" "}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              hideFilterMenu({ name: "clear" });
+                            }}
+                          >
+                            <Text style={[dynamicStyles.filterText]}>x</Text>
+                          </TouchableOpacity>
+                        </View>
                       </TouchableOpacity>
                     </View>
                   );
@@ -133,6 +152,7 @@ export default class FilterSelect extends Component {
                           this.setState({
                             showMenu: true,
                           });
+                          this.props.onFilterMenuChange(true);
                         }}
                       >
                         <Text

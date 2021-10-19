@@ -244,7 +244,7 @@ export class ScheduleDayView extends Component {
         style={{
           position: "absolute",
           right: 0,
-          bottom: this.props.paddingHeight - 15,
+          bottom: this.props.paddingHeight + 10,
         }}
         onPress={() => {
           if (this.currentScheduleRef != null) {

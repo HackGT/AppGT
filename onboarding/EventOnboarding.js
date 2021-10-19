@@ -111,7 +111,7 @@ export class EventOnboarding extends Component {
               }
               title="Questions? We're always available"
               subtitles={[
-                `Join our HackGT 7 community with staff, mentors, and other participants.`,
+                `Join our ${hackathonName} community with staff, mentors, and other participants.`,
               ]}
               button={slackButton}
             />

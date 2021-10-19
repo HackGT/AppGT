@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext } from "./context";
-import { StatusBar, Modal, View } from "react-native";
+import { StatusBar, Modal, View, Clipboard } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { InformationTab } from "./info/InformationTab";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
@@ -21,11 +21,16 @@ import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import PushNotification from "react-native-push-notification";
+import { turnToEst } from "./cms/DataHandler";
 import {
   useDarkModeContext,
   useDynamicStyleSheet,
 } from "react-native-dark-mode";
 import { dynamicStyles } from "./themes";
+import firebase from "@react-native-firebase/app";
+import messaging from "@react-native-firebase/messaging";
 
 const authUrl = "https://login.hack.gt";
 
@@ -38,6 +43,56 @@ const config = {
     tokenEndpoint: `${authUrl}/oauth/token`,
   },
 };
+
+PushNotification.configure({
+  // (optional) Called when Token is generated (iOS and Android)
+  onRegister: function (token) {
+    console.log("TOKEN:", token);
+  },
+
+  // (required) Called when a remote is received or opened, or local notification is opened
+  onNotification: function (notification) {
+    console.log("NOTIFICATION:", notification);
+
+    // process the notification
+
+    // (required) Called when a remote is received or opened, or local notification is opened
+    notification.finish(PushNotificationIOS.FetchResult.NoData);
+  },
+
+  // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+  onAction: function (notification) {
+    console.log("ACTION:", notification.action);
+    console.log("NOTIFICATION:", notification);
+
+    // process the action
+  },
+
+  // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+  onRegistrationError: function (err) {
+    console.error(err.message, err);
+  },
+
+  // IOS ONLY (optional): default: all - Permissions to register.
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
+
+  // Should the initial notification be popped automatically
+  // default: true
+  popInitialNotification: true,
+
+  /**
+   * (optional) default: true
+   * - Specified if permissions (ios) and token (android and ios) will requested or not,
+   * - if not, you must call PushNotificationsHandler.requestPermissions() later
+   * - if you are not using remote notification or do not have Firebase installed, use this:
+   *     requestPermissions: Platform.OS === 'ios'
+   */
+  requestPermissions: true,
+});
 
 function HackGTitle() {
   return <HackGTIcon />;
@@ -71,7 +126,9 @@ function SchdeuleStackScreen({ navigation }) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{ paddingLeft: 10, paddingRight: 10 }}
-                    onPress={() => navigation.navigate("ScheduleSearch")}
+                    onPress={() => {
+                      navigation.navigate("ScheduleSearch");
+                    }}
                   >
                     <SearchIcon
                       fill={dStyles.secondaryBackgroundColor.backgroundColor}
@@ -125,6 +182,20 @@ const Tab = createBottomTabNavigator();
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    // setup firebase notification support
+    firebase.messaging().subscribeToTopic("all");
+    // alert(firebase.messaging().getToken());
+
+    PushNotification.createChannel(
+      {
+        channelId: "hackgt-channel",
+        channelName: "HackGT Channel",
+        channelDescription: "For all your HackGT needs",
+      },
+      (created) => console.log(`createChannel returned '${created}'`)
+    );
+
     this.state = {
       // event data
       hackathon: null,
@@ -162,7 +233,35 @@ class App extends React.Component {
       AsyncStorage.setItem("starredIds", JSON.stringify(this.state.starredIds));
     }
 
-    if (this.state.starredIds.indexOf(toggleEventId) != -1) {
+    isNowStarred = this.state.starredIds.indexOf(toggleEventId) == -1;
+
+    let eventIdNumber = toggleEventId.replace(/\D/g, "").substring(1, 5);
+    eventIdNumber = Number.parseInt(eventIdNumber);
+
+    if (isNowStarred) {
+      // schedule notification for 15 min before
+      PushNotification.localNotificationSchedule({
+        channelId: "hackgt-channel",
+        id: eventIdNumber + "", // map string into a unique id for cancellation
+        message: event.name + " is starting in 15 minutes! ",
+        date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
+      });
+
+      // add to starred state, then update storage
+      this.setState(
+        (prevState) => ({
+          starredIds: [...prevState.starredIds, toggleEventId],
+        }),
+        updateStorage
+      );
+
+      return true;
+    } else {
+      // cancel notification if previously starred
+      PushNotification.cancelLocalNotifications({
+        id: eventIdNumber + "",
+      });
+
       // remove from starred state, then update storage
       this.setState(
         {
@@ -173,16 +272,6 @@ class App extends React.Component {
         updateStorage
       );
       return false;
-    } else {
-      // add to starred state, then update storage
-      this.setState(
-        (prevState) => ({
-          starredIds: [...prevState.starredIds, toggleEventId],
-        }),
-        updateStorage
-      );
-
-      return true;
     }
   };
 
@@ -293,6 +382,11 @@ class App extends React.Component {
       }
 
       fetchHackathonData().then((data) => {
+        // no response back, just return
+        if (data == null || data.data == null) {
+          return;
+        }
+
         const hackathons = data.data.allHackathons;
         const eventTypes = data.data.allTypes;
 

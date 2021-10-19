@@ -1,10 +1,9 @@
-import moment, { utc } from "moment-timezone";
+import moment from "moment-timezone";
 
 export const daysAvailable = ["friday", "saturday", "sunday"];
 
-// TODO: in cms, dates are stored in UTC+00 which isn't EST, so manually convert date for now
-function turnToEst(date) {
-  return moment.utc(date).subtract(-4, "hours").tz("America/New_York");
+export function turnToEst(date) {
+  return moment(date);
 }
 
 export function getDaysForEvent(events) {
@@ -25,6 +24,7 @@ export function getDaysForEvent(events) {
 
 export function getEventsHappeningNow(events) {
   return getEventsForDay(events).filter((event) => isEventHappeningNow(event));
+  // return events; -- comment line and replace with this to view what's happening now header with all events
 }
 
 export function sortEventsByStartTime(events) {

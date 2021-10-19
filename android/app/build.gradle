@@ -1,4 +1,6 @@
 apply plugin: "com.android.application"
+// firebase 
+apply plugin: 'com.google.gms.google-services' // <- Add this line
 
 import com.android.build.OutputFile
 
@@ -129,10 +131,11 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.appgt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5145793
+        versionCode 5145795
         versionName "1.2.3"
         manifestPlaceholders = [
             appAuthRedirectScheme: 'gt.hack.live'
@@ -186,8 +189,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    
+    implementation 'com.google.firebase:firebase-analytics:17.3.0'
+    
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation 'com.android.support:multidex:1.0.3'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

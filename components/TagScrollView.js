@@ -15,6 +15,7 @@ export default class TagScrollView extends Component {
         {({ dynamicStyles }) => (
           <View style={styles.container}>
             <ScrollView
+              scrollEnabled={this.props.scroll}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
             >
@@ -24,7 +25,7 @@ export default class TagScrollView extends Component {
                     onPress={() =>
                       this.props.onPress && this.props.onPress(value)
                     }
-                    disabled={!this.props.onPress}
+                    disabled={this.props.disabled}
                     style={[
                       styles.tagStyle,
                       this.props.highlightedTags &&
