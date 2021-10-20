@@ -9,25 +9,43 @@ import {
   Alert,
 } from "react-native";
 import { HackathonContext, ThemeContext } from "../context";
-import { Card } from "../components/Card";
-import { Linking } from "react-native";
-import FontMarkdown from "../components/FontMarkdown";
+import { fetchServerTime } from "../cms";
+import moment from "moment-timezone";
 
 export class ScavengerHuntTab extends Component {
-
+  
+  componentDidMount() {
+    console.log("Scav hunt mounted")
+    fetchServerTime().then( timeData => {
+      console.log("server time fetched: ", timeData)
+      this.setState({
+        currentDate: Date.parse(timeData.datetime)
+      })
+    })
+  }
   render() {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
             {({ hackathon }) => {
+              const availableItems = scavHuntData.items.filter(item => {
+                if (this.state && this.state.currentDate) {
+                  return item.releaseDate < this.state.currentDate
+                } else {
+                  return false
+                }
+              })
               const scavHuntButtons = scavHuntData.items.map(item => {
+                const available = this.state && this.state.currentDate && item.releaseDate < this.state.currentDate
+                console.log("state: ", this.state, 'item date: ', item.releaseDate, available)
                 return (
                       <TouchableOpacity
                         style={[
                           styles.joinEvent,
                           {
                             borderColor: dynamicStyles.tintColor.color,
+                            backgroundColor: available ? 'white' : 'gray'
                           },
                         ]}
                         onPress={() => {
@@ -36,6 +54,9 @@ export class ScavengerHuntTab extends Component {
                       >
                         <Text style={[dynamicStyles.text, styles.buttonText]}>
                           {item.title}
+                        </Text>
+                        <Text style={[dynamicStyles.text, styles.infoText]}>
+                          {moment(item.releaseDate).format("MM/d/yyyy hh:mm:ss")}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -106,16 +127,19 @@ const scavHuntData = {
         title: "Hint 1 Title",
         hint: "Hint 1 description",
         answer: "answer1",
+        releaseDate: Date.parse("2021-10-19T21:43:13.605217-04:00")
       },
       { 
         title: "Hint 2 Title",
         hint: "Hint 2 description",
-        answer: "answer2"
+        answer: "answer2",
+        releaseDate: Date.parse("2021-10-19T22:23:13.605217-04:00")
       },
       { 
         title: "Hint 3 Title",
         hint: "Hint 3 description",
-        answer: "answer3"
+        answer: "answer3",
+        releaseDate: Date.parse("2021-10-19T23:23:13.605217-04:00")
       }
     ]
   }
