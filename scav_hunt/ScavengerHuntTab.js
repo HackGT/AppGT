@@ -46,7 +46,7 @@ export class ScavengerHuntTab extends Component {
                           },
                         ]}
                         onPress={() => {
-                          this.props.navigation.navigate("ScavHuntItem")
+                          this.props.navigation.navigate("ScavHuntItem", {'item': item})
                         }}
                       >
                         <Text style={[dynamicStyles.text, styles.buttonHeaderText]}>
