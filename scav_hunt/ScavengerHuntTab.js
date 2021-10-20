@@ -17,8 +17,8 @@ export class ScavengerHuntTab extends Component {
   
   componentDidMount() {
     console.log("Scav hunt mounted")
+    console.log("Props: ", this.props)
     fetchServerTime().then( timeData => {
-      console.log("server time fetched: ", timeData)
       this.setState({
         currentDate: Date.parse(timeData.datetime)
       })
@@ -35,7 +35,6 @@ export class ScavengerHuntTab extends Component {
               })
               const scavHuntButtons = scavHuntData.items.map(item => {
                 const available = this.state && this.state.currentDate && item.releaseDate < this.state.currentDate
-                console.log("state: ", this.state, 'item date: ', item.releaseDate, available)
                 return (
                       <TouchableOpacity
                         disabled={!available}
@@ -47,7 +46,7 @@ export class ScavengerHuntTab extends Component {
                           },
                         ]}
                         onPress={() => {
-                          
+                          this.props.navigation.navigate("ScavHuntItem")
                         }}
                       >
                         <Text style={[dynamicStyles.text, styles.buttonHeaderText]}>

@@ -6,6 +6,7 @@ import { StatusBar, Modal, View, Clipboard } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { InformationTab } from "./info/InformationTab";
 import { ScavengerHuntTab } from "./scav_hunt/ScavengerHuntTab"
+import { ScavHuntItem } from "./scav_hunt/ScavHuntItem";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -192,6 +193,16 @@ function ScavengerHuntStackScreen({ navigation }) {
       >
         {(props) => <ScavengerHuntTab {...props} />}
       </ScavengerHuntStack.Screen>
+      <ScavengerHuntStack.Screen
+        options={{
+          headerTitleAlign: "left",
+          headerTitle: (props) => <HackGTitle {...props} />,
+          headerStyle: dStyles.tabBarBackgroundColor,
+          headerLeft: null
+        }}
+        name="ScavHuntItem"
+        component={ScavHuntItem}
+      />
     </ScavengerHuntStack.Navigator>
   );
 }

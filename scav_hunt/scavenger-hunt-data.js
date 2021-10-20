@@ -7,7 +7,7 @@ export const scavHuntData = {
         title: "Binary Bridge",
         hint: "There is a bridge near the building you're at right now.  Decode the message on it to solve this clue.",
         answer: "KLAUS",
-        releaseDate: Date.parse("2021-10-22T20:30:00.000000-04:00")
+        releaseDate: Date.parse("2021-09-22T20:30:00.000000-04:00")
       },
       { 
         title: "3D Printed Buzz",
