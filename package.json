@@ -39,8 +39,7 @@
     "react-native-screens": "^2.11.0",
     "react-native-svg": "^12.1.0",
     "react-native-svg-transformer": "^0.14.3",
-    "react-native-vector-icons": "^7.1.0",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.22"
+    "react-native-vector-icons": "^7.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import {
   View,
@@ -6,14 +6,25 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  Button
 } from "react-native";
+import RBSheet from "react-native-raw-bottom-sheet";
 import { HackathonContext, ThemeContext } from "../context";
 import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
 import { scavHuntData } from "./scavenger-hunt-data";
 
 export function ScavHuntItem(props) {
+    const sheetRef = useRef()
     const item = props.route.params.item
+    const [modalVisible, setModalVisible] = useState(false)
+
+    const sheetContent = () => (
+      <View style={[styles.sheetStyle]}>
+        <Text>{'Test'}</Text>
+      </View>
+    )
+
     const completed = () => {
       if (props.isComplete) {
         return (
@@ -24,22 +35,45 @@ export function ScavHuntItem(props) {
       }
     }
 
-
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={{flexDirection: 'column', paddingTop: 34, paddingHorizontal: 32}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.titleText]}>{item.title}</Text>
-            {
-              completed()
-            }
+      <>
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+          <View style={{flexDirection: 'column', paddingTop: 34, paddingHorizontal: 32}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[styles.titleText]}>{item.title}</Text>
+              {
+                completed()
+              }
+            </View>
+            <Text style={[styles.hintText]}>{item.hint}</Text>
+            <TouchableOpacity style={[styles.answerButton]} onPress={() => {
+              setModalVisible(true)
+              sheetRef.current.open()
+              // sheetRef.current.snapTo(0)
+            }}>
+              <Text style={[styles.answerButtonText]}>{'Input Answer'}</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.hintText]}>{item.hint}</Text>
-          <TouchableOpacity style={[styles.answerButton]}>
-            <Text style={[styles.answerButtonText]}>{'Input Answer'}</Text>
-          </TouchableOpacity>
         </View>
-      </View>
+        <RBSheet
+            ref={sheetRef}
+            height={200}
+            openDuration={250}
+            closeDuration={250}
+            closeOnDragDown
+            customStyles={{
+              container: {
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+              },
+              draggableIcon: {
+                backgroundColor: 'white'
+              },
+            }}
+          >
+            { sheetContent() }
+          </RBSheet>
+      </>
     )
 }
 
@@ -80,17 +114,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.005,
   },
 
-  welcomeHeader: {
-    fontFamily: "SpaceMono-Bold",
-    fontSize: 22,
-    marginTop: 10,
-    marginBottom: 10,    
-  },
-
-  scavHuntHeaderContainer: {
-    flexDirection: "row",
-    justifyContent: 'space-between',
-    marginHorizontal: 15,
-    flex: 1
+  sheetStyle: {
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    height: 200
   }
 });
