@@ -5,6 +5,7 @@ import { HackathonContext, AuthContext, ThemeContext } from "./context";
 import { StatusBar, Modal, View, Clipboard } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { InformationTab } from "./info/InformationTab";
+import { ScavengerHuntTab } from "./scav_hunt/ScavengerHuntTab"
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -100,6 +101,7 @@ function HackGTitle() {
 
 const SchdeuleStack = createStackNavigator();
 const InformationStack = createStackNavigator();
+const ScavengerHuntStack = createStackNavigator();
 
 function SchdeuleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
@@ -173,6 +175,24 @@ function InformationStackScreen({ navigation }) {
         {(props) => <InformationTab {...props} />}
       </InformationStack.Screen>
     </InformationStack.Navigator>
+  );
+}
+
+function ScavengerHuntStackScreen({ navigation }) {
+  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  return (
+    <ScavengerHuntStack.Navigator>
+      <ScavengerHuntStack.Screen
+        options={{
+          headerTitleAlign: "left",
+          headerTitle: (props) => <HackGTitle {...props} />,
+          headerStyle: dStyles.tabBarBackgroundColor,
+        }}
+        name="HackGT"
+      >
+        {(props) => <ScavengerHuntTab {...props} />}
+      </ScavengerHuntStack.Screen>
+    </ScavengerHuntStack.Navigator>
   );
 }
 
@@ -526,6 +546,8 @@ class App extends React.Component {
                       icon = faCalendar;
                     } else if (route.name === "Information") {
                       icon = faInfoCircle;
+                    } else if (route.name === "ScavengerHunt") {
+                      icon = faInfoCircle
                     }
 
                     return (
@@ -565,6 +587,10 @@ class App extends React.Component {
                 <Stack.Screen
                   name="Information"
                   component={InformationStackScreen}
+                />
+                <Stack.Screen
+                  name="ScavengerHunt"
+                  component={ScavengerHuntStackScreen}
                 />
               </Tab.Navigator>
             </NavigationContainer>
