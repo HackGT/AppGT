@@ -1,11 +1,10 @@
-import React, { Component } from "react";
+import React, { useRef } from "react";
 
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
   Alert,
 } from "react-native";
 import { HackathonContext, ThemeContext } from "../context";
@@ -13,12 +12,10 @@ import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
 import { scavHuntData } from "./scavenger-hunt-data";
 
-export class ScavHuntItem extends Component {
-  render() {
-    const item = this.props.route.params.item
-    console.log('item props: ', this.props)
+export function ScavHuntItem(props) {
+    const item = props.route.params.item
     const completed = () => {
-      if (this.props.isComplete) {
+      if (props.isComplete) {
         return (
           <View style={{flexDirection:'row'}}>
             <Text>{'Completed!'}</Text>
@@ -44,7 +41,6 @@ export class ScavHuntItem extends Component {
         </View>
       </View>
     )
-  }
 }
 
 const styles = StyleSheet.create({
