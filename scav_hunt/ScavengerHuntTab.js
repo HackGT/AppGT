@@ -11,6 +11,7 @@ import {
 import { HackathonContext, ThemeContext } from "../context";
 import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
+import { scavHuntData } from "./scavenger-hunt-data";
 
 export class ScavengerHuntTab extends Component {
   
@@ -56,7 +57,7 @@ export class ScavengerHuntTab extends Component {
                           {item.title}
                         </Text>
                         <Text style={[dynamicStyles.text, styles.infoText]}>
-                          {moment(item.releaseDate).format("MM/d/yyyy hh:mm:ss")}
+                          {moment(item.releaseDate).format("MM/DD/yyyy hh:mm:ss")}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -68,7 +69,7 @@ export class ScavengerHuntTab extends Component {
                     {"Scavenger Hunt"}
                   </Text>
                   <Text style={[dynamicStyles.text, styles.infoText]}>
-                    {"10 points per correct answer. Go to help desk to redeem your points."}
+                    {"5 points per correct answer. Go to help desk to redeem your points."}
                   </Text>
 
                   <View style={styles.headerButtons}>{scavHuntButtons}</View>
@@ -120,26 +121,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-const scavHuntData = {
-    items: [
-      { 
-        title: "Hint 1 Title",
-        hint: "Hint 1 description",
-        answer: "answer1",
-        releaseDate: Date.parse("2021-10-19T21:43:13.605217-04:00")
-      },
-      { 
-        title: "Hint 2 Title",
-        hint: "Hint 2 description",
-        answer: "answer2",
-        releaseDate: Date.parse("2021-10-19T22:23:13.605217-04:00")
-      },
-      { 
-        title: "Hint 3 Title",
-        hint: "Hint 3 description",
-        answer: "answer3",
-        releaseDate: Date.parse("2021-10-19T23:23:13.605217-04:00")
-      }
-    ]
-  }
