@@ -1,6 +1,7 @@
 // probably want to add this to cms at some point
 
 export const scavHuntData = {
+    pointsPer: 5,
     items: [
       { 
         title: "Binary Bridge",

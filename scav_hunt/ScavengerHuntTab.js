@@ -30,18 +30,15 @@ export class ScavengerHuntTab extends Component {
         {({ dynamicStyles }) => (
           <HackathonContext.Consumer>
             {({ hackathon }) => {
-              const availableItems = scavHuntData.items.filter(item => {
-                if (this.state && this.state.currentDate) {
-                  return item.releaseDate < this.state.currentDate
-                } else {
-                  return false
-                }
+              scavHuntData.items.sort((item1, item2) => {
+                return item1.releaseDate - item2.releaseDate
               })
               const scavHuntButtons = scavHuntData.items.map(item => {
                 const available = this.state && this.state.currentDate && item.releaseDate < this.state.currentDate
                 console.log("state: ", this.state, 'item date: ', item.releaseDate, available)
                 return (
                       <TouchableOpacity
+                        disabled={!available}
                         style={[
                           styles.joinEvent,
                           {
@@ -53,11 +50,11 @@ export class ScavengerHuntTab extends Component {
                           
                         }}
                       >
-                        <Text style={[dynamicStyles.text, styles.buttonText]}>
+                        <Text style={[dynamicStyles.text, styles.buttonHeaderText]}>
                           {item.title}
                         </Text>
                         <Text style={[dynamicStyles.text, styles.infoText]}>
-                          {moment(item.releaseDate).format("MM/DD/yyyy hh:mm:ss")}
+                          {"Available " + moment(item.releaseDate).format("MMM D [at] h:mm A")}
                         </Text>
                       </TouchableOpacity>
                     );
@@ -65,11 +62,16 @@ export class ScavengerHuntTab extends Component {
 
               return (
                 <ScrollView style={[dynamicStyles.backgroundColor]}>
-                  <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                    {"Scavenger Hunt"}
-                  </Text>
+                  <View style={[styles.scavHuntHeaderContainer]}>
+                    <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+                      {"Scavenger Hunt"}
+                    </Text>
+                    <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+                      {"0/" + (scavHuntData.pointsPer && scavHuntData.items ? scavHuntData.pointsPer * scavHuntData.items.length : 0)}
+                    </Text>
+                  </View>
                   <Text style={[dynamicStyles.text, styles.infoText]}>
-                    {"5 points per correct answer. Go to help desk to redeem your points."}
+                    {(scavHuntData.pointsPer ? scavHuntData.pointsPer : 5) + " points per correct answer. Go to help desk to redeem your points."}
                   </Text>
 
                   <View style={styles.headerButtons}>{scavHuntButtons}</View>
@@ -106,18 +108,25 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
 
-  buttonText: {
-    padding: 5,
+  buttonHeaderText: {
+    paddingTop: 5,
     textAlign: "center",
-    fontFamily: "SpaceMono-Regular",
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 16,
     letterSpacing: 0.005,
   },
 
   welcomeHeader: {
     fontFamily: "SpaceMono-Bold",
-    fontSize: 18,
-    marginLeft: 20,
+    fontSize: 22,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 10,    
   },
+
+  scavHuntHeaderContainer: {
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+    flex: 1
+  }
 });
