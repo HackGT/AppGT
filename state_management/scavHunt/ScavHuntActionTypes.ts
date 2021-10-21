@@ -1,0 +1,1 @@
+export const COMPLETE_HINT = "COMPLETE_HINT"

@@ -1,10 +1,13 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
-import { HackathonContext, AuthContext, ThemeContext } from "./context";
+import { HackathonContext, AuthContext, ThemeContext, ScavHuntContext } from "./context";
 import { StatusBar, Modal, View, Clipboard } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { InformationTab } from "./info/InformationTab";
+import { ScavengerHuntTab } from "./scav_hunt/ScavengerHuntTab"
+import { ScavHuntItem } from "./scav_hunt/ScavHuntItem";
+import ScavHuntProvider from "./state_management/scavHunt";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -100,6 +103,7 @@ function HackGTitle() {
 
 const SchdeuleStack = createStackNavigator();
 const InformationStack = createStackNavigator();
+const ScavengerHuntStack = createStackNavigator();
 
 function SchdeuleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
@@ -173,6 +177,36 @@ function InformationStackScreen({ navigation }) {
         {(props) => <InformationTab {...props} />}
       </InformationStack.Screen>
     </InformationStack.Navigator>
+  );
+}
+
+function ScavengerHuntStackScreen({ navigation }) {
+  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  return (
+    <ScavHuntProvider>
+    <ScavengerHuntStack.Navigator>
+      <ScavengerHuntStack.Screen
+        options={{
+          headerTitleAlign: "left",
+          headerTitle: (props) => <HackGTitle {...props} />,
+          headerStyle: dStyles.tabBarBackgroundColor,
+        }}
+        name="HackGT"
+      >
+        {(props) => <ScavengerHuntTab {...props} />}
+      </ScavengerHuntStack.Screen>
+      <ScavengerHuntStack.Screen
+        options={{
+          headerTitleAlign: "left",
+          headerTitle: (props) => <HackGTitle {...props} />,
+          headerStyle: dStyles.tabBarBackgroundColor,
+          headerLeft: null
+        }}
+        name="ScavHuntItem"
+        component={ScavHuntItem}
+      />
+    </ScavengerHuntStack.Navigator>
+    </ScavHuntProvider>
   );
 }
 
@@ -526,6 +560,8 @@ class App extends React.Component {
                       icon = faCalendar;
                     } else if (route.name === "Information") {
                       icon = faInfoCircle;
+                    } else if (route.name === "ScavengerHunt") {
+                      icon = faInfoCircle
                     }
 
                     return (
@@ -565,6 +601,10 @@ class App extends React.Component {
                 <Stack.Screen
                   name="Information"
                   component={InformationStackScreen}
+                />
+                <Stack.Screen
+                  name="ScavengerHunt"
+                  component={ScavengerHuntStackScreen}
                 />
               </Tab.Navigator>
             </NavigationContainer>
