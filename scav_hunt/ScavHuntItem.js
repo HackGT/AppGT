@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 
 import {
   View,
@@ -9,7 +9,7 @@ import {
   Dimensions
 } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
-import { HackathonContext, ThemeContext } from "../context";
+import { HackathonContext, ThemeContext, ScavHuntContext } from "../context";
 import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
 import { scavHuntData } from "./scavenger-hunt-data";
@@ -18,14 +18,14 @@ import CorrectAnswer from "../assets/CorrectAnswer.svg";
 import IncorrectAnswer from "../assets/IncorrectAnswer.svg";
 
 export function ScavHuntItem(props) {
+    const { state, completeHint } = useContext(ScavHuntContext)
     const sheetRef = useRef()
     const item = props.route.params.item
+    const isComplete = state.completedHints.includes(item.id)
     const [modalVisible, setModalVisible] = useState(false)
     const [answer, setAnswer] = useState('')
-    const [showAnswerStatus, setShowAnswerStatus] = useState(false)
-    const [isAnswerCorrect, setIsAnswerCorrect] = useState(false)
-
-
+    const [showAnswerStatus, setShowAnswerStatus] = useState(isComplete)
+    const [isAnswerCorrect, setIsAnswerCorrect] = useState(isComplete)
     const answerStatus = () => {
       console.log("answer status: ", showAnswerStatus, isAnswerCorrect)
       if (showAnswerStatus) {
@@ -62,7 +62,10 @@ export function ScavHuntItem(props) {
           <Text style={[styles.completeText]}>{'Complete'}</Text> :
           <TouchableOpacity style={[styles.answerButton, { width: 200 }]} onPress={() => {
             setShowAnswerStatus(true)
-            setIsAnswerCorrect(answer === item.answer)
+            if (answer === item.answer) {
+              setIsAnswerCorrect(true)
+              completeHint(item.id)
+            }
           }}>
             <Text style={[styles.answerButtonText]}>{'Submit'}</Text>
           </TouchableOpacity>
@@ -96,7 +99,7 @@ export function ScavHuntItem(props) {
               sheetRef.current.open()
               // sheetRef.current.snapTo(0)
             }}>
-              <Text style={[styles.answerButtonText]}>{'Input Answer'}</Text>
+              <Text style={[styles.answerButtonText]}>{isComplete ? 'Completed!' : 'Input Answer'}</Text>
             </TouchableOpacity>
           </View>
         </View>

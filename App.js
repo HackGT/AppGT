@@ -1,12 +1,13 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
-import { HackathonContext, AuthContext, ThemeContext } from "./context";
+import { HackathonContext, AuthContext, ThemeContext, ScavHuntContext } from "./context";
 import { StatusBar, Modal, View, Clipboard } from "react-native";
 import { ScheduleTab } from "./schedule/ScheduleTab";
 import { InformationTab } from "./info/InformationTab";
 import { ScavengerHuntTab } from "./scav_hunt/ScavengerHuntTab"
 import { ScavHuntItem } from "./scav_hunt/ScavHuntItem";
+import ScavHuntProvider from "./state_management/scavHunt";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -182,6 +183,7 @@ function InformationStackScreen({ navigation }) {
 function ScavengerHuntStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
+    <ScavHuntProvider>
     <ScavengerHuntStack.Navigator>
       <ScavengerHuntStack.Screen
         options={{
@@ -204,6 +206,7 @@ function ScavengerHuntStackScreen({ navigation }) {
         component={ScavHuntItem}
       />
     </ScavengerHuntStack.Navigator>
+    </ScavHuntProvider>
   );
 }
 
