@@ -5,23 +5,68 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Alert,
-  Button
+  TextInput,
+  Dimensions
 } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { HackathonContext, ThemeContext } from "../context";
 import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
 import { scavHuntData } from "./scavenger-hunt-data";
+import DismissModal from "../assets/DismissModal.svg";
+import CorrectAnswer from "../assets/CorrectAnswer.svg";
+import IncorrectAnswer from "../assets/IncorrectAnswer.svg";
 
 export function ScavHuntItem(props) {
     const sheetRef = useRef()
     const item = props.route.params.item
     const [modalVisible, setModalVisible] = useState(false)
+    const [answer, setAnswer] = useState('')
+    const [showAnswerStatus, setShowAnswerStatus] = useState(false)
+    const [isAnswerCorrect, setIsAnswerCorrect] = useState(false)
+
+
+    const answerStatus = () => {
+      console.log("answer status: ", showAnswerStatus, isAnswerCorrect)
+      if (showAnswerStatus) {
+        isAnswerCorrect ? <CorrectAnswer/> : <IncorrectAnswer/>
+      }
+    }
 
     const sheetContent = () => (
       <View style={[styles.sheetStyle]}>
-        <Text>{'Test'}</Text>
+        <TouchableOpacity style={{alignSelf: 'flex-end', marginRight: 26}} onPress={() => {
+          setModalVisible(false)
+          sheetRef.current.close()
+        }}>
+          <DismissModal/>
+        </TouchableOpacity>
+        <Text style={[styles.hintText, {paddingBottom: 15}]}>{'What\'s the answer?'}</Text>
+        <View style={styles.answerInputContainer}>
+          <TextInput
+            style={styles.answerInput}
+            onChangeText={setAnswer}
+            value={answer}
+            placeholder={"Your Answer"}
+          />
+          {
+            // answerStatus()
+            showAnswerStatus ?
+              (isAnswerCorrect ? <CorrectAnswer style={{marginRight: 5}}/> : <IncorrectAnswer style={{marginRight: 5}}/>) :
+              null
+          }
+          
+        </View>
+        {
+          isAnswerCorrect ?
+          <Text style={[styles.completeText]}>{'Complete'}</Text> :
+          <TouchableOpacity style={[styles.answerButton, { width: 200 }]} onPress={() => {
+            setShowAnswerStatus(true)
+            setIsAnswerCorrect(answer === item.answer)
+          }}>
+            <Text style={[styles.answerButtonText]}>{'Submit'}</Text>
+          </TouchableOpacity>
+        }
       </View>
     )
 
@@ -57,7 +102,7 @@ export function ScavHuntItem(props) {
         </View>
         <RBSheet
             ref={sheetRef}
-            height={200}
+            height={300}
             openDuration={250}
             closeDuration={250}
             closeOnDragDown
@@ -117,7 +162,29 @@ const styles = StyleSheet.create({
   sheetStyle: {
     flexDirection: 'column',
     backgroundColor: 'white',
+    alignItems: 'center'
+  },
+
+  answerInputContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    height: 200
+    backgroundColor: '#F3F3F3',
+    borderRadius: 5,
+    padding: 11,
+    width: Dimensions.get('window').width - 80
+  },
+
+  answerInput: {
+    fontFamily: 'SpaceMono-Regular',
+    fontSize: 20,
+    borderRadius: 5,
+    padding: 11,
+    flex: 1
+  },
+
+  completeText: {
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 20,
+    marginTop: 32
   }
 });
