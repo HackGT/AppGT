@@ -33,6 +33,7 @@ export function ScavengerHuntTab(props) {
   }, [])
 
   useEffect(() => {
+    console.log(props.user)
     const unsubscribe = props.navigation.addListener('focus', () => {
       // The screen is focused
       fetchServerTime().then( timeData => {
@@ -65,7 +66,7 @@ export function ScavengerHuntTab(props) {
                         },
                       ]}
                       onPress={() => {
-                        props.navigation.navigate("ScavHuntItem", {'item': item})
+                        props.navigation.navigate("ScavHuntItem", {'item': item, 'user': props.user})
                       }}
                     >
                       <Text style={[dynamicStyles.text, styles.buttonHeaderText]}>
