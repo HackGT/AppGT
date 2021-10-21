@@ -184,6 +184,9 @@ function ScavengerHuntStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
     <ScavHuntProvider>
+      <AuthContext.Consumer>
+        {({user}) => {
+        return (
     <ScavengerHuntStack.Navigator>
       <ScavengerHuntStack.Screen
         options={{
@@ -193,7 +196,7 @@ function ScavengerHuntStackScreen({ navigation }) {
         }}
         name="HackGT"
       >
-        {(props) => <ScavengerHuntTab {...props} />}
+        {(props) => <ScavengerHuntTab {...props} user={user} />}
       </ScavengerHuntStack.Screen>
       <ScavengerHuntStack.Screen
         options={{
@@ -206,6 +209,8 @@ function ScavengerHuntStackScreen({ navigation }) {
         component={ScavHuntItem}
       />
     </ScavengerHuntStack.Navigator>
+        )}}
+    </AuthContext.Consumer>
     </ScavHuntProvider>
   );
 }
@@ -322,21 +327,22 @@ class App extends React.Component {
     });
   };
 
-  login = () => {
-    this.setState({ skipOnboarding: true });
-    AsyncStorage.setItem("skipOnboarding", "true");
-  };
-
-  // login = async () => {
-  //   try {
-  //     const result = await authorize(config);
-  //     this.setState({ accessToken: result.accessToken });
-  //     this.fetchUserDetails(result.accessToken);
-  //     AsyncStorage.setItem("accessToken", accessToken);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  // login = () => {
+  //   this.setState({ skipOnboarding: true });
+  //   AsyncStorage.setItem("skipOnboarding", "true");
   // };
+
+  login = async () => {
+    try {
+      const result = await authorize(config);
+      console.log('Login result: ', result, result['accessToken'], result.accessToken)
+      this.setState({ accessToken: result.accessToken });
+      this.fetchUserDetails(result.accessToken);
+      AsyncStorage.setItem("accessToken", result.accessToken);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   fetchUserDetails = async (accessToken) => {
     fetch(`${authUrl}/api/user`, {
@@ -360,17 +366,16 @@ class App extends React.Component {
         };
 
         AsyncStorage.setItem("userData", JSON.stringify(user));
-
         this.setState({ user: user });
       });
   };
 
   componentDidMount() {
-    AsyncStorage.getItem("skipOnboarding", (error, result) => {
-      console.log(error);
-      result &&
-        this.setState({ skipOnboarding: result === "true" ? true : false });
-    });
+    // AsyncStorage.getItem("skipOnboarding", (error, result) => {
+    //   console.log(error);
+    //   result &&
+    //     this.setState({ skipOnboarding: result === "true" ? true : false });
+    // });
 
     AsyncStorage.getItem(
       "starredIds",
@@ -451,7 +456,7 @@ class App extends React.Component {
     const eventTypes = this.state.eventTypes;
 
     // TODO: login re-enable
-    const needsLogin = this.state.skipOnboarding == false; // this.state.user == null;
+    const needsLogin = this.state.user == null;
     const isLoading = this.state.isFetchingData || this.state.isFetchingLogin;
 
     const splashGrowModal = (
