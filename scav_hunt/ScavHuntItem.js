@@ -9,10 +9,7 @@ import {
   Dimensions
 } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
-import { HackathonContext, ThemeContext, ScavHuntContext } from "../context";
-import { fetchServerTime } from "../cms";
-import moment from "moment-timezone";
-import { scavHuntData } from "./scavenger-hunt-data";
+import { ScavHuntContext } from "../context";
 import DismissModal from "../assets/DismissModal.svg";
 import CorrectAnswer from "../assets/CorrectAnswer.svg";
 import IncorrectAnswer from "../assets/IncorrectAnswer.svg";
