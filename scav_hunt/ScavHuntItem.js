@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions
 } from "react-native";
+import { notifyHintComplete } from "../yac";
 import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { ScavHuntContext } from "../context";
@@ -19,6 +20,7 @@ export function ScavHuntItem(props) {
     const { state, completeHint } = useContext(ScavHuntContext)
     const sheetRef = useRef()
     const item = props.route.params.item
+    const user = props.route.params.user
     const isComplete = state.completedHints.includes(item.id)
     const [modalVisible, setModalVisible] = useState(false)
     const [answer, setAnswer] = useState(isComplete ? item.answer : '')
@@ -65,6 +67,7 @@ export function ScavHuntItem(props) {
               completeHint(item.id)
               console.log('itemID ', item.id)
               AsyncStorage.setItem("completedHints", JSON.stringify(state.completedHints.concat([item.id])))
+              notifyHintComplete(user.uuid, item.id)
             }
           }}>
             <Text style={[styles.answerButtonText]}>{'Submit'}</Text>
