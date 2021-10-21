@@ -23,7 +23,7 @@ export function ScavHuntItem(props) {
     const item = props.route.params.item
     const isComplete = state.completedHints.includes(item.id)
     const [modalVisible, setModalVisible] = useState(false)
-    const [answer, setAnswer] = useState('')
+    const [answer, setAnswer] = useState(isComplete ? item.answer : '')
     const [showAnswerStatus, setShowAnswerStatus] = useState(isComplete)
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(isComplete)
     const answerStatus = () => {
