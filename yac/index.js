@@ -1,11 +1,11 @@
 const _notifyHintComplete = async (uid, hintId) => {
 
-  const dev = true
+  const dev = false
 
   const prodUrl = "https://log.2021.hack.gt/log/interaction"
   const devUrl = "https://log.dev.hack.gt/log/interaction"
-
-  const prodToken = ''
+  const keys = require('../keys/keys.json')
+  const prodToken = keys.scavHunt
   const devToken = 'rangerover'
 
   const body = {
