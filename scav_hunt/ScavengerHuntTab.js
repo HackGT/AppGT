@@ -7,19 +7,41 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { HackathonContext, ThemeContext, ScavHuntContext } from "../context";
 import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
 import { scavHuntData } from "./scavenger-hunt-data";
 
 export function ScavengerHuntTab(props) {
-  const { state } = useContext(ScavHuntContext)
+  const { state, completeHint } = useContext(ScavHuntContext)
   const [currentDate, setCurrentDate] = useState(Date.parse("2000-01-01T20:30:00.000000-04:00"))
   useEffect(() => {
-    fetchServerTime().then( timeData => {
-      setCurrentDate(Date.parse(timeData.datetime))
-    })
+    AsyncStorage.getItem(
+      "completedHints",
+      (error, result) => {
+        if (result) {
+          const r = JSON.parse(result)
+          r.forEach(id => {
+            if (!state.completedHints.includes(id)) {
+              completeHint(id)
+            }
+          })
+        }
+      }
+    );
   }, [])
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      // The screen is focused
+      fetchServerTime().then( timeData => {
+        console.log('Got time: ', timeData)
+        setCurrentDate(Date.parse(timeData.datetime))
+      })
+    }, [props.navigation]);
+    return unsubscribe
+  })
 
   return (
     <ThemeContext.Consumer>

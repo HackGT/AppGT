@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 
 import {
   View,
@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { ScavHuntContext } from "../context";
 import DismissModal from "../assets/DismissModal.svg";
@@ -62,6 +63,8 @@ export function ScavHuntItem(props) {
             if (answer === item.answer) {
               setIsAnswerCorrect(true)
               completeHint(item.id)
+              console.log('itemID ', item.id)
+              AsyncStorage.setItem("completedHints", JSON.stringify(state.completedHints.concat([item.id])))
             }
           }}>
             <Text style={[styles.answerButtonText]}>{'Submit'}</Text>
