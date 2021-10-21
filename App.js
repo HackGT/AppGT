@@ -19,7 +19,7 @@ import SearchIcon from "./assets/Search";
 import StarOnIcon from "./assets/StarLargeOn";
 import StarOffIcon from "./assets/StarLargeOff";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faInfoCircle, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faCalendar, faMapSigns } from "@fortawesome/free-solid-svg-icons";
 import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -566,7 +566,7 @@ class App extends React.Component {
                     } else if (route.name === "Information") {
                       icon = faInfoCircle;
                     } else if (route.name === "ScavengerHunt") {
-                      icon = faInfoCircle
+                      icon = faMapSigns
                     }
 
                     return (

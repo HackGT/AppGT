@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import { HackathonContext, ThemeContext, ScavHuntContext } from "../context";
 import { fetchServerTime } from "../cms";
@@ -61,16 +63,26 @@ export function ScavengerHuntTab(props) {
                       style={[
                         styles.joinEvent,
                         {
-                          borderColor: dynamicStyles.tintColor.color,
-                          backgroundColor: available ? 'white' : 'gray'
+                          borderColor: available ? dynamicStyles.tintColor.color : 'gray',
+                          backgroundColor: isComplete ? '#A4D496' : (available ? 'white' : '#E0E0E0'),
+                          
                         },
                       ]}
                       onPress={() => {
                         props.navigation.navigate("ScavHuntItem", {'item': item, 'user': props.user})
                       }}
-                    >
-                      <Text style={[dynamicStyles.text, styles.buttonHeaderText]}>
-                        {item.title + (isComplete ? " (Complete)" : "")}
+                    > 
+                      {
+                        available ? null :
+                        <FontAwesomeIcon
+                          color={'gray'}
+                          icon={faLock}
+                          size={12}
+                          style={{position: 'absolute', margin: 5}}
+                        />
+                      }
+                      <Text style={[dynamicStyles.text, styles.buttonHeaderText, {color: available ? 'black' : 'gray'}]}>
+                        {item.title}
                       </Text>
                       <Text style={[dynamicStyles.text, styles.infoText]}>
                         {"Available " + moment(item.releaseDate).format("MMM D [at] h:mm A")}
