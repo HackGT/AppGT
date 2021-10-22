@@ -63,7 +63,7 @@ export function ScavengerHuntTab(props) {
                       style={[
                         styles.joinEvent,
                         {
-                          borderColor: available ? dynamicStyles.tintColor.color : 'gray',
+                          borderColor: available ? dynamicStyles.tintColor.color : 'white',
                           backgroundColor: isComplete ? '#A4D496' : (available ? 'white' : '#E0E0E0'),
                           
                         },
@@ -98,7 +98,7 @@ export function ScavengerHuntTab(props) {
                     {"Scavenger Hunt"}
                   </Text>
                   <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                    {(state.completedHints.length * scavHuntData.pointsPer) + "/" + (scavHuntData.pointsPer && scavHuntData.items ? scavHuntData.pointsPer * scavHuntData.items.length : 0)}
+                    {(state.completedHints.length * scavHuntData.pointsPer) + "/" + (scavHuntData.pointsPer && scavHuntData.items ? scavHuntData.pointsPer * scavHuntData.items.length : 0) + " pts"}
                   </Text>
                 </View>
                 <Text style={[dynamicStyles.text, styles.infoText]}>
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   welcomeHeader: {
     fontFamily: "SpaceMono-Bold",
     fontSize: 22,
-    marginTop: 10,
+    marginTop: 34,
     marginBottom: 10,    
   },
 
