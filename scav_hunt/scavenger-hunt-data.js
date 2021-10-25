@@ -25,7 +25,7 @@ export const scavHuntData = {
         hint: "Go try on some clothes in Klaus to find the answer for this clue.",
         answer: "white and old gold",
         isQR: true,
-        releaseDate: Date.parse("2021-10-23T11:30:00.000000-04:00")
+        releaseDate: Date.parse("2021-10-23T11:00:00.000000-04:00")
       },
       { 
         id: 3,
@@ -33,15 +33,23 @@ export const scavHuntData = {
         hint: "Explore the market tonight and look for a code to the answer for this clue.",
         answer: "shopping with burdell",
         isQR: true,
-        releaseDate: Date.parse("2021-10-23T11:30:00.000000-04:00")
+        releaseDate: Date.parse("2021-10-23T13:00:00.000000-04:00")
       },
       { 
         id: 4,
         title: "Stairs",
-        hint: "Go to the colorful stairs and enter the order of all the colors you see (separated by commas).",
-        answer: "Purple, Blue, Green, Yellow, Orange, Pink, Blue, White, Black, Brown",
+        hint: "Go to the colorful stairs and enter the first letter (capitalized) of the colors from bottom to top.",
+        answer: "PBGYOPBWBB",
         isQR: false,
-        releaseDate: Date.parse("2021-10-23T11:30:00.000000-04:00")
+        releaseDate: Date.parse("2021-10-23T17:00:00.000000-04:00")
+      },
+      {
+        id: 5,
+        title: "Fishing",
+        hint: "Go fishing in the atrium to find the code for the final clue.",
+        answer: "fishy business",
+        isQR: true,
+        releaseDate: Date.parse("2021-10-24T07:00:00.000000-04:00")
       }
     ]
   }

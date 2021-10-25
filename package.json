@@ -24,6 +24,8 @@
     "@react-navigation/stack": "^5.14.9",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
+    "ndef": "^0.2.0",
+    "nfccard-tool": "^0.1.1",
     "react": "16.13.1",
     "react-moment": "^0.9.7",
     "react-native": "0.63.2",
