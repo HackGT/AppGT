@@ -36,12 +36,6 @@ const styles = StyleSheet.create({
     card: {
         marginBottom: 10,
     }, 
-    titleHeader: {
-        flexDirection: "row",
-        width: "100%",
-        letterSpacing: 0.005,
-        backgroundColor: "#ADD8E6"
-    },
 
     titleFont: {
         fontSize: 16,
@@ -56,14 +50,6 @@ const styles = StyleSheet.create({
         marginTop: 2,
         fontFamily: "SpaceMono-Regular",
         letterSpacing: 0.005,
-    },
-
-    tagFont: {
-        marginTop: 2,
-        fontFamily: "SpaceMono-Regular",
-        letterSpacing: 0.005,
-        marginTop: -0.2,
-        marginLeft: 8,
     },
 
     wrappable: {

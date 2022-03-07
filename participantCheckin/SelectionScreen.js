@@ -74,7 +74,7 @@ export class SelectionScreen extends Component {
       
     if(this.state.events != null) { // there are no events getting properly populated
       var formattedEvents = [];
-      var events = this.state.searchResults != null ? this.state.searchResults : this.state.events;
+      var events = this.state.searchText.length != 0 ? this.state.searchResults : this.state.events;
       events.forEach((event)=>{
         const eventType = event != null && event.type != null
             ? event.type
@@ -143,22 +143,21 @@ export class SelectionScreen extends Component {
             return ( 
             <ScrollView>
                   <View style={[styles.eventContainer]}>
-                        <Text style={[styles.header]}> {this.state.selectedEvent.name} </Text>
-                        <Button title="< Back" onPress={() => {
-                            this.setSelectedEvent(null);
-                        }}/>
-                        <ScanScreen 
-                            startTime={this.state.selectedEvent.startTime} 
-                            endTime={this.state.selectedEvent.endTime} 
-                            location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
-                                ? this.state.selectedEvent.location[0].name + " • "
-                                : ""}
-                            type={this.state.selectedEvent != null && this.state.selectedEvent.type != null
-                                ? this.state.selectedEvent.type
-                                : { name: "none", color: "gray" }}
-                            description={this.state.selectedEvent.description}
-                        />
-                        
+                      <Text style={[styles.header]}> {this.state.selectedEvent.name} </Text>
+                      <Button title="< Back" onPress={() => {
+                          this.setSelectedEvent(null);
+                      }}/>
+                      <ScanScreen 
+                          startTime={this.state.selectedEvent.startTime} 
+                          endTime={this.state.selectedEvent.endTime} 
+                          location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
+                              ? this.state.selectedEvent.location[0].name + " • "
+                              : ""}
+                          type={this.state.selectedEvent != null && this.state.selectedEvent.type != null
+                              ? this.state.selectedEvent.type
+                              : { name: "none", color: "gray" }}
+                          description={this.state.selectedEvent.description}
+                      />
                 </View>
             </ScrollView>);
 
