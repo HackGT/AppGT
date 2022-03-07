@@ -34,6 +34,7 @@ import {
 import { dynamicStyles } from "./themes";
 import firebase from "@react-native-firebase/app";
 import messaging from "@react-native-firebase/messaging";
+import { SelectionScreen } from "./participantCheckin/SelectionScreen";
 
 const authUrl = "https://login.hack.gt";
 
@@ -509,6 +510,31 @@ class App extends React.Component {
     }
 
     const showEventOnboard = this.state.pastEventOnboardID !== hackathon.id;
+
+    // if logging in with a hexlabs email
+    if(/@hexlabs.org\s*$/.test(this.state.user.email)) {
+      return (
+        <ThemeContext.Provider
+          value={{
+            theme: this.props.theme,
+            dynamicStyles: this.props.styles,
+          }}
+        >
+          <AuthContext.Provider
+            value={{
+              user: this.state.user,
+              login: this.login,
+              logout: this.logout,
+            }}
+          >
+            
+            <SelectionScreen />
+            
+          </AuthContext.Provider>
+        </ThemeContext.Provider>
+      );
+    }
+
 
     // once logged in and all data is loaded, present full app after grow animation
     return (
