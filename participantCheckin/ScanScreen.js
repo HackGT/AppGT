@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { ThemeContext } from "../context";
 import { Card } from "../components/Card";
+import QRScan from "./QRScan"
 
 export class ScanScreen extends Component {
   render() {
@@ -22,10 +23,10 @@ export class ScanScreen extends Component {
                     <Text>
                         {this.props.description}
                     </Text>
-
+                    <QRScan/>
                 </Card>
             </View>
-            
+
         ))}
       </ThemeContext.Consumer>
     );
@@ -35,7 +36,7 @@ export class ScanScreen extends Component {
 const styles = StyleSheet.create({
     card: {
         marginBottom: 10,
-    }, 
+    },
 
     titleFont: {
         fontSize: 16,

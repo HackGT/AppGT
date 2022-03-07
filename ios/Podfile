@@ -36,6 +36,9 @@ target 'AppGT' do
     pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
     pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
     
+    permissions_path = '../node_modules/react-native-permissions/ios'
+    pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+
     use_native_modules!
   # config = use_native_modules!
 
@@ -49,4 +52,6 @@ target 'AppGT' do
   # post_install do |installer|
   #   flipper_post_install(installer)
   # end
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
 end

@@ -49,7 +49,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This app uses your location to track data</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SpaceMono-Bold.ttf</string>
@@ -74,5 +74,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app uses the camera to scan QR codes</string>
 </dict>
 </plist>

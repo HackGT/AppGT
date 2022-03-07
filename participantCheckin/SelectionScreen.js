@@ -11,10 +11,10 @@ export class SelectionScreen extends Component {
   state = {
     events: null,
     selectedEvent: null,
-    searchText: "", 
+    searchText: "",
     searchResults: null
   }
-  
+
   async componentDidMount() {
     this.refreshEventState();
 
@@ -54,13 +54,13 @@ export class SelectionScreen extends Component {
     });
     const data = await response.json();
     this.setState({events: data.data.allEvents})
-    
+
   }
 
   searchEvents = (value) => {
       var newEvents = this.state.events.filter(e => e.name.includes(this.state.searchText));
       this.setState({ searchText: value, searchResults: newEvents });
-  }; 
+  };
 
   setSelectedEvent = (event) => {
     if (event) {
@@ -71,7 +71,7 @@ export class SelectionScreen extends Component {
   };
 
   render() {
-      
+
     if(this.state.events != null) { // there are no events getting properly populated
       var formattedEvents = [];
       var events = this.state.searchText.length != 0 ? this.state.searchResults : this.state.events;
@@ -89,11 +89,11 @@ export class SelectionScreen extends Component {
                     this.setSelectedEvent(event);
                 }}
                 >
-                <EventSel 
-                    key={event.id} 
-                    name={event.name} 
-                    startTime={event.startTime} 
-                    endTime={event.endTime} 
+                <EventSel
+                    key={event.id}
+                    name={event.name}
+                    startTime={event.startTime}
+                    endTime={event.endTime}
                     location={loc}
                     type={eventType}
                 />
@@ -134,22 +134,23 @@ export class SelectionScreen extends Component {
                             value={this.state.searchText}
                         />
                       </View>
-                    )} 
+                    )}
                     </ThemeContext.Consumer>
                     {formattedEvents}
                 </View>
               </ScrollView>);
         } else {
-            return ( 
+            return (
             <ScrollView>
                   <View style={[styles.eventContainer]}>
                       <Text style={[styles.header]}> {this.state.selectedEvent.name} </Text>
                       <Button title="< Back" onPress={() => {
                           this.setSelectedEvent(null);
                       }}/>
-                      <ScanScreen 
-                          startTime={this.state.selectedEvent.startTime} 
-                          endTime={this.state.selectedEvent.endTime} 
+                      <ScanScreen
+                          eventID = {this.state.selectedEvent}
+                          startTime={this.state.selectedEvent.startTime}
+                          endTime={this.state.selectedEvent.endTime}
                           location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
                               ? this.state.selectedEvent.location[0].name + " • "
                               : ""}
@@ -162,7 +163,7 @@ export class SelectionScreen extends Component {
             </ScrollView>);
 
         }
-      
+
     } else { return (<View/>); }
   }
 }
@@ -175,9 +176,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 22,
     marginTop: 34,
-    marginBottom: 10, 
+    marginBottom: 10,
     flexDirection: "row",
-    alignItems: "center", 
+    alignItems: "center",
   },
 
   eventContainer: {
@@ -192,4 +193,3 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
 });
-
