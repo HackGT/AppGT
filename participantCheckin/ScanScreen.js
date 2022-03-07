@@ -3,24 +3,13 @@ import { Text, View, StyleSheet } from "react-native";
 import { ThemeContext } from "../context";
 import { Card } from "../components/Card";
 
-export class EventSel extends Component {
+export class ScanScreen extends Component {
   render() {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => ((
             <View style={styles.card}>
                 <Card >
-                    <View style={styles.titleHeader}>
-                        <Text
-                        numberOfLines={this.props.truncateText ? 1 : null}
-                        style={styles.flexWrap}
-                        ellipsizeMode={"tail"}
-                        style={[dynamicStyles.text, styles.titleFont]}
-                        >
-                        {this.props.name}
-                        </Text>
-                    </View>
-
                     <Text
                         numberOfLines={this.props.truncateText ? 1 : null}
                         style={styles.flexWrap}
@@ -29,6 +18,9 @@ export class EventSel extends Component {
                     >
                         {this.props.location}
                         {this.props.startTime} - {this.props.endTime}
+                    </Text>
+                    <Text>
+                        {this.props.description}
                     </Text>
 
                 </Card>
@@ -42,12 +34,13 @@ export class EventSel extends Component {
 
 const styles = StyleSheet.create({
     card: {
-        marginBottom: 10
+        marginBottom: 10,
     }, 
     titleHeader: {
         flexDirection: "row",
         width: "100%",
         letterSpacing: 0.005,
+        backgroundColor: "#ADD8E6"
     },
 
     titleFont: {
