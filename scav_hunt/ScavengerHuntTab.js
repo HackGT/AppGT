@@ -13,7 +13,6 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { HackathonContext, ThemeContext, ScavHuntContext } from "../context";
 import { fetchServerTime } from "../cms";
 import moment from "moment-timezone";
-import { scavHuntData } from "./scavenger-hunt-data";
 
 export function ScavengerHuntTab(props) {
   const { state, completeHint } = useContext(ScavHuntContext)
@@ -51,12 +50,21 @@ export function ScavengerHuntTab(props) {
       {({ dynamicStyles }) => (
         <HackathonContext.Consumer>
           {({ hackathon }) => {
-            scavHuntData.items.sort((item1, item2) => {
-              return item1.releaseDate - item2.releaseDate
+            console.log('blah',hackathon.scavengerHunts)
+            var scavHunts = hackathon.scavengerHunts
+            scavHunts.sort((item1, item2) => {
+              const d1 = Date.parse(item1.releaseDate)
+              const d2 = Date.parse(item2.releaseDate)
+              return d1-d2
             })
-            const scavHuntButtons = scavHuntData.items.map(item => {
-              const available = item.releaseDate < currentDate
+            const scavHuntButtons = scavHunts.map(challenge => {
+              const item = {
+                ...challenge,
+                releaseDate: Date.parse(challenge.releaseDate),
+              }
+              const available = new Date(item.releaseDate) < currentDate
               const isComplete = state.completedHints.includes(item.id)
+
               return (
                     <TouchableOpacity
                       disabled={!available}
@@ -84,12 +92,18 @@ export function ScavengerHuntTab(props) {
                       <Text style={[dynamicStyles.text, styles.buttonHeaderText, {color: available ? 'black' : 'gray'}]}>
                         {item.title}
                       </Text>
-                      <Text style={[dynamicStyles.text, styles.infoText]}>
+                      <Text style={[dynamicStyles.text, styles.dateText]}>
                         {"Available " + moment(item.releaseDate).format("MMM D [at] h:mm A")}
                       </Text>
                     </TouchableOpacity>
                   );
             })
+
+            const currPoints = state.completedHints.reduce((acc, curr) => { acc + curr.points }, 0)
+            const totalPoints = scavHunts.reduce((acc, curr) => {
+              console.log(acc, ' ', curr.points)
+              return acc + curr.points
+            }, 0)
 
             return (
               <ScrollView style={[dynamicStyles.backgroundColor]}>
@@ -97,12 +111,14 @@ export function ScavengerHuntTab(props) {
                   <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
                     {"Scavenger Hunt"}
                   </Text>
-                  <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                    {(state.completedHints.length * scavHuntData.pointsPer) + "/" + (scavHuntData.pointsPer && scavHuntData.items ? scavHuntData.pointsPer * scavHuntData.items.length : 0) + " pts"}
-                  </Text>
+                  { totalPoints > 0 ?
+                    <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+                      {currPoints + "/" + totalPoints + " pts"}
+                    </Text> : null
+                 }
                 </View>
                 <Text style={[dynamicStyles.text, styles.infoText]}>
-                  {(scavHuntData.pointsPer ? scavHuntData.pointsPer : 5) + " points per correct answer. Go to help desk to redeem your points."}
+                  {"Scavenger Hunt is a fun way to earn points for completing challenges!"}
                 </Text>
 
                 <View style={styles.headerButtons}>{scavHuntButtons}</View>
@@ -128,7 +144,15 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     fontFamily: "SpaceMono-Regular",
-    letterSpacing: 0.005
+    letterSpacing: 0.005,
+  },
+
+  dateText: {
+    padding: 10,
+    textAlign: "center",
+    fontFamily: "SpaceMono-Regular",
+    letterSpacing: 0.005,
+    color: 'black'
   },
 
   joinEvent: {
