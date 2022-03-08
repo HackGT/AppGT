@@ -513,28 +513,39 @@ class App extends React.Component {
     const showEventOnboard = this.state.pastEventOnboardID !== hackathon.id;
 
     // if logging in with a hexlabs email
-    // if(/@hexlabs.org\s*$/.test(this.state.user.email)) {
-    //   return (
-    //     <ThemeContext.Provider
-    //       value={{
-    //         theme: this.props.theme,
-    //         dynamicStyles: this.props.styles,
-    //       }}
-    //     >
-    //       <AuthContext.Provider
-    //         value={{
-    //           user: this.state.user,
-    //           login: this.login,
-    //           logout: this.logout,
-    //         }}
-    //       >
-            
-    //         <SelectionScreen />
-            
-    //       </AuthContext.Provider>
-    //     </ThemeContext.Provider>
-    //   );
-    // }
+    if(/@hexlabs.org\s*$/.test(this.state.user.email)) {
+      return (
+        <ThemeContext.Provider
+          value={{
+            theme: this.props.theme,
+            dynamicStyles: this.props.styles,
+          }}
+        >
+          <HackathonContext.Provider
+            value={{
+              hackathon: hackathon,
+              eventTypes: eventTypes,
+              toggleStar: this.toggleStarred,
+              starredIds: starredIds,
+              isStarSchedule: this.state.isStarSchedule,
+              toggleIsStarSchedule: this.toggleIsStarSchedule,
+            }}
+          >
+            <AuthContext.Provider
+              value={{
+                user: this.state.user,
+                login: this.login,
+                logout: this.logout,
+              }}
+            >
+              
+              <SelectionScreen />
+              
+            </AuthContext.Provider>
+          </HackathonContext.Provider>
+        </ThemeContext.Provider>
+      );
+    }
 
 
     // once logged in and all data is loaded, present full app after grow animation

@@ -1,4 +1,4 @@
-const _logInteraction = async (hackthonName, type, userId, identifier) => {
+const _logInteraction = async (hackathonName, type, userId, identifier) => {
 
   const dev = false
 
@@ -21,21 +21,27 @@ const _logInteraction = async (hackthonName, type, userId, identifier) => {
     'hackathon': hackathonName
   }
   console.log('Notifying that interaction occured for ', body, '\nwith auth: ', 'Bearer ' + (dev ? devToken : prodToken))
-  return fetch(dev ? devUrl : prodUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": `application/json`,
-      "Accept": `application/json`,
-      "Authorization": 'Bearer ' + (dev ? devToken : prodToken)
-    },
-    body: JSON.stringify(body),
-  }).then((r) => {
-    console.log('Interaction response: ', r)
-    return r.status === 200
-  }).catch((err) => {
-    console.error('Interaction error: ', err);
-    return false
-  })
+  try {
+    const response = await fetch(dev ? devUrl : prodUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": `application/json`,
+        Accept: `application/json`,
+        Authorization: "Bearer " + (dev ? devToken : prodToken),
+      },
+      body: JSON.stringify(body),
+    });
+
+    const json = await response.json();
+
+    console.log("Hint complete notification response: ", json);
+
+    return {json, status: response.status};
+  } catch (err) {
+    console.error("Hint complete notification error: ", err);
+
+    return false;
+  }
 }
 
 

@@ -23,8 +23,8 @@ export class ScanScreen extends Component {
                     <Text>
                         {this.props.description}
                     </Text>
-                    <QRScan/>
                 </Card>
+                    <QRScan eventID={this.props.eventID} />
             </View>
 
         ))}

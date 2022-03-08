@@ -148,7 +148,7 @@ export class SelectionScreen extends Component {
                           this.setSelectedEvent(null);
                       }}/>
                       <ScanScreen
-                          eventID = {this.state.selectedEvent}
+                          eventID = {this.state.selectedEvent.id}
                           startTime={this.state.selectedEvent.startTime}
                           endTime={this.state.selectedEvent.endTime}
                           location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
