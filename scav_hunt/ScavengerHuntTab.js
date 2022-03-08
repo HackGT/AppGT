@@ -77,7 +77,7 @@ export function ScavengerHuntTab(props) {
                         },
                       ]}
                       onPress={() => {
-                        props.navigation.navigate("ScavHuntItem", {'item': item, 'user': props.user})
+                        props.navigation.navigate("ScavHuntItem", {'item': item, 'user': props.user, 'hackathonName': hackathon.name})
                       }}
                     > 
                       {

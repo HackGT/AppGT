@@ -8,7 +8,7 @@ import {
   TextInput,
   Dimensions
 } from "react-native";
-import { notifyHintComplete } from "../yac";
+import { logInteraction } from "../yac";
 import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { ScavHuntContext } from "../context";
@@ -67,7 +67,7 @@ export function ScavHuntItem(props) {
               completeHint(item.id)
               console.log('itemID ', item.id)
               AsyncStorage.setItem("completedHints", JSON.stringify(state.completedHints.concat([item.id])))
-              notifyHintComplete(user.uuid, item.id)
+              logInteraction(props.route.params.hackthonName, 'scavengerHunt', user.uuid, item.id)
             }
           }}>
             <Text style={[styles.answerButtonText]}>{'Submit'}</Text>
