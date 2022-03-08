@@ -7,9 +7,9 @@ import {request, PERMISSIONS} from "react-native-permissions"
 
 function QRScan() {
   const[uid, setUid] = useState(null)
-  const[fName, setfName] = useState("ojkj")
-  const[lName, setlName] = useState("jknjk")
-  const[email, setEmail] = useState("jknk")
+  const[fName, setfName] = useState("*First Name*")
+  const[lName, setlName] = useState("*Last Name*")
+  const[email, setEmail] = useState("*Email*")
 
   const styles = StyleSheet.create({
   centerText: {
@@ -50,6 +50,7 @@ function QRScan() {
 
   return (
       <QRCodeScanner
+        reactivateTimeout={5000}
         onRead={
           onSuccess
         }
