@@ -99,11 +99,8 @@ export function ScavengerHuntTab(props) {
                   );
             })
 
-            const currPoints = state.completedHints.reduce((acc, curr) => { acc + curr.points }, 0)
-            const totalPoints = scavHunts.reduce((acc, curr) => {
-              console.log(acc, ' ', curr.points)
-              return acc + curr.points
-            }, 0)
+            const currPoints = state.completedHints.reduce((acc, curr) => { return acc + (curr.points ? curr.points : 0) }, 0)
+            const totalPoints = scavHunts.reduce((acc, curr) => { return acc + (curr.points ? curr.points : 0) }, 0)
 
             return (
               <ScrollView style={[dynamicStyles.backgroundColor]}>
@@ -111,7 +108,7 @@ export function ScavengerHuntTab(props) {
                   <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
                     {"Scavenger Hunt"}
                   </Text>
-                  { totalPoints > 0 ?
+                  { totalPoints ?
                     <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
                       {currPoints + "/" + totalPoints + " pts"}
                     </Text> : null
