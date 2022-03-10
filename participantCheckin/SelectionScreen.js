@@ -26,7 +26,8 @@ export class SelectionScreen extends Component {
   }
 
   async refreshEventState() {
-    const response = await fetch("https://keystone.dev.hack.gt/admin/api", {
+    // const response = await fetch("https://keystone.dev.hack.gt/admin/api", {
+    const response = await fetch("https://cms.hack.gt/admin/api", {
         method: "POST",
         headers: {
         "Content-Type": `application/json`,
@@ -34,7 +35,7 @@ export class SelectionScreen extends Component {
         },
         body: JSON.stringify({
         query: `query {
-            allEvents  (orderBy: "name") {
+            allEvents  (orderBy: "name", where: { hackathon: { isUsedForMobileApp:true } }) {
                 name
                 endTime
                 startTime

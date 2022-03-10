@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>HackGT</string>
+	<string>HexLabs</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -48,6 +48,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>This app uses the camera to scan QR codes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app uses your location to track data</string>
 	<key>UIAppFonts</key>
@@ -74,7 +76,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>This app uses the camera to scan QR codes</string>
 </dict>
 </plist>
