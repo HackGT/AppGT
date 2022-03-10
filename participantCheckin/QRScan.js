@@ -15,7 +15,7 @@ function QRScan(props) {
   const[fName, setfName] = useState("")
   const[lName, setlName] = useState("")
   const[email, setEmail] = useState("")
-  const [status, setStatus] = useState("Scan to get started!")
+  const [status, setStatus] = useState(-1)
   const scanner = useRef(null)
 
   const styles = StyleSheet.create({
@@ -59,7 +59,9 @@ function QRScan(props) {
         createAlert(res.json.message)
       } else {
         setTimeout(() => {
-          scanner.current.reactivate()
+          if (scanner && scanner.current) {
+            scanner.current.reactivate()
+          }
         }, 2000);
       }
     } else {
@@ -73,8 +75,9 @@ function QRScan(props) {
       message,
       [
         { text: "OK", onPress: () => {
-          console.log("OK Pressed")
-          scanner.current.reactivate()
+          if (scanner && scanner.current) {
+            scanner.current.reactivate()
+          }
         } }
       ]
     );
@@ -82,7 +85,7 @@ function QRScan(props) {
   return (
     <View>
       <View style={styles.buttonTouchable}>
-        <Text style={[styles.centerText, { fontWeight: 'bold', fontSize: 16, color: status === 200 ? 'green' : 'red' }]}>{status === 200 ? "Success!" : "Try again!"}</Text>
+        <Text style={[styles.centerText, { fontWeight: 'bold', fontSize: 16, color: status === 200 ? 'green' : 'red' }]}>{status === 200 ? "Success!" : status === -1 ? "Scan to get started!" : "Try again!"}</Text>
         <Text style={styles.centerText}>{'Name: ' + fName + ' ' + lName}</Text>
         <Text style={styles.centerText}>{'Email: ' + email}</Text>
         <Text style={styles.centerText}>{'ID: ' + uid}</Text>

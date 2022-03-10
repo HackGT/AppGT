@@ -18,11 +18,11 @@ export class SelectionScreen extends Component {
   async componentDidMount() {
     this.refreshEventState();
 
-    AppState.addEventListener("change", (state) => {
-        if (state == "active") {
-          this.refreshEventState();
-        }
-      });
+    // AppState.addEventListener("change", (state) => {
+    //     if (state == "active") {
+    //       this.refreshEventState();
+    //     }
+    //   });
   }
 
   async refreshEventState() {
@@ -85,6 +85,7 @@ export class SelectionScreen extends Component {
             : "";
         formattedEvents.push(
             <TouchableOpacity
+            key={event.id}
                 style={styles.cardHorizontalParent}
                 onPress={() => {
                     this.setSelectedEvent(event);
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
 
   eventContainer: {
     marginHorizontal: 15,
+    marginTop: 15,
     flex: 1,
   },
   inputContainer: {
