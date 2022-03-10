@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Alert } from "react-native";
+import { Text, StyleSheet, View, Alert, Dimensions } from "react-native";
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -82,7 +82,7 @@ function QRScan(props) {
   return (
     <View>
       <View style={styles.buttonTouchable}>
-        <Text style={[styles.centerText, { fontWeight: 'bold', fontSize: 16, color: status === 200 ? 'green' : '#111' }]}>{status === 200 ? "Success!" : "Try again!"}</Text>
+        <Text style={[styles.centerText, { fontWeight: 'bold', fontSize: 16, color: status === 200 ? 'green' : 'red' }]}>{status === 200 ? "Success!" : "Try again!"}</Text>
         <Text style={styles.centerText}>{'Name: ' + fName + ' ' + lName}</Text>
         <Text style={styles.centerText}>{'Email: ' + email}</Text>
         <Text style={styles.centerText}>{'ID: ' + uid}</Text>
@@ -93,9 +93,8 @@ function QRScan(props) {
         fadeIn={false}
         showMarker
         markerStyle={{borderColor: 'white', borderWidth: 2}}
-        onRead={
-          onSuccess
-        }
+        onRead={ onSuccess }
+        cameraStyle={{width: Dimensions.get('window').width - 30}}
       />
     </View>
   );
