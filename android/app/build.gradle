@@ -135,11 +135,12 @@ android {
         applicationId "com.appgt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5145900
-        versionName "1.3.1"
+        versionCode 5146000
+        versionName '1.4.0'
         manifestPlaceholders = [
             appAuthRedirectScheme: 'gt.hack.live'
         ]
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
     
     splits {
