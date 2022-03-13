@@ -28,7 +28,7 @@
     "nfccard-tool": "^0.1.1",
     "react": "16.13.1",
     "react-moment": "^0.9.7",
-    "react-native": "0.63.2",
+    "react-native": "0.64.1",
     "react-native-app-auth": "^6.4.0",
     "react-native-camera": "^4.2.1",
     "react-native-dark-mode": "^0.2.2",
