@@ -8,6 +8,7 @@ import { InformationTab } from "./info/InformationTab";
 import { ScavengerHuntTab } from "./scav_hunt/ScavengerHuntTab"
 import { ScavHuntItem } from "./scav_hunt/ScavHuntItem";
 import ScavHuntProvider from "./state_management/scavHunt";
+import CheckInProvider from "./state_management/checkIn";
 import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -34,7 +35,7 @@ import {
 import { dynamicStyles } from "./themes";
 import firebase from "@react-native-firebase/app";
 import messaging from "@react-native-firebase/messaging";
-import { SelectionScreen } from "./participantCheckin/SelectionScreen";
+import { CheckInTab } from "./participantCheckin/CheckInTab";
 
 const authUrl = "https://login.hack.gt";
 
@@ -105,6 +106,7 @@ function HackGTitle() {
 const SchdeuleStack = createStackNavigator();
 const InformationStack = createStackNavigator();
 const ScavengerHuntStack = createStackNavigator();
+const CheckInStack = createStackNavigator();
 
 function SchdeuleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
@@ -215,6 +217,33 @@ function ScavengerHuntStackScreen({ navigation }) {
     </ScavHuntProvider>
   );
 }
+
+function CheckInStackScreen({ navigation }) {
+  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  return (
+    <CheckInProvider>
+      <AuthContext.Consumer>
+        {({ user }) => {
+          return (
+            <CheckInStack.Navigator>
+              <CheckInStack.Screen
+                options={{
+                  headerTitleAlign: "left",
+                  headerTitle: (props) => <HackGTitle {...props} />,
+                  headerStyle: dStyles.tabBarBackgroundColor,
+                }}
+                name="HackGT"
+              >
+                {(props) => <CheckInTab {...props} />}
+              </CheckInStack.Screen>
+            </CheckInStack.Navigator>
+          )
+        }}
+      </AuthContext.Consumer>
+    </CheckInProvider>
+  );
+}
+
 
 // for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
 const Tab = createBottomTabNavigator();
@@ -513,39 +542,40 @@ class App extends React.Component {
     const showEventOnboard = this.state.pastEventOnboardID !== hackathon.id;
 
     // if logging in with a hexlabs email
-    if(/@hexlabs.org\s*$/.test(this.state.user.email)) {
-      return (
-        <ThemeContext.Provider
-          value={{
-            theme: this.props.theme,
-            dynamicStyles: this.props.styles,
-          }}
-        >
-          <HackathonContext.Provider
-            value={{
-              hackathon: hackathon,
-              eventTypes: eventTypes,
-              toggleStar: this.toggleStarred,
-              starredIds: starredIds,
-              isStarSchedule: this.state.isStarSchedule,
-              toggleIsStarSchedule: this.toggleIsStarSchedule,
-            }}
-          >
-            <AuthContext.Provider
-              value={{
-                user: this.state.user,
-                login: this.login,
-                logout: this.logout,
-              }}
-            >
+    const showCheckin = /@hexlabs.org\s*$/.test(this.state.user.email)
+    // if(showCheckin) {
+    //   return (
+    //     <ThemeContext.Provider
+    //       value={{
+    //         theme: this.props.theme,
+    //         dynamicStyles: this.props.styles,
+    //       }}
+    //     >
+    //       <HackathonContext.Provider
+    //         value={{
+    //           hackathon: hackathon,
+    //           eventTypes: eventTypes,
+    //           toggleStar: this.toggleStarred,
+    //           starredIds: starredIds,
+    //           isStarSchedule: this.state.isStarSchedule,
+    //           toggleIsStarSchedule: this.toggleIsStarSchedule,
+    //         }}
+    //       >
+    //         <AuthContext.Provider
+    //           value={{
+    //             user: this.state.user,
+    //             login: this.login,
+    //             logout: this.logout,
+    //           }}
+    //         >
               
-              <SelectionScreen />
+    //           <SelectionScreen />
               
-            </AuthContext.Provider>
-          </HackathonContext.Provider>
-        </ThemeContext.Provider>
-      );
-    }
+    //         </AuthContext.Provider>
+    //       </HackathonContext.Provider>
+    //     </ThemeContext.Provider>
+    //   );
+    // }
 
 
     // once logged in and all data is loaded, present full app after grow animation
@@ -605,6 +635,8 @@ class App extends React.Component {
                       icon = faInfoCircle;
                     } else if (route.name === "ScavengerHunt") {
                       icon = faMapSigns
+                    } else if (route.name === "CheckIn") {
+                      icon = faMapSigns;
                     }
 
                     return (
@@ -648,6 +680,10 @@ class App extends React.Component {
                 <Stack.Screen
                   name="ScavengerHunt"
                   component={ScavengerHuntStackScreen}
+                />
+                <Stack.Screen
+                  name="CheckIn"
+                  component={CheckInStackScreen}
                 />
               </Tab.Navigator>
             </NavigationContainer>

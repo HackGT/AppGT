@@ -64,7 +64,7 @@ export function ScavengerHuntTab(props) {
               }
               const available = new Date(item.releaseDate) < currentDate
               const isComplete = state.completedHints.includes(item.id)
-
+              console.log('Scav Hunt info: \nRelease date', new Date(item.releaseDate), 'current date: ', currentDate, 'available: ', available, 'isComplete: ', isComplete)
               return (
                     <TouchableOpacity
                       disabled={!available}

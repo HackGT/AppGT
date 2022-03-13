@@ -10,21 +10,7 @@ export class ScanScreen extends Component {
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => ((
             <View style={styles.card}>
-                <Card >
-                    <Text
-                        numberOfLines={this.props.truncateText ? 1 : null}
-                        style={styles.flexWrap}
-                        ellipsizeMode={"tail"}
-                        style={[dynamicStyles.secondaryText, styles.subtitleFont]}
-                    >
-                        {this.props.location}
-                        {this.props.startTime} - {this.props.endTime}
-                    </Text>
-                    <Text>
-                        {this.props.description}
-                    </Text>
-                </Card>
-                    <QRScan eventID={this.props.eventID} />
+                <QRScan eventID={this.props.eventID} />
             </View>
 
         ))}

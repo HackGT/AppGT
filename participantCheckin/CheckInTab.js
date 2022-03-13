@@ -5,8 +5,9 @@ import { EventSel } from "./EventSel";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../assets/Search";
 import { SearchBar } from "react-native-elements";
+import { dynamicStyles } from "../themes";
 
-export class SelectionScreen extends Component {
+export class CheckInTab extends Component {
 
   state = {
     events: null,
@@ -71,6 +72,8 @@ export class SelectionScreen extends Component {
     }
   };
 
+
+
   render() {
 
     if(this.state.events != null) { // there are no events getting properly populated
@@ -86,7 +89,6 @@ export class SelectionScreen extends Component {
         formattedEvents.push(
             <TouchableOpacity
             key={event.id}
-                style={styles.cardHorizontalParent}
                 onPress={() => {
                     this.setSelectedEvent(event);
                 }}
@@ -98,71 +100,94 @@ export class SelectionScreen extends Component {
                     endTime={event.endTime}
                     location={loc}
                     type={eventType}
+                    dynamicStyles={dynamicStyles}
                 />
             </TouchableOpacity>
         );
       })
         if(this.state.selectedEvent == null) {
             return (
-              <ScrollView>
-                <View style={[styles.eventContainer]}>
-                  <ThemeContext.Consumer>
-                      {({ dynamicStyles }) => (
-                        <View style={styles.header}>
+              <ThemeContext.Consumer>
+                {({ dynamicStyles }) => (
+                  <View style={dynamicStyles.backgroundColor}>
+                      <View style={styles.header}>
                         <SearchBar
-                            searchIcon={
+                          searchIcon={
                             <SearchIcon
-                                fill={
+                              fill={
                                 dynamicStyles.secondaryBackgroundColor
-                                    .backgroundColor
-                                }
+                                  .backgroundColor
+                              }
                             />
-                            }
-                            containerStyle={[
+                          }
+                          containerStyle={[
                             styles.searchContainer,
                             dynamicStyles.backgroundColor,
                             dynamicStyles.searchBorderTopColor,
                             dynamicStyles.searchBorderBottomColor,
-                            ]}
-                            inputContainerStyle={[
+                            { flex: 1 }
+                          ]}
+                          inputContainerStyle={[
                             styles.inputContainer,
                             dynamicStyles.searchBackgroundColor,
-                            ]}
-                            clearIcon={null}
-                            lightTheme
-                            round
-                            placeholder="Search..."
-                            onChangeText={(value) => this.searchEvents(value)}
-                            value={this.state.searchText}
+                          ]}
+                          clearIcon={null}
+                          lightTheme
+                          round
+                          placeholder="Search..."
+                          onChangeText={(value) => this.searchEvents(value)}
+                          value={this.state.searchText}
                         />
                       </View>
-                    )}
-                    </ThemeContext.Consumer>
-                    {formattedEvents}
-                </View>
-              </ScrollView>);
+
+                    <ScrollView>
+                      <View>
+                        <View style={styles.eventContainer}>
+                        {formattedEvents}
+                        </View>
+                      </View>
+                    </ScrollView>
+                  </View>
+                )}
+              </ThemeContext.Consumer>
+              );
         } else {
             return (
-            <ScrollView>
-                  <View style={[styles.eventContainer]}>
-                      <Text style={[styles.header]}> {this.state.selectedEvent.name} </Text>
-                      <Button title="< Back" onPress={() => {
-                          this.setSelectedEvent(null);
-                      }}/>
-                      <ScanScreen
-                          eventID = {this.state.selectedEvent.id}
-                          startTime={this.state.selectedEvent.startTime}
-                          endTime={this.state.selectedEvent.endTime}
-                          location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
+              <ThemeContext.Consumer>
+                {({ dynamicStyles }) => (
+                  <ScrollView style={dynamicStyles.backgroundColor}>
+                        <View style={styles.eventContainer}>
+                          <Text style={[styles.title, { paddingLeft: 0 }]}>{this.state.selectedEvent.name}</Text>
+                          <Text
+                            numberOfLines={this.props.truncateText ? 1 : null}
+                            ellipsizeMode={"tail"}
+                            style={[dynamicStyles.secondaryText, { fontFamily: "SpaceMono-Bold", marginLeft: 0 }]}
+                          >
+                            {this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
                               ? this.state.selectedEvent.location[0].name + " • "
                               : ""}
-                          type={this.state.selectedEvent != null && this.state.selectedEvent.type != null
-                              ? this.state.selectedEvent.type
-                              : { name: "none", color: "gray" }}
-                          description={this.state.selectedEvent.description}
-                      />
-                </View>
-            </ScrollView>);
+                            {this.state.selectedEvent.startTime + ' - ' + this.state.selectedEvent.endTime}
+                          </Text>
+                            <Button title="< Back" onPress={() => {
+                                this.setSelectedEvent(null);
+                            }}/>
+                            <ScanScreen
+                                eventID = {this.state.selectedEvent.id}
+                                startTime={this.state.selectedEvent.startTime}
+                                endTime={this.state.selectedEvent.endTime}
+                                location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
+                                    ? this.state.selectedEvent.location[0].name + " • "
+                                    : ""}
+                                type={this.state.selectedEvent != null && this.state.selectedEvent.type != null
+                                    ? this.state.selectedEvent.type
+                                    : { name: "none", color: "gray" }}
+                                description={this.state.selectedEvent.description}
+                            />
+                      </View>
+                  </ScrollView>
+                )}
+              </ThemeContext.Consumer>
+            );
 
         }
 
@@ -177,15 +202,20 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceMono-Bold",
     textAlign: "center",
     fontSize: 22,
-    marginTop: 34,
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
   },
 
+  title: {
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 22,
+    marginBottom: 10,
+    marginTop: 10
+  },
+
   eventContainer: {
     marginHorizontal: 15,
-    marginTop: 15,
     flex: 1,
   },
   inputContainer: {

@@ -2,6 +2,7 @@ import React from 'react'
 import { initialValue, scavHuntReducer } from './ScavHuntReducer'
 import { COMPLETE_HINT } from "./ScavHuntActionTypes";
 import { ScavHuntContext } from '../../context'
+
 export default function ScavHuntProvider({ children }) {
 
     const [state, dispatch] = React.useReducer(scavHuntReducer, initialValue)
