@@ -157,7 +157,7 @@ export class CheckInTab extends Component {
                 {({ dynamicStyles }) => (
                   <ScrollView style={dynamicStyles.backgroundColor}>
                         <View style={styles.eventContainer}>
-                          <Text style={[styles.title, { paddingLeft: 0 }]}>{this.state.selectedEvent.name}</Text>
+                          <Text style={[styles.title, dynamicStyles.text]}>{this.state.selectedEvent.name}</Text>
                           <Text
                             numberOfLines={this.props.truncateText ? 1 : null}
                             ellipsizeMode={"tail"}
