@@ -94,10 +94,6 @@ PushNotification.configure({
   requestPermissions: true,
 });
 
-function HackGTitle() {
-  return <HackGTIcon />;
-}
-
 // for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
 const Tab = createBottomTabNavigator();
 
@@ -210,11 +206,6 @@ class App extends React.Component {
     });
   };
 
-  // login = () => {
-  //   this.setState({ skipOnboarding: true });
-  //   AsyncStorage.setItem("skipOnboarding", "true");
-  // };
-
   login = async () => {
     try {
       const result = await authorize(config);
@@ -254,11 +245,6 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    // AsyncStorage.getItem("skipOnboarding", (error, result) => {
-    //   console.log(error);
-    //   result &&
-    //     this.setState({ skipOnboarding: result === "true" ? true : false });
-    // });
 
     AsyncStorage.getItem(
       "starredIds",
@@ -396,40 +382,6 @@ class App extends React.Component {
 
     // if logging in with a hexlabs email
     const showCheckin = /@hexlabs.org\s*$/.test(this.state.user.email)
-    // if(showCheckin) {
-    //   return (
-    //     <ThemeContext.Provider
-    //       value={{
-    //         theme: this.props.theme,
-    //         dynamicStyles: this.props.styles,
-    //       }}
-    //     >
-    //       <HackathonContext.Provider
-    //         value={{
-    //           hackathon: hackathon,
-    //           eventTypes: eventTypes,
-    //           toggleStar: this.toggleStarred,
-    //           starredIds: starredIds,
-    //           isStarSchedule: this.state.isStarSchedule,
-    //           toggleIsStarSchedule: this.toggleIsStarSchedule,
-    //         }}
-    //       >
-    //         <AuthContext.Provider
-    //           value={{
-    //             user: this.state.user,
-    //             login: this.login,
-    //             logout: this.logout,
-    //           }}
-    //         >
-              
-    //           <SelectionScreen />
-              
-    //         </AuthContext.Provider>
-    //       </HackathonContext.Provider>
-    //     </ThemeContext.Provider>
-    //   );
-    // }
-
 
     // once logged in and all data is loaded, present full app after grow animation
     return (
