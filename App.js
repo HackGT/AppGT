@@ -103,18 +103,18 @@ function HackGTitle() {
   return <HackGTIcon />;
 }
 
-const SchdeuleStack = createStackNavigator();
+const ScheduleStack = createStackNavigator();
 const InformationStack = createStackNavigator();
 const ScavengerHuntStack = createStackNavigator();
 const CheckInStack = createStackNavigator();
 
-function SchdeuleStackScreen({ navigation }) {
+function ScheduleStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
     <HackathonContext.Consumer>
       {({ isStarSchedule, toggleIsStarSchedule }) => (
-        <SchdeuleStack.Navigator>
-          <SchdeuleStack.Screen
+        <ScheduleStack.Navigator>
+          <ScheduleStack.Screen
             options={{
               headerTitleAlign: "left",
               headerTitle: (props) => <HackGTitle {...props} />,
@@ -148,9 +148,9 @@ function SchdeuleStackScreen({ navigation }) {
             name="HackGT"
           >
             {(props) => <ScheduleTab {...props} />}
-          </SchdeuleStack.Screen>
+          </ScheduleStack.Screen>
 
-          <SchdeuleStack.Screen
+          <ScheduleStack.Screen
             options={{
               headerTransparent: true,
               headerTitle: "",
@@ -159,7 +159,7 @@ function SchdeuleStackScreen({ navigation }) {
             name="ScheduleSearch"
             component={ScheduleSearch}
           />
-        </SchdeuleStack.Navigator>
+        </ScheduleStack.Navigator>
       )}
     </HackathonContext.Consumer>
   );
@@ -668,7 +668,7 @@ class App extends React.Component {
                   <Stack.Screen
                     name="Schedule"
                     component={
-                      showEventOnboard ? EventOnboarding : SchdeuleStackScreen
+                      showEventOnboard ? EventOnboarding : ScheduleStackScreen
                     }
                   />
                 )}
