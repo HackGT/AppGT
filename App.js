@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { fetchHackathonData } from "./cms";
-import { HackathonContext, AuthContext, ThemeContext, ScavHuntContext } from "./context";
+import { HackathonContext, AuthContext, ThemeContext } from "./context";
 import { StatusBar, Modal } from "react-native";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
@@ -30,6 +30,8 @@ import {
   ScavengerHuntStackScreen, 
   CheckInStackScreen 
 } from "./stacks"
+
+import { ThemeProvider, HackathonProvider, AuthProvider } from "./state_management";
 
 const authUrl = "https://login.hack.gt";
 
