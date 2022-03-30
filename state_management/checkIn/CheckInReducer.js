@@ -1,4 +1,4 @@
-import { COMPLETE_HINT } from './CheckInActionTypes'
+import { } from './CheckInActionTypes'
 
 export const initialValue = {
     
