@@ -25,10 +25,12 @@ import { dynamicStyles } from "./themes";
 import firebase from "@react-native-firebase/app";
 import messaging from "@react-native-firebase/messaging";
 
-import ScheduleStackScreen from "./schedule/ScheduleStackScreen";
-import InformationStackScreen from "./info/InformationStackScreen";
-import ScavengerHuntStackScreen from "./scav_hunt/ScavengerHuntStackScreen";
-import CheckInStackScreen from "./participantCheckin/CheckInStackScreen";
+import { 
+  ScheduleStackScreen, 
+  InformationStackScreen, 
+  ScavengerHuntStackScreen, 
+  CheckInStackScreen 
+} from "./stacks"
 
 const authUrl = "https://login.hack.gt";
 
