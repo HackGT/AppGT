@@ -1,4 +1,4 @@
-import { } from './ThemActionTypes'
+import { } from './ThemeActionTypes'
 
 export const initialValue = {
 

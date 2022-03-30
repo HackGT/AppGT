@@ -1,6 +1,6 @@
 import React from 'react'
 import { initialValue, authReducer } from './AuthReducer'
-import { } from "./CheckInActionTypes";
+import { } from "./AuthActionTypes";
 import { AuthContext } from '../../context'
 
 export default function AuthProvider({ children }) {
