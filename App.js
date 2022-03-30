@@ -3,27 +3,16 @@ import React from "react";
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext, ScavHuntContext } from "./context";
 import { StatusBar, Modal, View, Clipboard } from "react-native";
-import { ScheduleTab } from "./schedule/ScheduleTab";
-import { InformationTab } from "./info/InformationTab";
-import { ScavengerHuntTab } from "./scav_hunt/ScavengerHuntTab"
-import { ScavHuntItem } from "./scav_hunt/ScavHuntItem";
-import ScavHuntProvider from "./state_management/scavHunt";
-import CheckInProvider from "./state_management/checkIn";
-import { ScheduleSearch } from "./schedule/ScheduleSearch";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
 import { EventOnboarding } from "./onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SearchIcon from "./assets/Search";
-import StarOnIcon from "./assets/StarLargeOn";
-import StarOffIcon from "./assets/StarLargeOff";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faInfoCircle, faCalendar, faMapSigns } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faCalendar, faMapSigns, faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
 import HackGTIcon from "./assets/HackGTIcon";
 import AsyncStorage from "@react-native-community/async-storage";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
@@ -35,7 +24,11 @@ import {
 import { dynamicStyles } from "./themes";
 import firebase from "@react-native-firebase/app";
 import messaging from "@react-native-firebase/messaging";
-import { CheckInTab } from "./participantCheckin/CheckInTab";
+
+import ScheduleStackScreen from "./schedule/ScheduleStackScreen";
+import InformationStackScreen from "./info/InformationStackScreen";
+import ScavengerHuntStackScreen from "./scav_hunt/ScavengerHuntStackScreen";
+import CheckInStackScreen from "./participantCheckin/CheckInStackScreen";
 
 const authUrl = "https://login.hack.gt";
 
@@ -102,148 +95,6 @@ PushNotification.configure({
 function HackGTitle() {
   return <HackGTIcon />;
 }
-
-const ScheduleStack = createStackNavigator();
-const InformationStack = createStackNavigator();
-const ScavengerHuntStack = createStackNavigator();
-const CheckInStack = createStackNavigator();
-
-function ScheduleStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
-  return (
-    <HackathonContext.Consumer>
-      {({ isStarSchedule, toggleIsStarSchedule }) => (
-        <ScheduleStack.Navigator>
-          <ScheduleStack.Screen
-            options={{
-              headerTitleAlign: "left",
-              headerTitle: (props) => <HackGTitle {...props} />,
-              headerRight: () => (
-                <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity onPress={toggleIsStarSchedule}>
-                    {isStarSchedule ? (
-                      <StarOnIcon
-                        fill={dStyles.secondaryBackgroundColor.backgroundColor}
-                      />
-                    ) : (
-                      <StarOffIcon
-                        fill={dStyles.secondaryBackgroundColor.backgroundColor}
-                      />
-                    )}
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{ paddingLeft: 10, paddingRight: 10 }}
-                    onPress={() => {
-                      navigation.navigate("ScheduleSearch");
-                    }}
-                  >
-                    <SearchIcon
-                      fill={dStyles.secondaryBackgroundColor.backgroundColor}
-                    />
-                  </TouchableOpacity>
-                </View>
-              ),
-              headerStyle: dStyles.tabBarBackgroundColor,
-            }}
-            name="HackGT"
-          >
-            {(props) => <ScheduleTab {...props} />}
-          </ScheduleStack.Screen>
-
-          <ScheduleStack.Screen
-            options={{
-              headerTransparent: true,
-              headerTitle: "",
-              headerLeft: null,
-            }}
-            name="ScheduleSearch"
-            component={ScheduleSearch}
-          />
-        </ScheduleStack.Navigator>
-      )}
-    </HackathonContext.Consumer>
-  );
-}
-
-function InformationStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
-  return (
-    <InformationStack.Navigator>
-      <InformationStack.Screen
-        options={{
-          headerTitleAlign: "left",
-          headerTitle: (props) => <HackGTitle {...props} />,
-          headerStyle: dStyles.tabBarBackgroundColor,
-        }}
-        name="HackGT"
-      >
-        {(props) => <InformationTab {...props} />}
-      </InformationStack.Screen>
-    </InformationStack.Navigator>
-  );
-}
-
-function ScavengerHuntStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
-  return (
-    <ScavHuntProvider>
-      <AuthContext.Consumer>
-        {({user}) => {
-        return (
-    <ScavengerHuntStack.Navigator>
-      <ScavengerHuntStack.Screen
-        options={{
-          headerTitleAlign: "left",
-          headerTitle: (props) => <HackGTitle {...props} />,
-          headerStyle: dStyles.tabBarBackgroundColor,
-        }}
-        name="HackGT"
-      >
-        {(props) => <ScavengerHuntTab {...props} user={user} />}
-      </ScavengerHuntStack.Screen>
-      <ScavengerHuntStack.Screen
-        options={{
-          headerTitleAlign: "left",
-          headerTitle: (props) => <HackGTitle {...props} />,
-          headerStyle: dStyles.tabBarBackgroundColor,
-          headerLeft: null
-        }}
-        name="ScavHuntItem"
-        component={ScavHuntItem}
-      />
-    </ScavengerHuntStack.Navigator>
-        )}}
-    </AuthContext.Consumer>
-    </ScavHuntProvider>
-  );
-}
-
-function CheckInStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
-  return (
-    <CheckInProvider>
-      <AuthContext.Consumer>
-        {({ user }) => {
-          return (
-            <CheckInStack.Navigator>
-              <CheckInStack.Screen
-                options={{
-                  headerTitleAlign: "left",
-                  headerTitle: (props) => <HackGTitle {...props} />,
-                  headerStyle: dStyles.tabBarBackgroundColor,
-                }}
-                name="HackGT"
-              >
-                {(props) => <CheckInTab {...props} />}
-              </CheckInStack.Screen>
-            </CheckInStack.Navigator>
-          )
-        }}
-      </AuthContext.Consumer>
-    </CheckInProvider>
-  );
-}
-
 
 // for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
 const Tab = createBottomTabNavigator();
@@ -636,7 +487,7 @@ class App extends React.Component {
                     } else if (route.name === "ScavengerHunt") {
                       icon = faMapSigns
                     } else if (route.name === "CheckIn") {
-                      icon = faMapSigns;
+                      icon = faClipboardCheck;
                     }
 
                     return (
