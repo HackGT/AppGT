@@ -16,6 +16,8 @@ import moment from "moment-timezone";
 
 export function ScavengerHuntTab(props) {
   const { state, completeHint } = useContext(ScavHuntContext)
+  const hackathonContext = useContext(HackathonContext)
+  const hackathon = hackathonContext.state.hackathon
   const [currentDate, setCurrentDate] = useState(Date.parse("2000-01-01T20:30:00.000000-04:00"))
   useEffect(() => {
     AsyncStorage.getItem(
@@ -47,10 +49,7 @@ export function ScavengerHuntTab(props) {
 
   return (
     <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <HackathonContext.Consumer>
-          {({ hackathon }) => {
-            console.log('blah',hackathon.scavengerHunts)
+      {({ dynamicStyles }) => {
             var scavHunts = hackathon.scavengerHunts
             scavHunts.sort((item1, item2) => {
               const d1 = Date.parse(item1.releaseDate)
@@ -122,8 +121,6 @@ export function ScavengerHuntTab(props) {
               </ScrollView>
             );
           }}
-        </HackathonContext.Consumer>
-      )}
     </ThemeContext.Consumer>
   );
 }
