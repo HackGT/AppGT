@@ -13,118 +13,116 @@ import { Card } from "../components/Card";
 import { Linking } from "react-native";
 import FontMarkdown from "../components/FontMarkdown";
 
-export class InformationTab extends Component {
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <HackathonContext.Consumer>
-            {({ hackathon }) => {
-              // create button blocks for "Join Slack", "View Event site", etc
-              const buttonBlock = hackathon.blocks.find(
-                (e) => e.slug && e.slug === "info-button-links"
-              );
+export function InformationTab(props) {
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <HackathonContext.Consumer>
+          {({ hackathon }) => {
+            // create button blocks for "Join Slack", "View Event site", etc
+            const buttonBlock = hackathon.blocks.find(
+              (e) => e.slug && e.slug === "info-button-links"
+            );
 
-              const faqBlock = hackathon.blocks.find(
-                (e) => e.slug && e.slug === "info-faq"
-              );
+            const faqBlock = hackathon.blocks.find(
+              (e) => e.slug && e.slug === "info-faq"
+            );
 
-              headerButtons = [];
+            headerButtons = [];
 
-              if (buttonBlock && buttonBlock.content) {
-                const buttonJSON = JSON.parse(buttonBlock.content);
-                if (buttonJSON) {
-                  headerButtons = buttonJSON.map((button) => {
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.joinEvent,
-                          {
-                            borderColor: dynamicStyles.tintColor.color,
-                          },
-                        ]}
-                        onPress={() => {
-                          Linking.openURL(button.url).catch((err) => {
-                            if (err) {
-                              if (button.backupURL) {
-                                Linking.openURL(button.backupURL).catch((err) =>
-                                  Alert.alert(
-                                    "Redirect Error",
-                                    "The link you selected cannot be opened."
-                                  )
-                                );
-                              } else {
+            if (buttonBlock && buttonBlock.content) {
+              const buttonJSON = JSON.parse(buttonBlock.content);
+              if (buttonJSON) {
+                headerButtons = buttonJSON.map((button) => {
+                  return (
+                    <TouchableOpacity
+                      style={[
+                        styles.joinEvent,
+                        {
+                          borderColor: dynamicStyles.tintColor.color,
+                        },
+                      ]}
+                      onPress={() => {
+                        Linking.openURL(button.url).catch((err) => {
+                          if (err) {
+                            if (button.backupURL) {
+                              Linking.openURL(button.backupURL).catch((err) =>
                                 Alert.alert(
                                   "Redirect Error",
                                   "The link you selected cannot be opened."
-                                );
-                              }
+                                )
+                              );
+                            } else {
+                              Alert.alert(
+                                "Redirect Error",
+                                "The link you selected cannot be opened."
+                              );
                             }
-                          });
-                        }}
-                      >
-                        <Text style={[dynamicStyles.text, styles.buttonText]}>
-                          {button.title}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  });
-                }
-              }
-
-              let infoBlocks = hackathon.blocks.filter(
-                (e) => e.slug && e.slug === "info-faq"
-              );
-
-              // let faqCopy = [...hackathon.faqs];
-              // let faqList = [];
-              // // sort faq based on priority so important questions come first
-              // faqCopy.sort(function (a, b) {
-              //   return parseFloat(a.index) - parseFloat(b.index);
-              // });
-
-              // for (i in faqCopy) {
-              //   faqList.push(
-              //     <FontMarkdown fontFamily="SpaceMono">
-              //       **{faqCopy[i].question}**
-              //     </FontMarkdown>,
-              //     <FontMarkdown fontFamily="SpaceMono">
-              //       {faqCopy[i].answer}
-              //     </FontMarkdown>
-              //   );
-              // }
-
-              return (
-                <ScrollView style={[dynamicStyles.backgroundColor]}>
-                  <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                    {"Welcome to " + hackathon.name}
-                  </Text>
-
-                  <View style={styles.headerButtons}>{headerButtons}</View>
-
-                  {infoBlocks.map((block, i) => (
-                    <View>
-                      <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                        {block.name}
+                          }
+                        });
+                      }}
+                    >
+                      <Text style={[dynamicStyles.text, styles.buttonText]}>
+                        {button.title}
                       </Text>
+                    </TouchableOpacity>
+                  );
+                });
+              }
+            }
 
-                      <View style={styles.faqList}>
-                        <Card>
-                          <FontMarkdown fontFamily="SpaceMono">
-                            {block.content}
-                          </FontMarkdown>
-                        </Card>
-                      </View>
+            let infoBlocks = hackathon.blocks.filter(
+              (e) => e.slug && e.slug === "info-faq"
+            );
+
+            // let faqCopy = [...hackathon.faqs];
+            // let faqList = [];
+            // // sort faq based on priority so important questions come first
+            // faqCopy.sort(function (a, b) {
+            //   return parseFloat(a.index) - parseFloat(b.index);
+            // });
+
+            // for (i in faqCopy) {
+            //   faqList.push(
+            //     <FontMarkdown fontFamily="SpaceMono">
+            //       **{faqCopy[i].question}**
+            //     </FontMarkdown>,
+            //     <FontMarkdown fontFamily="SpaceMono">
+            //       {faqCopy[i].answer}
+            //     </FontMarkdown>
+            //   );
+            // }
+
+            return (
+              <ScrollView style={[dynamicStyles.backgroundColor]}>
+                <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+                  {"Welcome to " + hackathon.name}
+                </Text>
+
+                <View style={styles.headerButtons}>{headerButtons}</View>
+
+                {infoBlocks.map((block, i) => (
+                  <View key={i}>
+                    <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+                      {block.name}
+                    </Text>
+
+                    <View style={styles.faqList}>
+                      <Card>
+                        <FontMarkdown fontFamily="SpaceMono">
+                          {block.content}
+                        </FontMarkdown>
+                      </Card>
                     </View>
-                  ))}
-                </ScrollView>
-              );
-            }}
-          </HackathonContext.Consumer>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+                  </View>
+                ))}
+              </ScrollView>
+            );
+          }}
+        </HackathonContext.Consumer>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({
