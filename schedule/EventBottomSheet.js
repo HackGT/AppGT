@@ -37,90 +37,90 @@ export function EventBottomSheet(props) {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => {
-              const eventTags = event.tags
-                ? event.tags.map((tag) => tag.name)
-                : [];
+          const eventTags = event.tags
+            ? event.tags.map((tag) => tag.name)
+            : [];
 
-              return (
-                <View
-                  style={[dynamicStyles.tritaryBackgroundColor, styles.panel]}
+          return (
+            <View
+              style={[dynamicStyles.tritaryBackgroundColor, styles.panel]}
+            >
+              <TouchableOpacity
+                style={styles.panelClose}
+                onPress={() => {
+                  props.reference.current.close();
+                }}
+              >
+                <X
+                  fill={
+                    dynamicStyles.secondaryBackgroundColor.backgroundColor
+                  }
+                />
+              </TouchableOpacity>
+
+              <Text style={[dynamicStyles.text, styles.panelTitleText]}>
+                {title}
+              </Text>
+              <Text
+                style={[
+                  dynamicStyles.secondaryText,
+                  styles.locationTimeText,
+                ]}
+              >
+                {location}
+                {start} - {end}
+              </Text>
+
+              <View style={{ flexDirection: "row" }}>
+                <EventTypeView eventType={eventType} />
+                {event.tags &&
+                  event.tags.map((tag) => (
+                    <Text
+                      style={[dynamicStyles.secondaryText, styles.tagFont]}
+                    >
+                      {tag.name}
+                    </Text>
+                  ))}
+              </View>
+
+              {event.url !== null ? (
+                <TouchableOpacity
+                  style={[
+                    dynamicStyles.secondaryBackgroundColor,
+                    styles.joinEvent,
+                  ]}
+                  onPress={() => Linking.openURL(event.url)}
                 >
-                  <TouchableOpacity
-                    style={styles.panelClose}
-                    onPress={() => {
-                      props.reference.current.close();
-                    }}
-                  >
-                    <X
-                      fill={
-                        dynamicStyles.secondaryBackgroundColor.backgroundColor
-                      }
+                  <Text style={[dynamicStyles.text, styles.buttonText]}>
+                    Join
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+
+              <FontMarkdown fontFamily="SpaceMono">
+                {description}
+              </FontMarkdown>
+
+              <View style={styles.panelButtonCenterRoot}>
+                <TouchableOpacity
+                  onPress={() => {
+                      setAddStarButton(!addStarButton)
+                      toggleStar(props.event)
+                    }
+                  }
+                >
+                  {addStarButton ? (
+                    <AddStarButton
+                      fill={dynamicStyles.tintColor.color}
                     />
-                  </TouchableOpacity>
-
-                  <Text style={[dynamicStyles.text, styles.panelTitleText]}>
-                    {title}
-                  </Text>
-                  <Text
-                    style={[
-                      dynamicStyles.secondaryText,
-                      styles.locationTimeText,
-                    ]}
-                  >
-                    {location}
-                    {start} - {end}
-                  </Text>
-
-                  <View style={{ flexDirection: "row" }}>
-                    <EventTypeView eventType={eventType} />
-                    {event.tags &&
-                      event.tags.map((tag) => (
-                        <Text
-                          style={[dynamicStyles.secondaryText, styles.tagFont]}
-                        >
-                          {tag.name}
-                        </Text>
-                      ))}
-                  </View>
-
-                  {event.url !== null ? (
-                    <TouchableOpacity
-                      style={[
-                        dynamicStyles.secondaryBackgroundColor,
-                        styles.joinEvent,
-                      ]}
-                      onPress={() => Linking.openURL(event.url)}
-                    >
-                      <Text style={[dynamicStyles.text, styles.buttonText]}>
-                        Join
-                      </Text>
-                    </TouchableOpacity>
-                  ) : null}
-
-                  <FontMarkdown fontFamily="SpaceMono">
-                    {description}
-                  </FontMarkdown>
-
-                  <View style={styles.panelButtonCenterRoot}>
-                    <TouchableOpacity
-                      onPress={() => {
-                          setAddStarButton(!addStarButton)
-                          toggleStar(props.event)
-                        }
-                      }
-                    >
-                      {addStarButton ? (
-                        <AddStarButton
-                          fill={dynamicStyles.tintColor.color}
-                        />
-                      ) : (
-                        <RemoveStarButton />
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            }}
+                  ) : (
+                    <RemoveStarButton />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }}
       </ThemeContext.Consumer>
     );
   };
