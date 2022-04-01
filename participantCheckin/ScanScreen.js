@@ -1,22 +1,19 @@
-import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import { ThemeContext } from "../context";
-import { Card } from "../components/Card";
 import QRScan from "./QRScan"
 
-export class ScanScreen extends Component {
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => ((
-            <View style={styles.card}>
-                <QRScan eventID={this.props.eventID} />
-            </View>
+export function ScanScreen(props) {
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => ((
+          <View style={styles.card}>
+              <QRScan eventID={props.eventID} />
+          </View>
 
-        ))}
-      </ThemeContext.Consumer>
-    );
-  }
+      ))}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({

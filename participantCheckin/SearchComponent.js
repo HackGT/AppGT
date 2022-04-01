@@ -1,65 +1,54 @@
-import React, { Component } from "react";
-import { HackathonContext, ThemeContext } from "../context";
-import { getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
+import React, { useState } from "react";
+import { ThemeContext } from "../context";
 import { SearchBar } from "react-native-elements";
 import {
-  FlatList,
-  Text,
   View,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import SearchIcon from "../assets/Search";
 
-export class SearchComponent extends Component {
+export function SearchComponent(props) {
 
-  constructor() {
-    super();
-    this.state = {
-      searchText: ""
-    };
-  }
+  const [searchText, setSearchText] = useState("")
 
-  searchEvents = (value) => {
-    console.log(value)
-    this.setState({ searchText: value });
+  const searchEvents = (value) => {
+    setSearchText(value)
   };
 
-  render() {
-    return (
-        <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-            <View style={styles.searchHeader}>
-                <SearchBar
-                    searchIcon={
-                    <SearchIcon
-                        fill={
-                        dynamicStyles.secondaryBackgroundColor
-                            .backgroundColor
-                        }
-                    />
-                    }
-                    containerStyle={[
-                    styles.searchContainer,
-                    dynamicStyles.backgroundColor,
-                    dynamicStyles.searchBorderTopColor,
-                    dynamicStyles.searchBorderBottomColor,
-                    ]}
-                    inputContainerStyle={[
-                    styles.inputContainer,
-                    dynamicStyles.searchBackgroundColor,
-                    ]}
-                    clearIcon={null}
-                    lightTheme
-                    round
-                    placeholder="Search..."
-                    onChangeText={(value) => this.searchEvents(value)}
-                    value={this.state.searchText}
-                />
-            </View>
-    )} 
-    </ThemeContext.Consumer> );
-  }
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <View style={styles.searchHeader}>
+          <SearchBar
+            searchIcon={
+              <SearchIcon
+                fill={
+                  dynamicStyles.secondaryBackgroundColor
+                    .backgroundColor
+                }
+              />
+            }
+            containerStyle={[
+              styles.searchContainer,
+              dynamicStyles.backgroundColor,
+              dynamicStyles.searchBorderTopColor,
+              dynamicStyles.searchBorderBottomColor,
+            ]}
+            inputContainerStyle={[
+              styles.inputContainer,
+              dynamicStyles.searchBackgroundColor,
+            ]}
+            clearIcon={null}
+            lightTheme
+            round
+            placeholder="Search..."
+            onChangeText={(value) => searchEvents(value)}
+            value={searchText}
+          />
+        </View>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -68,8 +57,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 22,
     marginTop: 34,
-    marginBottom: 10, 
-    backgroundColor: "#ADD8E6"   
+    marginBottom: 10,
+    backgroundColor: "#ADD8E6"
   },
   searchHeader: {
     marginTop: 34,

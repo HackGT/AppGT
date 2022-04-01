@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet,ScrollView, FlatList, TouchableOpacity, Button } from "react-native";
 import { ThemeContext } from "../context";
 import { EventSel } from "./EventSel";
@@ -7,35 +7,24 @@ import SearchIcon from "../assets/Search";
 import { SearchBar } from "react-native-elements";
 import { dynamicStyles } from "../themes";
 
-export class CheckInTab extends Component {
+export function CheckInTab(props) {
 
-  state = {
-    events: null,
-    selectedEvent: null,
-    searchText: "",
-    searchResults: null
-  }
+  const [events, setEvents] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [searchText, setSearchText] = useState("")
+  const [searchResults, setSearchResults] = useState(null)
 
-  async componentDidMount() {
-    this.refreshEventState();
-
-    // AppState.addEventListener("change", (state) => {
-    //     if (state == "active") {
-    //       this.refreshEventState();
-    //     }
-    //   });
-  }
-
-  async refreshEventState() {
-    // const response = await fetch("https://keystone.dev.hack.gt/admin/api", {
-    const response = await fetch("https://cms.hack.gt/admin/api", {
+  useEffect(() => {
+    async function refreshEventState() {
+      // const response = await fetch("https://keystone.dev.hack.gt/admin/api", {
+      const response = await fetch("https://cms.hack.gt/admin/api", {
         method: "POST",
         headers: {
-        "Content-Type": `application/json`,
-        Accept: `application/json`,
+          "Content-Type": `application/json`,
+          Accept: `application/json`,
         },
         body: JSON.stringify({
-        query: `query {
+          query: `query {
             allEvents  (orderBy: "name", where: { hackathon: { isUsedForMobileApp:true } }) {
                 name
                 endTime
@@ -53,145 +42,145 @@ export class CheckInTab extends Component {
             }
           }`,
         }),
-    });
-    const data = await response.json();
-    this.setState({events: data.data.allEvents})
+      });
+      const data = await response.json();
+      setEvents(data.data.allEvents)
+    }
 
-  }
+    refreshEventState()
+  }, [])
 
-  searchEvents = (value) => {
-      var newEvents = this.state.events.filter(e => e.name.includes(this.state.searchText));
-      this.setState({ searchText: value, searchResults: newEvents });
+  const searchEvents = (value) => {
+      var newEvents = events.filter(e => e.name.includes(searchText));
+      setSearchResults(newEvents)
+      setSearchText(value)
   };
 
-  setSelectedEvent = (event) => {
+  const onPressEvent = (event) => {
     if (event) {
-      this.setState({ selectedEvent: event });
+      setSelectedEvent(event)
     } else {
-      this.setState({ selectedEvent: null });
+      setSelectedEvent(null)
     }
   };
 
+  if(events != null) { // there are no events getting properly populated
+    var formattedEvents = [];
+    var shownEvents = searchText.length != 0 ? searchResults : events;
+    shownEvents.forEach((event)=>{
+      const eventType = event != null && event.type != null
+          ? event.type
+          : { name: "none", color: "gray" };
+      const loc = event != null && event.location != null && event.location[0] != null && event.location[0].name != null
+          ? event.location[0].name + " • "
+          : "";
+      formattedEvents.push(
+          <TouchableOpacity
+          key={event.id}
+              onPress={() => {
+                  onPressEvent(event);
+              }}
+              >
+              <EventSel
+                  key={event.id}
+                  name={event.name}
+                  startTime={event.startTime}
+                  endTime={event.endTime}
+                  location={loc}
+                  type={eventType}
+                  dynamicStyles={dynamicStyles}
+              />
+          </TouchableOpacity>
+      );
+    })
+      if(selectedEvent == null) {
+          return (
+            <ThemeContext.Consumer>
+              {({ dynamicStyles }) => (
+                <View style={dynamicStyles.backgroundColor}>
+                    <View style={styles.header}>
+                      <SearchBar
+                        searchIcon={
+                          <SearchIcon
+                            fill={
+                              dynamicStyles.secondaryBackgroundColor
+                                .backgroundColor
+                            }
+                          />
+                        }
+                        containerStyle={[
+                          styles.searchContainer,
+                          dynamicStyles.backgroundColor,
+                          dynamicStyles.searchBorderTopColor,
+                          dynamicStyles.searchBorderBottomColor,
+                          { flex: 1 }
+                        ]}
+                        inputContainerStyle={[
+                          styles.inputContainer,
+                          dynamicStyles.searchBackgroundColor,
+                        ]}
+                        clearIcon={null}
+                        lightTheme
+                        round
+                        placeholder="Search..."
+                        onChangeText={(value) => searchEvents(value)}
+                        value={searchText}
+                      />
+                    </View>
 
-
-  render() {
-
-    if(this.state.events != null) { // there are no events getting properly populated
-      var formattedEvents = [];
-      var events = this.state.searchText.length != 0 ? this.state.searchResults : this.state.events;
-      events.forEach((event)=>{
-        const eventType = event != null && event.type != null
-            ? event.type
-            : { name: "none", color: "gray" };
-        const loc = event != null && event.location != null && event.location[0] != null && event.location[0].name != null
-            ? event.location[0].name + " • "
-            : "";
-        formattedEvents.push(
-            <TouchableOpacity
-            key={event.id}
-                onPress={() => {
-                    this.setSelectedEvent(event);
-                }}
-                >
-                <EventSel
-                    key={event.id}
-                    name={event.name}
-                    startTime={event.startTime}
-                    endTime={event.endTime}
-                    location={loc}
-                    type={eventType}
-                    dynamicStyles={dynamicStyles}
-                />
-            </TouchableOpacity>
-        );
-      })
-        if(this.state.selectedEvent == null) {
-            return (
-              <ThemeContext.Consumer>
-                {({ dynamicStyles }) => (
-                  <View style={dynamicStyles.backgroundColor}>
-                      <View style={styles.header}>
-                        <SearchBar
-                          searchIcon={
-                            <SearchIcon
-                              fill={
-                                dynamicStyles.secondaryBackgroundColor
-                                  .backgroundColor
-                              }
-                            />
-                          }
-                          containerStyle={[
-                            styles.searchContainer,
-                            dynamicStyles.backgroundColor,
-                            dynamicStyles.searchBorderTopColor,
-                            dynamicStyles.searchBorderBottomColor,
-                            { flex: 1 }
-                          ]}
-                          inputContainerStyle={[
-                            styles.inputContainer,
-                            dynamicStyles.searchBackgroundColor,
-                          ]}
-                          clearIcon={null}
-                          lightTheme
-                          round
-                          placeholder="Search..."
-                          onChangeText={(value) => this.searchEvents(value)}
-                          value={this.state.searchText}
-                        />
+                  <ScrollView>
+                    <View>
+                      <View style={styles.eventContainer}>
+                      {formattedEvents}
                       </View>
-
-                    <ScrollView>
-                      <View>
-                        <View style={styles.eventContainer}>
-                        {formattedEvents}
-                        </View>
-                      </View>
-                    </ScrollView>
-                  </View>
-                )}
-              </ThemeContext.Consumer>
-              );
-        } else {
-            return (
-              <ThemeContext.Consumer>
-                {({ dynamicStyles }) => (
-                  <ScrollView style={dynamicStyles.backgroundColor}>
-                        <View style={styles.eventContainer}>
-                          <Text style={[styles.title, dynamicStyles.text]}>{this.state.selectedEvent.name}</Text>
-                          <Text
-                            numberOfLines={this.props.truncateText ? 1 : null}
-                            ellipsizeMode={"tail"}
-                            style={[dynamicStyles.secondaryText, { fontFamily: "SpaceMono-Bold", marginLeft: 0 }]}
-                          >
-                            {this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
-                              ? this.state.selectedEvent.location[0].name + " • "
-                              : ""}
-                            {this.state.selectedEvent.startTime + ' - ' + this.state.selectedEvent.endTime}
-                          </Text>
-                            <Button title="< Back" onPress={() => {
-                                this.setSelectedEvent(null);
-                            }}/>
-                            <ScanScreen
-                                eventID = {this.state.selectedEvent.id}
-                                startTime={this.state.selectedEvent.startTime}
-                                endTime={this.state.selectedEvent.endTime}
-                                location={this.state.selectedEvent != null && this.state.selectedEvent.location != null && this.state.selectedEvent.location[0] != null && this.state.selectedEvent.location[0].name != null
-                                    ? this.state.selectedEvent.location[0].name + " • "
-                                    : ""}
-                                type={this.state.selectedEvent != null && this.state.selectedEvent.type != null
-                                    ? this.state.selectedEvent.type
-                                    : { name: "none", color: "gray" }}
-                                description={this.state.selectedEvent.description}
-                            />
-                      </View>
+                    </View>
                   </ScrollView>
-                )}
-              </ThemeContext.Consumer>
+                </View>
+              )}
+            </ThemeContext.Consumer>
             );
+      } else {
+          return (
+            <ThemeContext.Consumer>
+              {({ dynamicStyles }) => (
+                <ScrollView style={dynamicStyles.backgroundColor}>
+                      <View style={styles.eventContainer}>
+                        <Text style={[styles.title, dynamicStyles.text]}>{selectedEvent.name}</Text>
+                        <Text
+                          numberOfLines={props.truncateText ? 1 : null}
+                          ellipsizeMode={"tail"}
+                          style={[dynamicStyles.secondaryText, { fontFamily: "SpaceMono-Bold", marginLeft: 0 }]}
+                        >
+                          {selectedEvent != null && selectedEvent.location != null && selectedEvent.location[0] != null && selectedEvent.location[0].name != null
+                            ? selectedEvent.location[0].name + " • "
+                            : ""}
+                          {selectedEvent.startTime + ' - ' + selectedEvent.endTime}
+                        </Text>
+                          <Button title="< Back" onPress={() => {
+                              onPressEvent(null);
+                          }}/>
+                          <ScanScreen
+                              eventID = {selectedEvent.id}
+                              startTime={selectedEvent.startTime}
+                              endTime={selectedEvent.endTime}
+                              location={selectedEvent != null && selectedEvent.location != null && selectedEvent.location[0] != null && selectedEvent.location[0].name != null
+                                  ? selectedEvent.location[0].name + " • "
+                                  : ""}
+                              type={selectedEvent != null && selectedEvent.type != null
+                                  ? selectedEvent.type
+                                  : { name: "none", color: "gray" }}
+                              description={selectedEvent.description}
+                          />
+                    </View>
+                </ScrollView>
+              )}
+            </ThemeContext.Consumer>
+          );
 
-        }
+      }
 
-    } else { return (<View/>); }
+  } else { 
+    return (<View/>); 
   }
 }
 
