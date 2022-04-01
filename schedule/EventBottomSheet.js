@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useRef, useContext, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { EventTypeView } from "./EventTypeView";
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -9,9 +9,13 @@ import { HackathonContext, ThemeContext } from "../context";
 import FontMarkdown from "../components/FontMarkdown";
 import { Linking } from "react-native";
 
-export class EventBottomSheet extends Component {
-  bottomSheetContent = () => {
-    const event = this.props.event;
+export function EventBottomSheet(props) {
+  const { state, toggleStar } = useContext(HackathonContext)
+  const sheetRef = useRef(null)
+  const [addStarButton, setAddStarButton] = useState(props.event ? state.starredIds.indexOf(props.event.id) == -1 : true)
+
+  const bottomSheetContent = () => {
+    const event = props.event;
     const title = event.name;
     const description = event.description;
     const location =
@@ -30,10 +34,7 @@ export class EventBottomSheet extends Component {
 
     return (
       <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <HackathonContext.Consumer>
-            {({ starredIds }) => {
-              const addStarButton = starredIds.indexOf(event.id) == -1;
+        {({ dynamicStyles }) => {
               const eventTags = event.tags
                 ? event.tags.map((tag) => tag.name)
                 : [];
@@ -45,7 +46,7 @@ export class EventBottomSheet extends Component {
                   <TouchableOpacity
                     style={styles.panelClose}
                     onPress={() => {
-                      this.RBSheet.close();
+                      props.reference.current.close();
                     }}
                   >
                     <X
@@ -99,69 +100,56 @@ export class EventBottomSheet extends Component {
                   </FontMarkdown>
 
                   <View style={styles.panelButtonCenterRoot}>
-                    <HackathonContext.Consumer>
-                      {({ toggleStar }) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() =>
-                              this.setState({
-                                addStarButton: !toggleStar(this.props.event),
-                              })
-                            }
-                          >
-                            {addStarButton ? (
-                              <AddStarButton
-                                fill={dynamicStyles.tintColor.color}
-                              />
-                            ) : (
-                              <RemoveStarButton />
-                            )}
-                          </TouchableOpacity>
-                        );
-                      }}
-                    </HackathonContext.Consumer>
+                    <TouchableOpacity
+                      onPress={() => {
+                          toggleStar(props.event)
+                          setAddStarButton(state.starredIds.indexOf(props.event.id) == -1)
+                        }
+                      }
+                    >
+                      {addStarButton ? (
+                        <AddStarButton
+                          fill={dynamicStyles.tintColor.color}
+                        />
+                      ) : (
+                        <RemoveStarButton />
+                      )}
+                    </TouchableOpacity>
                   </View>
                 </View>
               );
             }}
-          </HackathonContext.Consumer>
-        )}
       </ThemeContext.Consumer>
     );
   };
 
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <RBSheet
-            ref={(ref) => {
-              this.props.reference(ref);
-              this.RBSheet = ref;
-            }}
-            height={450}
-            openDuration={250}
-            closeDuration={250}
-            closeOnDragDown
-            customStyles={{
-              container: {
-                backgroundColor:
-                  dynamicStyles.tritaryBackgroundColor.backgroundColor,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-              },
-              draggableIcon: {
-                backgroundColor:
-                  dynamicStyles.secondaryBackgroundColor.backgroundColor,
-              },
-            }}
-          >
-            {this.props.event != null ? this.bottomSheetContent() : null}
-          </RBSheet>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <RBSheet
+          ref={props.reference}
+          height={450}
+          openDuration={250}
+          closeDuration={250}
+          closeOnDragDown
+          customStyles={{
+            container: {
+              backgroundColor:
+                dynamicStyles.tritaryBackgroundColor.backgroundColor,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            },
+            draggableIcon: {
+              backgroundColor:
+                dynamicStyles.secondaryBackgroundColor.backgroundColor,
+            },
+          }}
+        >
+          {props.event != null ? bottomSheetContent() : null}
+        </RBSheet>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({

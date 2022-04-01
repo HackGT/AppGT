@@ -216,50 +216,53 @@ function App(props) {
     );
   }, [isStarSchedule])
 
-  useEffect(() => {
-    updateStorage()
-  }, [starredIds])
+  // useEffect(() => {
+  //   console.log('toggling starred ids', starredIds)
+  //   updateStorage()
+  // }, [starredIds])
 
-  const updateStorage = () => {
-    AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
-  }
+  // const updateStorage = () => {
+  //   AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
+  // }
 
-  const toggleIsStarSchedule = () => {
-    setIsStarSchedule(!isStarSchedule)
-  };
+  // Not used anymore, but keeping just in case (look at HackathonReducer.js)
+  // const toggleIsStarSchedule = () => {
+  //   setIsStarSchedule(!isStarSchedule)
+  // };
 
-  const toggleStarred = (event) => {
-    const toggleEventId = event.id;
+  // Not used anymore, but keeping just in case (look at HackathonReducer.js)
+  // const toggleStarred = (event) => {
+  //   const toggleEventId = event.id;
 
-    isNowStarred = starredIds.indexOf(toggleEventId) == -1;
+  //   const isNowStarred = starredIds.indexOf(toggleEventId) == -1;
 
-    let eventIdNumber = toggleEventId.replace(/\D/g, "").substring(1, 5);
-    eventIdNumber = Number.parseInt(eventIdNumber);
+  //   let eventIdNumber = toggleEventId.replace(/\D/g, "").substring(1, 5);
+  //   eventIdNumber = Number.parseInt(eventIdNumber);
 
-    if (isNowStarred) {
-      // schedule notification for 15 min before
-      PushNotification.localNotificationSchedule({
-        channelId: "hackgt-channel",
-        id: eventIdNumber + "", // map string into a unique id for cancellation
-        message: event.name + " is starting in 15 minutes! ",
-        date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
-      });
+  //   if (isNowStarred) {
+  //     // schedule notification for 15 min before
+  //     PushNotification.localNotificationSchedule({
+  //       channelId: "hackgt-channel",
+  //       id: eventIdNumber + "", // map string into a unique id for cancellation
+  //       message: event.name + " is starting in 15 minutes! ",
+  //       date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
+  //     });
 
-      // add to starred state, then update storage
-      setStarredIds([...starredIds, toggleEventId]);
+  //     // add to starred state, then update storage
+  //     setStarredIds([...starredIds, toggleEventId]);
 
-      return true;
-    } else {
-      // cancel notification if previously starred
-      PushNotification.cancelLocalNotifications({
-        id: eventIdNumber + "",
-      });
+  //     return true;
+  //   } else {
+  //     // cancel notification if previously starred
+  //     PushNotification.cancelLocalNotifications({
+  //       id: eventIdNumber + "",
+  //     });
 
-      // remove from starred state, then update storage
-      setStarredIds(starredIds.filter((id) => id !== toggleEventId));
-      return false;
-    }
-  };
+  //     // remove from starred state, then update storage
+  //     setStarredIds(starredIds.filter((id) => id !== toggleEventId));
+  //     return false;
+  //   }
+  // };
 
   const logout = async () => {
     fetch(`${authUrl}/api/user/logout`, {
@@ -383,14 +386,12 @@ function App(props) {
         dynamicStyles: props.styles,
       }}
     >
-      <HackathonContext.Provider
-        value={{
+      <HackathonProvider
+        initialValue={{
           hackathon: hackathon,
           eventTypes: eventTypes,
-          toggleStar: toggleStarred,
           starredIds: starredIds,
           isStarSchedule: isStarSchedule,
-          toggleIsStarSchedule: toggleIsStarSchedule,
         }}
       >
         <AuthContext.Provider
@@ -485,7 +486,7 @@ function App(props) {
             </Tab.Navigator>
           </NavigationContainer>
         </AuthContext.Provider>
-      </HackathonContext.Provider>
+      </HackathonProvider>
     </ThemeContext.Provider>
   );
 }

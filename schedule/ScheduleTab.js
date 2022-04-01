@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import {
   TouchableOpacity,
@@ -21,155 +21,147 @@ import {
   getCurrentEventIndex,
 } from "../cms/DataHandler";
 
-export class ScheduleTab extends Component {
-  static contextType = HackathonContext;
+export function ScheduleTab(props) {
+  const { state } = useContext(HackathonContext);
+  const sheetRef = useRef(null)
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [eventsHappeningNow, setEventsHappeningNow] = useState([])
 
-  state = {
-    selectedEvent: null,
-    eventsHappeningNow: [],
-  };
-
-  componentDidMount() {
-    this.refreshEventState();
+  useEffect(() => {
+    console.log('REFRESHING')
+    refreshEventState()
 
     // update time changes whenever app opens
     AppState.addEventListener("change", (state) => {
       if (state == "active") {
-        this.refreshEventState();
+        refreshEventState()
       }
     });
+  }, [])
+
+  const refreshEventState = () => {
+    const events = state.hackathon.events;
+    setEventsHappeningNow(getEventsHappeningNow(events))
   }
 
-  refreshEventState() {
-    const events = this.context.hackathon.events;
-
-    this.setState({
-      eventsHappeningNow: getEventsHappeningNow(events),
-    });
-  }
-
-  setSelectedEvent = (event) => {
+  const onPressEvent = (event) => {
     if (event) {
-      this.setState({ selectedEvent: event });
-      this.RBSheet.open();
+      setSelectedEvent(event)
+      console.log('REF', sheetRef)
+      sheetRef.current.open();
     } else {
-      this.setState({ selectedEvent: null });
-      this.RBSheet.close();
+      setSelectedEvent(null)
+      sheetRef.current.close();
     }
   };
 
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <HackathonContext.Consumer>
-            {({ hackathon, isStarSchedule, starredIds }) => {
-              let events = hackathon.events;
-              const eventsHappeningNow = this.state.eventsHappeningNow;
-              const hasEventsNow = eventsHappeningNow.length > 0;
-              const happeningNowView = (
-                <View
-                  style={[dynamicStyles.backgroundColor, styles.headerDetail]}
-                >
-                  <View style={styles.headerContent}>
-                    <WhatsHappeningNow style={styles.headerText} />
-                    <FlatList
-                      showsHorizontalScrollIndicator={false}
-                      horizontal
-                      data={eventsHappeningNow}
-                      keyExtractor={(item, index) =>
-                        item && item.id ? item.id : index
-                      }
-                      renderItem={({ item }) => {
-                        return (
-                          <TouchableOpacity
-                            style={styles.cardHorizontalParent}
-                            onPress={() => {
-                              this.setSelectedEvent(item);
-                            }}
-                          >
-                            <ScheduleEventCell
-                              event={item}
-                              highlighted
-                              truncateText
-                            />
-                          </TouchableOpacity>
-                        );
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => {
+        console.log('PENIS', state)
+        let events = state.hackathon.events;
+        const hasEventsNow = eventsHappeningNow.length > 0;
+        const happeningNowView = (
+          <View
+            style={[dynamicStyles.backgroundColor, styles.headerDetail]}
+          >
+            <View style={styles.headerContent}>
+              <WhatsHappeningNow style={styles.headerText} />
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={eventsHappeningNow}
+                keyExtractor={(item, index) =>
+                  item && item.id ? item.id : index
+                }
+                renderItem={({ item }) => {
+                  console.log("ITEM: ", item)
+                  return (
+                    <TouchableOpacity
+                      style={styles.cardHorizontalParent}
+                      onPress={() => {
+                        onPressEvent(item);
                       }}
-                    />
-                  </View>
-                </View>
-              );
+                    >
+                      <ScheduleEventCell
+                        event={item}
+                        highlighted
+                        truncateText
+                      />
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+          </View>
+        );
 
-              if (isStarSchedule) {
-                events = events.filter(
-                  (event) => starredIds.indexOf(event.id) != -1
-                );
-              }
+        if (state.isStarSchedule) {
+          events = events.filter(
+            (event) => state.starredIds.indexOf(event.id) != -1
+          );
+        }
 
-              const daysForEvents = getDaysForEvent(events);
-              const currentDayIndex = getCurrentDayIndex(events);
-              const initialEventIndex = getCurrentEventIndex(
-                events,
-                daysForEvents[currentDayIndex]
-              );
+        const daysForEvents = getDaysForEvent(events);
+        const currentDayIndex = getCurrentDayIndex(events);
+        const initialEventIndex = getCurrentEventIndex(
+          events,
+          daysForEvents[currentDayIndex]
+        );
 
-              if (isStarSchedule && starredIds.length === 0) {
-                return (
-                  <Text
-                    style={[
-                      dynamicStyles.text,
-                      styles.noEventsText,
-                      dynamicStyles.backgroundColor,
-                    ]}
-                  >
-                    You have no starred events.
-                  </Text>
-                );
-              } else if (events.length == 0) {
-                return (
-                  <Text
-                    style={[
-                      dynamicStyles.text,
-                      styles.noEventsText,
-                      dynamicStyles.backgroundColor,
-                    ]}
-                  >
-                    No events found.
-                  </Text>
-                );
-              }
+        if (state.isStarSchedule && state.starredIds.length === 0) {
+          return (
+            <Text
+              style={[
+                dynamicStyles.text,
+                styles.noEventsText,
+                dynamicStyles.backgroundColor,
+              ]}
+            >
+              You have no starred events.
+            </Text>
+          );
+        } else if (events.length == 0) {
+          return (
+            <Text
+              style={[
+                dynamicStyles.text,
+                styles.noEventsText,
+                dynamicStyles.backgroundColor,
+              ]}
+            >
+              No events found.
+            </Text>
+          );
+        }
 
-              return (
-                <View
-                  style={[
-                    dynamicStyles.backgroundColor,
-                    styles.underBackground,
-                  ]}
-                >
-                  <EventBottomSheet
-                    reference={(ref) => (this.RBSheet = ref)}
-                    event={this.state.selectedEvent}
-                  />
+        return (
+          <View
+            style={[
+              dynamicStyles.backgroundColor,
+              styles.underBackground,
+            ]}
+          >
+            <EventBottomSheet
+              reference={sheetRef}
+              event={selectedEvent}
+            />
 
-                  {hasEventsNow ? happeningNowView : null}
-                  {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
-                  <ScheduleDayView
-                    paddingHeight={hasEventsNow ? 160 : 40}
-                    events={events}
-                    initialEventIndex={initialEventIndex}
-                    initialDayIndex={currentDayIndex}
-                    days={daysForEvents}
-                    onSelectEvent={this.setSelectedEvent}
-                  />
-                </View>
-              );
-            }}
-          </HackathonContext.Consumer>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+            {hasEventsNow ? happeningNowView : null}
+            {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
+            <ScheduleDayView
+              paddingHeight={hasEventsNow ? 160 : 40}
+              events={events}
+              initialEventIndex={initialEventIndex}
+              initialDayIndex={currentDayIndex}
+              days={daysForEvents}
+              onSelectEvent={onPressEvent}
+            />
+          </View>
+        );
+      }}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({
