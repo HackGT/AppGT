@@ -9,7 +9,7 @@ export default function HackathonProvider({ initialValue, children }) {
 
     // could set state to state from useReducer, but for some reason it sets eventTypes to an emtpy array, so I'm just directly setting state to initialValues
     const value = {
-        state: initialValue,
+        state: state,
         toggleStar: (event) => dispatch({
             type: TOGGLE_STAR,
             value: event
