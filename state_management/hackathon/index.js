@@ -8,7 +8,7 @@ export default function HackathonProvider({ initialValue, children }) {
     const [state, dispatch] = React.useReducer(hackathonReducer, initialValue)
 
     const value = {
-        state: state,
+        state: initialValue,
         toggleStar: (event) => dispatch({
             type: TOGGLE_STAR,
             value: event
@@ -19,7 +19,7 @@ export default function HackathonProvider({ initialValue, children }) {
         })
     }
 
-    console.log('value', value)
+    console.log('value', value, initialValue)
 
     return (
         <HackathonContext.Provider value={value}>
