@@ -62,7 +62,7 @@ export function ScheduleDayView(props) {
               paddingBottom: props.paddingHeight,
             }}
             data={timeblocks}
-            keyExtractor={(item, index) => (item && item.id ? item.id : index)}
+            keyExtractor={(item, index) => '' + (item && item.id ? item.id : index)}
             onScrollToIndexFailed={(error) => {
               setTimeout(() => {
                 if (props.days[dayIndex] == currentDayString) {
@@ -88,7 +88,7 @@ export function ScheduleDayView(props) {
 
               if (item && item.time) {
                 return (
-                  <View key={index} flexDirection="row" style={{ height: 40 }}>
+                  <View key={'' + index} flexDirection="row" style={{ height: 40 }}>
                     <View flexDirection="row" style={styles.circleParent}>
                       <Svg height={size} width={size}>
                         <Circle
