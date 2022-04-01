@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { HackathonContext, ThemeContext } from "../context";
 import { getEventsForDay, getDaysForEvent } from "../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
@@ -18,13 +18,24 @@ import { EventBottomSheet } from "./EventBottomSheet";
 import FilterSelect from "../components/FilterSelect";
 import TagScrollView from "../components/TagScrollView";
 
-export class ScheduleSearch extends Component {
-  backButton = () => {
-    const { navigation } = this.props;
+export function ScheduleSearch(props) {
+  const { state } = useContext(HackathonContext)
+  const hackathon = state.hackathon
+
+  const [searchText, setSearchText] = useState("")
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [filterItem, setFilterItem] = useState(null)
+  const [highlightedTags, setHighlightedTags] = useState([])
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false)
+
+  const sheetRef = useRef(null)
+
+  const backButton = () => {
+    const { navigation } = props;
 
     return (
       <TouchableOpacity
-        disabled={this.state.filterMenuOpen}
+        disabled={filterMenuOpen}
         style={styles.cancelButton}
         onPress={() => navigation.goBack()}
       >
@@ -33,326 +44,300 @@ export class ScheduleSearch extends Component {
     );
   };
 
-  constructor() {
-    super();
-    this.state = {
-      searchText: "",
-      selectedEvent: null,
-      filterItem: null,
-      highlightedTags: [],
-      filterMenuOpen: false,
-    };
-  }
-
-  setSelectedEvent = (event) => {
+  const onPressEvent = (event) => {
     if (event) {
-      this.setState({ selectedEvent: event });
-      this.RBSheet.open();
+      setSelectedEvent(event)
+      sheetRef.current.open();
     } else {
-      this.setState({ selectedEvent: null });
-      this.RBSheet.close();
+      setSelectedEvent(null)
+      sheetRef.current.close();
     }
   };
 
-  searchEvents = (value) => {
-    this.setState({ searchText: value });
+  const searchEvents = (value) => {
+    setSearchText(value)
   };
 
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <HackathonContext.Consumer>
-            {({ hackathon }) => {
-              let highlightedTagsCopy = [...this.state.highlightedTags];
-              let sortedEvents = [...hackathon.events];
-              var days = [
-                "Sunday",
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-              ];
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => {
+        let highlightedTagsCopy = [...highlightedTags];
+        let sortedEvents = [...hackathon.events];
+        var days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
 
-              sortedEvents = sortedEvents.filter((event) => {
-                var date = new Date(event.startDate);
-                var dayName = days[date.getDay()];
-                let eventNameLowerCase = event.name.toLowerCase();
-                let eventDescriptionLowerCase = "";
-                let eventTypeLowerCase = "";
-                const name =
-                  event.type && event.type.name ? event.type.name : null;
+        sortedEvents = sortedEvents.filter((event) => {
+          var date = new Date(event.startDate);
+          var dayName = days[date.getDay()];
+          let eventNameLowerCase = event.name.toLowerCase();
+          let eventDescriptionLowerCase = "";
+          let eventTypeLowerCase = "";
+          const name =
+            event.type && event.type.name ? event.type.name : null;
 
-                if (event.description != null) {
-                  eventDescriptionLowerCase = event.description.toLowerCase();
+          if (event.description != null) {
+            eventDescriptionLowerCase = event.description.toLowerCase();
+          }
+
+          if (name != null) {
+            eventTypeLowerCase = name.toLowerCase();
+          }
+
+          const filterName =
+            filterItem == null
+              ? null
+              : filterItem.name;
+          if (name === filterName) {
+            return (
+              (eventNameLowerCase.includes(
+                searchText.trim().toLowerCase()
+              ) &&
+                name === filterName) ||
+              (eventDescriptionLowerCase.includes(
+                searchText.trim().toLowerCase()
+              ) &&
+                name === filterName) ||
+              (eventTypeLowerCase.includes(
+                searchText.trim().toLowerCase()
+              ) &&
+                name === filterName) ||
+              (dayName.includes(
+                searchText.trim().toLowerCase()
+              ) &&
+                name === filterName)
+            );
+          } else if (filterName === null) {
+            return (
+              eventNameLowerCase.includes(
+                searchText.trim().toLowerCase()
+              ) ||
+              eventDescriptionLowerCase.includes(
+                searchText.trim().toLowerCase()
+              ) ||
+              dayName.includes(
+                searchText.trim().toLowerCase()
+              ) ||
+              eventTypeLowerCase.includes(
+                searchText.trim().toLowerCase()
+              )
+            );
+          }
+        });
+
+        let tagArr = [];
+        for (event of sortedEvents) {
+          for (var { name } of event.tags) {
+            tagArr.push(name);
+          }
+        }
+
+        const counter = Object.create(null);
+        tagArr.forEach(function (tag) {
+          counter[tag] = (counter[tag] || 0) + 1;
+        });
+        tagArr.sort(function (x, y) {
+          return counter[y] - counter[x];
+        });
+
+        let uniquetagArr = [...new Set(tagArr)];
+
+        sortedEvents = sortedEvents.filter((event) => {
+          let result = event.tags && event.tags.map((a) => a.name);
+          let found = result.some((r) =>
+            highlightedTags.includes(r)
+          );
+
+          if (highlightedTags.length != 0) {
+            if (!found) {
+              return false;
+            }
+          }
+          return true;
+        });
+
+        const events = [];
+        let eventDays = ["Friday", "Saturday", "Sunday"];
+
+        for (let day of getDaysForEvent(sortedEvents)) {
+          if (day == "friday") {
+            events.push({ day: eventDays[0] });
+          }
+          if (day == "saturday") {
+            events.push({ day: eventDays[1] });
+          }
+          if (day == "sunday") {
+            events.push({ day: eventDays[2] });
+          }
+          for (const event of getEventsForDay(sortedEvents, day)) {
+            events.push(event);
+          }
+        }
+
+        return (
+          <SafeAreaView
+            style={[dynamicStyles.backgroundColor, styles.safeArea]}
+          >
+            <View style={styles.searchHeader}>
+              <SearchBar
+                searchIcon={
+                  <SearchIcon
+                    fill={
+                      dynamicStyles.secondaryBackgroundColor
+                        .backgroundColor
+                    }
+                  />
                 }
+                containerStyle={[
+                  styles.searchContainer,
+                  dynamicStyles.backgroundColor,
+                  dynamicStyles.searchBorderTopColor,
+                  dynamicStyles.searchBorderBottomColor,
+                ]}
+                inputContainerStyle={[
+                  styles.inputContainer,
+                  dynamicStyles.searchBackgroundColor,
+                ]}
+                clearIcon={null}
+                disabled={filterMenuOpen}
+                lightTheme
+                round
+                placeholder="Search..."
+                onChangeText={(value) => searchEvents(value)}
+                value={searchText}
+              />
 
-                if (name != null) {
-                  eventTypeLowerCase = name.toLowerCase();
-                }
+              {backButton()}
+            </View>
 
-                const filterName =
-                  this.state.filterItem == null
-                    ? null
-                    : this.state.filterItem.name;
-                if (name === filterName) {
-                  return (
-                    (eventNameLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) &&
-                      name === filterName) ||
-                    (eventDescriptionLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) &&
-                      name === filterName) ||
-                    (eventTypeLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) &&
-                      name === filterName) ||
-                    (dayName.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) &&
-                      name === filterName)
-                  );
-                } else if (filterName === null) {
-                  return (
-                    eventNameLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) ||
-                    eventDescriptionLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) ||
-                    dayName.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    ) ||
-                    eventTypeLowerCase.includes(
-                      this.state.searchText.trim().toLowerCase()
-                    )
-                  );
-                }
-              });
-
-              let tagArr = [];
-              for (event of sortedEvents) {
-                for (var { name } of event.tags) {
-                  tagArr.push(name);
-                }
-              }
-
-              counter = Object.create(null);
-              tagArr.forEach(function (tag) {
-                counter[tag] = (counter[tag] || 0) + 1;
-              });
-              tagArr.sort(function (x, y) {
-                return counter[y] - counter[x];
-              });
-
-              let uniquetagArr = [...new Set(tagArr)];
-
-              sortedEvents = sortedEvents.filter((event) => {
-                let result = event.tags && event.tags.map((a) => a.name);
-                let found = result.some((r) =>
-                  this.state.highlightedTags.includes(r)
-                );
-
-                if (this.state.highlightedTags.length != 0) {
-                  if (!found) {
-                    return false;
+            <View style={dynamicStyles.backgroundColor}>
+              <FilterSelect
+                onSelectFilter={(newFilter) => {
+                    setFilterItem(newFilter)
+                    setHighlightedTags([])
                   }
                 }
-                return true;
-              });
+                onFilterMenuChange={(isOpen) =>
+                  setFilterMenuOpen(isOpen)
+                }
+              />
 
-              const events = [];
-              let eventDays = ["Friday", "Saturday", "Sunday"];
-
-              for (let day of getDaysForEvent(sortedEvents)) {
-                if (day == "friday") {
-                  events.push({ day: eventDays[0] });
-                }
-                if (day == "saturday") {
-                  events.push({ day: eventDays[1] });
-                }
-                if (day == "sunday") {
-                  events.push({ day: eventDays[2] });
-                }
-                for (const event of getEventsForDay(sortedEvents, day)) {
-                  events.push(event);
-                }
-              }
-
-              return (
-                <SafeAreaView
-                  style={[dynamicStyles.backgroundColor, styles.safeArea]}
-                >
-                  <View style={styles.searchHeader}>
-                    <SearchBar
-                      searchIcon={
-                        <SearchIcon
-                          fill={
-                            dynamicStyles.secondaryBackgroundColor
-                              .backgroundColor
-                          }
-                        />
+              {/* Trending Topics */}
+              {uniquetagArr.length > 0 && (
+                <View style={{ flexDirection: "row", display: "flex" }}>
+                  <Text
+                    style={[dynamicStyles.text, styles.trendingTopics]}
+                  >
+                    Trending Topics
+                  </Text>
+                  {highlightedTags.length > 0 && (
+                    <TouchableOpacity
+                      disabled={filterMenuOpen}
+                      onPress={() =>
+                        setHighlightedTags([])
                       }
-                      containerStyle={[
-                        styles.searchContainer,
-                        dynamicStyles.backgroundColor,
-                        dynamicStyles.searchBorderTopColor,
-                        dynamicStyles.searchBorderBottomColor,
+                      style={[
+                        styles.clearButtonStyle,
+                        dynamicStyles.borderColor,
                       ]}
-                      inputContainerStyle={[
-                        styles.inputContainer,
-                        dynamicStyles.searchBackgroundColor,
-                      ]}
-                      clearIcon={null}
-                      disabled={this.state.filterMenuOpen}
-                      lightTheme
-                      round
-                      placeholder="Search..."
-                      onChangeText={(value) => this.searchEvents(value)}
-                      value={this.state.searchText}
-                    />
-
-                    {this.backButton()}
-                  </View>
-
-                  <View style={dynamicStyles.backgroundColor}>
-                    <FilterSelect
-                      onSelectFilter={(newFilter) =>
-                        this.setState({
-                          filterItem: newFilter,
-                          highlightedTags: [],
-                        })
-                      }
-                      onFilterMenuChange={(isOpen) =>
-                        this.setState({
-                          filterMenuOpen: isOpen,
-                        })
-                      }
-                    />
-
-                    {/* Trending Topics */}
-                    {uniquetagArr.length > 0 && (
-                      <View style={{ flexDirection: "row", display: "flex" }}>
-                        <Text
-                          style={[dynamicStyles.text, styles.trendingTopics]}
-                        >
-                          Trending Topics
-                        </Text>
-                        {this.state.highlightedTags.length > 0 && (
-                          <TouchableOpacity
-                            disabled={this.state.filterMenuOpen}
-                            onPress={() =>
-                              this.setState({
-                                highlightedTags: [],
-                              })
-                            }
+                    >
+                      <Text style={[dynamicStyles.text, styles.clear]}>
+                        clear
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+              {/*Tags */}
+              <View style={{ marginLeft: 10 }}>
+                <TagScrollView
+                  scroll={!filterMenuOpen}
+                  disabled={filterMenuOpen}
+                  style={{ padding: 10 }}
+                  tags={uniquetagArr}
+                  highlightedTags={highlightedTags}
+                  onPress={(tag) => {
+                    if (highlightedTags.includes(tag)) {
+                      highlightedTagsCopy.splice(
+                        highlightedTagsCopy.indexOf(tag),
+                        1
+                      );
+                      setHighlightedTags(highlightedTagsCopy);
+                    } else {
+                      highlightedTagsCopy.push(tag),
+                      setHighlightedTags(highlightedTagsCopy)
+                    }
+                  }}
+                />
+              </View>
+              <View
+                style={[styles.divider, dynamicStyles.searchDividerColor]}
+              />
+              {events.length == 0 ? (
+                <Text style={[styles.noEvents, dynamicStyles.text]}>
+                  {" "}
+                  No Events Found{" "}
+                </Text>
+              ) : (
+                <FlatList
+                  data={events}
+                  scrollEnabled={!filterMenuOpen}
+                  renderItem={({ item, index }) => {
+                    if (item.day) {
+                      return (
+                        <View style={styles.dayContainer}>
+                          <View
                             style={[
-                              styles.clearButtonStyle,
-                              dynamicStyles.borderColor,
+                              styles.dayStyle,
+                              dynamicStyles.secondaryBackgroundColor,
                             ]}
                           >
-                            <Text style={[dynamicStyles.text, styles.clear]}>
-                              clear
+                            <Text
+                              style={[styles.dayText, dynamicStyles.text]}
+                            >
+                              {item.day}
                             </Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    )}
-                    {/*Tags */}
-                    <View style={{ marginLeft: 10 }}>
-                      <TagScrollView
-                        scroll={!this.state.filterMenuOpen}
-                        disabled={this.state.filterMenuOpen}
-                        style={{ padding: 10 }}
-                        tags={uniquetagArr}
-                        highlightedTags={this.state.highlightedTags}
-                        onPress={(tag) => {
-                          if (this.state.highlightedTags.includes(tag)) {
-                            highlightedTagsCopy.splice(
-                              highlightedTagsCopy.indexOf(tag),
-                              1
-                            );
-                            this.setState({
-                              highlightedTags: highlightedTagsCopy,
-                            });
-                          } else {
-                            highlightedTagsCopy.push(tag),
-                              this.setState({
-                                highlightedTags: highlightedTagsCopy,
-                              });
-                          }
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={[styles.divider, dynamicStyles.searchDividerColor]}
-                    />
-                    {events.length == 0 ? (
-                      <Text style={[styles.noEvents, dynamicStyles.text]}>
-                        {" "}
-                        No Events Found{" "}
-                      </Text>
-                    ) : (
-                      <FlatList
-                        data={events}
-                        scrollEnabled={!this.state.filterMenuOpen}
-                        renderItem={({ item, index }) => {
-                          if (item.day) {
-                            return (
-                              <View style={styles.dayContainer}>
-                                <View
-                                  style={[
-                                    styles.dayStyle,
-                                    dynamicStyles.secondaryBackgroundColor,
-                                  ]}
-                                >
-                                  <Text
-                                    style={[styles.dayText, dynamicStyles.text]}
-                                  >
-                                    {item.day}
-                                  </Text>
-                                </View>
-                              </View>
-                            );
-                          } else {
-                            return (
-                              <TouchableOpacity
-                                disabled={this.state.filterMenuOpen}
-                                style={styles.flatList}
-                                onPress={() => {
-                                  this.setSelectedEvent(item);
-                                }}
-                              >
-                                <ScheduleEventCell event={item} />
-                              </TouchableOpacity>
-                            );
-                          }
-                        }}
-                        contentContainerStyle={{
-                          paddingBottom: 200,
-                        }}
-                        keyExtractor={(item, index) =>
-                          item && item.id ? item.id : index
-                        }
-                      />
-                    )}
-                    <EventBottomSheet
-                      reference={(ref) => (this.RBSheet = ref)}
-                      event={this.state.selectedEvent}
-                    />
-                  </View>
-                </SafeAreaView>
-              );
-            }}
-          </HackathonContext.Consumer>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+                          </View>
+                        </View>
+                      );
+                    } else {
+                      return (
+                        <TouchableOpacity
+                          disabled={filterMenuOpen}
+                          style={styles.flatList}
+                          onPress={() => {
+                            onPressEvent(item);
+                          }}
+                        >
+                          <ScheduleEventCell event={item} />
+                        </TouchableOpacity>
+                      );
+                    }
+                  }}
+                  contentContainerStyle={{
+                    paddingBottom: 200,
+                  }}
+                  keyExtractor={(item, index) =>
+                    item && item.id ? item.id : index
+                  }
+                />
+              )}
+              <EventBottomSheet
+                reference={sheetRef}
+                event={selectedEvent}
+              />
+            </View>
+          </SafeAreaView>
+        );
+      }}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({

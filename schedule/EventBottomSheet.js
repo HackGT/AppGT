@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { EventTypeView } from "./EventTypeView";
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -11,9 +11,11 @@ import { Linking } from "react-native";
 
 export function EventBottomSheet(props) {
   const { state, toggleStar } = useContext(HackathonContext)
-  const sheetRef = useRef(null)
   const [addStarButton, setAddStarButton] = useState(props.event ? state.starredIds.indexOf(props.event.id) == -1 : true)
-
+  console.log('SELECTED EVENT: ', props.event)
+  useEffect(() => {
+    setAddStarButton(props.event ? state.starredIds.indexOf(props.event.id) == -1 : false)
+  })
   const bottomSheetContent = () => {
     const event = props.event;
     const title = event.name;
@@ -102,8 +104,8 @@ export function EventBottomSheet(props) {
                   <View style={styles.panelButtonCenterRoot}>
                     <TouchableOpacity
                       onPress={() => {
+                          setAddStarButton(!addStarButton)
                           toggleStar(props.event)
-                          setAddStarButton(state.starredIds.indexOf(props.event.id) == -1)
                         }
                       }
                     >
