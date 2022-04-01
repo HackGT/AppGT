@@ -30,7 +30,7 @@ export default function ScavengerHuntStackScreen({ navigation }) {
                             <ScavengerHuntStack.Screen
                                 options={{
                                     headerTitleAlign: "left",
-                                    headerTitle: (props) => <HackGTitle {...props} />,
+                                    headerTitle: (props) => <HackGTIcon {...props} />,
                                     headerStyle: dStyles.tabBarBackgroundColor,
                                     headerLeft: null
                                 }}
