@@ -58,7 +58,6 @@ export function ScheduleTab(props) {
   return (
     <ThemeContext.Consumer>
       {({ dynamicStyles }) => {
-        console.log('PENIS', state)
         let events = state.hackathon.events;
         const hasEventsNow = eventsHappeningNow.length > 0;
         const happeningNowView = (
