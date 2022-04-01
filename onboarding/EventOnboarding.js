@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Dimensions, Clipboard } from "react-native";
 import {
   ScrollView,
@@ -21,20 +21,27 @@ import QRCode from "react-native-qrcode-svg";
 import { Linking } from "react-native";
 import { AuthContext, HackathonContext, ThemeContext } from "../context";
 
-export class EventOnboarding extends Component {
-  static contextType = HackathonContext;
+export function EventOnboarding(props) {
+  const { state } = useContext(HackathonContext)
+  const hackathon = state.hackathon
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      pageIndex: 0,
-      pageCount: 3,
-    };
-  }
+  const [pageIndex, setPageIndex] = useState(0)
+  const [pageCount, setPageCount] = useState(3)
+  
+  const scrollViewRef = useRef(null)
 
-  createScreens(width) {
-    const hackathonName = this.context.hackathon.name;
-    const slackUrl = this.context.hackathon.slackUrl;
+  useEffect(() => {
+    const screenWidth = Dimensions.get("window").width;
+
+    const newHorizontalPosition = pageIndex * screenWidth;
+    if (scrollViewRef != null) {
+      scrollViewRef.current.scrollTo({ x: newHorizontalPosition });
+    }
+  })
+
+  const createScreens = (width) => {
+    const hackathonName = hackathon.name;
+    const slackUrl = hackathon.slackUrl;
 
     // TODO: test this
     const qrCode = (
@@ -184,8 +191,8 @@ export class EventOnboarding extends Component {
     );
   }
 
-  statusHeader() {
-    const portionComplete = (this.state.pageIndex + 1) / this.state.pageCount;
+  const statusHeader = () => {
+    const portionComplete = (pageIndex + 1) / pageCount;
 
     return (
       <ThemeContext.Consumer>
@@ -194,8 +201,8 @@ export class EventOnboarding extends Component {
             <View flex={0.1}>
               <TouchableOpacity
                 onPress={() => {
-                  if (this.state.pageIndex - 1 >= 0) {
-                    this.setState({ pageIndex: this.state.pageIndex - 1 });
+                  if (pageIndex - 1 >= 0) {
+                    setPageIndex(pageIndex - 1)
                   }
                 }}
               >
@@ -226,56 +233,45 @@ export class EventOnboarding extends Component {
     );
   }
 
-  componentDidUpdate() {
-    const screenWidth = Dimensions.get("window").width;
+  const screenWidth = Dimensions.get("window").width;
 
-    const newHorizontalPosition = this.state.pageIndex * screenWidth;
-    if (this.scrollView != null) {
-      this.scrollView.scrollTo({ x: newHorizontalPosition });
-    }
-  }
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <SafeAreaView
+          style={[dynamicStyles.backgroundColor, styles.rootView]}
+        >
+          {statusHeader()}
 
-  render() {
-    const screenWidth = Dimensions.get("window").width;
-
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <SafeAreaView
-            style={[dynamicStyles.backgroundColor, styles.rootView]}
+          <ScrollView
+            style={dynamicStyles.backgroundColor}
+            ref={scrollViewRef}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled={true}
+            scrollEnabled={false}
           >
-            {this.statusHeader()}
+            {createScreens(screenWidth)}
+          </ScrollView>
 
-            <ScrollView
-              style={dynamicStyles.backgroundColor}
-              ref={(ref) => (this.scrollView = ref)}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled={true}
-              scrollEnabled={false}
+          <View style={[dynamicStyles.backgroundColor, styles.footer]}>
+            <TouchableOpacity
+              onPress={() => {
+                if (pageIndex < pageCount - 1) {
+                  setPageIndex(pageIndex + 1)
+                } else {
+                  // reached end, onboarding complete
+                  props.onDone();
+                }
+              }}
             >
-              {this.createScreens(screenWidth)}
-            </ScrollView>
-
-            <View style={[dynamicStyles.backgroundColor, styles.footer]}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (this.state.pageIndex < this.state.pageCount - 1) {
-                    this.setState({ pageIndex: this.state.pageIndex + 1 });
-                  } else {
-                    // reached end, onboarding complete
-                    this.props.onDone();
-                  }
-                }}
-              >
-                <ContinueButton />
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+              <ContinueButton />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({

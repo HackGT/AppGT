@@ -3,27 +3,25 @@ import { Text, View, StyleSheet } from "react-native";
 import Logo from "../assets/Logo";
 import { ThemeContext } from "../context";
 
-export class ContentInfo extends Component {
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <View style={styles.root} flexDirection="column">
-            {this.props.image ? this.props.image : <Logo />}
-            <Text style={[dynamicStyles.text, styles.textTitle]}>
-              {this.props.title}
+export function ContentInfo(props) {
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <View style={styles.root} flexDirection="column">
+          {props.image ? props.image : <Logo />}
+          <Text style={[dynamicStyles.text, styles.textTitle]}>
+            {props.title}
+          </Text>
+          {props.subtitles.map((subtitle, i) => (
+            <Text key={i} style={[dynamicStyles.text, styles.textSubtitle]}>
+              {subtitle}
             </Text>
-            {this.props.subtitles.map((subtitle, i) => (
-              <Text key={i} style={[dynamicStyles.text, styles.textSubtitle]}>
-                {subtitle}
-              </Text>
-            ))}
-            {this.props.button ? this.props.button : null}
-          </View>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+          ))}
+          {props.button ? props.button : null}
+        </View>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({

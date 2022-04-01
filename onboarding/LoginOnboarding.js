@@ -1,11 +1,9 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import {
-  Text,
   ScrollView,
   View,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import Logo from "../assets/Logo";
@@ -16,18 +14,12 @@ import { ContentInfo } from "./ContentInfo";
 import { AuthContext, ThemeContext } from "../context";
 import { GradientButton } from "../components/GradientButton";
 
-export class LoginOnboarding extends Component {
-  static contextType = ThemeContext;
+export function LoginOnboarding(props) {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      pageIndex: 0,
-      pageCount: 3,
-    };
-  }
+  const [pageIndex, setPageIndex] = useState(0)
+  const [pageCount, setPageCount] = useState(3)
 
-  createScreens(width) {
+  const createScreens = (width) => {
     const hackgtLogo = (
       <View style={styles.firstScreenLogo}>
         <Logo />
@@ -92,10 +84,10 @@ export class LoginOnboarding extends Component {
   }
 
   // render the dots indicating which page user is on
-  indexIndicator() {
+  const indexIndicator = () => {
     const radius = 4;
     const size = radius * 2;
-    const bubbles = Array.from(new Array(this.state.pageCount).keys()).map(
+    const bubbles = Array.from(new Array(pageCount).keys()).map(
       (i) => {
         return (
           <ThemeContext.Consumer>
@@ -106,7 +98,7 @@ export class LoginOnboarding extends Component {
                   cy={radius}
                   r={radius}
                   fill={
-                    i == this.state.pageIndex
+                    i == pageIndex
                       ? dynamicStyles.tintColor.color
                       : dynamicStyles.secondaryBackgroundColor.backgroundColor
                   }
@@ -121,68 +113,64 @@ export class LoginOnboarding extends Component {
     return <View flexDirection="row">{bubbles}</View>;
   }
 
-  render() {
-    const screenWidth = Dimensions.get("window").width;
+  const screenWidth = Dimensions.get("window").width;
 
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <AuthContext.Consumer>
-            {({ login, user, logout }) => {
-              return (
-                <View style={styles.rootView}>
-                  <ScrollView
-                    flex={0.8}
-                    style={dynamicStyles.backgroundColor}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    pagingEnabled={true}
-                    onMomentumScrollEnd={(scrollData) => {
-                      // update page indicator
-                      this.setState({
-                        pageIndex: Math.round(
-                          scrollData.nativeEvent.contentOffset.x / screenWidth
-                        ),
-                      });
-                    }}
-                  >
-                    {this.createScreens(screenWidth)}
-                  </ScrollView>
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <AuthContext.Consumer>
+          {({ login, user, logout }) => {
+            return (
+              <View style={styles.rootView}>
+                <ScrollView
+                  flex={0.8}
+                  style={dynamicStyles.backgroundColor}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  pagingEnabled={true}
+                  onMomentumScrollEnd={(scrollData) => {
+                    // update page indicator
+                    setPageIndex(Math.round(
+                      scrollData.nativeEvent.contentOffset.x / screenWidth
+                    ))
+                  }}
+                >
+                  {createScreens(screenWidth)}
+                </ScrollView>
 
-                  <View
-                    style={[dynamicStyles.backgroundColor, styles.footer]}
-                    flex={0.2}
-                  >
-                    {this.indexIndicator()}
+                <View
+                  style={[dynamicStyles.backgroundColor, styles.footer]}
+                  flex={0.2}
+                >
+                  {indexIndicator()}
 
-                    <GradientButton
-                      text="Get Started"
-                      onPress={() => login()}
-                    ></GradientButton>
+                  <GradientButton
+                    text="Get Started"
+                    onPress={() => login()}
+                  ></GradientButton>
 
-                    {/* TODO: put back login stuff */}
-                    {/* <TouchableOpacity onPress={() => login()}>
-                      <Text style={[dynamicStyles.text, styles.makeAccount]}>
-                        Don't have an account?
-                      </Text>
-                    </TouchableOpacity> */}
+                  {/* TODO: put back login stuff */}
+                  {/* <TouchableOpacity onPress={() => login()}>
+                    <Text style={[dynamicStyles.text, styles.makeAccount]}>
+                      Don't have an account?
+                    </Text>
+                  </TouchableOpacity> */}
 
-                    {/* TOOD: logout button */}
-                    {/* <TouchableOpacity onPress={() => logout()}>
-                      <Text style={[dynamicStyles.text, styles.toDelete]}>
-                        Logout (for testing.)
-                        {user != null ? user.email : "None."}
-                      </Text>
-                    </TouchableOpacity> */}
-                  </View>
+                  {/* TOOD: logout button */}
+                  {/* <TouchableOpacity onPress={() => logout()}>
+                    <Text style={[dynamicStyles.text, styles.toDelete]}>
+                      Logout (for testing.)
+                      {user != null ? user.email : "None."}
+                    </Text>
+                  </TouchableOpacity> */}
                 </View>
-              );
-            }}
-          </AuthContext.Consumer>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+              </View>
+            );
+          }}
+        </AuthContext.Consumer>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -229,5 +217,3 @@ const styles = StyleSheet.create({
     letterSpacing: 0.05,
   },
 });
-
-LoginOnboarding.contextType = AuthContext;
