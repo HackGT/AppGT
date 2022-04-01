@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import {
   Text,
@@ -21,64 +21,56 @@ import Underline from "../assets/UnderlineGradient";
 import { getTimeblocksForDay, isEventHappeningNow } from "../cms/DataHandler";
 import BackToTop from "../assets/ChevronUp";
 
-export class ScheduleDayView extends Component {
-  constructor(props) {
-    super(props);
+export function ScheduleDayView(props) {
 
-    const dayIndex =
-      this.props.initialDayIndex == -1 ? 0 : this.props.initialDayIndex;
+  const initDayIndex =
+    props.initialDayIndex == -1 ? 0 : props.initialDayIndex;
+  const [dayIndex, setDayIndex] = useState(initDayIndex)
 
-    this.state = {
-      dayIndex: dayIndex,
-    };
+  const tabListRef = useRef(null)
+  const currentScheduleRef = useRef(null)
 
-    this.tabListRef = React.createRef();
-    this.currentScheduleRef = React.createRef();
-  }
-
-  componentDidMount() {
-    if (this.props.events.count > 0) {
-      this.tabListRef.current.scrollToIndex({
-        index: this.state.dayIndex,
+  useEffect(() => {
+    if (props.events.count > 0) {
+      tabListRef.current.scrollToIndex({
+        index: dayIndex,
         animated: false,
       });
-      if (this.props.initialEventIndex > 0) {
-        if (this.currentScheduleRef != null) {
-          this.currentScheduleRef.scrollToIndex({
-            index: this.props.initialEventIndex,
+      if (props.initialEventIndex > 0) {
+        if (currentScheduleRef != null && props.days[dayIndex] == currentDayString) {
+          currentScheduleRef.current.scrollToIndex({
+            index: props.initialEventIndex,
             animated: false,
           });
         }
       }
     }
-  }
+  }, [])
 
-  tabContent = (day) => (
+  const tabContent = (day) => (
     <ThemeContext.Consumer>
       {({ dynamicStyles }) => {
-        const events = this.props.events;
+        const events = props.events;
         const currentDayString = day;
         const timeblocks = getTimeblocksForDay(events, currentDayString);
 
         return (
           <FlatList
-            ref={(ref) => {
-              if (this.props.days[this.state.dayIndex] == currentDayString) {
-                this.currentScheduleRef = ref;
-              }
-            }}
+            ref={currentScheduleRef}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              paddingBottom: this.props.paddingHeight,
+              paddingBottom: props.paddingHeight,
             }}
             data={timeblocks}
             keyExtractor={(item, index) => (item && item.id ? item.id : index)}
             onScrollToIndexFailed={(error) => {
               setTimeout(() => {
-                this.currentScheduleRef.scrollToIndex({
-                  index: error.index,
-                  animated: false,
-                });
+                if (props.days[dayIndex] == currentDayString) {
+                  currentScheduleRef.current.scrollToIndex({
+                    index: error.index,
+                    animated: false,
+                  });
+                }
               }, 100);
             }}
             renderItem={({ item, index }) => {
@@ -138,7 +130,7 @@ export class ScheduleDayView extends Component {
                   <TouchableOpacity
                     style={styles.cardParent}
                     onPress={() => {
-                      this.props.onSelectEvent(item);
+                      props.onSelectEvent(item);
                     }}
                   >
                     <ScheduleEventCell event={item} highlighted={highlighted} />
@@ -152,14 +144,14 @@ export class ScheduleDayView extends Component {
     </ThemeContext.Consumer>
   );
 
-  dayTabView = (width) => {
+  const dayTabView = (width) => {
     return (
       <ThemeContext.Consumer>
         {({ dynamicStyles }) => (
           <View style={dynamicStyles.backgroundColor}>
             <View flexDirection="row" style={styles.daysParent}>
-              {this.props.days.map((dayString, i) => {
-                const isHighlight = this.state.dayIndex == i;
+              {props.days.map((dayString, i) => {
+                const isHighlight = dayIndex == i;
                 let button;
 
                 if (dayString == "friday") {
@@ -191,9 +183,9 @@ export class ScheduleDayView extends Component {
                   alignSelf: "center",
                   top: 7,
                   height: 3,
-                  width: (width * 0.9) / this.props.days.length,
+                  width: (width * 0.9) / props.days.length,
                 };
-                if (i == this.state.dayIndex) {
+                if (i == dayIndex) {
                   underline = (
                     <Underline
                       style={{
@@ -202,7 +194,7 @@ export class ScheduleDayView extends Component {
                         justifyContent: "center",
                         alignSelf: "center",
                       }}
-                      width={(width * 0.9) / this.props.days.length}
+                      width={(width * 0.9) / props.days.length}
                     />
                   );
                 } else {
@@ -220,9 +212,9 @@ export class ScheduleDayView extends Component {
                   <TouchableOpacity
                     key={i}
                     onPress={() => {
-                      if (this.tabListRef.current != null) {
-                        this.tabListRef.current.scrollToIndex({ index: i });
-                        this.setState({ dayIndex: i });
+                      if (tabListRef.current != null) {
+                        tabListRef.current.scrollToIndex({ index: i });
+                        setDayIndex(i)
                       }
                     }}
                   >
@@ -238,18 +230,18 @@ export class ScheduleDayView extends Component {
     );
   };
 
-  backToTopButton = () => {
+  const backToTopButton = () => {
     return (
       <TouchableOpacity
         style={{
           position: "absolute",
           right: 0,
-          bottom: this.props.paddingHeight + 10,
+          bottom: props.paddingHeight + 10,
         }}
         onPress={() => {
-          if (this.currentScheduleRef != null) {
-            this.currentScheduleRef.scrollToIndex({
-              index: this.props.initialEventIndex,
+          if (currentScheduleRef != null && props.days[dayIndex] == currentDayString) {
+            currentScheduleRef.current.scrollToIndex({
+              index: props.initialEventIndex,
               animated: true,
             });
           }
@@ -260,64 +252,60 @@ export class ScheduleDayView extends Component {
     );
   };
 
-  render() {
-    const width = Dimensions.get("window").width;
-    // only show back to top button if the current tab is on the current day, and there are events
-    const shouldShowBackToTopButton =
-      this.state.dayIndex == this.props.initialDayIndex &&
-      this.props.initialEventIndex != -1;
-    const itemStyle = {
-      width: width,
-      justifyContent: "center",
-      alignItems: "center",
-    };
+  const width = Dimensions.get("window").width;
+  // only show back to top button if the current tab is on the current day, and there are events
+  const shouldShowBackToTopButton =
+    dayIndex == props.initialDayIndex &&
+    props.initialEventIndex != -1;
+  const itemStyle = {
+    width: width,
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <View>
-            {this.dayTabView(width)}
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <View>
+          {dayTabView(width)}
 
-            <FlatList
-              ref={this.tabListRef}
-              data={this.props.days}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled={true}
-              keyExtractor={(item) => item}
-              onMomentumScrollEnd={(scrollData) => {
-                this.setState({
-                  dayIndex: Math.round(
-                    scrollData.nativeEvent.contentOffset.x / width
-                  ),
+          <FlatList
+            ref={tabListRef}
+            data={props.days}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled={true}
+            keyExtractor={(item) => item}
+            onMomentumScrollEnd={(scrollData) => {
+              setDayIndex(Math.round(
+                scrollData.nativeEvent.contentOffset.x / width
+              ))
+            }}
+            onScrollToIndexFailed={(error) => {
+              setTimeout(() => {
+                tabListRef.current.scrollToIndex({
+                  index: error.index,
+                  animated: false,
                 });
-              }}
-              onScrollToIndexFailed={(error) => {
-                setTimeout(() => {
-                  this.tabListRef.current.scrollToIndex({
-                    index: error.index,
-                    animated: false,
-                  });
-                }, 100);
-              }}
-              renderItem={({ item }) => {
-                return (
-                  <View
-                    key={item}
-                    style={[dynamicStyles.backgroundColor, itemStyle]}
-                  >
-                    {this.tabContent(item)}
-                  </View>
-                );
-              }}
-            />
+              }, 100);
+            }}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  key={item}
+                  style={[dynamicStyles.backgroundColor, itemStyle]}
+                >
+                  {tabContent(item)}
+                </View>
+              );
+            }}
+          />
 
-            {shouldShowBackToTopButton && this.backToTopButton()}
-          </View>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+          {shouldShowBackToTopButton && backToTopButton()}
+        </View>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({
