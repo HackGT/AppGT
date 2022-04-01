@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { ThemeContext } from "../context";
 import {
   Text,
@@ -8,53 +8,51 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default class TagScrollView extends Component {
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <View style={styles.container}>
-            <ScrollView
-              scrollEnabled={this.props.scroll}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              {this.props.tags.map((value, i) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() =>
-                      this.props.onPress && this.props.onPress(value)
-                    }
-                    disabled={this.props.disabled}
+export default function TagScrollView(props) {
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <View style={styles.container}>
+          <ScrollView
+            scrollEnabled={props.scroll}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          >
+            {props.tags.map((value, i) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    props.onPress && props.onPress(value)
+                  }
+                  disabled={props.disabled}
+                  style={[
+                    styles.tagStyle,
+                    props.highlightedTags &&
+                    props.highlightedTags.includes(value)
+                      ? dynamicStyles.tintBackgroundColor
+                      : dynamicStyles.searchBackgroundColor,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.tagStyle,
-                      this.props.highlightedTags &&
-                      this.props.highlightedTags.includes(value)
-                        ? dynamicStyles.tintBackgroundColor
-                        : dynamicStyles.searchBackgroundColor,
+                      styles.textStyle,
+                      props.highlightedTags &&
+                      props.highlightedTags.includes(value)
+                        ? { color: "white" }
+                        : dynamicStyles.text,
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.textStyle,
-                        this.props.highlightedTags &&
-                        this.props.highlightedTags.includes(value)
-                          ? { color: "white" }
-                          : dynamicStyles.text,
-                      ]}
-                    >
-                      {" "}
-                      {value}{" "}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+                    {" "}
+                    {value}{" "}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,18 +1,18 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import { ThemeContext } from "../context";
 
-export class Card extends Component {
-  createCardStyle = (dynamicStyles) => {
+export function Card(props) {
+  const createCardStyle = (dynamicStyles) => {
     const style = {
       padding: 17,
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "space-evenly",
-      height: this.props.height,
+      height: props.height,
       borderWidth: 1.3,
       borderRadius: 12,
-      borderColor: this.props.highlighted
+      borderColor: props.highlighted
         ? dynamicStyles.tintColor.color
         : dynamicStyles.tritaryBackgroundColor.backgroundColor,
       elevation: 1, // android shadow
@@ -25,24 +25,22 @@ export class Card extends Component {
     return style;
   };
 
-  render() {
-    return (
-      <ThemeContext.Consumer>
-        {({ dynamicStyles }) => (
-          <View style={styles.cardParent}>
-            <View
-              style={[
-                dynamicStyles.tritaryBackgroundColor,
-                this.createCardStyle(dynamicStyles),
-              ]}
-            >
-              {this.props.children}
-            </View>
+  return (
+    <ThemeContext.Consumer>
+      {({ dynamicStyles }) => (
+        <View style={styles.cardParent}>
+          <View
+            style={[
+              dynamicStyles.tritaryBackgroundColor,
+              createCardStyle(dynamicStyles),
+            ]}
+          >
+            {props.children}
           </View>
-        )}
-      </ThemeContext.Consumer>
-    );
-  }
+        </View>
+      )}
+    </ThemeContext.Consumer>
+  );
 }
 
 const styles = StyleSheet.create({
