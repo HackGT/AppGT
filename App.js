@@ -1,8 +1,10 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
+import { WebView } from 'react-native-webview';
+import UserAgent from 'react-native-user-agent'
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext } from "./context";
-import { StatusBar, Modal } from "react-native";
+import { StatusBar, Modal, SafeAreaView, Text, View } from "react-native";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
 import { EventOnboarding } from "./onboarding/EventOnboarding";
@@ -11,6 +13,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faInfoCircle, faCalendar, faMapSigns, faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
+import Logo from "./assets/Logo";
 import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
@@ -33,7 +36,10 @@ import {
 
 import { ThemeProvider, HackathonProvider, AuthProvider } from "./state_management";
 
-const authUrl = "https://login.hack.gt";
+// old groundtruth auth
+// const authUrl = "https://login.hack.gt";
+const authUrl = "https://login.hexlabs.org"
+
 
 const config = {
   clientId: "7d1c11b30351e91d6517492c19a9a0185a6e4e6304f9826f96a76895534cf26f",
@@ -111,10 +117,11 @@ function App(props) {
   const [isFetchingData, setIsFetchingData] = useState(true)
   const [isFetchingLogin, setIsFetchingLogin] = useState(true)
    // login data
+  const [showLogin, setShowLogin] = useState(false); 
   const [user, setUser] = useState(null)
   const [accessToken, setAccessToken] = useState(null)
 
-  // TODO: temporay, onboarding login should show when user is null. login is disabled so remove this whn fixed
+  // TODO: temporary, onboarding login should show when user is null. login is disabled so remove this whn fixed
   const [skipOnboarding, setSkipOnboarding] = useState(false)
   const [scheduleModal, setScheduleModal] = useState(false)
   const [pastEventOnboardID, setPastEventOnboardID] = useState(null)
@@ -278,17 +285,26 @@ function App(props) {
     });
   };
 
+  // groundtruth login
+  // const login = async () => {
+  //   try {
+  //     const result = await authorize(config);
+  //     console.log('Login result: ', result, result['accessToken'], result.accessToken)
+  //     setAccessToken(result.accessToken)
+  //     fetchUserDetails(result.accessToken);
+  //     AsyncStorage.setItem("accessToken", result.accessToken);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const login = async () => {
     try {
-      const result = await authorize(config);
-      console.log('Login result: ', result, result['accessToken'], result.accessToken)
-      setAccessToken(result.accessToken)
-      fetchUserDetails(result.accessToken);
-      AsyncStorage.setItem("accessToken", result.accessToken);
+      setShowLogin(!showLogin);
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const fetchUserDetails = async (accessToken) => {
     fetch(`${authUrl}/api/user`, {
@@ -349,7 +365,7 @@ function App(props) {
       </ThemeContext.Provider>
     );
   }
-
+  console.log('AGENT: ', UserAgent.getUserAgent())
   // if user needs to login, do splash grow/fade out animation then show login
   if (needsLogin) {
     return (
@@ -368,6 +384,37 @@ function App(props) {
         >
           {!scheduleModal && splashGrowModal}
           <LoginOnboarding />
+          <Modal visible={showLogin}>
+            <SafeAreaView style={{ flex: 1 }}>
+              <WebView
+                source={{uri: authUrl }}
+                userAgent='Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/105.0.5195.129 Mobile/15E148 Safari/604.1'
+                javaScriptCanOpenWindowsAutomatically={true}
+                javaScriptEnabled={true}
+                onNavigationStateChange={(event) => {
+                  console.log(event);
+                  if (event.url.startsWith('https://hexlabs-cloud.firebaseapp.com/__/auth/')) {// event.title === 'OAuth application authorized') {
+                    const splitUrl = event.url.split('?')
+                    if (splitUrl[1]) {
+                      const params = splitUrl[1].split('&')
+                      const codeParam = params.find(param => param.startsWith('code'))
+                      if (codeParam) {
+                        const authCode = codeParam.split('=')[1]
+                        console.log('AuthCode: ', authCode)
+                        setShowLogin(false)
+                      }
+                    } 
+                  }
+                }}
+              />
+            </SafeAreaView>
+            <View style={{ height: 1, backgroundColor: '#F3F3F3'}}/>
+            <SafeAreaView>
+            <View style={{ paddingTop: 10 }}>
+              <Logo height={50} style={{alignSelf: 'center'}}/>
+            </View>
+            </SafeAreaView>
+          </Modal>
         </AuthContext.Provider>
       </ThemeContext.Provider>
     );
