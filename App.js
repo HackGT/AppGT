@@ -386,6 +386,7 @@ function App(props) {
           <LoginOnboarding />
           <Modal visible={showLogin}>
             <SafeAreaView style={{ flex: 1 }}>
+              {/* Use the following url with Chrome on Iphone for userAgent: https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome */}
               <WebView
                 source={{uri: authUrl }}
                 userAgent='Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/105.0.5195.129 Mobile/15E148 Safari/604.1'
