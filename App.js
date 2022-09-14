@@ -26,6 +26,8 @@ import {
 import { dynamicStyles } from "./themes";
 import firebase from "@react-native-firebase/app";
 import messaging from "@react-native-firebase/messaging";
+import { initializeApp } from 'firebase/app';
+import { getAuth, GithubAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { 
   ScheduleStackScreen, 
@@ -38,7 +40,7 @@ import { ThemeProvider, HackathonProvider, AuthProvider } from "./state_manageme
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
-const authUrl = "https://login.hexlabs.org"
+const authUrl = "https://login.hexlabs.org/?redirect=https://mobile.hexlabs.org"
 
 
 const config = {
@@ -103,6 +105,14 @@ PushNotification.configure({
 
 // for editing styles shown on tabs, see https://reactnavigation.org/docs/tab-based-navigation
 const Tab = createBottomTabNavigator();
+
+const app = initializeApp({
+  apiKey: "AIzaSyCsukUZtMkI5FD_etGfefO4Sr7fHkZM7Rg",
+  authDomain: "hexlabs-cloud.firebaseapp.com",
+});
+
+const auth = getAuth(app);
+const provider = new GithubAuthProvider();
 
 function App(props) {
 
@@ -298,12 +308,23 @@ function App(props) {
   //   }
   // };
 
+  // webview login
+  // const login = async () => {
+  //   try {
+  //     setShowLogin(!showLogin);
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+
   const login = async () => {
-    try {
-      setShowLogin(!showLogin);
-    } catch (error) {
-      console.log(error)
-    }
+    signInWithPopup(auth, provider)
+      .then((userCredential) => {
+        setCookieAndRedirect(userCredential, navigate, location);
+      })
+      .catch((error) => {
+        handleLoginError(error);
+      });
   }
 
   const fetchUserDetails = async (accessToken) => {
@@ -394,17 +415,17 @@ function App(props) {
                 javaScriptEnabled={true}
                 onNavigationStateChange={(event) => {
                   console.log(event);
-                  if (event.url.startsWith('https://hexlabs-cloud.firebaseapp.com/__/auth/')) {// event.title === 'OAuth application authorized') {
+                  if (event.url.startsWith('https://mobile.hexlabs.org')) {// event.title === 'OAuth application authorized') {
                     const splitUrl = event.url.split('?')
                     if (splitUrl[1]) {
                       const params = splitUrl[1].split('&')
-                      const codeParam = params.find(param => param.startsWith('code'))
+                      const codeParam = params.find(param => param.startsWith('idToken'))
                       if (codeParam) {
                         const authCode = codeParam.split('=')[1]
                         console.log('AuthCode: ', authCode)
                         setShowLogin(false)
                       }
-                    } 
+                    }
                   }
                 }}
               />
