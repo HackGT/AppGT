@@ -309,23 +309,23 @@ function App(props) {
   // };
 
   // webview login
-  // const login = async () => {
-  //   try {
-  //     setShowLogin(!showLogin);
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   const login = async () => {
-    signInWithPopup(auth, provider)
-      .then((userCredential) => {
-        setCookieAndRedirect(userCredential, navigate, location);
-      })
-      .catch((error) => {
-        handleLoginError(error);
-      });
+    try {
+      setShowLogin(!showLogin);
+    } catch (error) {
+      console.log(error)
+    }
   }
+
+  // const login = async () => {
+  //   signInWithPopup(auth, provider)
+  //     .then((userCredential) => {
+  //       console.log('CRED: ', userCredential)
+  //     })
+  //     .catch((error) => {
+  //       // handleLoginError(error);
+  //     });
+  // }
 
   const fetchUserDetails = async (accessToken) => {
     fetch(`${authUrl}/api/user`, {
@@ -413,6 +413,7 @@ function App(props) {
                 userAgent='Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/105.0.5195.129 Mobile/15E148 Safari/604.1'
                 javaScriptCanOpenWindowsAutomatically={true}
                 javaScriptEnabled={true}
+                useWebKit={true}
                 onNavigationStateChange={(event) => {
                   console.log(event);
                   if (event.url.startsWith('https://mobile.hexlabs.org')) {// event.title === 'OAuth application authorized') {
