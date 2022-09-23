@@ -12,6 +12,18 @@ export const dynamicStyles = new DynamicStyleSheet({
     color: new DynamicValue("#3F3F3F", "white"),
   },
 
+  toggleText: {
+    color: new DynamicValue("black", "white"),
+  },
+
+  trackBarBackground: {
+    color: new DynamicValue("#d3d3d3", "#4a5568"),
+  },
+
+  toggleThumbBackgroundColor: {
+    color: new DynamicValue("white", "black"),
+  },
+
   filterText: {
     color: new DynamicValue("white", "#0F0F0F"),
     fontSize: 15,

@@ -45,6 +45,7 @@
     "react-native-screens": "^2.18.1",
     "react-native-svg": "^12.1.1",
     "react-native-svg-transformer": "^0.14.3",
+    "react-native-toggle-element": "^2.0.1",
     "react-native-vector-icons": "^7.1.0"
   },
   "devDependencies": {
