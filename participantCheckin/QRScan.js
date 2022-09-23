@@ -123,7 +123,7 @@ function QRScan(props) {
             <View style={{ marginTop: 5, alignItems: "center" }}>
               <Toggle
                 value={toggleValue}
-                onPress={(newState) => setToggleValue(newState)}
+                onPress={setToggleValue}
                 leftComponent={
                   <Text
                     style={{
@@ -163,15 +163,19 @@ function QRScan(props) {
               />
             </View>
           </View>
-          <QRCodeScanner
-            ref={scanner}
-            reactivate={false}
-            fadeIn={false}
-            showMarker
-            markerStyle={{ borderColor: "white", borderWidth: 2 }}
-            onRead={onSuccess}
-            cameraStyle={{ width: Dimensions.get("window").width - 30 }}
-          />
+          {!toggleValue ? (
+            <QRCodeScanner
+              ref={scanner}
+              reactivate={false}
+              fadeIn={false}
+              showMarker
+              markerStyle={{ borderColor: "white", borderWidth: 2 }}
+              onRead={onSuccess}
+              cameraStyle={{ width: Dimensions.get("window").width - 30 }}
+            />
+          ) : (
+            <Text> test </Text>
+          )}
         </View>
       )}
     </ThemeContext.Consumer>
