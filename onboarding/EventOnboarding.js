@@ -49,7 +49,7 @@ export function EventOnboarding(props) {
         {({ dynamicStyles }) => (
           <AuthContext.Consumer>
             {({ user }) => {
-              const id = user ? user.uuid : "Unknown UUID";
+              const id = user ? user.userId : "Unknown UUID";
               return (
                 <QRCode
                   value={`user:${id}`}

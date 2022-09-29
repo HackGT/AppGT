@@ -67,7 +67,7 @@ export function ScavHuntItem(props) {
               completeHint(item.id)
               console.log('itemID ', item.id)
               AsyncStorage.setItem("completedHints", JSON.stringify(state.completedHints.concat([item.id])))
-              logInteraction(props.route.params.hackathonName, 'scavengerHunt', user.uuid, item.id)
+              logInteraction(props.route.params.hackathonName, 'scavengerHunt', user.userId, item.id)
             }
           }}>
             <Text style={[styles.answerButtonText]}>{'Submit'}</Text>

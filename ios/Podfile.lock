@@ -372,6 +372,8 @@ PODS:
     - RNFBApp
   - RNGestureHandler (1.10.3):
     - React-Core
+  - RNInAppBrowser (3.7.0):
+    - React-Core
   - RNPermissions (3.3.0):
     - React-Core
   - RNReanimated (1.13.3):
@@ -428,6 +430,7 @@ DEPENDENCIES:
   - "RNFBIid (from `../node_modules/@react-native-firebase/iid`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNInAppBrowser (from `../node_modules/react-native-inappbrowser-reborn`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -533,6 +536,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNInAppBrowser:
+    :path: "../node_modules/react-native-inappbrowser-reborn"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -600,6 +605,7 @@ SPEC CHECKSUMS:
   RNFBIid: e3a0c5de29ab0d414f6b186963066b4d34884d59
   RNFBMessaging: c873e6c37f69d22de22cab134413030a9c6330a9
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
+  RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNPermissions: bcd846e8f5a7f39e921cc7ca7172e2de0e698b6f
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
