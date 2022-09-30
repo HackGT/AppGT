@@ -1,6 +1,6 @@
 import React from "react";
 import { useDynamicStyleSheet } from "react-native-dark-mode";
-
+import { ScavHuntCrossword } from "./ScavHuntCrossword";
 import { ScavengerHuntTab } from "./ScavengerHuntTab";
 import { AuthContext } from "../context";
 import { ScavengerHuntStack } from "../stacks"
@@ -36,6 +36,16 @@ export default function ScavengerHuntStackScreen({ navigation }) {
                                 }}
                                 name="ScavHuntItem"
                                 component={ScavHuntItem}
+                            />
+                            <ScavengerHuntStack.Screen
+                                options={{
+                                    headerTitleAlign: "left",
+                                    headerTitle: (props) => <HackGTIcon {...props} />,
+                                    headerStyle: dStyles.tabBarBackgroundColor,
+                                    headerLeft: null
+                                }}
+                                name="ScavHuntCrossword"
+                                component={ScavHuntCrossword}
                             />
                         </ScavengerHuntStack.Navigator>
                     )
