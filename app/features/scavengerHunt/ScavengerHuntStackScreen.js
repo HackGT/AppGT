@@ -2,12 +2,12 @@ import React from "react";
 import { useDynamicStyleSheet } from "react-native-dark-mode";
 import { ScavHuntCrossword } from "./ScavHuntCrossword";
 import { ScavengerHuntTab } from "./ScavengerHuntTab";
-import { AuthContext } from "../../state/context";
 import { ScavengerHuntStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import ScavHuntProvider from "../../state/scavHunt";
 import { ScavHuntItem } from "./ScavHuntItem";
 import HackGTIcon from "../../../assets/images/HackGTIcon";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function ScavengerHuntStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);

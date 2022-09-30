@@ -2,11 +2,11 @@ import React from "react";
 import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { CheckInTab } from "./CheckInTab";
-import { AuthContext } from "../../state/context";
 import { CheckInStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import CheckInProvider from "../../state/checkIn";
 import HackGTIcon from "../../../assets/images/HackGTIcon";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function CheckInStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
