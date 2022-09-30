@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { SearchBar } from "react-native-elements";
 import { View, StyleSheet } from "react-native";
 import SearchIcon from "../../assets/images/Search";
 
 export function SearchComponent(props) {
+  const { dynamicStyles } = useContext(ThemeContext);
   const [searchText, setSearchText] = useState("");
 
   const searchEvents = (value) => {
@@ -12,35 +13,31 @@ export function SearchComponent(props) {
   };
 
   return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <View style={styles.searchHeader}>
-          <SearchBar
-            searchIcon={
-              <SearchIcon
-                fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
-              />
-            }
-            containerStyle={[
-              styles.searchContainer,
-              dynamicStyles.backgroundColor,
-              dynamicStyles.searchBorderTopColor,
-              dynamicStyles.searchBorderBottomColor,
-            ]}
-            inputContainerStyle={[
-              styles.inputContainer,
-              dynamicStyles.searchBackgroundColor,
-            ]}
-            clearIcon={null}
-            lightTheme
-            round
-            placeholder="Search..."
-            onChangeText={(value) => searchEvents(value)}
-            value={searchText}
+    <View style={styles.searchHeader}>
+      <SearchBar
+        searchIcon={
+          <SearchIcon
+            fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
           />
-        </View>
-      )}
-    </ThemeContext.Consumer>
+        }
+        containerStyle={[
+          styles.searchContainer,
+          dynamicStyles.backgroundColor,
+          dynamicStyles.searchBorderTopColor,
+          dynamicStyles.searchBorderBottomColor,
+        ]}
+        inputContainerStyle={[
+          styles.inputContainer,
+          dynamicStyles.searchBackgroundColor,
+        ]}
+        clearIcon={null}
+        lightTheme
+        round
+        placeholder="Search..."
+        onChangeText={(value) => searchEvents(value)}
+        value={searchText}
+      />
+    </View>
   );
 }
 

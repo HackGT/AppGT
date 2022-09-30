@@ -18,6 +18,7 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScavengerHuntTab(props) {
   const { state, completeHint } = useContext(ScavHuntContext);
+  const { dynamicStyles } = useContext(ThemeContext);
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
   const [currentDate, setCurrentDate] = useState(
@@ -52,170 +53,159 @@ export function ScavengerHuntTab(props) {
     return unsubscribe;
   });
 
+  var scavHunts = hackathon.scavengerHunts;
+  scavHunts.sort((item1, item2) => {
+    const d1 = Date.parse(item1.releaseDate);
+    const d2 = Date.parse(item2.releaseDate);
+    return d1 - d2;
+  });
+  const crosswordPuzzleChallenges = scavHunts.filter((challenge) => {
+    !challenge.isQR;
+  });
+  console.log(scavHunts);
+  var crosswordPuzzleButton = null;
+
+  if (crosswordPuzzleChallenges.length == 0) {
+    const available = true;
+    const isComplete = false;
+    crosswordPuzzleButton = () => (
+      <TouchableOpacity
+        disabled={!available}
+        style={[
+          styles.joinEvent,
+          {
+            borderColor: available ? dynamicStyles.tintColor.color : "white",
+            backgroundColor: isComplete
+              ? "#A4D496"
+              : available
+              ? "white"
+              : "#E0E0E0",
+          },
+        ]}
+        onPress={() => {
+          props.navigation.navigate("ScavHuntCrossword", {
+            challenges: crosswordPuzzleChallenges,
+            user: props.user,
+            hackathonName: hackathon.name,
+          });
+        }}
+      >
+        {available ? null : (
+          <FontAwesomeIcon
+            color={"gray"}
+            icon={faLock}
+            size={12}
+            style={{ position: "absolute", margin: 5 }}
+          />
+        )}
+        <Text
+          style={[
+            dynamicStyles.text,
+            styles.buttonHeaderText,
+            { color: available ? "black" : "gray" },
+          ]}
+        >
+          {"Crossword Puzzle"}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+  const scavHuntButtons = scavHunts.map((challenge) => {
+    if (!challenge.isQR) {
+      return null;
+    }
+    const item = {
+      ...challenge,
+      releaseDate: Date.parse(challenge.releaseDate),
+    };
+    const available = new Date(item.releaseDate) < currentDate;
+    const isComplete = state.completedHints.includes(item.id);
+    console.log(
+      "Scav Hunt info: \nRelease date",
+      new Date(item.releaseDate),
+      "current date: ",
+      currentDate,
+      "available: ",
+      available,
+      "isComplete: ",
+      isComplete
+    );
+    return (
+      <TouchableOpacity
+        disabled={!available}
+        style={[
+          styles.joinEvent,
+          {
+            borderColor: available ? dynamicStyles.tintColor.color : "white",
+            backgroundColor: isComplete
+              ? "#A4D496"
+              : available
+              ? "white"
+              : "#E0E0E0",
+          },
+        ]}
+        onPress={() => {
+          props.navigation.navigate("ScavHuntItem", {
+            item: item,
+            user: props.user,
+            hackathonName: hackathon.name,
+          });
+        }}
+      >
+        {available ? null : (
+          <FontAwesomeIcon
+            color={"gray"}
+            icon={faLock}
+            size={12}
+            style={{ position: "absolute", margin: 5 }}
+          />
+        )}
+        <Text
+          style={[
+            dynamicStyles.text,
+            styles.buttonHeaderText,
+            { color: available ? "black" : "gray" },
+          ]}
+        >
+          {item.title}
+        </Text>
+        <Text style={[dynamicStyles.text, styles.dateText]}>
+          {"Available " + moment(item.releaseDate).format("MMM D [at] h:mm A")}
+        </Text>
+      </TouchableOpacity>
+    );
+  });
+
+  const currPoints = state.completedHints.reduce((acc, curr) => {
+    return acc + (curr.points ? curr.points : 0);
+  }, 0);
+  const totalPoints = scavHunts.reduce((acc, curr) => {
+    return acc + (curr.points ? curr.points : 0);
+  }, 0);
+
   return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => {
-        var scavHunts = hackathon.scavengerHunts;
-        scavHunts.sort((item1, item2) => {
-          const d1 = Date.parse(item1.releaseDate);
-          const d2 = Date.parse(item2.releaseDate);
-          return d1 - d2;
-        });
-        const crosswordPuzzleChallenges = scavHunts.filter((challenge) => {
-          !challenge.isQR;
-        });
-        console.log(scavHunts);
-        var crosswordPuzzleButton = null;
-
-        if (crosswordPuzzleChallenges.length == 0) {
-          const available = true;
-          const isComplete = false;
-          crosswordPuzzleButton = () => (
-            <TouchableOpacity
-              disabled={!available}
-              style={[
-                styles.joinEvent,
-                {
-                  borderColor: available
-                    ? dynamicStyles.tintColor.color
-                    : "white",
-                  backgroundColor: isComplete
-                    ? "#A4D496"
-                    : available
-                    ? "white"
-                    : "#E0E0E0",
-                },
-              ]}
-              onPress={() => {
-                props.navigation.navigate("ScavHuntCrossword", {
-                  challenges: crosswordPuzzleChallenges,
-                  user: props.user,
-                  hackathonName: hackathon.name,
-                });
-              }}
-            >
-              {available ? null : (
-                <FontAwesomeIcon
-                  color={"gray"}
-                  icon={faLock}
-                  size={12}
-                  style={{ position: "absolute", margin: 5 }}
-                />
-              )}
-              <Text
-                style={[
-                  dynamicStyles.text,
-                  styles.buttonHeaderText,
-                  { color: available ? "black" : "gray" },
-                ]}
-              >
-                {"Crossword Puzzle"}
-              </Text>
-            </TouchableOpacity>
-          );
+    <ScrollView style={[dynamicStyles.backgroundColor]}>
+      <View style={[styles.scavHuntHeaderContainer]}>
+        <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+          {"Scavenger Hunt"}
+        </Text>
+        {totalPoints ? (
+          <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
+            {currPoints + "/" + totalPoints + " pts"}
+          </Text>
+        ) : null}
+      </View>
+      <Text style={[dynamicStyles.text, styles.infoText]}>
+        {
+          "Scavenger Hunt is a fun way to earn points for completing challenges!"
         }
-        const scavHuntButtons = scavHunts.map((challenge) => {
-          if (!challenge.isQR) {
-            return null;
-          }
-          const item = {
-            ...challenge,
-            releaseDate: Date.parse(challenge.releaseDate),
-          };
-          const available = new Date(item.releaseDate) < currentDate;
-          const isComplete = state.completedHints.includes(item.id);
-          console.log(
-            "Scav Hunt info: \nRelease date",
-            new Date(item.releaseDate),
-            "current date: ",
-            currentDate,
-            "available: ",
-            available,
-            "isComplete: ",
-            isComplete
-          );
-          return (
-            <TouchableOpacity
-              disabled={!available}
-              style={[
-                styles.joinEvent,
-                {
-                  borderColor: available
-                    ? dynamicStyles.tintColor.color
-                    : "white",
-                  backgroundColor: isComplete
-                    ? "#A4D496"
-                    : available
-                    ? "white"
-                    : "#E0E0E0",
-                },
-              ]}
-              onPress={() => {
-                props.navigation.navigate("ScavHuntItem", {
-                  item: item,
-                  user: props.user,
-                  hackathonName: hackathon.name,
-                });
-              }}
-            >
-              {available ? null : (
-                <FontAwesomeIcon
-                  color={"gray"}
-                  icon={faLock}
-                  size={12}
-                  style={{ position: "absolute", margin: 5 }}
-                />
-              )}
-              <Text
-                style={[
-                  dynamicStyles.text,
-                  styles.buttonHeaderText,
-                  { color: available ? "black" : "gray" },
-                ]}
-              >
-                {item.title}
-              </Text>
-              <Text style={[dynamicStyles.text, styles.dateText]}>
-                {"Available " +
-                  moment(item.releaseDate).format("MMM D [at] h:mm A")}
-              </Text>
-            </TouchableOpacity>
-          );
-        });
+      </Text>
 
-        const currPoints = state.completedHints.reduce((acc, curr) => {
-          return acc + (curr.points ? curr.points : 0);
-        }, 0);
-        const totalPoints = scavHunts.reduce((acc, curr) => {
-          return acc + (curr.points ? curr.points : 0);
-        }, 0);
-
-        return (
-          <ScrollView style={[dynamicStyles.backgroundColor]}>
-            <View style={[styles.scavHuntHeaderContainer]}>
-              <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                {"Scavenger Hunt"}
-              </Text>
-              {totalPoints ? (
-                <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
-                  {currPoints + "/" + totalPoints + " pts"}
-                </Text>
-              ) : null}
-            </View>
-            <Text style={[dynamicStyles.text, styles.infoText]}>
-              {
-                "Scavenger Hunt is a fun way to earn points for completing challenges!"
-              }
-            </Text>
-
-            <View style={styles.headerButtons}>
-              {scavHuntButtons}
-              {crosswordPuzzleButton()}
-            </View>
-          </ScrollView>
-        );
-      }}
-    </ThemeContext.Consumer>
+      <View style={styles.headerButtons}>
+        {scavHuntButtons}
+        {crosswordPuzzleButton()}
+      </View>
+    </ScrollView>
   );
 }
 

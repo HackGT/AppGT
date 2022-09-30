@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
   View,
   StyleSheet,
   ScrollView,
-  FlatList,
   TouchableOpacity,
-  Button,
   Pressable,
 } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
@@ -14,9 +12,9 @@ import { EventSel } from "./EventSel";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
-import { dynamicStyles } from "../../theme";
 
 export function CheckInTab(props) {
+  const { dynamicStyles } = useContext(ThemeContext);
   const [events, setEvents] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -34,19 +32,19 @@ export function CheckInTab(props) {
         body: JSON.stringify({
           query: `query {
             allEvents  (orderBy: "name", where: { hackathon: { isUsedForMobileApp:true } }) {
-                name
-                endTime
-                startTime
-                startDate
-                url
-                tags {
-                    name
-                }
-                description
-                location {
-                    name
-                }
-                id
+              name
+              endTime
+              startTime
+              startDate
+              url
+              tags {
+                  name
+              }
+              description
+              location {
+                  name
+              }
+              id
             }
           }`,
         }),
@@ -109,111 +107,101 @@ export function CheckInTab(props) {
     });
     if (selectedEvent == null) {
       return (
-        <ThemeContext.Consumer>
-          {({ dynamicStyles }) => (
-            <View style={dynamicStyles.backgroundColor}>
-              <View style={styles.header}>
-                <SearchBar
-                  searchIcon={
-                    <SearchIcon
-                      fill={
-                        dynamicStyles.secondaryBackgroundColor.backgroundColor
-                      }
-                    />
-                  }
-                  containerStyle={[
-                    styles.searchContainer,
-                    dynamicStyles.backgroundColor,
-                    dynamicStyles.searchBorderTopColor,
-                    dynamicStyles.searchBorderBottomColor,
-                    { flex: 1 },
-                  ]}
-                  inputContainerStyle={[
-                    styles.inputContainer,
-                    dynamicStyles.searchBackgroundColor,
-                  ]}
-                  clearIcon={null}
-                  lightTheme
-                  round
-                  placeholder="Search..."
-                  onChangeText={(value) => searchEvents(value)}
-                  value={searchText}
+        <View style={dynamicStyles.backgroundColor}>
+          <View style={styles.header}>
+            <SearchBar
+              searchIcon={
+                <SearchIcon
+                  fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
                 />
-              </View>
+              }
+              containerStyle={[
+                styles.searchContainer,
+                dynamicStyles.backgroundColor,
+                dynamicStyles.searchBorderTopColor,
+                dynamicStyles.searchBorderBottomColor,
+                { flex: 1 },
+              ]}
+              inputContainerStyle={[
+                styles.inputContainer,
+                dynamicStyles.searchBackgroundColor,
+              ]}
+              clearIcon={null}
+              lightTheme
+              round
+              placeholder="Search..."
+              onChangeText={(value) => searchEvents(value)}
+              value={searchText}
+            />
+          </View>
 
-              <ScrollView>
-                <View>
-                  <View style={styles.eventContainer}>{formattedEvents}</View>
-                </View>
-              </ScrollView>
+          <ScrollView>
+            <View>
+              <View style={styles.eventContainer}>{formattedEvents}</View>
             </View>
-          )}
-        </ThemeContext.Consumer>
+          </ScrollView>
+        </View>
       );
     } else {
       return (
-        <ThemeContext.Consumer>
-          {({ dynamicStyles }) => (
-            <ScrollView style={dynamicStyles.backgroundColor}>
-              <View style={styles.eventContainer}>
-                <Pressable
-                  style={styles.backButton}
-                  onPress={() => {
-                    onPressEvent(null);
-                  }}
-                >
-                  <Text style={[styles.backButtontext, dynamicStyles.text]}>
-                    {"< Back"}
-                  </Text>
-                </Pressable>
+        <ScrollView style={dynamicStyles.backgroundColor}>
+          <View style={styles.eventContainer}>
+            <Pressable
+              style={styles.backButton}
+              onPress={() => {
+                onPressEvent(null);
+              }}
+            >
+              <Text style={[styles.backButtontext, dynamicStyles.text]}>
+                {"< Back"}
+              </Text>
+            </Pressable>
 
-                <Text style={[styles.title, dynamicStyles.text]}>
-                  {selectedEvent.name}
-                </Text>
-                <Text
-                  numberOfLines={props.truncateText ? 1 : null}
-                  ellipsizeMode={"tail"}
-                  style={[
-                    dynamicStyles.secondaryText,
-                    {
-                      fontFamily: "SpaceMono-Bold",
-                      marginLeft: 0,
-                      textAlign: "center",
-                      fontSize: 14,
-                    },
-                  ]}
-                >
-                  {selectedEvent != null &&
-                  selectedEvent.location != null &&
-                  selectedEvent.location[0] != null &&
-                  selectedEvent.location[0].name != null
-                    ? selectedEvent.location[0].name + " • "
-                    : ""}
-                  {selectedEvent.startTime + " - " + selectedEvent.endTime}
-                </Text>
-                <ScanScreen
-                  eventID={selectedEvent.id}
-                  startTime={selectedEvent.startTime}
-                  endTime={selectedEvent.endTime}
-                  location={
-                    selectedEvent != null &&
-                    selectedEvent.location != null &&
-                    selectedEvent.location[0] != null &&
-                    selectedEvent.location[0].name != null
-                      ? selectedEvent.location[0].name + " • "
-                      : ""
-                  }
-                  type={
-                    selectedEvent != null && selectedEvent.type != null
-                      ? selectedEvent.type
-                      : { name: "none", color: "gray" }
-                  }
-                  description={selectedEvent.description}
-                />
-              </View>
-            </ScrollView>
-          )}
-        </ThemeContext.Consumer>
+            <Text style={[styles.title, dynamicStyles.text]}>
+              {selectedEvent.name}
+            </Text>
+            <Text
+              numberOfLines={props.truncateText ? 1 : null}
+              ellipsizeMode={"tail"}
+              style={[
+                dynamicStyles.secondaryText,
+                {
+                  fontFamily: "SpaceMono-Bold",
+                  marginLeft: 0,
+                  textAlign: "center",
+                  fontSize: 14,
+                },
+              ]}
+            >
+              {selectedEvent != null &&
+              selectedEvent.location != null &&
+              selectedEvent.location[0] != null &&
+              selectedEvent.location[0].name != null
+                ? selectedEvent.location[0].name + " • "
+                : ""}
+              {selectedEvent.startTime + " - " + selectedEvent.endTime}
+            </Text>
+            <ScanScreen
+              eventID={selectedEvent.id}
+              startTime={selectedEvent.startTime}
+              endTime={selectedEvent.endTime}
+              location={
+                selectedEvent != null &&
+                selectedEvent.location != null &&
+                selectedEvent.location[0] != null &&
+                selectedEvent.location[0].name != null
+                  ? selectedEvent.location[0].name + " • "
+                  : ""
+              }
+              type={
+                selectedEvent != null && selectedEvent.type != null
+                  ? selectedEvent.type
+                  : { name: "none", color: "gray" }
+              }
+              description={selectedEvent.description}
+            />
+          </View>
+        </ScrollView>
       );
     }
   } else {

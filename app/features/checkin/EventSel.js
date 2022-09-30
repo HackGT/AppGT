@@ -1,38 +1,38 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { Card } from "../../components/Card";
 
 export function EventSel(props) {
-  return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <View style={styles.card}>
-          <Card>
-            <View style={styles.titleHeader}>
-              <Text
-                numberOfLines={props.truncateText ? 1 : null}
-                style={styles.flexWrap}
-                ellipsizeMode={"tail"}
-                style={[dynamicStyles.text, styles.titleFont]}
-              >
-                {props.name}
-              </Text>
-            </View>
+  const { dynamicStyles } = useContext(ThemeContext);
 
-            <Text
-              numberOfLines={props.truncateText ? 1 : null}
-              style={styles.flexWrap}
-              ellipsizeMode={"tail"}
-              style={[dynamicStyles.secondaryText, styles.subtitleFont]}
-            >
-              {props.location}
-              {props.startTime} - {props.endTime}
-            </Text>
-          </Card>
+  return (
+    <View style={styles.card}>
+      <Card>
+        <View style={styles.titleHeader}>
+          <Text
+            numberOfLines={props.truncateText ? 1 : null}
+            ellipsizeMode={"tail"}
+            style={[styles.flexWrap, dynamicStyles.text, styles.titleFont]}
+          >
+            {props.name}
+          </Text>
         </View>
-      )}
-    </ThemeContext.Consumer>
+
+        <Text
+          numberOfLines={props.truncateText ? 1 : null}
+          ellipsizeMode={"tail"}
+          style={[
+            styles.flexWrap,
+            dynamicStyles.secondaryText,
+            styles.subtitleFont,
+          ]}
+        >
+          {props.location}
+          {props.startTime} - {props.endTime}
+        </Text>
+      </Card>
+    </View>
   );
 }
 

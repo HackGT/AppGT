@@ -1,17 +1,12 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { ThemeContext } from "../../contexts/ThemeContext";
 import QRScan from "./QRScan";
 
 export function ScanScreen(props) {
   return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <View style={styles.card}>
-          <QRScan eventID={props.eventID} />
-        </View>
-      )}
-    </ThemeContext.Consumer>
+    <View style={styles.card}>
+      <QRScan eventID={props.eventID} />
+    </View>
   );
 }
 

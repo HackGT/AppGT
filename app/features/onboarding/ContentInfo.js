@@ -1,26 +1,22 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Logo from "../../../assets/images/Logo";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ContentInfo(props) {
+  const { dynamicStyles } = useContext(ThemeContext);
+
   return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <View style={styles.root} flexDirection="column">
-          {props.image ? props.image : <Logo />}
-          <Text style={[dynamicStyles.text, styles.textTitle]}>
-            {props.title}
-          </Text>
-          {props.subtitles.map((subtitle, i) => (
-            <Text key={i} style={[dynamicStyles.text, styles.textSubtitle]}>
-              {subtitle}
-            </Text>
-          ))}
-          {props.button ? props.button : null}
-        </View>
-      )}
-    </ThemeContext.Consumer>
+    <View style={styles.root} flexDirection="column">
+      {props.image ? props.image : <Logo />}
+      <Text style={[dynamicStyles.text, styles.textTitle]}>{props.title}</Text>
+      {props.subtitles.map((subtitle, i) => (
+        <Text key={i} style={[dynamicStyles.text, styles.textSubtitle]}>
+          {subtitle}
+        </Text>
+      ))}
+      {props.button ? props.button : null}
+    </View>
   );
 }
 

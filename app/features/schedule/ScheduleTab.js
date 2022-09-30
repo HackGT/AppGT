@@ -23,6 +23,7 @@ import {
 
 export function ScheduleTab(props) {
   const { state } = useContext(HackathonContext);
+  const { dynamicStyles } = useContext(ThemeContext);
   const sheetRef = useRef(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventsHappeningNow, setEventsHappeningNow] = useState([]);
@@ -55,101 +56,87 @@ export function ScheduleTab(props) {
     }
   };
 
-  return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => {
-        let events = state.hackathon.events;
-        const hasEventsNow = eventsHappeningNow.length > 0;
-        const happeningNowView = (
-          <View style={[dynamicStyles.backgroundColor, styles.headerDetail]}>
-            <View style={styles.headerContent}>
-              <WhatsHappeningNow style={styles.headerText} />
-              <FlatList
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                data={eventsHappeningNow}
-                keyExtractor={(item, index) =>
-                  item && item.id ? item.id : index
-                }
-                renderItem={({ item }) => {
-                  console.log("ITEM: ", item);
-                  return (
-                    <TouchableOpacity
-                      style={styles.cardHorizontalParent}
-                      onPress={() => {
-                        onPressEvent(item);
-                      }}
-                    >
-                      <ScheduleEventCell
-                        event={item}
-                        highlighted
-                        truncateText
-                      />
-                    </TouchableOpacity>
-                  );
+  let events = state.hackathon.events;
+  const hasEventsNow = eventsHappeningNow.length > 0;
+  const happeningNowView = (
+    <View style={[dynamicStyles.backgroundColor, styles.headerDetail]}>
+      <View style={styles.headerContent}>
+        <WhatsHappeningNow style={styles.headerText} />
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={eventsHappeningNow}
+          keyExtractor={(item, index) => (item && item.id ? item.id : index)}
+          renderItem={({ item }) => {
+            console.log("ITEM: ", item);
+            return (
+              <TouchableOpacity
+                style={styles.cardHorizontalParent}
+                onPress={() => {
+                  onPressEvent(item);
                 }}
-              />
-            </View>
-          </View>
-        );
+              >
+                <ScheduleEventCell event={item} highlighted truncateText />
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
+    </View>
+  );
 
-        if (state.isStarSchedule) {
-          events = events.filter(
-            (event) => state.starredIds.indexOf(event.id) != -1
-          );
-        }
+  if (state.isStarSchedule) {
+    events = events.filter((event) => state.starredIds.indexOf(event.id) != -1);
+  }
 
-        const daysForEvents = getDaysForEvent(events);
-        const currentDayIndex = getCurrentDayIndex(events);
-        const initialEventIndex = getCurrentEventIndex(
-          events,
-          daysForEvents[currentDayIndex]
-        );
+  const daysForEvents = getDaysForEvent(events);
+  const currentDayIndex = getCurrentDayIndex(events);
+  const initialEventIndex = getCurrentEventIndex(
+    events,
+    daysForEvents[currentDayIndex]
+  );
 
-        if (state.isStarSchedule && state.starredIds.length === 0) {
-          return (
-            <Text
-              style={[
-                dynamicStyles.text,
-                styles.noEventsText,
-                dynamicStyles.backgroundColor,
-              ]}
-            >
-              You have no starred events.
-            </Text>
-          );
-        } else if (events.length == 0) {
-          return (
-            <Text
-              style={[
-                dynamicStyles.text,
-                styles.noEventsText,
-                dynamicStyles.backgroundColor,
-              ]}
-            >
-              No events found.
-            </Text>
-          );
-        }
+  if (state.isStarSchedule && state.starredIds.length === 0) {
+    return (
+      <Text
+        style={[
+          dynamicStyles.text,
+          styles.noEventsText,
+          dynamicStyles.backgroundColor,
+        ]}
+      >
+        You have no starred events.
+      </Text>
+    );
+  } else if (events.length == 0) {
+    return (
+      <Text
+        style={[
+          dynamicStyles.text,
+          styles.noEventsText,
+          dynamicStyles.backgroundColor,
+        ]}
+      >
+        No events found.
+      </Text>
+    );
+  }
 
-        return (
-          <View style={[dynamicStyles.backgroundColor, styles.underBackground]}>
-            <EventBottomSheet reference={sheetRef} event={selectedEvent} />
+  return (
+    <View style={[dynamicStyles.backgroundColor, styles.underBackground]}>
+      <EventBottomSheet reference={sheetRef} event={selectedEvent} />
 
-            {hasEventsNow ? happeningNowView : null}
-            {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
-            <ScheduleDayView
-              paddingHeight={hasEventsNow ? 160 : 40}
-              events={events}
-              initialEventIndex={initialEventIndex}
-              initialDayIndex={currentDayIndex}
-              days={daysForEvents}
-              onSelectEvent={onPressEvent}
-            />
-          </View>
-        );
-      }}
-    </ThemeContext.Consumer>
+      {hasEventsNow ? happeningNowView : null}
+      {!hasEventsNow ? <View style={{ height: 10 }} /> : null}
+      <ScheduleDayView
+        paddingHeight={hasEventsNow ? 160 : 40}
+        events={events}
+        initialEventIndex={initialEventIndex}
+        initialDayIndex={currentDayIndex}
+        days={daysForEvents}
+        onSelectEvent={onPressEvent}
+      />
+    </View>
   );
 }
 

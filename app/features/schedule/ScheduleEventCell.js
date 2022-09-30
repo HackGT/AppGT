@@ -9,7 +9,7 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScheduleEventCell(props) {
   const { state, toggleStar } = useContext(HackathonContext);
-  const [isStarred, setIsStarred] = useState(false);
+  const { dynamicStyles } = useContext(ThemeContext);
 
   const event = props.event;
   const eventType =
@@ -26,64 +26,59 @@ export function ScheduleEventCell(props) {
       : "";
   const start = event.startTime;
   const end = event.endTime;
+
+  const isStarred = state.starredIds.indexOf(event.id) != -1;
+
   return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => {
-        const isStarred = state.starredIds.indexOf(event.id) != -1;
-        console.log("toggling star function: ", toggleStar);
-        return (
-          <Card highlighted={props.highlighted}>
-            <View style={styles.titleHeader}>
-              <Text
-                numberOfLines={props.truncateText ? 1 : null}
-                style={styles.flexWrap}
-                ellipsizeMode={"tail"}
-                style={[dynamicStyles.text, styles.titleFont]}
-              >
-                {title}
-              </Text>
-              <TouchableOpacity
-                style={{ width: "10%" }}
-                onPress={() => {
-                  console.log("toggling star pressed", event.id);
-                  toggleStar(event);
-                }}
-              >
-                {isStarred ? (
-                  <StarOn fill={dynamicStyles.tintColor.color} />
-                ) : (
-                  <StarOff
-                    fill={
-                      dynamicStyles.secondaryBackgroundColor.backgroundColor
-                    }
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
+    <Card highlighted={props.highlighted}>
+      <View style={styles.titleHeader}>
+        <Text
+          numberOfLines={props.truncateText ? 1 : null}
+          ellipsizeMode={"tail"}
+          style={[styles.flexWrap, dynamicStyles.text, styles.titleFont]}
+        >
+          {title}
+        </Text>
+        <TouchableOpacity
+          style={{ width: "10%" }}
+          onPress={() => {
+            console.log("toggling star pressed", event.id);
+            toggleStar(event);
+          }}
+        >
+          {isStarred ? (
+            <StarOn fill={dynamicStyles.tintColor.color} />
+          ) : (
+            <StarOff
+              fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
 
-            <Text
-              numberOfLines={props.truncateText ? 1 : null}
-              style={styles.flexWrap}
-              ellipsizeMode={"tail"}
-              style={[dynamicStyles.secondaryText, styles.subtitleFont]}
-            >
-              {location}
-              {start} - {end}
+      <Text
+        numberOfLines={props.truncateText ? 1 : null}
+        ellipsizeMode={"tail"}
+        style={[
+          styles.flexWrap,
+          dynamicStyles.secondaryText,
+          styles.subtitleFont,
+        ]}
+      >
+        {location}
+        {start} - {end}
+      </Text>
+
+      <View style={{ flexDirection: "row" }}>
+        <EventTypeView eventType={eventType} />
+        {event.tags &&
+          event.tags.map((tag) => (
+            <Text style={[dynamicStyles.secondaryText, styles.tagFont]}>
+              {tag.name}
             </Text>
-
-            <View style={{ flexDirection: "row" }}>
-              <EventTypeView eventType={eventType} />
-              {event.tags &&
-                event.tags.map((tag) => (
-                  <Text style={[dynamicStyles.secondaryText, styles.tagFont]}>
-                    {tag.name}
-                  </Text>
-                ))}
-            </View>
-          </Card>
-        );
-      }}
-    </ThemeContext.Consumer>
+          ))}
+      </View>
+    </Card>
   );
 }
 

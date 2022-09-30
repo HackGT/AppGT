@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
 import {
   Text,
@@ -9,47 +9,43 @@ import {
 } from "react-native";
 
 export default function TagScrollView(props) {
+  const { dynamicStyles } = useContext(ThemeContext);
+
   return (
-    <ThemeContext.Consumer>
-      {({ dynamicStyles }) => (
-        <View style={styles.container}>
-          <ScrollView
-            scrollEnabled={props.scroll}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          >
-            {props.tags.map((value, i) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => props.onPress && props.onPress(value)}
-                  disabled={props.disabled}
-                  style={[
-                    styles.tagStyle,
-                    props.highlightedTags &&
-                    props.highlightedTags.includes(value)
-                      ? dynamicStyles.tintBackgroundColor
-                      : dynamicStyles.searchBackgroundColor,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.textStyle,
-                      props.highlightedTags &&
-                      props.highlightedTags.includes(value)
-                        ? { color: "white" }
-                        : dynamicStyles.text,
-                    ]}
-                  >
-                    {" "}
-                    {value}{" "}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-      )}
-    </ThemeContext.Consumer>
+    <View style={styles.container}>
+      <ScrollView
+        scrollEnabled={props.scroll}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
+        {props.tags.map((value, i) => {
+          return (
+            <TouchableOpacity
+              onPress={() => props.onPress && props.onPress(value)}
+              disabled={props.disabled}
+              style={[
+                styles.tagStyle,
+                props.highlightedTags && props.highlightedTags.includes(value)
+                  ? dynamicStyles.tintBackgroundColor
+                  : dynamicStyles.searchBackgroundColor,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.textStyle,
+                  props.highlightedTags && props.highlightedTags.includes(value)
+                    ? { color: "white" }
+                    : dynamicStyles.text,
+                ]}
+              >
+                {" "}
+                {value}{" "}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
   );
 }
 
