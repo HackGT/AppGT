@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Platform } from "react-native";
 import {
   ScrollView,
   View,
   StyleSheet,
 } from "react-native";
 import Svg, { Circle } from "react-native-svg";
+import { InAppBrowser } from 'react-native-inappbrowser-reborn'
+import { signInWithCustomToken } from "firebase/auth";
 import Logo from "../assets/Logo";
 import LogoText from "../assets/LogoText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -13,11 +15,67 @@ import { faUsers, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentInfo } from "./ContentInfo";
 import { AuthContext, ThemeContext } from "../context";
 import { GradientButton } from "../components/GradientButton";
+import { app } from '../'
+
+import { getAuth } from 'firebase/auth'
+
+
 
 export function LoginOnboarding(props) {
 
+  const auth = getAuth(app);
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(3)
+
+  const loginUrl = "https://login.hexlabs.org"
+  const authUrl = 'https://auth.api.hexlabs.org'
+
+
+  const login = async () => {
+    try {
+      const path = ''
+      const deepLink = getDeepLink(path)
+      const redirect = '/?redirect=hexlabs://' + path
+      const result = await InAppBrowser.openAuth(loginUrl + redirect, deepLink, {})
+      if (result.type === 'success') {
+        const splitUrl = result.url.split('?')
+        if (splitUrl[1]) {
+          const params = splitUrl[1].split('&')
+          const codeParam = params.find(param => param.startsWith('idToken'))
+          if (codeParam) {
+            const idToken = codeParam.split('=')[1]
+            console.log('idToken: ', idToken)
+            fetchAccessToken(idToken)
+          }
+        }
+      }
+      console.log(JSON.stringify(result))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getDeepLink = (path = '') => {
+    const scheme = 'hexlabs'
+    const prefix = Platform.OS == 'android' ? `${scheme}://my-host/` : `${scheme}://`
+    return prefix + path
+  }
+
+  const fetchAccessToken = async (idToken) => {
+    console.log('token: ', idToken)
+    fetch(`${authUrl + '/auth/status'}/`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + idToken,
+      }
+    }).then((response) => {
+      return response.json()
+    }).then((authJson) => {
+      console.log('auth: ', authJson)
+      const customToken = authJson.customToken
+      signInWithCustomToken(auth, customToken)
+    })
+  }
 
   const createScreens = (width) => {
     const hackgtLogo = (
@@ -118,56 +176,50 @@ export function LoginOnboarding(props) {
   return (
     <ThemeContext.Consumer>
       {({ dynamicStyles }) => (
-        <AuthContext.Consumer>
-          {({ login, user, logout }) => {
-            return (
-              <View style={styles.rootView}>
-                <ScrollView
-                  flex={0.8}
-                  style={dynamicStyles.backgroundColor}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  pagingEnabled={true}
-                  onMomentumScrollEnd={(scrollData) => {
-                    // update page indicator
-                    setPageIndex(Math.round(
-                      scrollData.nativeEvent.contentOffset.x / screenWidth
-                    ))
-                  }}
-                >
-                  {createScreens(screenWidth)}
-                </ScrollView>
+        <View style={styles.rootView}>
+          <ScrollView
+            flex={0.8}
+            style={dynamicStyles.backgroundColor}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled={true}
+            onMomentumScrollEnd={(scrollData) => {
+              // update page indicator
+              setPageIndex(Math.round(
+                scrollData.nativeEvent.contentOffset.x / screenWidth
+              ))
+            }}
+          >
+            {createScreens(screenWidth)}
+          </ScrollView>
 
-                <View
-                  style={[dynamicStyles.backgroundColor, styles.footer]}
-                  flex={0.2}
-                >
-                  {indexIndicator()}
+          <View
+            style={[dynamicStyles.backgroundColor, styles.footer]}
+            flex={0.2}
+          >
+            {indexIndicator()}
 
-                  <GradientButton
-                    text="Get Started"
-                    onPress={() => login()}
-                  ></GradientButton>
+            <GradientButton
+              text="Get Started"
+              onPress={() => login()}
+            ></GradientButton>
 
-                  {/* TODO: put back login stuff */}
-                  {/* <TouchableOpacity onPress={() => login()}>
-                    <Text style={[dynamicStyles.text, styles.makeAccount]}>
-                      Don't have an account?
-                    </Text>
-                  </TouchableOpacity> */}
+            {/* TODO: put back login stuff */}
+            {/* <TouchableOpacity onPress={() => login()}>
+              <Text style={[dynamicStyles.text, styles.makeAccount]}>
+                Don't have an account?
+              </Text>
+            </TouchableOpacity> */}
 
-                  {/* TOOD: logout button */}
-                  {/* <TouchableOpacity onPress={() => logout()}>
-                    <Text style={[dynamicStyles.text, styles.toDelete]}>
-                      Logout (for testing.)
-                      {user != null ? user.email : "None."}
-                    </Text>
-                  </TouchableOpacity> */}
-                </View>
-              </View>
-            );
-          }}
-        </AuthContext.Consumer>
+            {/* TOOD: logout button */}
+            {/* <TouchableOpacity onPress={() => logout()}>
+              <Text style={[dynamicStyles.text, styles.toDelete]}>
+                Logout (for testing.)
+                {user != null ? user.email : "None."}
+              </Text>
+            </TouchableOpacity> */}
+          </View>
+        </View>
       )}
     </ThemeContext.Consumer>
   );

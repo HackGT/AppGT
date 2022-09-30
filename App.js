@@ -1,8 +1,10 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
+import { WebView } from 'react-native-webview';
+import UserAgent from 'react-native-user-agent'
 import { fetchHackathonData } from "./cms";
 import { HackathonContext, AuthContext, ThemeContext } from "./context";
-import { StatusBar, Modal } from "react-native";
+import { StatusBar, Modal, SafeAreaView, Platform, View } from "react-native";
 import { LoginOnboarding } from "./onboarding/LoginOnboarding";
 import SplashScreen from "./components/SplashScreen";
 import { EventOnboarding } from "./onboarding/EventOnboarding";
@@ -11,6 +13,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faInfoCircle, faCalendar, faMapSigns, faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
+import Logo from "./assets/Logo";
 import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
@@ -33,15 +36,18 @@ import {
 
 import { ThemeProvider, HackathonProvider, AuthProvider } from "./state_management";
 
-const authUrl = "https://login.hack.gt";
+// old groundtruth auth
+// const authUrl = "https://login.hack.gt";
+const loginUrl = "https://login.hexlabs.org"
+
 
 const config = {
   clientId: "7d1c11b30351e91d6517492c19a9a0185a6e4e6304f9826f96a76895534cf26f",
   redirectUrl: "gt.hack.live://redirect",
   clientSecret: "hackgt",
   serviceConfiguration: {
-    authorizationEndpoint: `${authUrl}/oauth/authorize`,
-    tokenEndpoint: `${authUrl}/oauth/token`,
+    authorizationEndpoint: `${loginUrl}/oauth/authorize`,
+    tokenEndpoint: `${loginUrl}/oauth/token`,
   },
 };
 
@@ -103,19 +109,13 @@ function App(props) {
   // event data
   const [hackathon, setHackathon] = useState(null)
   const [eventTypes, setEventTypes] = useState([])
-  const [types, setTypes] = useState([])
   const [starredIds, setStarredIds] = useState([])
   const [isStarSchedule, setIsStarSchedule] = useState(false)
 
   // used for finding current state of screen for loading/login components
   const [isFetchingData, setIsFetchingData] = useState(true)
-  const [isFetchingLogin, setIsFetchingLogin] = useState(true)
-   // login data
-  const [user, setUser] = useState(null)
-  const [accessToken, setAccessToken] = useState(null)
 
-  // TODO: temporay, onboarding login should show when user is null. login is disabled so remove this whn fixed
-  const [skipOnboarding, setSkipOnboarding] = useState(false)
+  // TODO: temporary, onboarding login should show when user is null. login is disabled so remove this whn fixed
   const [scheduleModal, setScheduleModal] = useState(false)
   const [pastEventOnboardID, setPastEventOnboardID] = useState(null)
 
@@ -136,13 +136,6 @@ function App(props) {
       result &&
         setIsStarSchedule(result === true ? true : false)
       console.log(isStarSchedule)
-    });
-
-    AsyncStorage.getItem("userData", (error, result) => {
-      if (result) {
-        setUser(JSON.parse(result))
-      }
-      setIsFetchingLogin(false)
     });
 
     AsyncStorage.getItem("localEventTypeData", (error, result) => {
@@ -209,6 +202,8 @@ function App(props) {
 
   }, [])
 
+
+
   useEffect(() => {
     AsyncStorage.setItem(
       "isStarSchedule",
@@ -264,65 +259,24 @@ function App(props) {
   //   }
   // };
 
-  const logout = async () => {
-    fetch(`${authUrl}/api/user/logout`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    }).then((response) => {
-      AsyncStorage.removeItem("accessToken");
-      AsyncStorage.removeItem("userData");
-      setAccessToken("")
-      setUser(null)
-    });
-  };
-
-  const login = async () => {
-    try {
-      const result = await authorize(config);
-      console.log('Login result: ', result, result['accessToken'], result.accessToken)
-      setAccessToken(result.accessToken)
-      fetchUserDetails(result.accessToken);
-      AsyncStorage.setItem("accessToken", result.accessToken);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchUserDetails = async (accessToken) => {
-    fetch(`${authUrl}/api/user`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((userData) => {
-        const name = userData.nameParts;
-        const user = {
-          email: userData.email,
-          name: userData.name,
-          firstName: name.first,
-          preferredName: name.preferred,
-          lastName: name.last,
-          uuid: userData.uuid,
-        };
-
-        AsyncStorage.setItem("userData", JSON.stringify(user));
-        setUser(user)
-      });
-  };
+  // groundtruth login
+  // const login = async () => {
+  //   try {
+  //     const result = await authorize(config);
+  //     console.log('Login result: ', result, result['accessToken'], result.accessToken)
+  //     setAccessToken(result.accessToken)
+  //     fetchUserDetails(result.accessToken);
+  //     AsyncStorage.setItem("accessToken", result.accessToken);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const Stack = createStackNavigator();
 
   console.log(hackathon)
 
   // TODO: login re-enable
-  const needsLogin = user == null;
-  const isLoading = isFetchingData || isFetchingLogin;
 
   const splashGrowModal = (
     <Modal animationType="none" transparent={true}>
@@ -333,162 +287,158 @@ function App(props) {
     </Modal>
   );
 
-  // until app is done loading data, show the splash screen
-  if (isLoading) {
-    return (
-      <ThemeContext.Provider
-        value={{
-          theme: props.theme,
-          dynamicStyles: props.styles,
-        }}
-      >
-        <SplashScreen
-          grow={true}
-          onGrowDone={() => setScheduleModal(true)}
-        />
-      </ThemeContext.Provider>
-    );
-  }
 
-  // if user needs to login, do splash grow/fade out animation then show login
-  if (needsLogin) {
-    return (
-      <ThemeContext.Provider
-        value={{
-          theme: props.theme,
-          dynamicStyles: props.styles,
-        }}
-      >
-        <AuthContext.Provider
-          value={{
-            user: user,
-            login: login,
-            logout: logout,
-          }}
-        >
-          {!scheduleModal && splashGrowModal}
-          <LoginOnboarding />
-        </AuthContext.Provider>
-      </ThemeContext.Provider>
-    );
-  }
-
-  const showEventOnboard = pastEventOnboardID !== hackathon.id;
-
-  // if logging in with a hexlabs email
-  const showCheckin = /@hexlabs.org\s*$/.test(user.email)
-
-  // once logged in and all data is loaded, present full app after grow animation
   return (
-    <ThemeContext.Provider
-      value={{
-        theme: props.theme,
-        dynamicStyles: props.styles,
-      }}
-    >
-      <HackathonProvider
-        initialValue={{
-          hackathon: hackathon,
-          eventTypes: eventTypes,
-          starredIds: starredIds,
-          isStarSchedule: isStarSchedule,
-        }}
-      >
-        <AuthContext.Provider
-          value={{
-            user: user,
-            login: login,
-            logout: logout,
-          }}
-        >
-          {!scheduleModal && splashGrowModal}
-          <NavigationContainer>
-            <StatusBar
-              backgroundColor={
-                props.styles.tabBarBackgroundColor.backgroundColor
-              }
-              barStyle={
-                props.theme == "dark" ? "light-content" : "dark-content"
-              }
-            />
-
-            {/* TODO: when need tab bottom bar, convert "Stack." to "Tab." and remoe headerMode="none" and finally add different screens below */}
-            <Tab.Navigator
-              // headerMode="none"
-              tabBarOptions={{
-                activeTintColor: props.styles.tintColor.color,
-                style: props.styles.tabBarBackgroundColor,
-                showLabel: false,
-              }}
-              screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused, color, size }) => {
-                  let icon;
-                  const selectedColor = focused
-                    ? props.styles.tintColor.color
-                    : props.styles.text.color;
-
-                  if (route.name === "Schedule") {
-                    icon = faCalendar;
-                  } else if (route.name === "Information") {
-                    icon = faInfoCircle;
-                  } else if (route.name === "ScavengerHunt") {
-                    icon = faMapSigns
-                  } else if (route.name === "CheckIn") {
-                    icon = faClipboardCheck;
-                  }
-
-                  return (
-                    <FontAwesomeIcon
-                      color={selectedColor}
-                      icon={icon}
-                      size={26}
-                    />
-                  );
-                },
-              })}
-            >
-              {showEventOnboard ? (
-                <Stack.Screen
-                  name="Schedule"
-                  children={() => (
-                    <EventOnboarding
-                      onDone={() => {
-                        setPastEventOnboardID(hackathon.id)
-                        AsyncStorage.setItem(
-                          "pastEventOnboardID",
-                          hackathon.id
-                        );
-                      }}
-                    ></EventOnboarding>
-                  )}
-                ></Stack.Screen>
-              ) : (
-                <Stack.Screen
-                  name="Schedule"
-                  component={
-                    showEventOnboard ? EventOnboarding : ScheduleStackScreen
-                  }
+    <AuthProvider>
+      <AuthContext.Consumer>
+        {({isLoading, showLogin, user}) => {
+          // until app is done loading data, show the splash screen
+          if (isLoading || isFetchingData) {
+            return (
+              <ThemeContext.Provider
+                value={{
+                  theme: props.theme,
+                  dynamicStyles: props.styles,
+                }}
+              >
+                <SplashScreen
+                  grow={true}
+                  onGrowDone={() => setScheduleModal(true)}
                 />
-              )}
+              </ThemeContext.Provider>
+            );
+          }
+          // if user needs to login, do splash grow/fade out animation then show login
+          if (showLogin) {
+            return (
+              <ThemeContext.Provider
+                value={{
+                  theme: props.theme,
+                  dynamicStyles: props.styles,
+                }}
+              >
 
-              <Stack.Screen
-                name="Information"
-                component={InformationStackScreen}
-              />
-              <Stack.Screen
-                name="ScavengerHunt"
-                component={ScavengerHuntStackScreen}
-              />
-              <Stack.Screen
-                name="CheckIn"
-                component={CheckInStackScreen}
-              />
-            </Tab.Navigator>
-          </NavigationContainer>
-        </AuthContext.Provider>
-      </HackathonProvider>
-    </ThemeContext.Provider>
-  );
+                  {!scheduleModal && splashGrowModal}
+                  <LoginOnboarding />
+              </ThemeContext.Provider>
+            );
+          }
+
+          const showEventOnboard = pastEventOnboardID !== hackathon.id;
+
+          // if logging in with a hexlabs email
+          // const showCheckin = /@hexlabs.org\s*$/.test(user.email)
+          const showCheckin = user && user.roles.member
+          // once logged in and all data is loaded, present full app after grow animation
+          return (
+            <ThemeContext.Provider
+              value={{
+                theme: props.theme,
+                dynamicStyles: props.styles,
+              }}
+            >
+              <HackathonProvider
+                initialValue={{
+                  hackathon: hackathon,
+                  eventTypes: eventTypes,
+                  starredIds: starredIds,
+                  isStarSchedule: isStarSchedule,
+                }}
+              >
+                  {!scheduleModal && splashGrowModal}
+                  <NavigationContainer>
+                    <StatusBar
+                      backgroundColor={
+                        props.styles.tabBarBackgroundColor.backgroundColor
+                      }
+                      barStyle={
+                        props.theme == "dark" ? "light-content" : "dark-content"
+                      }
+                    />
+
+                    {/* TODO: when need tab bottom bar, convert "Stack." to "Tab." and remoe headerMode="none" and finally add different screens below */}
+                    <Tab.Navigator
+                      // headerMode="none"
+                      tabBarOptions={{
+                        activeTintColor: props.styles.tintColor.color,
+                        style: props.styles.tabBarBackgroundColor,
+                        showLabel: false,
+                      }}
+                      screenOptions={({ route }) => ({
+                        tabBarIcon: ({ focused, color, size }) => {
+                          let icon;
+                          const selectedColor = focused
+                            ? props.styles.tintColor.color
+                            : props.styles.text.color;
+
+                          if (route.name === "Schedule") {
+                            icon = faCalendar;
+                          } else if (route.name === "Information") {
+                            icon = faInfoCircle;
+                          } else if (route.name === "ScavengerHunt") {
+                            icon = faMapSigns
+                          } else if (route.name === "CheckIn") {
+                            icon = faClipboardCheck;
+                          }
+
+                          return (
+                            <FontAwesomeIcon
+                              color={selectedColor}
+                              icon={icon}
+                              size={26}
+                            />
+                          );
+                        },
+                      })}
+                    >
+                      {showEventOnboard ? (
+                        <Stack.Screen
+                          name="Schedule"
+                          children={() => (
+                            <EventOnboarding
+                              onDone={() => {
+                                setPastEventOnboardID(hackathon.id)
+                                AsyncStorage.setItem(
+                                  "pastEventOnboardID",
+                                  hackathon.id
+                                );
+                              }}
+                            ></EventOnboarding>
+                          )}
+                        ></Stack.Screen>
+                      ) : (
+                        <Stack.Screen
+                          name="Schedule"
+                          component={
+                            showEventOnboard ? EventOnboarding : ScheduleStackScreen
+                          }
+                        />
+                      )}
+
+                      <Stack.Screen
+                        name="Information"
+                        component={InformationStackScreen}
+                      />
+                      <Stack.Screen
+                        name="ScavengerHunt"
+                        component={ScavengerHuntStackScreen}
+                      />
+                      { !showCheckin ? null :
+                      <Stack.Screen
+                        name="CheckIn"
+                        component={CheckInStackScreen}
+                      />
+                      }
+                    </Tab.Navigator>
+                  </NavigationContainer>
+              </HackathonProvider>
+            </ThemeContext.Provider>
+          );
+        }}
+      </AuthContext.Consumer>
+    </AuthProvider>
+
+  )
 }
 
 export default withThemeHook(App);
