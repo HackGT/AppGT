@@ -291,9 +291,9 @@ function App(props) {
   return (
     <AuthProvider>
       <AuthContext.Consumer>
-        {({isLoading, showLogin, user}) => {
+        {({loading, showLogin, user}) => {
           // until app is done loading data, show the splash screen
-          if (isLoading || isFetchingData) {
+          if (loading || isFetchingData) {
             return (
               <ThemeContext.Provider
                 value={{

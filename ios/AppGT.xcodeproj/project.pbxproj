@@ -11,7 +11,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5151D10414D24C789259A0DC /* SpaceMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 187AE479EF1147F2A68657C7 /* SpaceMono-Bold.ttf */; };
-		5A00B83D28D2635700E4B27B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A00B83C28D2635700E4B27B /* GoogleService-Info.plist */; };
+		5AC61C1B28E6714100979926 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5AC61C1A28E6714100979926 /* GoogleService-Info.plist */; };
 		6E5BF9A2B1984A6C830C5225 /* SpaceMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A3A684B78764B4697769AFB /* SpaceMono-BoldItalic.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B165A0C4392CCC2276A5AD4C /* libPods-AppGT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6354C7CB3996DC0B202548C7 /* libPods-AppGT.a */; };
@@ -37,7 +37,7 @@
 		2C1302889E55AF6CFE12942D /* Pods-AppGT-AppGTTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-AppGTTests.debug.xcconfig"; path = "Target Support Files/Pods-AppGT-AppGTTests/Pods-AppGT-AppGTTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4368E45325D614EA00D9838F /* HackGT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HackGT.entitlements; path = AppGT/HackGT.entitlements; sourceTree = "<group>"; };
 		4FAF25C873A84C4A89ACDCE5 /* SpaceMono-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Italic.ttf"; path = "../assets/fonts/SpaceMono-Italic.ttf"; sourceTree = "<group>"; };
-		5A00B83C28D2635700E4B27B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5AC61C1A28E6714100979926 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6077885D15165913C92ED622 /* libPods-AppGT-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6354C7CB3996DC0B202548C7 /* libPods-AppGT.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CA52163ADF7A0F3F408B53D /* Pods-AppGT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT.debug.xcconfig"; path = "Target Support Files/Pods-AppGT/Pods-AppGT.debug.xcconfig"; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				5A00B83C28D2635700E4B27B /* GoogleService-Info.plist */,
+				5AC61C1A28E6714100979926 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* AppGT */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AppGTTests */,
@@ -230,12 +230,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				5A00B83D28D2635700E4B27B /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5151D10414D24C789259A0DC /* SpaceMono-Bold.ttf in Resources */,
 				6E5BF9A2B1984A6C830C5225 /* SpaceMono-BoldItalic.ttf in Resources */,
 				E77A6C132BA844D7BE262146 /* SpaceMono-Italic.ttf in Resources */,
 				EA24588DC54D4379981A8D85 /* SpaceMono-Regular.ttf in Resources */,
+				5AC61C1B28E6714100979926 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

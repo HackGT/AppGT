@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
     useEffect(() => {
         const unsubAuth = onAuthStateChanged(auth, async (fUser) => {
             if (fUser) {
-                setLoading(false)
+                setLoading(true)
                 console.log('FIRUser:', fUser)
                 await fetchUserDetails(fUser)
                 setShowLogin(false)
@@ -28,7 +28,7 @@ export default function AuthProvider({ children }) {
                 setFirebaseUser(fUser)
             } else {
                 setShowLogin(true)
-                setShowLoading(false)
+                setLoading(false)
             }
         })
         return unsubAuth
