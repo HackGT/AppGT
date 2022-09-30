@@ -10,14 +10,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
-import {
-  HackathonContext,
-  ThemeContext,
-  ScavHuntContext,
-} from "../../state/context";
+import { HackathonContext, ScavHuntContext } from "../../state/context";
 import { fetchServerTime } from "../../cms";
 import moment from "moment-timezone";
 import QRCode from "react-native-qrcode-svg";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScavengerHuntTab(props) {
   const { state, completeHint } = useContext(ScavHuntContext);

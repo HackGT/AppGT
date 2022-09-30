@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Logo from "../../../assets/images/Logo";
-import { ThemeContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ContentInfo(props) {
   return (

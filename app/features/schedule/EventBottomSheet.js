@@ -5,9 +5,10 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../../../assets/images/X";
 import RemoveStarButton from "../../../assets/images/RemoveFromCalendarButton";
 import AddStarButton from "../../../assets/images/AddToCalendarButton";
-import { HackathonContext, ThemeContext } from "../../state/context";
+import { HackathonContext } from "../../state/context";
 import FontMarkdown from "../../components/FontMarkdown";
 import { Linking } from "react-native";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function EventBottomSheet(props) {
   const { state, toggleStar } = useContext(HackathonContext);

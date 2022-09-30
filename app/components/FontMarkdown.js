@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import Markdown from "react-native-markdown-renderer";
-import { ThemeContext } from "../state/context";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 export default function FontMarkdown(props) {
   const createStyles = (dynamicStyles) => {

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   FlatList,
 } from "react-native";
-import { ThemeContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import Svg, { Circle } from "react-native-svg";
 import { Dimensions } from "react-native";

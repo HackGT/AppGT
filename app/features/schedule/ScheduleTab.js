@@ -8,12 +8,12 @@ import {
   AppState,
   Text,
 } from "react-native";
-import { HackathonContext, ThemeContext } from "../../state/context";
+import { HackathonContext } from "../../state/context";
 import WhatsHappeningNow from "../../../assets/images/HappeningNow";
 import { ScheduleEventCell } from "./ScheduleEventCell";
 import { ScheduleDayView } from "./ScheduleDayView";
 import { EventBottomSheet } from "./EventBottomSheet";
-
+import { ThemeContext } from "../../contexts/ThemeContext";
 import {
   getEventsHappeningNow,
   getDaysForEvent,

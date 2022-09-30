@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Animated, Easing } from "react-native";
 import HackGTIcon from "../../assets/images/Logo";
-import { ThemeContext } from "../state/context";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 export default function SplashScreen(props) {
   const opacity = new Animated.Value(0);

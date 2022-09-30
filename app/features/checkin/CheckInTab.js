@@ -9,7 +9,7 @@ import {
   Button,
   Pressable,
 } from "react-native";
-import { ThemeContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import { EventSel } from "./EventSel";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";

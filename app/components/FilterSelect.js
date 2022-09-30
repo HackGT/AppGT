@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 import React, { useState, useContext } from "react";
-import { ThemeContext, HackathonContext } from "../state/context";
+import { HackathonContext } from "../state/context";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function FilterSelect(props) {

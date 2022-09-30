@@ -9,7 +9,7 @@ import LogoText from "../../../assets/images/LogoText";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUsers, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentInfo } from "./ContentInfo";
-import { AuthContext, ThemeContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import { GradientButton } from "../../components/GradientButton";
 import { app } from "../../../firebase";
 

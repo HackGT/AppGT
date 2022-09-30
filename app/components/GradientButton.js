@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
-import { ThemeContext } from "../state/context";
+import { ThemeContext } from "../contexts/ThemeContext";
 import ButtonBackground from "../../assets/images/ButtonBackground";
 
 export function GradientButton(props) {

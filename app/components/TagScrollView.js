@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeContext } from "../state/context";
+import { ThemeContext } from "../contexts/ThemeContext";
 import {
   Text,
   ScrollView,

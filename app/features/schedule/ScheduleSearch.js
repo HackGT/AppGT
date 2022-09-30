@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from "react";
-import { HackathonContext, ThemeContext } from "../../state/context";
+import { HackathonContext } from "../../state/context";
 import { getEventsForDay, getDaysForEvent } from "../../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import {
@@ -16,6 +16,7 @@ import { ScheduleEventCell } from "./ScheduleEventCell";
 import { EventBottomSheet } from "./EventBottomSheet";
 import FilterSelect from "../../components/FilterSelect";
 import TagScrollView from "../../components/TagScrollView";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScheduleSearch(props) {
   const { state } = useContext(HackathonContext);

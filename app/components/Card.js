@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { ThemeContext } from "../state/context";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 export function Card(props) {
   const createCardStyle = (dynamicStyles) => {

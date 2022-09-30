@@ -3,11 +3,7 @@ import React, { useState, useEffect } from "react";
 import { WebView } from "react-native-webview";
 import UserAgent from "react-native-user-agent";
 import { fetchHackathonData } from "./app/cms";
-import {
-  HackathonContext,
-  AuthContext,
-  ThemeContext,
-} from "./app/state/context";
+import { HackathonContext, AuthContext } from "./app/state/context";
 import { StatusBar, Modal, SafeAreaView, Platform, View } from "react-native";
 import { LoginOnboarding } from "./app/features/onboarding/LoginOnboarding";
 import SplashScreen from "./app/components/SplashScreen";
@@ -40,7 +36,8 @@ import {
   ScavengerHuntStackScreen,
   CheckInStackScreen,
 } from "./app/navigation";
-import { ThemeProvider, HackathonProvider, AuthProvider } from "./app/state";
+import { HackathonProvider, AuthProvider } from "./app/state";
+import { ThemeProvider } from "./app/contexts/ThemeContext";
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
@@ -282,12 +279,7 @@ function App(props) {
 
   return (
     <AuthProvider>
-      <ThemeContext.Provider
-        value={{
-          theme: theme,
-          dynamicStyles: styles,
-        }}
-      >
+      <ThemeProvider>
         <AuthContext.Consumer>
           {({ loading, showLogin, user }) => {
             // until app is done loading data, show the splash screen
@@ -415,7 +407,7 @@ function App(props) {
             );
           }}
         </AuthContext.Consumer>
-      </ThemeContext.Provider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

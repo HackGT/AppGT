@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { ThemeContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import { Card } from "../../components/Card";
 
 export function EventSel(props) {

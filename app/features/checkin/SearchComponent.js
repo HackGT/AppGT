@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ThemeContext } from "../context";
+import { ThemeContext } from "../contexts/ThemeContext";
 import { SearchBar } from "react-native-elements";
 import { View, StyleSheet } from "react-native";
 import SearchIcon from "../../assets/images/Search";

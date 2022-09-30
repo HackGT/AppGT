@@ -8,7 +8,7 @@ import { request, PERMISSIONS } from "react-native-permissions";
 import { logInteraction } from "../../yac";
 import { HackathonContext, ScavHuntContext } from "../../state/context";
 import { dynamicStyles } from "../../theme";
-import { ThemeContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 function QRScan(props) {
   const { hackathon } = useContext(HackathonContext);

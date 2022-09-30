@@ -19,11 +19,8 @@ import BackButton from "../../../assets/images/Back";
 import ContinueButton from "../../../assets/images/ContinueButton";
 import QRCode from "react-native-qrcode-svg";
 import { Linking } from "react-native";
-import {
-  AuthContext,
-  HackathonContext,
-  ThemeContext,
-} from "../../state/context";
+import { AuthContext, HackathonContext } from "../../state/context";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function EventOnboarding(props) {
   const { state } = useContext(HackathonContext);

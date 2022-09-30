@@ -8,10 +8,11 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { HackathonContext, ThemeContext } from "../../state/context";
+import { HackathonContext } from "../../state/context";
 import { Card } from "../../components/Card";
 import { Linking } from "react-native";
 import FontMarkdown from "../../components/FontMarkdown";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function InformationTab(props) {
   const { state } = useContext(HackathonContext);
