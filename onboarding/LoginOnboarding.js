@@ -19,7 +19,8 @@ import { app } from '../'
 
 import { getAuth } from 'firebase/auth'
 
-
+const LOGIN_URL = "https://login.hexlabs.org"
+const AUTH_URL = 'https://auth.api.hexlabs.org'
 
 export function LoginOnboarding(props) {
 
@@ -27,16 +28,12 @@ export function LoginOnboarding(props) {
   const [pageIndex, setPageIndex] = useState(0)
   const [pageCount, setPageCount] = useState(3)
 
-  const loginUrl = "https://login.hexlabs.org"
-  const authUrl = 'https://auth.api.hexlabs.org'
-
-
   const login = async () => {
     try {
       const path = ''
       const deepLink = getDeepLink(path)
       const redirect = '/?redirect=hexlabs://' + path
-      const result = await InAppBrowser.openAuth(loginUrl + redirect, deepLink, {})
+      const result = await InAppBrowser.openAuth(LOGIN_URL + redirect, deepLink, {})
       if (result.type === 'success') {
         const splitUrl = result.url.split('?')
         if (splitUrl[1]) {
@@ -63,7 +60,7 @@ export function LoginOnboarding(props) {
 
   const fetchAccessToken = async (idToken) => {
     console.log('token: ', idToken)
-    fetch(`${authUrl + '/auth/status'}/`, {
+    fetch(`${AUTH_URL + '/auth/status'}/`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + idToken,
