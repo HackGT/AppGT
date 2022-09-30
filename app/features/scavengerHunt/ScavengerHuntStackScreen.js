@@ -4,7 +4,7 @@ import { ScavHuntCrossword } from "./ScavHuntCrossword";
 import { ScavengerHuntTab } from "./ScavengerHuntTab";
 import { ScavengerHuntStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
-import ScavHuntProvider from "../../state/scavHunt";
+import { ScavHuntProvider } from "../../state/scavHunt";
 import { ScavHuntItem } from "./ScavHuntItem";
 import HackGTIcon from "../../../assets/images/HackGTIcon";
 import { AuthContext } from "../../contexts/AuthContext";

@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from "react-native";
 import React, { useState, useContext } from "react";
-import { HackathonContext } from "../state/context";
+import { HackathonContext } from "../state/hackathon";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 

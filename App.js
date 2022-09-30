@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { WebView } from "react-native-webview";
 import UserAgent from "react-native-user-agent";
 import { fetchHackathonData } from "./app/cms";
-import { HackathonContext } from "./app/state/context";
 import { StatusBar, Modal, SafeAreaView, Platform, View } from "react-native";
 import { LoginOnboarding } from "./app/features/onboarding/LoginOnboarding";
 import SplashScreen from "./app/components/SplashScreen";
@@ -36,7 +35,7 @@ import {
   ScavengerHuntStackScreen,
   CheckInStackScreen,
 } from "./app/navigation";
-import { HackathonProvider } from "./app/state";
+import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
 import { AuthProvider, AuthContext } from "./app/contexts/AuthContext";
 import { app } from "./firebase";

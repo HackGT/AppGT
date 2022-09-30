@@ -19,7 +19,7 @@ import BackButton from "../../../assets/images/Back";
 import ContinueButton from "../../../assets/images/ContinueButton";
 import QRCode from "react-native-qrcode-svg";
 import { Linking } from "react-native";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
 

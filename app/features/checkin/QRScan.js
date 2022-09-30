@@ -6,7 +6,7 @@ import { RNCamera } from "react-native-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { request, PERMISSIONS } from "react-native-permissions";
 import { logInteraction } from "../../yac";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
 function QRScan(props) {

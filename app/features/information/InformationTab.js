@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import { Card } from "../../components/Card";
 import { Linking } from "react-native";
 import FontMarkdown from "../../components/FontMarkdown";

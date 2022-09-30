@@ -5,7 +5,7 @@ import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { ScheduleSearch } from "./ScheduleSearch";
 import { ScheduleTab } from "./ScheduleTab";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import { ScheduleStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 

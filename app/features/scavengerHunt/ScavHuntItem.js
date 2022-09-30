@@ -11,7 +11,7 @@ import {
 import { logInteraction } from "../../yac";
 import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
-import { ScavHuntContext } from "../../state/context";
+import { ScavHuntContext } from "../../state/scavHunt";
 import DismissModal from "../../../assets/images/DismissModal.svg";
 import CorrectAnswer from "../../../assets/images/CorrectAnswer.svg";
 import IncorrectAnswer from "../../../assets/images/IncorrectAnswer.svg";

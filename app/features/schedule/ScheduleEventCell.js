@@ -2,7 +2,7 @@ import React, { Component, useState, useContext } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import StarOff from "../../../assets/images/StarOff";
 import StarOn from "../../../assets/images/StarOn";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import { EventTypeView } from "./EventTypeView";
 import { Card } from "../../components/Card";
 import { ThemeContext } from "../../contexts/ThemeContext";

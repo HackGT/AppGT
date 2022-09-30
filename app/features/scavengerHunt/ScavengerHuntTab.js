@@ -10,7 +10,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
-import { HackathonContext, ScavHuntContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
+import { ScavHuntContext } from "../../state/scavHunt";
 import { fetchServerTime } from "../../cms";
 import moment from "moment-timezone";
 import QRCode from "react-native-qrcode-svg";

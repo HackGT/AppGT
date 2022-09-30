@@ -5,7 +5,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../../../assets/images/X";
 import RemoveStarButton from "../../../assets/images/RemoveFromCalendarButton";
 import AddStarButton from "../../../assets/images/AddToCalendarButton";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import FontMarkdown from "../../components/FontMarkdown";
 import { Linking } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from "react";
-import { HackathonContext } from "../../state/context";
+import { HackathonContext } from "../../state/hackathon";
 import { getEventsForDay, getDaysForEvent } from "../../cms/DataHandler";
 import { SearchBar } from "react-native-elements";
 import {
