@@ -1,44 +1,50 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
-import { WebView } from 'react-native-webview';
-import UserAgent from 'react-native-user-agent'
-import { fetchHackathonData } from "./cms";
-import { HackathonContext, AuthContext, ThemeContext } from "./context";
+import { WebView } from "react-native-webview";
+import UserAgent from "react-native-user-agent";
+import { fetchHackathonData } from "./app/cms";
+import {
+  HackathonContext,
+  AuthContext,
+  ThemeContext,
+} from "./app/state/context";
 import { StatusBar, Modal, SafeAreaView, Platform, View } from "react-native";
-import { LoginOnboarding } from "./onboarding/LoginOnboarding";
-import SplashScreen from "./components/SplashScreen";
-import { EventOnboarding } from "./onboarding/EventOnboarding";
+import { LoginOnboarding } from "./app/features/onboarding/LoginOnboarding";
+import SplashScreen from "./app/components/SplashScreen";
+import { EventOnboarding } from "./app/features/onboarding/EventOnboarding";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faInfoCircle, faCalendar, faMapSigns, faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
-import Logo from "./assets/Logo";
+import {
+  faInfoCircle,
+  faCalendar,
+  faMapSigns,
+  faClipboardCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
-import { turnToEst } from "./cms/DataHandler";
+import { turnToEst } from "./app/cms/DataHandler";
 import {
   useDarkModeContext,
   useDynamicStyleSheet,
 } from "react-native-dark-mode";
-import { dynamicStyles } from "./themes";
+import { dynamicStyles } from "./app/theme";
 import firebase from "@react-native-firebase/app";
 import messaging from "@react-native-firebase/messaging";
-
-import { 
-  ScheduleStackScreen, 
-  InformationStackScreen, 
-  ScavengerHuntStackScreen, 
-  CheckInStackScreen 
-} from "./stacks"
-
-import { ThemeProvider, HackathonProvider, AuthProvider } from "./state_management";
+import {
+  ScheduleStackScreen,
+  InformationStackScreen,
+  ScavengerHuntStackScreen,
+  CheckInStackScreen,
+} from "./app/navigation";
+import { ThemeProvider, HackathonProvider, AuthProvider } from "./app/state";
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
-const loginUrl = "https://login.hexlabs.org"
+const loginUrl = "https://login.hexlabs.org";
 
 const config = {
   clientId: "7d1c11b30351e91d6517492c19a9a0185a6e4e6304f9826f96a76895534cf26f",
@@ -107,23 +113,22 @@ function App(props) {
   const styles = useDynamicStyleSheet(dynamicStyles);
 
   // event data
-  const [hackathon, setHackathon] = useState(null)
-  const [eventTypes, setEventTypes] = useState([])
-  const [starredIds, setStarredIds] = useState([])
-  const [isStarSchedule, setIsStarSchedule] = useState(false)
+  const [hackathon, setHackathon] = useState(null);
+  const [eventTypes, setEventTypes] = useState([]);
+  const [starredIds, setStarredIds] = useState([]);
+  const [isStarSchedule, setIsStarSchedule] = useState(false);
 
   // used for finding current state of screen for loading/login components
-  const [isFetchingData, setIsFetchingData] = useState(true)
+  const [isFetchingData, setIsFetchingData] = useState(true);
 
   // TODO: temporary, onboarding login should show when user is null. login is disabled so remove this whn fixed
-  const [scheduleModal, setScheduleModal] = useState(false)
-  const [pastEventOnboardID, setPastEventOnboardID] = useState(null)
+  const [scheduleModal, setScheduleModal] = useState(false);
+  const [pastEventOnboardID, setPastEventOnboardID] = useState(null);
 
   const configAsyncStorage = () => {
     AsyncStorage.getItem(
       "starredIds",
-      (error, result) =>
-        result && setStarredIds(JSON.parse(result))
+      (error, result) => result && setStarredIds(JSON.parse(result))
     );
 
     AsyncStorage.getItem(
@@ -132,16 +137,15 @@ function App(props) {
     );
 
     AsyncStorage.getItem("isStarSchedule", (error, result) => {
-      result &&
-        setIsStarSchedule(result === true ? true : false)
-      console.log(isStarSchedule)
+      result && setIsStarSchedule(result === true ? true : false);
+      console.log(isStarSchedule);
     });
 
     AsyncStorage.getItem("localEventTypeData", (error, result) => {
       if (result) {
         const eventTypes = JSON.parse(result);
         if (eventTypes != null) {
-          setEventTypes(eventTypes)
+          setEventTypes(eventTypes);
         }
       }
     });
@@ -152,8 +156,8 @@ function App(props) {
         const hackathon = JSON.parse(result);
 
         if (hackathon != null) {
-          setHackathon(hackathon)
-          setIsFetchingData(false)
+          setHackathon(hackathon);
+          setIsFetchingData(false);
         }
       }
 
@@ -173,15 +177,15 @@ function App(props) {
           AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
           AsyncStorage.setItem("localTypeData", JSON.stringify(eventTypes));
 
-          setEventTypes(eventTypes)
-          setHackathon(hackathon)
-          setIsFetchingData(false)
+          setEventTypes(eventTypes);
+          setHackathon(hackathon);
+          setIsFetchingData(false);
         } else {
           // if still loading, present error asking for retry
         }
       });
     });
-  }
+  };
 
   useEffect(() => {
     // setup firebase notification support
@@ -197,16 +201,15 @@ function App(props) {
       (created) => console.log(`createChannel returned '${created}'`)
     );
 
-    configAsyncStorage()
-
-  }, [])
+    configAsyncStorage();
+  }, []);
 
   useEffect(() => {
     AsyncStorage.setItem(
       "isStarSchedule",
       isStarSchedule == true ? "true" : "false"
     );
-  }, [isStarSchedule])
+  }, [isStarSchedule]);
 
   // useEffect(() => {
   //   console.log('toggling starred ids', starredIds)
@@ -273,13 +276,9 @@ function App(props) {
 
   const splashGrowModal = (
     <Modal animationType="none" transparent={true}>
-      <SplashScreen
-        grow={true}
-        onGrowDone={() => setScheduleModal(true)}
-      />
+      <SplashScreen grow={true} onGrowDone={() => setScheduleModal(true)} />
     </Modal>
   );
-
 
   return (
     <AuthProvider>
@@ -315,7 +314,7 @@ function App(props) {
 
             // if logging in with a hexlabs email
             // const showCheckin = /@hexlabs.org\s*$/.test(user.email)
-            const showCheckin = user && user.roles.member
+            const showCheckin = user && user.roles.member;
             // once logged in and all data is loaded, present full app after grow animation
             return (
               <HackathonProvider
@@ -355,7 +354,7 @@ function App(props) {
                         } else if (route.name === "Information") {
                           icon = faInfoCircle;
                         } else if (route.name === "ScavengerHunt") {
-                          icon = faMapSigns
+                          icon = faMapSigns;
                         } else if (route.name === "CheckIn") {
                           icon = faClipboardCheck;
                         }
@@ -376,7 +375,7 @@ function App(props) {
                         children={() => (
                           <EventOnboarding
                             onDone={() => {
-                              setPastEventOnboardID(hackathon.id)
+                              setPastEventOnboardID(hackathon.id);
                               AsyncStorage.setItem(
                                 "pastEventOnboardID",
                                 hackathon.id
@@ -389,7 +388,9 @@ function App(props) {
                       <Stack.Screen
                         name="Schedule"
                         component={
-                          showEventOnboard ? EventOnboarding : ScheduleStackScreen
+                          showEventOnboard
+                            ? EventOnboarding
+                            : ScheduleStackScreen
                         }
                       />
                     )}
@@ -402,12 +403,12 @@ function App(props) {
                       name="ScavengerHunt"
                       component={ScavengerHuntStackScreen}
                     />
-                    {!showCheckin ? null :
+                    {!showCheckin ? null : (
                       <Stack.Screen
                         name="CheckIn"
                         component={CheckInStackScreen}
                       />
-                    }
+                    )}
                   </Tab.Navigator>
                 </NavigationContainer>
               </HackathonProvider>
@@ -416,7 +417,7 @@ function App(props) {
         </AuthContext.Consumer>
       </ThemeContext.Provider>
     </AuthProvider>
-  )
+  );
 }
 
 export default App;
