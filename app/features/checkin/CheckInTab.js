@@ -63,150 +63,118 @@ export function CheckInTab(props) {
   };
 
   const onPressEvent = (event) => {
-    if (event) {
-      setSelectedEvent(event);
-    } else {
-      setSelectedEvent(null);
-    }
+    props.navigation.navigate("InteractionScreen", {
+      selectedEvent: event
+    });
+    // if (event) {
+    //   setSelectedEvent(event);
+    // } else {
+    //   setSelectedEvent(null);
+    // }
   };
 
-  if (events != null) {
     // there are no events getting properly populated
-    var formattedEvents = [];
-    var shownEvents = searchText.length != 0 ? searchResults : events;
-    shownEvents.forEach((event) => {
+    // var formattedEvents = [];
+    // var shownEvents = searchText.length != 0 ? searchResults : events;
+
+    const formattedEvents = !events ? [] : events.filter(e => e.name.includes(searchText)).map(event => {
       const eventType =
         event != null && event.type != null
           ? event.type
           : { name: "none", color: "gray" };
       const loc =
         event != null &&
-        event.location != null &&
-        event.location[0] != null &&
-        event.location[0].name != null
+          event.location != null &&
+          event.location[0] != null &&
+          event.location[0].name != null
           ? event.location[0].name + " • "
           : "";
-      formattedEvents.push(
-        <TouchableOpacity
+      return <TouchableOpacity
+        key={event.id}
+        onPress={() => {
+          onPressEvent(event);
+        }}
+      >
+        <EventSel
           key={event.id}
-          onPress={() => {
-            onPressEvent(event);
-          }}
-        >
-          <EventSel
-            key={event.id}
-            name={event.name}
-            startTime={event.startTime}
-            endTime={event.endTime}
-            location={loc}
-            type={eventType}
-            dynamicStyles={dynamicStyles}
+          name={event.name}
+          startTime={event.startTime}
+          endTime={event.endTime}
+          location={loc}
+          type={eventType}
+          dynamicStyles={dynamicStyles}
+        />
+      </TouchableOpacity>
+    })
+
+    // shownEvents.forEach((event) => {
+    //   const eventType =
+    //     event != null && event.type != null
+    //       ? event.type
+    //       : { name: "none", color: "gray" };
+    //   const loc =
+    //     event != null &&
+    //     event.location != null &&
+    //     event.location[0] != null &&
+    //     event.location[0].name != null
+    //       ? event.location[0].name + " • "
+    //       : "";
+    //   formattedEvents.push(
+    //     <TouchableOpacity
+    //       key={event.id}
+    //       onPress={() => {
+    //         onPressEvent(event);
+    //       }}
+    //     >
+    //       <EventSel
+    //         key={event.id}
+    //         name={event.name}
+    //         startTime={event.startTime}
+    //         endTime={event.endTime}
+    //         location={loc}
+    //         type={eventType}
+    //         dynamicStyles={dynamicStyles}
+    //       />
+    //     </TouchableOpacity>
+    //   );
+    // });
+
+    return (
+      <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
+        <View style={styles.header}>
+          <SearchBar
+            searchIcon={
+              <SearchIcon
+                fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
+              />
+            }
+            containerStyle={[
+              styles.searchContainer,
+              dynamicStyles.backgroundColor,
+              dynamicStyles.searchBorderTopColor,
+              dynamicStyles.searchBorderBottomColor,
+              { flex: 1 },
+            ]}
+            inputContainerStyle={[
+              styles.inputContainer,
+              dynamicStyles.searchBackgroundColor,
+            ]}
+            clearIcon={null}
+            lightTheme
+            round
+            placeholder="Search..."
+            onChangeText={(value) => searchEvents(value)}
+            value={searchText}
           />
-        </TouchableOpacity>
-      );
-    });
-    if (selectedEvent == null) {
-      return (
-        <View style={dynamicStyles.backgroundColor}>
-          <View style={styles.header}>
-            <SearchBar
-              searchIcon={
-                <SearchIcon
-                  fill={dynamicStyles.secondaryBackgroundColor.backgroundColor}
-                />
-              }
-              containerStyle={[
-                styles.searchContainer,
-                dynamicStyles.backgroundColor,
-                dynamicStyles.searchBorderTopColor,
-                dynamicStyles.searchBorderBottomColor,
-                { flex: 1 },
-              ]}
-              inputContainerStyle={[
-                styles.inputContainer,
-                dynamicStyles.searchBackgroundColor,
-              ]}
-              clearIcon={null}
-              lightTheme
-              round
-              placeholder="Search..."
-              onChangeText={(value) => searchEvents(value)}
-              value={searchText}
-            />
-          </View>
-
-          <ScrollView>
-            <View>
-              <View style={styles.eventContainer}>{formattedEvents}</View>
-            </View>
-          </ScrollView>
         </View>
-      );
-    } else {
-      return (
-        <ScrollView style={dynamicStyles.backgroundColor}>
-          <View style={styles.eventContainer}>
-            <Pressable
-              style={styles.backButton}
-              onPress={() => {
-                onPressEvent(null);
-              }}
-            >
-              <Text style={[styles.backButtontext, dynamicStyles.text]}>
-                {"< Back"}
-              </Text>
-            </Pressable>
 
-            <Text style={[styles.title, dynamicStyles.text]}>
-              {selectedEvent.name}
-            </Text>
-            <Text
-              numberOfLines={props.truncateText ? 1 : null}
-              ellipsizeMode={"tail"}
-              style={[
-                dynamicStyles.secondaryText,
-                {
-                  fontFamily: "SpaceMono-Bold",
-                  marginLeft: 0,
-                  textAlign: "center",
-                  fontSize: 14,
-                },
-              ]}
-            >
-              {selectedEvent != null &&
-              selectedEvent.location != null &&
-              selectedEvent.location[0] != null &&
-              selectedEvent.location[0].name != null
-                ? selectedEvent.location[0].name + " • "
-                : ""}
-              {selectedEvent.startTime + " - " + selectedEvent.endTime}
-            </Text>
-            <ScanScreen
-              eventID={selectedEvent.id}
-              startTime={selectedEvent.startTime}
-              endTime={selectedEvent.endTime}
-              location={
-                selectedEvent != null &&
-                selectedEvent.location != null &&
-                selectedEvent.location[0] != null &&
-                selectedEvent.location[0].name != null
-                  ? selectedEvent.location[0].name + " • "
-                  : ""
-              }
-              type={
-                selectedEvent != null && selectedEvent.type != null
-                  ? selectedEvent.type
-                  : { name: "none", color: "gray" }
-              }
-              description={selectedEvent.description}
-            />
+        <ScrollView>
+          <View>
+            <View style={styles.eventContainer}>{formattedEvents}</View>
           </View>
         </ScrollView>
-      );
-    }
-  } else {
-    return <View />;
-  }
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({

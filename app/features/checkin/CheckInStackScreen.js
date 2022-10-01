@@ -2,6 +2,7 @@ import React from "react";
 import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { CheckInTab } from "./CheckInTab";
+import { InteractionScreen } from './InteractionScreen';
 import { CheckInStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import HackGTIcon from "../../../assets/images/HackGTIcon";
@@ -24,6 +25,16 @@ export default function CheckInStackScreen({ navigation }) {
             >
               {(props) => <CheckInTab {...props} />}
             </CheckInStack.Screen>
+            <CheckInStack.Screen
+              options={{
+                headerTitleAlign: "left",
+                headerTitle: (props) => <HackGTIcon {...props} />,
+                headerStyle: dStyles.tabBarBackgroundColor,
+                headerLeft: null,
+              }}
+              name="InteractionScreen"
+              component={InteractionScreen}
+            />
           </CheckInStack.Navigator>
         );
       }}
