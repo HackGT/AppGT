@@ -411,6 +411,6 @@ function App(props) {
       </ThemeProvider>
     </AuthProvider>
   );
-}
+ }
 
 export default App;

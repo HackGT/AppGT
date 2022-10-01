@@ -13,8 +13,11 @@ import { Card } from "../../components/Card";
 import { Linking } from "react-native";
 import FontMarkdown from "../../components/FontMarkdown";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { getAuth } from "firebase/auth";
+import { app } from '../../../firebase'
 
 export function InformationTab(props) {
+  const auth = getAuth(app);
   const { state } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const hackathon = state.hackathon;
@@ -100,7 +103,17 @@ export function InformationTab(props) {
       </Text>
 
       <View style={styles.headerButtons}>{headerButtons}</View>
-
+      <TouchableOpacity style={[
+        styles.joinEvent,
+        {
+          borderColor: dynamicStyles.tintColor.color,
+        },
+      ]} 
+      onPress={() => {
+        auth.signOut()
+      }}>
+        <Text style={[dynamicStyles.text, styles.buttonText]}>{"Log Out"}</Text>
+      </TouchableOpacity>
       {infoBlocks.map((block, i) => (
         <View key={i}>
           <Text style={[dynamicStyles.text, styles.welcomeHeader]}>

@@ -31,7 +31,7 @@ export function LoginOnboarding(props) {
       const result = await InAppBrowser.openAuth(
         LOGIN_URL + redirect,
         deepLink,
-        {}
+        { ephemeralWebSession: true }
       );
       if (result.type === "success") {
         const splitUrl = result.url.split("?");
