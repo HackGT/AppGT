@@ -10,10 +10,12 @@ import { logInteraction } from "../../yac";
 import { HackathonContext } from "../../state/hackathon";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { initNfc, readNFC, writeNFC } from '../../NFCScanning/nfc';
+import { AuthContext } from "../../contexts/AuthContext";
 
 export function ScanScreen(props) {
   const { hackathon } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
+  const { fetchProfile } = useContext(AuthContext)
   const [toggleValue, setToggleValue] = useState(false);
   const [uid, setUid] = useState("");
   const [fName, setfName] = useState("");
@@ -66,16 +68,18 @@ export function ScanScreen(props) {
     console.log("QR code scanned!", e);
     const json = JSON.parse(e.data);
     if (json.uid) {
-      setEmail(json.email);
-      setfName(json.name.first);
-      setlName(json.name.last);
       setUid(json.uid);
+      
       const res = await logInteraction(
         hackathon.name,
         "event",
         json.uid,
         props.eventID
       );
+      const userProfile = await fetchProfile(json.uid)
+      setfName(userProfile.name.first);
+      setlName(userProfile.name.last);
+      setEmail(userProfile.email);
       setStatus(res.status);
       console.log("RES: ", res);
       if (res.status !== 200) {

@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { getAuth } from "firebase/auth";
+import { firebase } from "@react-native-firebase/messaging";
 
 const AuthContext = React.createContext();
 
@@ -14,28 +15,32 @@ const AuthProvider = ({ app, children }) => {
   const [showLogin, setShowLogin] = useState(true);
   const [user, setUser] = useState(null);
 
-  const fetchUserDetails = async (fUser) => {
-    const token = await fUser.getIdToken();
-    const response = await fetch(`${USERS_URL + "/users/" + fUser.uid}/`, {
+  const fetchUserProfile = async () => {
+    const json = await fetchProfile(firebaseUser.uid);
+    setUser(json);
+  };
+
+  const fetchProfile = async (uid) => {
+    const token = await firebaseUser.getIdToken();
+    const response = await fetch(`${USERS_URL + "/users/" + uid}/`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     const json = await response.json();
-    console.log("userJson: ", json);
-    setUser(json);
-  };
+    return json;
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (fUser) => {
       if (fUser) {
         setLoading(true);
         console.log("FIRUser:", fUser);
-        await fetchUserDetails(fUser);
+        setFirebaseUser(fUser);
+        await fetchUserProfile(fUser);
         setShowLogin(false);
         setLoading(false);
-        setFirebaseUser(fUser);
       } else {
         setShowLogin(true);
         setLoading(false);
@@ -51,6 +56,7 @@ const AuthProvider = ({ app, children }) => {
       loading: loading,
       showLogin: showLogin,
       user: user,
+      fetchProfile: fetchProfile
     }),
     [firebaseUser, loading, showLogin, user]
   );
