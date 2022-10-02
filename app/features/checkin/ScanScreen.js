@@ -9,6 +9,7 @@ import { request, PERMISSIONS } from "react-native-permissions";
 import { logInteraction } from "../../yac";
 import { HackathonContext } from "../../state/hackathon";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { initNfc, readNFC, writeNFC } from '../../NFCScanning/nfc';
 
 export function ScanScreen(props) {
   const { hackathon } = useContext(HackathonContext);
@@ -38,19 +39,29 @@ export function ScanScreen(props) {
     },
     buttonText: {
       fontSize: 21,
+      color: dynamicStyles.toggleText.color,
+      fontFamily: "SpaceMono-Bold",
     },
-    buttonTouchable: {
+    infoContainer: {
       padding: 16,
     },
+    button: {
+      alignSelf: 'center'
+    }
   });
   useEffect(() => {
-    console.log("235");
-    console.log("ID: ", hackathon);
     request(PERMISSIONS.IOS.CAMERA).then((result) => {
-      console.log("asdf");
       console.log(result);
     });
   }, []);
+
+  useEffect(async () => {
+
+    const cleanUp = await initNfc((scannedText) => {console.log('Scanned: ', scannedText)})
+
+    return () => cleanUp()
+  }, [])
+
   const onSuccess = async (e) => {
     console.log("QR code scanned!", e);
     const json = JSON.parse(e.data);
@@ -81,6 +92,10 @@ export function ScanScreen(props) {
     }
   };
 
+  const scanNFC = async () => {
+    await readNFC()
+  }
+
   const createAlert = (message) =>
     Alert.alert("Error", message, [
       {
@@ -95,7 +110,7 @@ export function ScanScreen(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonTouchable}>
+      <View style={styles.infoContainer}>
         <Text
           style={[
             styles.centerText,
@@ -163,7 +178,11 @@ export function ScanScreen(props) {
         </View>
       </View>
       {toggleValue ? (
-        <Text> test </Text>
+        <>
+          <TouchableOpacity style={styles.button} onPress={scanNFC}>
+            <Text style={styles.buttonText}>{'Scan'}</Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <QRCodeScanner
           ref={scanner}
