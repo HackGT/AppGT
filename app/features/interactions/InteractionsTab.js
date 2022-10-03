@@ -13,7 +13,7 @@ import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
 
-export function CheckInTab(props) {
+export function InteractionsTab(props) {
   const { dynamicStyles } = useContext(ThemeContext);
   const [events, setEvents] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);

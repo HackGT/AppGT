@@ -1,14 +1,14 @@
 import React from "react";
 import { useDynamicStyleSheet } from "react-native-dark-mode";
 
-import { CheckInTab } from "./CheckInTab";
+import { InteractionsTab } from "./InteractionsTab";
 import { InteractionScreen } from './InteractionScreen';
 import { CheckInStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import HackGTIcon from "../../../assets/images/HackGTIcon";
 import { AuthContext } from "../../contexts/AuthContext";
 
-export default function CheckInStackScreen({ navigation }) {
+export default function InteractionsStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
   return (
     <AuthContext.Consumer>
@@ -23,7 +23,7 @@ export default function CheckInStackScreen({ navigation }) {
               }}
               name="HackGT"
             >
-              {(props) => <CheckInTab {...props} />}
+              {(props) => <InteractionsTab {...props} />}
             </CheckInStack.Screen>
             <CheckInStack.Screen
               options={{

@@ -33,7 +33,7 @@ import {
   ScheduleStackScreen,
   InformationStackScreen,
   ScavengerHuntStackScreen,
-  CheckInStackScreen,
+  InteractionsStackScreen,
 } from "./app/navigation";
 import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
@@ -398,7 +398,7 @@ function App(props) {
                     {!showCheckin ? null : (
                       <Stack.Screen
                         name="CheckIn"
-                        component={CheckInStackScreen}
+                        component={InteractionsStackScreen}
                       />
                     )}
                   </Tab.Navigator>
