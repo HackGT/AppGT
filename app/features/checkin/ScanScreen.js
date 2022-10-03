@@ -60,10 +60,26 @@ export function ScanScreen(props) {
 
   useEffect(async () => {
 
-    const cleanUp = await initNfc((scannedText) => {console.log('Scanned: ', scannedText)})
+    const cleanUp = await initNfc((scannedText) => {onScan(scannedText)})
 
     return () => cleanUp()
   }, [])
+
+  const onScan = async (text) => {
+    const json = JSON.parse(text);
+    if (json.uid) {
+      const res = await interact(json.uid)
+      setStatus(res.status);
+      if (res.status !== 200) {
+        createAlert(res.json.message);
+      } else {
+        // reactivates reading on success to make the proccess of scanning many people faster
+        scanNFC();
+      }
+    } else {
+      createAlert("Invalid Badge")
+    }
+  }
 
   const onSuccess = async (e) => {
     console.log("QR code scanned!", e);
