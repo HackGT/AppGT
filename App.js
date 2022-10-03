@@ -152,7 +152,6 @@ function App(props) {
       if (result) {
         console.log("Hackathon found locally.");
         const hackathon = JSON.parse(result);
-
         if (hackathon != null) {
           setHackathon(hackathon);
           setIsFetchingData(false);

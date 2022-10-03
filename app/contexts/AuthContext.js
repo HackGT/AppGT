@@ -15,13 +15,13 @@ const AuthProvider = ({ app, children }) => {
   const [showLogin, setShowLogin] = useState(true);
   const [user, setUser] = useState(null);
 
-  const fetchUserProfile = async () => {
-    const json = await fetchProfile(firebaseUser.uid);
+  const fetchUserProfile = async (fUser) => {
+    const json = await fetchProfile(fUser.uid, fUser);
     setUser(json);
   };
 
-  const fetchProfile = async (uid) => {
-    const token = await firebaseUser.getIdToken();
+  const fetchProfile = async (uid, fUser) => {
+    const token = await fUser.getIdToken();
     const response = await fetch(`${USERS_URL + "/users/" + uid}/`, {
       method: "GET",
       headers: {

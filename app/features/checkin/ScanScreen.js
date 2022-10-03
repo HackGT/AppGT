@@ -13,9 +13,10 @@ import { initNfc, readNFC, writeNFC } from '../../NFCScanning/nfc';
 import { AuthContext } from "../../contexts/AuthContext";
 
 export function ScanScreen(props) {
-  const { hackathon } = useContext(HackathonContext);
+  const { state } = useContext(HackathonContext);
+  const hackathon = state.hackathon
   const { dynamicStyles } = useContext(ThemeContext);
-  const { fetchProfile } = useContext(AuthContext)
+  const { fetchProfile, firebaseUser } = useContext(AuthContext)
   const [toggleValue, setToggleValue] = useState(false);
   const [uid, setUid] = useState("");
   const [fName, setfName] = useState("");
@@ -68,18 +69,7 @@ export function ScanScreen(props) {
     console.log("QR code scanned!", e);
     const json = JSON.parse(e.data);
     if (json.uid) {
-      setUid(json.uid);
-      
-      const res = await logInteraction(
-        hackathon.name,
-        "event",
-        json.uid,
-        props.eventID
-      );
-      const userProfile = await fetchProfile(json.uid)
-      setfName(userProfile.name.first);
-      setlName(userProfile.name.last);
-      setEmail(userProfile.email);
+      const res = await interact(json.uid)
       setStatus(res.status);
       console.log("RES: ", res);
       if (res.status !== 200) {
@@ -95,6 +85,21 @@ export function ScanScreen(props) {
       createAlert("Invalid QR Code");
     }
   };
+
+  const interact = async (uid) => {
+    setUid(uid);
+    const res = await logInteraction(
+      hackathon.name,
+      "event",
+      uid,
+      props.eventID
+    );
+    const userProfile = await fetchProfile(uid, firebaseUser)
+    setfName(userProfile.name.first);
+    setlName(userProfile.name.last);
+    setEmail(userProfile.email);
+    return res;
+  }
 
   const scanNFC = async () => {
     await readNFC()
