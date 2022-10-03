@@ -34,6 +34,7 @@ import {
   InformationStackScreen,
   ScavengerHuntStackScreen,
   InteractionsStackScreen,
+  CheckInStackScreen
 } from "./app/navigation";
 import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
@@ -166,7 +167,6 @@ function App(props) {
 
         const hackathons = data.data.allHackathons;
         const eventTypes = data.data.allTypes;
-
         if (hackathons != null && hackathons.length != 0) {
           console.log("Hackathon found remotely.");
           const hackathon = hackathons[0];
@@ -347,6 +347,8 @@ function App(props) {
                           icon = faInfoCircle;
                         } else if (route.name === "ScavengerHunt") {
                           icon = faMapSigns;
+                        } else if (route.name === "Interactions") {
+                          icon = faClipboardCheck;
                         } else if (route.name === "CheckIn") {
                           icon = faClipboardCheck;
                         }
@@ -397,8 +399,14 @@ function App(props) {
                     />
                     {!showCheckin ? null : (
                       <Stack.Screen
-                        name="CheckIn"
+                        name="Interactions"
                         component={InteractionsStackScreen}
+                      />
+                    )}
+                    {!showCheckin ? null : (
+                      <Stack.Screen
+                        name="CheckIn"
+                        component={CheckInStackScreen}
                       />
                     )}
                   </Tab.Navigator>

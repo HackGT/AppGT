@@ -65,6 +65,7 @@ export function ScanScreen(props) {
     return () => cleanUp()
   }, [])
 
+  // NFC
   const onScan = async (text) => {
     const json = JSON.parse(text);
     if (json.uid) {
@@ -81,6 +82,7 @@ export function ScanScreen(props) {
     }
   }
 
+  //QR
   const onSuccess = async (e) => {
     console.log("QR code scanned!", e);
     const json = JSON.parse(e.data);
@@ -110,10 +112,11 @@ export function ScanScreen(props) {
       uid,
       props.eventID
     );
-    const userProfile = await fetchProfile(uid, firebaseUser)
-    setfName(userProfile.name.first);
-    setlName(userProfile.name.last);
-    setEmail(userProfile.email);
+    const { json, status } = await fetchProfile(uid, firebaseUser)
+    if (status !== 200) console.log('fetchProfile: ', status);
+    setfName(json.name.first);
+    setlName(json.name.last);
+    setEmail(json.email);
     return res;
   }
 

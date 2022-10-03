@@ -3,7 +3,7 @@ import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { InteractionsTab } from "./InteractionsTab";
 import { InteractionScreen } from './InteractionScreen';
-import { CheckInStack } from "../../navigation";
+import { InteractionsStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import HackGTIcon from "../../../assets/images/HackGTIcon";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -14,8 +14,8 @@ export default function InteractionsStackScreen({ navigation }) {
     <AuthContext.Consumer>
       {({ user }) => {
         return (
-          <CheckInStack.Navigator>
-            <CheckInStack.Screen
+          <InteractionsStack.Navigator>
+            <InteractionsStack.Screen
               options={{
                 headerTitleAlign: "left",
                 headerTitle: (props) => <HackGTIcon {...props} />,
@@ -24,8 +24,8 @@ export default function InteractionsStackScreen({ navigation }) {
               name="HackGT"
             >
               {(props) => <InteractionsTab {...props} />}
-            </CheckInStack.Screen>
-            <CheckInStack.Screen
+            </InteractionsStack.Screen>
+            <InteractionsStack.Screen
               options={{
                 headerTitleAlign: "left",
                 headerTitle: (props) => <HackGTIcon {...props} />,
@@ -35,7 +35,7 @@ export default function InteractionsStackScreen({ navigation }) {
               name="InteractionScreen"
               component={InteractionScreen}
             />
-          </CheckInStack.Navigator>
+          </InteractionsStack.Navigator>
         );
       }}
     </AuthContext.Consumer>

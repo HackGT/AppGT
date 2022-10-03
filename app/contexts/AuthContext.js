@@ -16,7 +16,7 @@ const AuthProvider = ({ app, children }) => {
   const [user, setUser] = useState(null);
 
   const fetchUserProfile = async (fUser) => {
-    const json = await fetchProfile(fUser.uid, fUser);
+    const { json } = await fetchProfile(fUser.uid, fUser);
     setUser(json);
   };
 
@@ -29,7 +29,7 @@ const AuthProvider = ({ app, children }) => {
       },
     });
     const json = await response.json();
-    return json;
+    return { json, status: response.status };
   }
 
   useEffect(() => {
