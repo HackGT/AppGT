@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Text, StyleSheet, View, Alert, Dimensions } from "react-native";
 import Toggle from "react-native-toggle-element";
-import QRCodeScanner from "react-native-qrcode-scanner";
+// import QRCodeScanner from "react-native-qrcode-scanner";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { request, PERMISSIONS } from "react-native-permissions";
 
@@ -212,15 +212,18 @@ export function ScanScreen(props) {
           </TouchableOpacity>
         </>
       ) : (
-        <QRCodeScanner
-          ref={scanner}
-          reactivate={false}
-          fadeIn={false}
-          showMarker
-          markerStyle={{ borderColor: "white", borderWidth: 2 }}
-          onRead={onSuccess}
-          cameraStyle={{ width: Dimensions.get("window").width - 30 }}
-        />
+        <>
+          <Text>sdf</Text>
+        </>
+        // <QRCodeScanner
+        //   ref={scanner}
+        //   reactivate={false}
+        //   fadeIn={false}
+        //   showMarker
+        //   markerStyle={{ borderColor: "white", borderWidth: 2 }}
+        //   onRead={onSuccess}
+        //   cameraStyle={{ width: Dimensions.get("window").width - 30 }}
+        // />
       )}
     </View>
   );

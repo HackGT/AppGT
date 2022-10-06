@@ -127,9 +127,9 @@ export function LoginOnboarding(props) {
 
           const screens = [hackgtLogo, personalizeSchedule, joinVirtually];
 
-          return screens.map((content, i) => (
+          return screens.map((content, index) => (
             <View
-              key={i}
+              key={index}
               style={[dynamicStyles.backgroundColor, screenBackground]}
             >
               {content}
@@ -146,9 +146,9 @@ export function LoginOnboarding(props) {
     const size = radius * 2;
     const bubbles = Array.from(new Array(pageCount).keys()).map((i) => {
       return (
-        <ThemeContext.Consumer>
+        <ThemeContext.Consumer key={i}>
           {({ dynamicStyles }) => (
-            <Svg key={i} height={size + 14} width={size + 14}>
+            <Svg height={size + 14} width={size + 14}>
               <Circle
                 cx={radius}
                 cy={radius}

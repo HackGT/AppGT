@@ -14,7 +14,6 @@ import { HackathonContext } from "../../state/hackathon";
 import { ScavHuntContext } from "../../state/scavHunt";
 import { fetchServerTime } from "../../cms";
 import moment from "moment-timezone";
-import QRCode from "react-native-qrcode-svg";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScavengerHuntTab(props) {

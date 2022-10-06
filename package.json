@@ -21,8 +21,8 @@
     "@react-navigation/bottom-tabs": "^5.11.15",
     "@react-navigation/native": "^5.9.8",
     "@react-navigation/stack": "^5.14.9",
-    "Buffer": "^0.0.0",
     "buffer": "^5.6.0",
+    "Buffer": "^0.0.0",
     "firebase": "^9.9.4",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
@@ -40,10 +40,9 @@
     "react-native-nfc-manager": "^3.14.0",
     "react-native-permissions": "^3.3.0",
     "react-native-push-notification": "^7.4.0",
-    "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "6.0.6",
     "react-native-raw-bottom-sheet": "^2.2.0",
-    "react-native-reanimated": "^1.13.3",
+    "react-native-reanimated": "^2.10.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^2.18.1",
     "react-native-svg": "^12.1.1",
@@ -51,8 +50,10 @@
     "react-native-toggle-element": "^2.0.1",
     "react-native-user-agent": "^2.3.1",
     "react-native-vector-icons": "^7.1.0",
+    "react-native-vision-camera": "^2.14.1",
     "react-native-webview": "^11.23.1",
-    "requirejs": "^2.3.6"
+    "requirejs": "^2.3.6",
+    "vision-camera-code-scanner": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
