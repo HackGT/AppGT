@@ -2,21 +2,20 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { Text, StyleSheet, View, Alert, Dimensions } from "react-native";
 import Toggle from "react-native-toggle-element";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { RNCamera } from "react-native-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { request, PERMISSIONS } from "react-native-permissions";
 
 import { logInteraction } from "../../yac";
 import { HackathonContext } from "../../state/hackathon";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { initNfc, readNFC, writeNFC } from '../../NFCScanning/nfc';
+import { initNfc, readNFC, writeNFC } from "../../NFCScanning/nfc";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export function ScanScreen(props) {
   const { state } = useContext(HackathonContext);
-  const hackathon = state.hackathon
+  const hackathon = state.hackathon;
   const { dynamicStyles } = useContext(ThemeContext);
-  const { fetchProfile, firebaseUser } = useContext(AuthContext)
+  const { fetchProfile, firebaseUser } = useContext(AuthContext);
   const [toggleValue, setToggleValue] = useState(false);
   const [uid, setUid] = useState("");
   const [fName, setfName] = useState("");
@@ -27,7 +26,7 @@ export function ScanScreen(props) {
 
   const styles = StyleSheet.create({
     container: {
-      paddingBottom: 10
+      paddingBottom: 10,
     },
     centerText: {
       flex: 1,
@@ -49,8 +48,8 @@ export function ScanScreen(props) {
       padding: 16,
     },
     button: {
-      alignSelf: 'center'
-    }
+      alignSelf: "center",
+    },
   });
   useEffect(() => {
     request(PERMISSIONS.IOS.CAMERA).then((result) => {
@@ -59,17 +58,18 @@ export function ScanScreen(props) {
   }, []);
 
   useEffect(async () => {
+    const cleanUp = await initNfc((scannedText) => {
+      onScan(scannedText);
+    });
 
-    const cleanUp = await initNfc((scannedText) => {onScan(scannedText)})
-
-    return () => cleanUp()
-  }, [])
+    return () => cleanUp();
+  }, []);
 
   // NFC
   const onScan = async (text) => {
     const json = JSON.parse(text);
     if (json.uid) {
-      const res = await interact(json.uid)
+      const res = await interact(json.uid);
       setStatus(res.status);
       if (res.status !== 200) {
         createAlert(res.json.message);
@@ -78,16 +78,16 @@ export function ScanScreen(props) {
         scanNFC();
       }
     } else {
-      createAlert("Invalid Badge")
+      createAlert("Invalid Badge");
     }
-  }
+  };
 
   //QR
   const onSuccess = async (e) => {
     console.log("QR code scanned!", e);
     const json = JSON.parse(e.data);
     if (json.uid) {
-      const res = await interact(json.uid)
+      const res = await interact(json.uid);
       setStatus(res.status);
       console.log("RES: ", res);
       if (res.status !== 200) {
@@ -112,17 +112,17 @@ export function ScanScreen(props) {
       uid,
       props.eventID
     );
-    const { json, status } = await fetchProfile(uid, firebaseUser)
-    if (status !== 200) console.log('fetchProfile: ', status);
+    const { json, status } = await fetchProfile(uid, firebaseUser);
+    if (status !== 200) console.log("fetchProfile: ", status);
     setfName(json.name.first);
     setlName(json.name.last);
     setEmail(json.email);
     return res;
-  }
+  };
 
   const scanNFC = async () => {
-    await readNFC()
-  }
+    await readNFC();
+  };
 
   const createAlert = (message) =>
     Alert.alert("Error", message, [
@@ -208,7 +208,7 @@ export function ScanScreen(props) {
       {toggleValue ? (
         <>
           <TouchableOpacity style={styles.button} onPress={scanNFC}>
-            <Text style={styles.buttonText}>{'Scan'}</Text>
+            <Text style={styles.buttonText}>{"Scan"}</Text>
           </TouchableOpacity>
         </>
       ) : (

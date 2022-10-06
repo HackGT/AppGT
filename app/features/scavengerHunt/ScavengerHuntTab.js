@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HackathonContext } from "../../state/hackathon";
 import { ScavHuntContext } from "../../state/scavHunt";
 import { fetchServerTime } from "../../cms";

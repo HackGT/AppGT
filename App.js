@@ -17,7 +17,7 @@ import {
   faMapSigns,
   faClipboardCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
@@ -34,7 +34,7 @@ import {
   InformationStackScreen,
   ScavengerHuntStackScreen,
   InteractionsStackScreen,
-  CheckInStackScreen
+  CheckInStackScreen,
 } from "./app/navigation";
 import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
@@ -320,9 +320,6 @@ function App(props) {
                 {!scheduleModal && splashGrowModal}
                 <NavigationContainer>
                   <StatusBar
-                    backgroundColor={
-                      styles.tabBarBackgroundColor.backgroundColor
-                    }
                     barStyle={
                       theme == "dark" ? "light-content" : "dark-content"
                     }
@@ -418,6 +415,6 @@ function App(props) {
       </ThemeProvider>
     </AuthProvider>
   );
- }
+}
 
 export default App;

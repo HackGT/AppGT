@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { logInteraction } from "../../yac";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { ScavHuntContext } from "../../state/scavHunt";
 import DismissModal from "../../../assets/images/DismissModal.svg";
