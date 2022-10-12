@@ -4,15 +4,17 @@ import QRCodeScanner from "react-native-qrcode-scanner";
 import { request, PERMISSIONS } from "react-native-permissions";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { HackathonContext } from "../../state/hackathon";
 import { getApplication } from "../../api/registration";
 import { useIsFocused } from "@react-navigation/native";
+
+const HEXATHON = {
+  id: "62d9ed68d0a69b88c06bdfb2",
+  name: "HackGT 9",
+};
 
 export function CheckInQR(props) {
   const { dynamicStyles } = useContext(ThemeContext);
   const { firebaseUser } = useContext(AuthContext);
-  const { state } = useContext(HackathonContext);
-  const hackathon = state.hackathon;
   const scanner = useRef(null);
   const isFocused = useIsFocused();
 
@@ -58,7 +60,7 @@ export function CheckInQR(props) {
       const token = await firebaseUser.getIdToken();
       const { data, status } = await getApplication(
         token,
-        hackathon.id,
+        HEXATHON.id,
         json.uid
       );
 
@@ -67,7 +69,7 @@ export function CheckInQR(props) {
       } else if (data?.applications.length === 0) {
         createAlert(
           "This person never submitted an application to ",
-          hackathon.name
+          HEXATHON.name
         );
       } else if (data?.applications[0].status !== "CONFIRMED") {
         createAlert(
