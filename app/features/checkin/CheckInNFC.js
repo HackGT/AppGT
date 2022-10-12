@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { initNfc, writeNFC } from "../../NFCScanning/nfc";
+import { writeNFC } from "../../NFCScanning/nfc";
 import BadgeJudge from "../../../assets/images/BadgeJudge.png";
 import BadgeMentor from "../../../assets/images/BadgeMentor.png";
 import BadgeOrganizer from "../../../assets/images/BadgeOrganizer.png";
@@ -19,14 +19,6 @@ import BadgeVolunteer from "../../../assets/images/BadgeVolunteer.png";
 export function CheckInNFC(props) {
   const { application } = props.route.params;
   const { dynamicStyles } = useContext(ThemeContext);
-
-  useEffect(async () => {
-    const cleanUp = await initNfc((scannedText) => {
-      onScan(scannedText);
-    });
-
-    return () => cleanUp();
-  }, []);
 
   const TagImage = (props) => {
     let source = null;
