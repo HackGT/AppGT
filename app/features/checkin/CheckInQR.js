@@ -111,6 +111,7 @@ export function CheckInQR(props) {
           cameraStyle={{
             width: Dimensions.get("window").width - 30,
             alignSelf: "center",
+            overflow: "hidden",
           }}
         />
       </View>

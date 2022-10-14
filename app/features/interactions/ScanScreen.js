@@ -217,7 +217,10 @@ export function ScanScreen(props) {
           showMarker
           markerStyle={{ borderColor: "white", borderWidth: 2 }}
           onRead={onSuccess}
-          cameraStyle={{ width: Dimensions.get("window").width - 30 }}
+          cameraStyle={{
+            width: Dimensions.get("window").width - 30,
+            overflow: "hidden",
+          }}
         />
       )}
     </View>
