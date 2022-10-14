@@ -58,8 +58,7 @@ export function CheckInNFC(props) {
       <Image
         source={source}
         style={{
-          alignSelf: "center",
-          width: Dimensions.get("window").width - 80,
+          width: Dimensions.get("window").width - 160,
           resizeMode: "contain",
         }}
       />
@@ -165,7 +164,15 @@ export function CheckInNFC(props) {
             {"Scan Badge"}
           </Text>
         </TouchableOpacity>
-        <TagImage branch={application.confirmationBranch.applicationGroup} />
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <TagImage branch={application.confirmationBranch.applicationGroup} />
+        </View>
       </View>
     </>
   );
