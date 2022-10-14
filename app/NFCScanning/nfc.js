@@ -1,3 +1,4 @@
+import { BackHandler, NativeModules, Platform } from "react-native";
 import NfcManager, { NfcTech, Ndef } from "react-native-nfc-manager";
 
 export async function initNfc() {
@@ -9,8 +10,19 @@ export async function initNfc() {
   }
 }
 
+export async function cancelNFC() {
+  console.log("Cancelling NFC");
+  try {
+    await NfcManager.unregisterTagEvent();
+    await NfcManager.cancelTechnologyRequest();
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
 export async function readNFC() {
   let data = "";
+  let success = true;
 
   try {
     await NfcManager.requestTechnology(NfcTech.Ndef);
@@ -20,11 +32,12 @@ export async function readNFC() {
     data = Ndef.text.decodePayload(tag.ndefMessage[0].payload);
   } catch (ex) {
     console.warn("NFC Reading Failed:", ex.message);
+    success = false;
   } finally {
     NfcManager.cancelTechnologyRequest();
   }
 
-  return data;
+  return { success, data };
 }
 
 export async function writeNFC(text) {

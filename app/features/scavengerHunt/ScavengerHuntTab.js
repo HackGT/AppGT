@@ -39,7 +39,6 @@ export function ScavengerHuntTab(props) {
   }, []);
 
   useEffect(() => {
-    console.log(props.user);
     const unsubscribe = props.navigation.addListener(
       "focus",
       () => {
@@ -86,7 +85,6 @@ export function ScavengerHuntTab(props) {
         onPress={() => {
           props.navigation.navigate("ScavHuntCrossword", {
             challenges: crosswordPuzzleChallenges,
-            user: props.user,
             hackathonName: hackathon.name,
           });
         }}
@@ -148,7 +146,6 @@ export function ScavengerHuntTab(props) {
         onPress={() => {
           props.navigation.navigate("ScavHuntItem", {
             item: item,
-            user: props.user,
             hackathonName: hackathon.name,
           });
         }}

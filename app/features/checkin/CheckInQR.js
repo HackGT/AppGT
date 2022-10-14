@@ -4,13 +4,9 @@ import QRCodeScanner from "react-native-qrcode-scanner";
 import { request, PERMISSIONS } from "react-native-permissions";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { getApplication } from "../../api/registration";
+import { getRegistrationApplication } from "../../api/api";
+import { CURRENT_HEXATHON } from "../../api/api";
 import { useIsFocused } from "@react-navigation/native";
-
-const HEXATHON = {
-  id: "62d9ed68d0a69b88c06bdfb2",
-  name: "HackGT 9",
-};
 
 export function CheckInQR(props) {
   const { dynamicStyles } = useContext(ThemeContext);
@@ -29,7 +25,9 @@ export function CheckInQR(props) {
   // Activate scanner whenever we navigate back to the screen
   useEffect(() => {
     if (scanner != null) {
-      scanner.current.reactivate();
+      setTimeout(() => {
+        scanner.current.reactivate();
+      }, 2000);
     }
   }, [scanner, isFocused]);
 
@@ -45,7 +43,7 @@ export function CheckInQR(props) {
       },
     ]);
 
-  const onSuccess = async (e) => {
+  const onQRScan = async (e) => {
     let json = {};
 
     try {
@@ -58,9 +56,9 @@ export function CheckInQR(props) {
 
     try {
       const token = await firebaseUser.getIdToken();
-      const { data, status } = await getApplication(
+      const { status, json: data } = await getRegistrationApplication(
         token,
-        HEXATHON.id,
+        CURRENT_HEXATHON.id,
         json.uid
       );
 
@@ -69,7 +67,7 @@ export function CheckInQR(props) {
       } else if (data?.applications.length === 0) {
         createAlert(
           "This person never submitted an application to ",
-          HEXATHON.name
+          CURRENT_HEXATHON.name
         );
       } else if (data?.applications[0].status !== "CONFIRMED") {
         createAlert(
@@ -107,7 +105,7 @@ export function CheckInQR(props) {
           fadeIn={false}
           showMarker
           markerStyle={{ borderColor: "white", borderWidth: 2 }}
-          onRead={onSuccess}
+          onRead={onQRScan}
           cameraStyle={{
             width: Dimensions.get("window").width - 30,
             alignSelf: "center",

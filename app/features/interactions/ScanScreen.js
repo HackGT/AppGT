@@ -1,57 +1,37 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Text, StyleSheet, View, Alert, Dimensions } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Alert,
+  Dimensions,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
 import Toggle from "react-native-toggle-element";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { RNCamera } from "react-native-camera";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { request, PERMISSIONS } from "react-native-permissions";
+import Modal from "react-native-modal";
 
-import { logInteraction } from "../../yac";
-import { HackathonContext } from "../../state/hackathon";
+import { logInteraction, getUserProfile } from "../../api/api";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { initNfc, readNFC, writeNFC } from "../../NFCScanning/nfc";
+import { cancelNFC, initNfc, readNFC } from "../../NFCScanning/nfc";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export function ScanScreen(props) {
-  const { state } = useContext(HackathonContext);
-  const hackathon = state.hackathon;
   const { dynamicStyles } = useContext(ThemeContext);
-  const { fetchProfile, firebaseUser } = useContext(AuthContext);
+  const { firebaseUser } = useContext(AuthContext);
   const [toggleValue, setToggleValue] = useState(false);
   const [uid, setUid] = useState("");
   const [fName, setfName] = useState("");
   const [lName, setlName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(-1);
+  const [isScanning, setIsScanning] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const scanner = useRef(null);
 
-  const styles = StyleSheet.create({
-    container: {
-      paddingBottom: 10,
-    },
-    centerText: {
-      flex: 1,
-      fontSize: 14,
-      padding: 4,
-      color: "#777",
-      fontFamily: "SpaceMono-Bold",
-    },
-    textBold: {
-      fontWeight: "500",
-      color: "#000",
-    },
-    buttonText: {
-      fontSize: 21,
-      color: dynamicStyles.toggleText.color,
-      fontFamily: "SpaceMono-Bold",
-    },
-    infoContainer: {
-      padding: 16,
-    },
-    button: {
-      alignSelf: "center",
-    },
-  });
   useEffect(() => {
     request(PERMISSIONS.IOS.CAMERA).then((result) => {
       console.log(result);
@@ -63,63 +43,93 @@ export function ScanScreen(props) {
   }, []);
 
   // NFC
-  const onScan = async (text) => {
-    const json = JSON.parse(text);
-    if (json.uid) {
-      const res = await interact(json.uid);
-      setStatus(res.status);
-      if (res.status !== 200) {
-        createAlert(res.json.message);
-      } else {
-        // reactivates reading on success to make the proccess of scanning many people faster
+  const onNFCTagScanned = async (text) => {
+    let json = {};
+    try {
+      json = JSON.parse(text);
+    } finally {
+      if (!json.uid) {
+        createAlert("Invalid badge");
+        return;
+      }
+    }
+
+    setUid(json.uid);
+    const success = await getProfileAndLogInteraction(json.uid);
+    if (success) {
+      // Reactivates reading on success to make the proccess of scanning many people faster
+      setTimeout(() => {
         scanNFC();
-      }
-    } else {
-      createAlert("Invalid Badge");
+      }, 1000);
     }
   };
 
-  //QR
-  const onSuccess = async (e) => {
-    console.log("QR code scanned!", e);
-    const json = JSON.parse(e.data);
-    if (json.uid) {
-      const res = await interact(json.uid);
-      setStatus(res.status);
-      console.log("RES: ", res);
-      if (res.status !== 200) {
-        createAlert(res.json.message);
-      } else {
-        setTimeout(() => {
-          if (scanner && scanner.current) {
-            scanner.current.reactivate();
-          }
-        }, 2000);
+  // QR
+  const onQRCodeScanned = async (e) => {
+    console.log("QR code scanned:", e.data);
+    let json = {};
+    try {
+      json = JSON.parse(e.data);
+    } finally {
+      if (!json.uid) {
+        createAlert("Invalid QR Code");
+        return;
       }
-    } else {
-      createAlert("Invalid QR Code");
+    }
+
+    setUid(json.uid);
+    const success = await getProfileAndLogInteraction(json.uid);
+    if (success) {
+      // Reactivates reading on success to make the proccess of scanning many people faster
+      setTimeout(() => {
+        if (scanner && scanner.current) {
+          scanner.current.reactivate();
+        }
+      }, 2000);
     }
   };
 
-  const interact = async (uid) => {
-    setUid(uid);
-    const res = await logInteraction(
-      hackathon.name,
+  const getProfileAndLogInteraction = async (uid) => {
+    const token = await firebaseUser.getIdToken();
+    const userProfileResponse = await getUserProfile(token, uid);
+    if (userProfileResponse.status !== 200) {
+      createAlert(userProfileResponse.json.message);
+      return false;
+    }
+
+    setfName(userProfileResponse.json.name.first);
+    setlName(userProfileResponse.json.name.last);
+    setEmail(userProfileResponse.json.email);
+    setStatus(userProfileResponse.json.status);
+
+    const interactionResponse = await logInteraction(
+      token,
       "event",
       uid,
       props.eventID
     );
-    const { json, status } = await fetchProfile(uid, firebaseUser);
-    if (status !== 200) console.log("fetchProfile: ", status);
-    setfName(json.name.first);
-    setlName(json.name.last);
-    setEmail(json.email);
-    return res;
+    if (interactionResponse.status !== 200) {
+      createAlert(interactionResponse.json.message);
+      return false;
+    }
+
+    return true;
   };
 
   const scanNFC = async () => {
-    const data = await readNFC();
-    console.log("data:", data);
+    setIsScanning(true);
+    if (Platform.OS === "android") {
+      setModalVisible(true);
+    }
+    const { success, data } = await readNFC();
+    if (success) {
+      await onNFCTagScanned(data);
+    }
+
+    if (Platform.OS === "android") {
+      setModalVisible(false);
+    }
+    setIsScanning(false);
   };
 
   const createAlert = (message) =>
@@ -136,6 +146,23 @@ export function ScanScreen(props) {
 
   return (
     <View style={styles.container}>
+      <Modal
+        isVisible={modalVisible}
+        onBackButtonPress={async () => {
+          if (Platform.OS === "android") {
+            await cancelNFC();
+          }
+        }}
+      >
+        <View style={styles.modalContent}>
+          <ActivityIndicator
+            size="large"
+            color="#5dbb63"
+            style={{ marginBottom: 20 }}
+          />
+          <Text>Scanning for NFC Tag...</Text>
+        </View>
+      </Modal>
       <View style={styles.infoContainer}>
         <Text
           style={[
@@ -147,7 +174,7 @@ export function ScanScreen(props) {
                 status === 200
                   ? "#5dbb63"
                   : status === -1
-                  ? "white"
+                  ? dynamicStyles.text.color
                   : "#d74040",
             },
           ]}
@@ -172,7 +199,7 @@ export function ScanScreen(props) {
                   fontFamily: "SpaceMono-Bold",
                 }}
               >
-                QR Code
+                NFC
               </Text>
             }
             rightComponent={
@@ -182,7 +209,7 @@ export function ScanScreen(props) {
                   fontFamily: "SpaceMono-Bold",
                 }}
               >
-                NFC
+                QR Code
               </Text>
             }
             trackBar={{
@@ -200,29 +227,75 @@ export function ScanScreen(props) {
               inActiveBackgroundColor:
                 dynamicStyles.toggleThumbBackgroundColor.color,
             }}
+            animationDuration={200}
           />
         </View>
       </View>
       {toggleValue ? (
-        <>
-          <TouchableOpacity style={styles.button} onPress={scanNFC}>
-            <Text style={styles.buttonText}>{"Scan"}</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
         <QRCodeScanner
           ref={scanner}
           reactivate={false}
           fadeIn={false}
           showMarker
           markerStyle={{ borderColor: "white", borderWidth: 2 }}
-          onRead={onSuccess}
+          onRead={onQRCodeScanned}
           cameraStyle={{
             width: Dimensions.get("window").width - 30,
             overflow: "hidden",
           }}
         />
+      ) : (
+        <TouchableOpacity
+          style={styles.scanButton}
+          onPress={scanNFC}
+          disabled={isScanning}
+        >
+          <Text
+            style={[
+              styles.scanButtonText,
+              { color: dynamicStyles.toggleText.color },
+            ]}
+          >
+            Press to Scan Badge
+          </Text>
+        </TouchableOpacity>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 10,
+  },
+  centerText: {
+    flex: 1,
+    fontSize: 14,
+    padding: 4,
+    color: "#777",
+    fontFamily: "SpaceMono-Bold",
+  },
+  textBold: {
+    fontWeight: "500",
+    color: "#000",
+  },
+  scanButtonText: {
+    fontSize: 20,
+    fontFamily: "SpaceMono-Bold",
+  },
+  infoContainer: {
+    padding: 16,
+    display: "flex",
+  },
+  scanButton: {
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+  },
+});
