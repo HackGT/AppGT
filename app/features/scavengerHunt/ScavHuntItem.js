@@ -137,7 +137,7 @@ export function ScavHuntItem(props) {
       </Text>
       <View style={[styles.answerInputContainer, dynamicStyles.searchBackgroundColor]}>
         <TextInput
-          style={[styles.answerInput, {color: 'white'}]}
+          style={[styles.answerInput, dynamicStyles.text]}
           onChangeText={setAnswer}
           value={answer}
           placeholder={"Your Answer"}
