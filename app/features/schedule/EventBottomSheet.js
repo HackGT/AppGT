@@ -16,7 +16,6 @@ export function EventBottomSheet(props) {
   const [addStarButton, setAddStarButton] = useState(
     props.event ? state.starredIds.indexOf(props.event.id) == -1 : true
   );
-  console.log("SELECTED EVENT: ", props.event);
   useEffect(() => {
     setAddStarButton(
       props.event ? state.starredIds.indexOf(props.event.id) == -1 : false
