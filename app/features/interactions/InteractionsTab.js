@@ -130,9 +130,7 @@ export function InteractionsTab(props) {
       </View>
 
       <ScrollView>
-        <View>
-          <View style={styles.eventContainer}>{formattedEvents}</View>
-        </View>
+        <View style={styles.eventCardContainer}>{formattedEvents}</View>
       </ScrollView>
     </View>
   );
@@ -175,9 +173,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  eventContainer: {
+  eventCardContainer: {
     marginHorizontal: 15,
     flex: 1,
+    paddingTop: 5,
   },
   inputContainer: {
     height: 41,

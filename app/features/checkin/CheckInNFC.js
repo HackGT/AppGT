@@ -19,6 +19,7 @@ import BadgeParticipant from "../../../assets/images/BadgeParticipant.png";
 import BadgeSponsor from "../../../assets/images/BadgeSponsor.png";
 import BadgeVolunteer from "../../../assets/images/BadgeVolunteer.png";
 import Modal from "react-native-modal";
+import { Card } from "../../components/Card";
 
 export function CheckInNFC(props) {
   const { application } = props.route.params;
@@ -29,7 +30,7 @@ export function CheckInNFC(props) {
     await initNfc();
   }, []);
 
-  const TagImage = (props) => {
+  const BadgeImage = (props) => {
     let source = null;
     switch (props.branch) {
       case "PARTICIPANT":
@@ -59,7 +60,7 @@ export function CheckInNFC(props) {
         source={source}
         style={{
           width: Dimensions.get("window").width - 160,
-          resizeMode: "contain"
+          resizeMode: "contain",
         }}
       />
     );
@@ -83,7 +84,7 @@ export function CheckInNFC(props) {
     if (!success) {
       createAlert("There was an issue writing to the badge. Try again.");
     } else {
-      props.navigation.goBack()
+      props.navigation.goBack();
     }
   };
 
@@ -153,28 +154,27 @@ export function CheckInNFC(props) {
           {"Application Group: " +
             application.confirmationBranch.applicationGroup}
         </Text>
-        <TouchableOpacity onPress={onPressScan}>
-          <Text
-            style={{
-              color: dynamicStyles.toggleText.color,
-              fontFamily: "SpaceMono-Bold",
-              fontSize: 20,
-              marginTop: 30,
-              alignSelf: "center",
-            }}
-          >
-            {"Scan Badge"}
-          </Text>
-        </TouchableOpacity>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1,
-            zIndex: -10000
-          }}
+        <TouchableOpacity
+          onPress={onPressScan}
+          style={styles.writeToBadgeButton}
         >
-          <TagImage branch={application.confirmationBranch.applicationGroup} />
+          <Card>
+            <Text
+              style={[
+                {
+                  color: dynamicStyles.toggleText.color,
+                },
+                styles.writeToBadgeButtonText,
+              ]}
+            >
+              Write to Badge
+            </Text>
+          </Card>
+        </TouchableOpacity>
+        <View style={styles.badgeImageWrapper}>
+          <BadgeImage
+            branch={application.confirmationBranch.applicationGroup}
+          />
         </View>
       </View>
     </>
@@ -188,5 +188,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
+  },
+  writeToBadgeButton: {
+    marginTop: 30,
+    marginHorizontal: 15,
+  },
+  writeToBadgeButtonText: {
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 20,
+    alignSelf: "center",
+    padding: 10,
+  },
+  badgeImageWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    zIndex: -10000,
   },
 });
