@@ -22,15 +22,6 @@ export function CheckInQR(props) {
     requestCameraPermission();
   }, []);
 
-  // Activate scanner whenever we navigate back to the screen
-  useEffect(() => {
-    if (scanner != null) {
-      setTimeout(() => {
-        scanner.current.reactivate();
-      }, 2000);
-    }
-  }, [scanner, isFocused]);
-
   const createAlert = (message) =>
     Alert.alert("Error", message, [
       {
@@ -104,19 +95,21 @@ export function CheckInQR(props) {
         >
           Scan User QR Code
         </Text>
-        <QRCodeScanner
-          ref={scanner}
-          reactivate={false}
-          fadeIn={false}
-          showMarker
-          markerStyle={{ borderColor: "white", borderWidth: 2 }}
-          onRead={onQRScan}
-          cameraStyle={{
-            width: Dimensions.get("window").width - 30,
-            alignSelf: "center",
-            overflow: "hidden",
-          }}
-        />
+        {isFocused && (
+          <QRCodeScanner
+            ref={scanner}
+            reactivate={false}
+            fadeIn={false}
+            showMarker
+            markerStyle={{ borderColor: "white", borderWidth: 2 }}
+            onRead={onQRScan}
+            cameraStyle={{
+              width: Dimensions.get("window").width - 30,
+              alignSelf: "center",
+              overflow: "hidden",
+            }}
+          />
+        )}
       </View>
     </View>
   );

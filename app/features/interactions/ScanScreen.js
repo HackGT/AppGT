@@ -19,6 +19,7 @@ import { logInteraction, getUserProfile } from "../../api/api";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { cancelNFC, initNfc, readNFC } from "../../NFCScanning/nfc";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useIsFocused } from "@react-navigation/native";
 
 export function ScanScreen(props) {
   const { dynamicStyles } = useContext(ThemeContext);
@@ -32,6 +33,7 @@ export function ScanScreen(props) {
   const [isScanning, setIsScanning] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const scanner = useRef(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     request(PERMISSIONS.IOS.CAMERA).then((result) => {
@@ -235,18 +237,20 @@ export function ScanScreen(props) {
         </View>
       </View>
       {toggleValue ? (
-        <QRCodeScanner
-          ref={scanner}
-          reactivate={false}
-          fadeIn={false}
-          showMarker
-          markerStyle={{ borderColor: "white", borderWidth: 2 }}
-          onRead={onQRCodeScanned}
-          cameraStyle={{
-            width: Dimensions.get("window").width - 30,
-            overflow: "hidden",
-          }}
-        />
+        isFocused && (
+          <QRCodeScanner
+            ref={scanner}
+            reactivate={false}
+            fadeIn={false}
+            showMarker
+            markerStyle={{ borderColor: "white", borderWidth: 2 }}
+            onRead={onQRCodeScanned}
+            cameraStyle={{
+              width: Dimensions.get("window").width - 30,
+              overflow: "hidden",
+            }}
+          />
+        )
       ) : (
         <TouchableOpacity
           style={styles.scanButton}
