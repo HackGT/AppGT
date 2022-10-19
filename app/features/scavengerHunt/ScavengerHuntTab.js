@@ -26,11 +26,11 @@ export function ScavengerHuntTab(props) {
   );
   console.log('sdf', hackathon)
   useEffect(() => {
-    AsyncStorage.getItem("completedHints", (error, result) => {
+    AsyncStorage.getItem("completedQuestions", (error, result) => {
       if (result) {
         const r = JSON.parse(result);
         r.forEach((id) => {
-          if (!state.completedHints.includes(id)) {
+          if (!state.completedQuestions.includes(id)) {
             completeHint(id);
           }
         });
@@ -83,7 +83,7 @@ export function ScavengerHuntTab(props) {
     };
     console.log('item', item)
     const available = true
-    const isComplete = state.completedHints.includes(item.id);
+    const isComplete = state.completedQuestions.includes(item.id);
     return (
       <TouchableOpacity
         disabled={!available}
@@ -126,7 +126,7 @@ export function ScavengerHuntTab(props) {
     );
   });
 
-  const currPoints = state.completedHints.reduce((acc, curr) => {
+  const currPoints = state.completedQuestions.reduce((acc, curr) => {
     return acc + (curr.points ? curr.points : 0);
   }, 0);
   const totalPoints = scavHunts.reduce((acc, curr) => {

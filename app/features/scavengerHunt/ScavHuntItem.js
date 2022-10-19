@@ -20,14 +20,14 @@ import CorrectAnswer from "../../../assets/images/CorrectAnswer.svg";
 import IncorrectAnswer from "../../../assets/images/IncorrectAnswer.svg";
 
 export function ScavHuntItem(props) {
-  const { state, completeHint } = useContext(ScavHuntContext);
+  const { state, completeQuestion } = useContext(ScavHuntContext);
   const { firebaseUser } = useContext(AuthContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const answerSheetRef = useRef();
   const qrSheetRef = useRef();
   const scanner = useRef(null);
   const item = props.route.params.item;
-  const isComplete = state.completedHints.includes(item.id);
+  const isComplete = state.completedQuestions.includes(item.id);
 
   const [scannedCode, setScannedCode] = useState(null);
 
@@ -57,11 +57,11 @@ export function ScavHuntItem(props) {
     setShowAnswerStatus(true);
     if (answer.toLowerCase() === item.answer.toLowerCase()) {
       setIsAnswerCorrect(true);
-      completeHint(item.id);
+      completeQuestion(item.id);
       console.log("itemID ", item.id);
       AsyncStorage.setItem(
-        "completedHints",
-        JSON.stringify(state.completedHints.concat([item.id]))
+        "completedQuestions",
+      JSON.stringify(state.completedQuestions.concat([item.id]))
       );
 
       const token = await firebaseUser.getIdToken();

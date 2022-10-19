@@ -1,6 +1,6 @@
 import React from "react";
 import { initialValue, scavHuntReducer } from "./ScavHuntReducer";
-import { COMPLETE_HINT } from "./ScavHuntActionTypes";
+import { COMPLETE_QUESTION } from "./ScavHuntActionTypes";
 import ScavHuntContext from "./ScavHuntContext";
 
 export default function ScavHuntProvider({ children }) {
@@ -8,9 +8,9 @@ export default function ScavHuntProvider({ children }) {
 
   const value = {
     state: state,
-    completeHint: (id) =>
+    completeQuestion: (id) =>
       dispatch({
-        type: COMPLETE_HINT,
+        type: COMPLETE_QUESTION,
         value: id,
       }),
   };

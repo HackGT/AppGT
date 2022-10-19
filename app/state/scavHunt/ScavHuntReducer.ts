@@ -1,12 +1,12 @@
-import { COMPLETE_HINT } from './ScavHuntActionTypes'
+import { COMPLETE_QUESTION } from './ScavHuntActionTypes'
 
 export const initialValue = {
-    completedHints: []
+    completedQuestions: []
 }
 
 export function scavHuntReducer(state, action) {
     switch (action.type) {
-        case COMPLETE_HINT:
-            return { ...state, completedHints: state.completedHints.concat([action.value])}
+        case COMPLETE_QUESTION:
+            return { ...state, completedQuestions: state.completedQuestions.concat([action.value])}
     }
 }
