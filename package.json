@@ -22,11 +22,13 @@
     "@react-navigation/bottom-tabs": "^5.11.15",
     "@react-navigation/native": "^5.9.8",
     "@react-navigation/stack": "^5.14.9",
+    "Buffer": "^0.0.0",
     "firebase": "^9.9.4",
+    "luxon": "^3.0.4",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "ndef": "^0.2.0",
-    "nfccard-tool": "^0.1.1",
+    "process": "^0.11.10",
     "react": "16.13.1",
     "react-moment": "^0.9.7",
     "react-native": "0.64.1",
@@ -37,6 +39,8 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-markdown-renderer": "^3.2.8",
+    "react-native-modal": "^12.1.0",
+    "react-native-nfc-manager": "^3.14.0",
     "react-native-permissions": "^3.3.0",
     "react-native-push-notification": "^7.4.0",
     "react-native-qrcode-scanner": "^1.5.5",
@@ -50,7 +54,8 @@
     "react-native-toggle-element": "^2.0.1",
     "react-native-user-agent": "^2.3.1",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-webview": "^11.23.1"
+    "react-native-webview": "^11.23.1",
+    "requirejs": "^2.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

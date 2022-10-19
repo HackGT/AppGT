@@ -1,34 +1,64 @@
-import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
+import { BackHandler, NativeModules, Platform } from "react-native";
+import NfcManager, { NfcTech, Ndef } from "react-native-nfc-manager";
 
-// Pre-step, call this before any NFC operations
 export async function initNfc() {
-  await NfcManager.start();
+  const isSupported = await NfcManager.isSupported();
+  if (isSupported) {
+    await NfcManager.start();
+  } else {
+    console.warn("Device not supported for NFC");
+  }
 }
 
-export function readNdef() {
-  print("ASDfasdfadsf")
-  const cleanUp = () => {
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-    NfcManager.setEventListener(NfcEvents.SessionClosed, null);
-  };
+export async function cancelNFC() {
+  console.log("Cancelling NFC");
+  try {
+    await NfcManager.unregisterTagEvent();
+    await NfcManager.cancelTechnologyRequest();
+  } catch (error) {
+    console.warn(error);
+  }
+}
 
-  return new Promise(resolve => {
-    let tagFound = null;
+export async function readNFC() {
+  let data = "";
+  let success = true;
 
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
-      tagFound = tag;
-      resolve(tagFound);
-      NfcManager.setAlertMessageIOS('NDEF tag found');
-      NfcManager.unregisterTagEvent().catch(() => 0);
-    });
+  try {
+    await NfcManager.requestTechnology(NfcTech.Ndef);
+    const tag = await NfcManager.getTag();
+    console.log("Tag found", tag);
 
-    NfcManager.setEventListener(NfcEvents.SessionClosed, () => {
-      cleanUp();
-      if (!tagFound) {
-        resolve();
-      }
-    });
+    data = Ndef.text.decodePayload(tag.ndefMessage[0].payload);
+  } catch (ex) {
+    console.warn("NFC Reading Failed:", ex.message);
+    success = false;
+  } finally {
+    NfcManager.cancelTechnologyRequest();
+  }
 
-    NfcManager.registerTagEvent();
-  });
+  return { success, data };
+}
+
+export async function writeNFC(text) {
+  let result = false;
+
+  try {
+    await NfcManager.requestTechnology(NfcTech.Ndef);
+
+    console.log("Writing data to NFC:", text);
+
+    const bytes = Ndef.encodeMessage([Ndef.textRecord(text)]);
+
+    if (bytes) {
+      await NfcManager.ndefHandler.writeNdefMessage(bytes);
+      result = true;
+    }
+  } catch (ex) {
+    console.warn("NFC Writing Failed:", ex.message);
+  } finally {
+    NfcManager.cancelTechnologyRequest();
+  }
+
+  return result;
 }

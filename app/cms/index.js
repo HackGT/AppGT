@@ -5,32 +5,6 @@ const hackathonQuery = `
       name
       slackUrl
       isActive
-      events(orderBy: "startDate") {
-          id
-          name
-          url
-          startDay
-          startTime
-          startDate
-          endDay
-          endTime
-          endDate
-          description
-          tags {
-            id
-            name
-          }
-          type {
-              id
-              name
-              color
-          }
-          location {
-              id
-              name
-              capacity
-          }
-      }
       blocks {
         id
         name
@@ -63,8 +37,8 @@ const hackathonQuery = `
 `;
 
 const getHackathonData = async (queryString) => {
-  return fetch("https://keystone.dev.hack.gt/admin/api", {
-  // return fetch("https://cms.hack.gt/admin/api", {
+  // return fetch("https://keystone.dev.hack.gt/admin/api", {
+  return fetch("https://cms.hack.gt/admin/api", {
     method: "POST",
     headers: {
       "Content-Type": `application/json`,

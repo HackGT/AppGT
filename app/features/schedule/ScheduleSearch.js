@@ -79,7 +79,7 @@ export function ScheduleSearch(props) {
           let eventNameLowerCase = event.name.toLowerCase();
           let eventDescriptionLowerCase = "";
           let eventTypeLowerCase = "";
-          const name = event.type && event.type.name ? event.type.name : null;
+          const name = event.type;
 
           if (event.description != null) {
             eventDescriptionLowerCase = event.description.toLowerCase();

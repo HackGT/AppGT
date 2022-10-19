@@ -14,7 +14,7 @@ import { Linking } from "react-native";
 import FontMarkdown from "../../components/FontMarkdown";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { getAuth } from "firebase/auth";
-import { app } from '../../../firebase'
+import { app } from "../../../firebase";
 
 export function InformationTab(props) {
   const auth = getAuth(app);
@@ -40,7 +40,7 @@ export function InformationTab(props) {
         return (
           <TouchableOpacity
             style={[
-              styles.joinEvent,
+              styles.button,
               {
                 borderColor: dynamicStyles.tintColor.color,
               },
@@ -103,17 +103,6 @@ export function InformationTab(props) {
       </Text>
 
       <View style={styles.headerButtons}>{headerButtons}</View>
-      <TouchableOpacity style={[
-        styles.joinEvent,
-        {
-          borderColor: dynamicStyles.tintColor.color,
-        },
-      ]} 
-      onPress={() => {
-        auth.signOut()
-      }}>
-        <Text style={[dynamicStyles.text, styles.buttonText]}>{"Log Out"}</Text>
-      </TouchableOpacity>
       {infoBlocks.map((block, i) => (
         <View key={i}>
           <Text style={[dynamicStyles.text, styles.welcomeHeader]}>
@@ -129,6 +118,20 @@ export function InformationTab(props) {
           </View>
         </View>
       ))}
+      <TouchableOpacity
+        style={[
+          styles.button,
+          {
+            borderColor: dynamicStyles.tintColor.color,
+            marginVertical: 20,
+          },
+        ]}
+        onPress={() => {
+          auth.signOut();
+        }}
+      >
+        <Text style={[dynamicStyles.text, styles.buttonText]}>{"Log Out"}</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -147,20 +150,19 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 
-  joinEvent: {
+  button: {
     margin: 5,
     borderRadius: 10,
     borderWidth: 1,
     flex: 0.5,
+    marginHorizontal: 15,
   },
-
   buttonText: {
-    padding: 5,
+    padding: 8,
     textAlign: "center",
     fontFamily: "SpaceMono-Regular",
     letterSpacing: 0.005,
   },
-
   welcomeHeader: {
     fontFamily: "SpaceMono-Bold",
     fontSize: 18,

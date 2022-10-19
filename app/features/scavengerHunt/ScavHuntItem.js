@@ -1,5 +1,4 @@
-import React, { useRef, useState, useContext, useEffect } from "react";
-
+import React, { useRef, useState, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -7,32 +6,63 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
+  Alert,
 } from "react-native";
-import { logInteraction } from "../../yac";
+import { logInteraction } from "../../api/api";
 import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { ScavHuntContext } from "../../state/scavHunt";
+import { AuthContext } from "../../contexts/AuthContext";
 import DismissModal from "../../../assets/images/DismissModal.svg";
 import CorrectAnswer from "../../../assets/images/CorrectAnswer.svg";
 import IncorrectAnswer from "../../../assets/images/IncorrectAnswer.svg";
 
 export function ScavHuntItem(props) {
   const { state, completeHint } = useContext(ScavHuntContext);
+  const { firebaseUser } = useContext(AuthContext);
   const sheetRef = useRef();
   const item = props.route.params.item;
-  const user = props.route.params.user;
   const isComplete = state.completedHints.includes(item.id);
   const [modalVisible, setModalVisible] = useState(false);
   const [answer, setAnswer] = useState(isComplete ? item.answer : "");
   const [showAnswerStatus, setShowAnswerStatus] = useState(isComplete);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(isComplete);
+
   const answerStatus = () => {
     console.log("answer status: ", showAnswerStatus, isAnswerCorrect);
     if (showAnswerStatus) {
       isAnswerCorrect ? <CorrectAnswer /> : <IncorrectAnswer />;
     }
   };
-  console.log("woahhhhhh", props);
+
+  const handleSubmitAnswer = async () => {
+    setShowAnswerStatus(true);
+    if (answer === item.answer) {
+      setIsAnswerCorrect(true);
+      completeHint(item.id);
+      console.log("itemID ", item.id);
+      AsyncStorage.setItem(
+        "completedHints",
+        JSON.stringify(state.completedHints.concat([item.id]))
+      );
+
+      const token = await firebaseUser.getIdToken();
+      const interactionResponse = await logInteraction(
+        token,
+        "scavenger-hunt",
+        firebaseUser.uid,
+        item.id
+      );
+      if (interactionResponse.status !== 200) {
+        Alert.alert("Error", "There was an error logging your answer", [
+          {
+            text: "OK",
+          },
+        ]);
+      }
+    }
+  };
+
   const sheetContent = () => (
     <View style={[styles.sheetStyle]}>
       <TouchableOpacity
@@ -70,24 +100,7 @@ export function ScavHuntItem(props) {
       ) : (
         <TouchableOpacity
           style={[styles.answerButton, { width: 200 }]}
-          onPress={() => {
-            setShowAnswerStatus(true);
-            if (answer === item.answer) {
-              setIsAnswerCorrect(true);
-              completeHint(item.id);
-              console.log("itemID ", item.id);
-              AsyncStorage.setItem(
-                "completedHints",
-                JSON.stringify(state.completedHints.concat([item.id]))
-              );
-              logInteraction(
-                props.route.params.hackathonName,
-                "scavengerHunt",
-                user.userId,
-                item.id
-              );
-            }
-          }}
+          onPress={handleSubmitAnswer}
         >
           <Text style={[styles.answerButtonText]}>{"Submit"}</Text>
         </TouchableOpacity>

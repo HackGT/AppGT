@@ -1,4 +1,4 @@
-import { TOGGLE_STAR, TOGGLE_STAR_SCHEDULE } from './HackathonActionTypes'
+import { TOGGLE_STAR, TOGGLE_STAR_SCHEDULE, SET_EVENTS } from './HackathonActionTypes'
 import { turnToEst } from "../../cms/DataHandler";
 
 import AsyncStorage from "@react-native-community/async-storage"
@@ -14,9 +14,15 @@ export function hackathonReducer(state, action) {
             return { ...state, 'starredIds': toggleStarred(state.starredIds, action.value) }
         case TOGGLE_STAR_SCHEDULE :
             return { ...state, 'isStarSchedule': !state.isStarSchedule }
+        case SET_EVENTS:
+            return { ...state, 'events' : setEvents(action.value)}
         default:
             return state
     }
+}
+
+function setEvents(events) {
+    return events
 }
 
 function toggleStarred(starredIds, event) {
@@ -38,7 +44,7 @@ function toggleStarred(starredIds, event) {
 
         // add to starred state, then update storage
         const newStarred = [...starredIds, toggleEventId]
-        AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
+        AsyncStorage.setItem("starredIds", JSON.stringify(newStarred));
         return newStarred;
     } else {
         // cancel notification if previously starred
@@ -48,7 +54,7 @@ function toggleStarred(starredIds, event) {
 
         // remove from starred state, then update storage
         const newStarred = starredIds.filter((id) => id !== toggleEventId);
-        AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
+        AsyncStorage.setItem("starredIds", JSON.stringify(newStarred));
         return newStarred;
     }
 };

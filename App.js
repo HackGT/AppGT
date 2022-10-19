@@ -33,12 +33,14 @@ import {
   ScheduleStackScreen,
   InformationStackScreen,
   ScavengerHuntStackScreen,
-  CheckInStackScreen,
+  InteractionsStackScreen,
+  CheckInStackScreen
 } from "./app/navigation";
 import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
 import { AuthProvider, AuthContext } from "./app/contexts/AuthContext";
 import { app } from "./firebase";
+import { HackathonContext } from "./app/state/hackathon";
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
@@ -147,42 +149,7 @@ function App(props) {
         }
       }
     });
-
-    AsyncStorage.getItem("localHackathonData", (error, result) => {
-      if (result) {
-        console.log("Hackathon found locally.");
-        const hackathon = JSON.parse(result);
-
-        if (hackathon != null) {
-          setHackathon(hackathon);
-          setIsFetchingData(false);
-        }
-      }
-
-      fetchHackathonData().then((data) => {
-        // no response back, just return
-        if (data == null || data.data == null) {
-          return;
-        }
-
-        const hackathons = data.data.allHackathons;
-        const eventTypes = data.data.allTypes;
-
-        if (hackathons != null && hackathons.length != 0) {
-          console.log("Hackathon found remotely.");
-          const hackathon = hackathons[0];
-
-          AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
-          AsyncStorage.setItem("localTypeData", JSON.stringify(eventTypes));
-
-          setEventTypes(eventTypes);
-          setHackathon(hackathon);
-          setIsFetchingData(false);
-        } else {
-          // if still loading, present error asking for retry
-        }
-      });
-    });
+    setIsFetchingData(false)
   };
 
   useEffect(() => {
@@ -209,67 +176,6 @@ function App(props) {
     );
   }, [isStarSchedule]);
 
-  // useEffect(() => {
-  //   console.log('toggling starred ids', starredIds)
-  //   updateStorage()
-  // }, [starredIds])
-
-  // const updateStorage = () => {
-  //   AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
-  // }
-
-  // Not used anymore, but keeping just in case (look at HackathonReducer.js)
-  // const toggleIsStarSchedule = () => {
-  //   setIsStarSchedule(!isStarSchedule)
-  // };
-
-  // Not used anymore, but keeping just in case (look at HackathonReducer.js)
-  // const toggleStarred = (event) => {
-  //   const toggleEventId = event.id;
-
-  //   const isNowStarred = starredIds.indexOf(toggleEventId) == -1;
-
-  //   let eventIdNumber = toggleEventId.replace(/\D/g, "").substring(1, 5);
-  //   eventIdNumber = Number.parseInt(eventIdNumber);
-
-  //   if (isNowStarred) {
-  //     // schedule notification for 15 min before
-  //     PushNotification.localNotificationSchedule({
-  //       channelId: "hackgt-channel",
-  //       id: eventIdNumber + "", // map string into a unique id for cancellation
-  //       message: event.name + " is starting in 15 minutes! ",
-  //       date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
-  //     });
-
-  //     // add to starred state, then update storage
-  //     setStarredIds([...starredIds, toggleEventId]);
-
-  //     return true;
-  //   } else {
-  //     // cancel notification if previously starred
-  //     PushNotification.cancelLocalNotifications({
-  //       id: eventIdNumber + "",
-  //     });
-
-  //     // remove from starred state, then update storage
-  //     setStarredIds(starredIds.filter((id) => id !== toggleEventId));
-  //     return false;
-  //   }
-  // };
-
-  // groundtruth login
-  // const login = async () => {
-  //   try {
-  //     const result = await authorize(config);
-  //     console.log('Login result: ', result, result['accessToken'], result.accessToken)
-  //     setAccessToken(result.accessToken)
-  //     fetchUserDetails(result.accessToken);
-  //     AsyncStorage.setItem("accessToken", result.accessToken);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const Stack = createStackNavigator();
 
   const splashGrowModal = (
@@ -277,12 +183,11 @@ function App(props) {
       <SplashScreen grow={true} onGrowDone={() => setScheduleModal(true)} />
     </Modal>
   );
-
   return (
     <AuthProvider app={app}>
       <ThemeProvider>
         <AuthContext.Consumer>
-          {({ loading, showLogin, user }) => {
+          {({ loading, showLogin, user, firebaseUser }) => {
             // until app is done loading data, show the splash screen
             if (loading || isFetchingData) {
               return (
@@ -302,11 +207,6 @@ function App(props) {
                 </>
               );
             }
-
-            const showEventOnboard = pastEventOnboardID !== hackathon.id;
-
-            // if logging in with a hexlabs email
-            // const showCheckin = /@hexlabs.org\s*$/.test(user.email)
             const showCheckin = user && user.roles.member;
             // once logged in and all data is loaded, present full app after grow animation
             return (
@@ -317,93 +217,121 @@ function App(props) {
                   starredIds: starredIds,
                   isStarSchedule: isStarSchedule,
                 }}
+                firebaseUser={firebaseUser}
               >
-                {!scheduleModal && splashGrowModal}
-                <NavigationContainer>
-                  <StatusBar
-                    backgroundColor={
-                      styles.tabBarBackgroundColor.backgroundColor
+                <HackathonContext.Consumer>
+                  {({isLoading}) => {
+                    if (!isLoading) {
+                      // const showEventOnboard = pastEventOnboardID !== hackathon.id;
+                      const showEventOnboard = false;
+                      return (
+                        <>
+                          {!scheduleModal && splashGrowModal}
+                          <NavigationContainer>
+                            <StatusBar
+                              backgroundColor={
+                                styles.tabBarBackgroundColor.backgroundColor
+                              }
+                              barStyle={
+                                theme == "dark" ? "light-content" : "dark-content"
+                              }
+                            />
+
+                            <Tab.Navigator
+                              tabBarOptions={{
+                                activeTintColor: styles.tintColor.color,
+                                style: styles.tabBarBackgroundColor,
+                                showLabel: false,
+                              }}
+                              screenOptions={({ route }) => ({
+                                tabBarIcon: ({ focused, color, size }) => {
+                                  let icon;
+                                  const selectedColor = focused
+                                    ? styles.tintColor.color
+                                    : styles.text.color;
+
+                                  if (route.name === "Schedule") {
+                                    icon = faCalendar;
+                                  } else if (route.name === "Information") {
+                                    icon = faInfoCircle;
+                                  } else if (route.name === "ScavengerHunt") {
+                                    icon = faMapSigns;
+                                  } else if (route.name === "Interactions") {
+                                    icon = faClipboardCheck;
+                                  } else if (route.name === "CheckIn") {
+                                    icon = faClipboardCheck;
+                                  }
+
+                                  return (
+                                    <FontAwesomeIcon
+                                      color={selectedColor}
+                                      icon={icon}
+                                      size={26}
+                                    />
+                                  );
+                                },
+                              })}
+                            >
+                              {showEventOnboard ? (
+                                <Stack.Screen
+                                  name="Schedule"
+                                  children={() => (
+                                    <EventOnboarding
+                                      onDone={() => {
+                                        setPastEventOnboardID(hackathon.id);
+                                        AsyncStorage.setItem(
+                                          "pastEventOnboardID",
+                                          hackathon.id
+                                        );
+                                      }}
+                                    ></EventOnboarding>
+                                  )}
+                                ></Stack.Screen>
+                              ) : (
+                                <Stack.Screen
+                                  name="Schedule"
+                                  component={
+                                    showEventOnboard
+                                      ? EventOnboarding
+                                      : ScheduleStackScreen
+                                  }
+                                />
+                              )}
+
+                              <Stack.Screen
+                                name="Information"
+                                component={InformationStackScreen}
+                              />
+                              <Stack.Screen
+                                name="ScavengerHunt"
+                                component={ScavengerHuntStackScreen}
+                              />
+                              {!showCheckin ? null : (
+                                <Stack.Screen
+                                  name="Interactions"
+                                  component={InteractionsStackScreen}
+                                />
+                              )}
+                              {!showCheckin ? null : (
+                                <Stack.Screen
+                                  name="CheckIn"
+                                  component={CheckInStackScreen}
+                                />
+                              )}
+                            </Tab.Navigator>
+                          </NavigationContainer>
+                        </>
+                      )
+                    } else {
+                      return (
+                        <SplashScreen
+                          grow={true}
+                          onGrowDone={() => setScheduleModal(true)}
+                        />
+                      )
                     }
-                    barStyle={
-                      theme == "dark" ? "light-content" : "dark-content"
-                    }
-                  />
-
-                  <Tab.Navigator
-                    tabBarOptions={{
-                      activeTintColor: styles.tintColor.color,
-                      style: styles.tabBarBackgroundColor,
-                      showLabel: false,
-                    }}
-                    screenOptions={({ route }) => ({
-                      tabBarIcon: ({ focused, color, size }) => {
-                        let icon;
-                        const selectedColor = focused
-                          ? styles.tintColor.color
-                          : styles.text.color;
-
-                        if (route.name === "Schedule") {
-                          icon = faCalendar;
-                        } else if (route.name === "Information") {
-                          icon = faInfoCircle;
-                        } else if (route.name === "ScavengerHunt") {
-                          icon = faMapSigns;
-                        } else if (route.name === "CheckIn") {
-                          icon = faClipboardCheck;
-                        }
-
-                        return (
-                          <FontAwesomeIcon
-                            color={selectedColor}
-                            icon={icon}
-                            size={26}
-                          />
-                        );
-                      },
-                    })}
-                  >
-                    {showEventOnboard ? (
-                      <Stack.Screen
-                        name="Schedule"
-                        children={() => (
-                          <EventOnboarding
-                            onDone={() => {
-                              setPastEventOnboardID(hackathon.id);
-                              AsyncStorage.setItem(
-                                "pastEventOnboardID",
-                                hackathon.id
-                              );
-                            }}
-                          ></EventOnboarding>
-                        )}
-                      ></Stack.Screen>
-                    ) : (
-                      <Stack.Screen
-                        name="Schedule"
-                        component={
-                          showEventOnboard
-                            ? EventOnboarding
-                            : ScheduleStackScreen
-                        }
-                      />
-                    )}
-
-                    <Stack.Screen
-                      name="Information"
-                      component={InformationStackScreen}
-                    />
-                    <Stack.Screen
-                      name="ScavengerHunt"
-                      component={ScavengerHuntStackScreen}
-                    />
-                    {!showCheckin ? null : (
-                      <Stack.Screen
-                        name="CheckIn"
-                        component={CheckInStackScreen}
-                      />
-                    )}
-                  </Tab.Navigator>
-                </NavigationContainer>
+                  }}
+                </HackathonContext.Consumer>
               </HackathonProvider>
             );
           }}

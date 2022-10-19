@@ -39,13 +39,11 @@ export function ScavengerHuntTab(props) {
   }, []);
 
   useEffect(() => {
-    console.log(props.user);
     const unsubscribe = props.navigation.addListener(
       "focus",
       () => {
         // The screen is focused
         fetchServerTime().then((timeData) => {
-          console.log("Got time: ", timeData);
           setCurrentDate(Date.parse(timeData.datetime));
         });
       },
@@ -86,7 +84,6 @@ export function ScavengerHuntTab(props) {
         onPress={() => {
           props.navigation.navigate("ScavHuntCrossword", {
             challenges: crosswordPuzzleChallenges,
-            user: props.user,
             hackathonName: hackathon.name,
           });
         }}
@@ -148,7 +145,6 @@ export function ScavengerHuntTab(props) {
         onPress={() => {
           props.navigation.navigate("ScavHuntItem", {
             item: item,
-            user: props.user,
             hackathonName: hackathon.name,
           });
         }}

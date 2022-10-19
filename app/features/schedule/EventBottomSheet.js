@@ -9,6 +9,7 @@ import { HackathonContext } from "../../state/hackathon";
 import FontMarkdown from "../../components/FontMarkdown";
 import { Linking } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { getStartEndTime } from "../../util";
 
 export function EventBottomSheet(props) {
   const { state, toggleStar } = useContext(HackathonContext);
@@ -25,6 +26,7 @@ export function EventBottomSheet(props) {
     const event = props.event;
     const title = event.name;
     const description = event.description;
+    const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
     const location =
       event != null &&
       event.location != null &&
@@ -32,12 +34,9 @@ export function EventBottomSheet(props) {
       event.location[0].name != null
         ? event.location[0].name + " • "
         : "";
-    const start = event.startTime;
-    const end = event.endTime;
-    const eventType =
-      event != null && event.type != null
-        ? event.type
-        : { name: "none", color: "gray" };
+    const start = startTime;
+    const end = endTime;
+    const eventType = event.type ?? 'none'
 
     return (
       <ThemeContext.Consumer>
@@ -77,7 +76,7 @@ export function EventBottomSheet(props) {
                   ))}
               </View>
 
-              {event.url !== null ? (
+              {!event.url ? null : (
                 <TouchableOpacity
                   style={[
                     dynamicStyles.secondaryBackgroundColor,
@@ -89,7 +88,7 @@ export function EventBottomSheet(props) {
                     Join
                   </Text>
                 </TouchableOpacity>
-              ) : null}
+              )}
 
               <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
 

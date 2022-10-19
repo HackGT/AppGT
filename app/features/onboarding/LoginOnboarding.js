@@ -25,14 +25,18 @@ export function LoginOnboarding(props) {
 
   const login = async () => {
     try {
+      const scheme = "hexlabs";
       const path = "";
-      const deepLink = getDeepLink(path);
-      const redirect = "/?redirect=hexlabs://" + path;
-      const result = await InAppBrowser.openAuth(
-        LOGIN_URL + redirect,
-        deepLink,
-        { ephemeralWebSession: true }
-      );
+      const deepLink =
+        Platform.OS == "android"
+          ? `${scheme}://my-host/${path}`
+          : `${scheme}://${path}`;
+
+      const browserUrl = `${LOGIN_URL}/?redirect=${deepLink}`;
+
+      const result = await InAppBrowser.openAuth(browserUrl, deepLink, {
+        ephemeralWebSession: true,
+      });
       if (result.type === "success") {
         const splitUrl = result.url.split("?");
         if (splitUrl[1]) {
@@ -40,26 +44,16 @@ export function LoginOnboarding(props) {
           const codeParam = params.find((param) => param.startsWith("idToken"));
           if (codeParam) {
             const idToken = codeParam.split("=")[1];
-            console.log("idToken: ", idToken);
             fetchAccessToken(idToken);
           }
         }
       }
-      console.log(JSON.stringify(result));
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   };
 
-  const getDeepLink = (path = "") => {
-    const scheme = "hexlabs";
-    const prefix =
-      Platform.OS == "android" ? `${scheme}://my-host/` : `${scheme}://`;
-    return prefix + path;
-  };
-
   const fetchAccessToken = async (idToken) => {
-    console.log("token: ", idToken);
     fetch(`${AUTH_URL + "/auth/status"}/`, {
       method: "GET",
       headers: {
@@ -70,7 +64,6 @@ export function LoginOnboarding(props) {
         return response.json();
       })
       .then((authJson) => {
-        console.log("auth: ", authJson);
         const customToken = authJson.customToken;
         signInWithCustomToken(auth, customToken);
       });
