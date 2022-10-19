@@ -82,7 +82,7 @@ export const getRegistrationApplication = async (token, hexathonId, userId) => {
 export const getEvents = async (token) => {
   try {
     const response = await fetch(
-      `${API_SERVICE_URLS.hexathons}/events`,
+      `${API_SERVICE_URLS.hexathons}/events?hexathon=${CURRENT_HEXATHON.id}`,
       {
         method: "GET",
         headers: {

@@ -76,7 +76,7 @@ export function EventBottomSheet(props) {
                   ))}
               </View>
 
-              {event.url !== null ? (
+              {!event.url ? null : (
                 <TouchableOpacity
                   style={[
                     dynamicStyles.secondaryBackgroundColor,
@@ -88,7 +88,7 @@ export function EventBottomSheet(props) {
                     Join
                   </Text>
                 </TouchableOpacity>
-              ) : null}
+              )}
 
               <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
 

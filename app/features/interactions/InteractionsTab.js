@@ -26,35 +26,6 @@ export function InteractionsTab(props) {
 
   useEffect(() => {
     async function refreshEventState() {
-      // const response = await fetch("https://keystone.dev.hack.gt/admin/api", {
-      // const response = await fetch("https://cms.hack.gt/admin/api", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": `application/json`,
-      //     Accept: `application/json`,
-      //   },
-      //   body: JSON.stringify({
-      //     query: `query {
-      //       allEvents  (orderBy: "name", where: { hackathon: { isUsedForMobileApp:true } }) {
-      //         name
-      //         endTime
-      //         startTime
-      //         startDate
-      //         url
-      //         tags {
-      //             name
-      //         }
-      //         description
-      //         location {
-      //             name
-      //         }
-      //         id
-      //       }
-      //     }`,
-      //   }),
-      // });
-      // const data = await response.json();
-      // setEvents(data.data.allEvents);
       let token = await firebaseUser.getIdToken();
       let {eventJson} = await getEvents(token);
       setEvents(eventJson);
@@ -85,10 +56,7 @@ export function InteractionsTab(props) {
     // var shownEvents = searchText.length != 0 ? searchResults : events;
 
     const formattedEvents = !events ? [] : events.filter(e => e.name.includes(searchText)).map(event => {
-      const eventType =
-        event != null && event.type != null
-          ? event.type
-          : { name: "none", color: "gray" };
+      const eventType = event.type ?? 'none';
       const loc =
         event != null &&
           event.location != null &&

@@ -11,7 +11,7 @@ export function EventTypeView(props) {
     'mini-challenge': '#C866F5',
     'mini-event': '#FF8D28',
     'speaker': '#FF586C',
-    'submission-expo': 'white',
+    'submission-expo': '#77DD77',
     'tech-talk': '#FFB6C1',
     'workshop': '#786CEB'
   }

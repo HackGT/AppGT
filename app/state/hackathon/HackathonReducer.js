@@ -44,7 +44,7 @@ function toggleStarred(starredIds, event) {
 
         // add to starred state, then update storage
         const newStarred = [...starredIds, toggleEventId]
-        AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
+        AsyncStorage.setItem("starredIds", JSON.stringify(newStarred));
         return newStarred;
     } else {
         // cancel notification if previously starred
@@ -53,8 +53,11 @@ function toggleStarred(starredIds, event) {
         });
 
         // remove from starred state, then update storage
+        console.log('starred toggle: ', toggleEventId)
+        console.log('starred before: ', starredIds)
         const newStarred = starredIds.filter((id) => id !== toggleEventId);
-        AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
+        AsyncStorage.setItem("starredIds", JSON.stringify(newStarred));
+        console.log('starred after: ', starredIds)
         return newStarred;
     }
 };

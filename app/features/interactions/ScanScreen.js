@@ -93,6 +93,7 @@ export function ScanScreen(props) {
     const token = await firebaseUser.getIdToken();
     const userProfileResponse = await getUserProfile(token, uid);
     if (userProfileResponse.status !== 200) {
+      setStatus(userProfileResponse.status);
       createAlert(userProfileResponse.json.message);
       return false;
     }
@@ -100,7 +101,6 @@ export function ScanScreen(props) {
     setfName(userProfileResponse.json.name.first);
     setlName(userProfileResponse.json.name.last);
     setEmail(userProfileResponse.json.email);
-    setStatus(userProfileResponse.json.status);
 
     const interactionResponse = await logInteraction(
       token,
@@ -108,6 +108,8 @@ export function ScanScreen(props) {
       uid,
       props.eventID
     );
+    setStatus(interactionResponse.status);
+
     if (interactionResponse.status !== 200) {
       createAlert(interactionResponse.json.message);
       return false;
