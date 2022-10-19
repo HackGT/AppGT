@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -35,12 +35,23 @@ export function ScavHuntItem(props) {
   const [showAnswerStatus, setShowAnswerStatus] = useState(isComplete);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(isComplete);
 
-  const answerStatus = () => {
-    console.log("answer status: ", showAnswerStatus, isAnswerCorrect);
-    if (showAnswerStatus) {
-      isAnswerCorrect ? <CorrectAnswer /> : <IncorrectAnswer />;
+  useEffect(() => {
+    if (scannedCode && scannedCode !== item.code) {
+      createAlert("Wrong QR code. Try again or visit the help desk for assistance!")
     }
-  };
+  }, [scannedCode])
+
+  const createAlert = (message) =>
+    Alert.alert("Error", message, [
+      {
+        text: "OK",
+        onPress: () => {
+          if (scanner && scanner.current) {
+            scanner.current.reactivate();
+          }
+        },
+      },
+    ]);
 
   const handleSubmitAnswer = async () => {
     setShowAnswerStatus(true);
@@ -73,6 +84,7 @@ export function ScavHuntItem(props) {
   const onQRCodeScanned = async (e) => {
     console.log(e.data,item.code)
     setScannedCode(e.data)
+    qrSheetRef.current.close()
   }
 
   const qrSheetContent = () => {
