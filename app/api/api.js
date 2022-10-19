@@ -103,6 +103,9 @@ export const getEvents = async (token) => {
       }
     );
     const eventJson = await response.json();
+    eventJson.sort((a, b) => {
+      return Date.parse(a.startDate) - Date.parse(b.startDate);
+    });
     return { status: response.status, eventJson };
   } catch (err) {
     return {
