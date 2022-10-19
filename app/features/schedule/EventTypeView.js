@@ -1,26 +1,13 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Svg, { Circle } from "react-native-svg";
+import { EVENT_TYPE_COLOR_MAP } from "../../api/api";
 
 export function EventTypeView(props) {
-
-  const eventTypeColorMap = {
-    'ceremony': '#b52c22',
-    'food': '#19458c',
-    'important': '#2CDACF',
-    'mini-challenge': '#C866F5',
-    'mini-event': '#FF8D28',
-    'speaker': '#FF586C',
-    'submission-expo': '#77DD77',
-    'tech-talk': '#FFB6C1',
-    'workshop': '#786CEB'
-  }
-
   const radius = 6;
   const size = radius * 2;
-  // const eventType = props.eventType ?? { name: "none", color: "gray" };
   const eventType = props.eventType;
-  const color = eventTypeColorMap[eventType] ?? "white";
+  const color = EVENT_TYPE_COLOR_MAP[eventType] ?? "white";
 
   return (
     <View flexDirection="row">

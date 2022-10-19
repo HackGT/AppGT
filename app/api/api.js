@@ -12,6 +12,18 @@ export const API_SERVICE_URLS = {
   notifications: "https://notifications.api.hexlabs.org",
 };
 
+export const EVENT_TYPE_COLOR_MAP = {
+  ceremony: "#b52c22",
+  food: "#19458c",
+  important: "#2CDACF",
+  "mini-challenge": "#C866F5",
+  "mini-event": "#FF8D28",
+  speaker: "#FF586C",
+  "submission-expo": "#77DD77",
+  "tech-talk": "#FFB6C1",
+  workshop: "#786CEB",
+};
+
 export const logInteraction = async (token, type, userId, identifier) => {
   const body = {
     userId: userId,
@@ -98,4 +110,4 @@ export const getEvents = async (token) => {
       json: { message: "Network error when getting application" },
     };
   }
-}
+};

@@ -35,7 +35,7 @@ import {
   InformationStackScreen,
   ScavengerHuntStackScreen,
   InteractionsStackScreen,
-  CheckInStackScreen
+  CheckInStackScreen,
 } from "./app/navigation";
 import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
@@ -115,7 +115,6 @@ function App(props) {
 
   // event data
   const [hackathon, setHackathon] = useState(null);
-  const [eventTypes, setEventTypes] = useState([]);
   const [starredIds, setStarredIds] = useState([]);
   const [isStarSchedule, setIsStarSchedule] = useState(false);
 
@@ -142,15 +141,7 @@ function App(props) {
       console.log(isStarSchedule);
     });
 
-    AsyncStorage.getItem("localEventTypeData", (error, result) => {
-      if (result) {
-        const eventTypes = JSON.parse(result);
-        if (eventTypes != null) {
-          setEventTypes(eventTypes);
-        }
-      }
-    });
-    setIsFetchingData(false)
+    setIsFetchingData(false);
   };
 
   useEffect(() => {
@@ -214,14 +205,13 @@ function App(props) {
               <HackathonProvider
                 initialValue={{
                   hackathon: hackathon,
-                  eventTypes: eventTypes,
                   starredIds: starredIds,
                   isStarSchedule: isStarSchedule,
                 }}
                 firebaseUser={firebaseUser}
               >
                 <HackathonContext.Consumer>
-                  {({isLoading}) => {
+                  {({ isLoading }) => {
                     if (!isLoading) {
                       // const showEventOnboard = pastEventOnboardID !== hackathon.id;
                       const showEventOnboard = false;
@@ -234,7 +224,9 @@ function App(props) {
                                 styles.tabBarBackgroundColor.backgroundColor
                               }
                               barStyle={
-                                theme == "dark" ? "light-content" : "dark-content"
+                                theme == "dark"
+                                  ? "light-content"
+                                  : "dark-content"
                               }
                             />
 
@@ -322,14 +314,14 @@ function App(props) {
                             </Tab.Navigator>
                           </NavigationContainer>
                         </>
-                      )
+                      );
                     } else {
                       return (
                         <SplashScreen
                           grow={true}
                           onGrowDone={() => setScheduleModal(true)}
                         />
-                      )
+                      );
                     }
                   }}
                 </HackathonContext.Consumer>
@@ -340,6 +332,6 @@ function App(props) {
       </ThemeProvider>
     </AuthProvider>
   );
- }
+}
 
 export default App;
