@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { ScavHuntContext } from "../../state/scavHunt";
 import { AuthContext } from "../../contexts/AuthContext";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import DismissModal from "../../../assets/images/DismissModal.svg";
 import CorrectAnswer from "../../../assets/images/CorrectAnswer.svg";
 import IncorrectAnswer from "../../../assets/images/IncorrectAnswer.svg";
@@ -20,10 +21,14 @@ import IncorrectAnswer from "../../../assets/images/IncorrectAnswer.svg";
 export function ScavHuntItem(props) {
   const { state, completeHint } = useContext(ScavHuntContext);
   const { firebaseUser } = useContext(AuthContext);
-  const sheetRef = useRef();
+  const { dynamicStyles } = useContext(ThemeContext);
+  const answerSheetRef = useRef();
+  const qrSheetRef = useRef();
   const item = props.route.params.item;
   const isComplete = state.completedHints.includes(item.id);
-  const [modalVisible, setModalVisible] = useState(false);
+
+  const [scannedCode, setScannedCode] = useState(null);
+
   const [answer, setAnswer] = useState(isComplete ? item.answer : "");
   const [showAnswerStatus, setShowAnswerStatus] = useState(isComplete);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(isComplete);
@@ -63,13 +68,18 @@ export function ScavHuntItem(props) {
     }
   };
 
-  const sheetContent = () => (
+  const qrSheetContent = () => {
+    <View>
+      <Text>TEST</Text>
+    </View>
+  }
+
+  const answerSheetContent = () => (
     <View style={[styles.sheetStyle]}>
       <TouchableOpacity
         style={{ alignSelf: "flex-end", marginRight: 26 }}
         onPress={() => {
-          setModalVisible(false);
-          sheetRef.current.close();
+          answerSheetRef.current.close();
         }}
       >
         <DismissModal />
@@ -120,7 +130,7 @@ export function ScavHuntItem(props) {
 
   return (
     <>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
         <View
           style={{
             flexDirection: "column",
@@ -129,26 +139,57 @@ export function ScavHuntItem(props) {
           }}
         >
           <View style={{ flexDirection: "row" }}>
-            <Text style={[styles.titleText]}>{item.title}</Text>
+            <Text style={[styles.titleText, dynamicStyles.text]}>{item.title}</Text>
             {completed()}
           </View>
-          <Text style={[styles.hintText]}>{item.hint}</Text>
+          <Text style={[styles.hintText, dynamicStyles.text]}>{item.hint}</Text>
           <TouchableOpacity
             style={[styles.answerButton]}
             onPress={() => {
-              setModalVisible(true);
-              sheetRef.current.open();
-              // sheetRef.current.snapTo(0)
+              qrSheetRef.current.open();
             }}
           >
-            <Text style={[styles.answerButtonText]}>
-              {isComplete ? "Completed!" : "Input Answer"}
+            <Text style={[styles.answerButtonText, dynamicStyles.text]}>
+              {isComplete ? "Completed!" : "Scan Code"}
             </Text>
           </TouchableOpacity>
+          { scannedCode !== item.code ? null :
+            <>
+              <Text style={[styles.hintText, dynamicStyles.text]}>{item.question}</Text>
+              <TouchableOpacity
+                style={[styles.answerButton]}
+                onPress={() => {
+                  answerSheetRef.current.open();
+                }}
+              >
+                <Text style={[styles.answerButtonText, dynamicStyles.text]}>
+                  {isComplete ? "Completed!" : "Input Answer"}
+                </Text>
+              </TouchableOpacity>
+            </>
+          }
         </View>
       </View>
       <RBSheet
-        ref={sheetRef}
+        ref={qrSheetRef}
+        height={400}
+        openDuration={250}
+        closeDuration={250}
+        closeOnDragDown
+        customStyles={{
+          container: {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+          draggableIcon: {
+            backgroundColor: "white",
+          },
+        }}
+      >
+        {qrSheetContent()}
+      </RBSheet>
+      <RBSheet
+        ref={answerSheetRef}
         height={300}
         openDuration={250}
         closeDuration={250}
@@ -163,7 +204,7 @@ export function ScavHuntItem(props) {
           },
         }}
       >
-        {sheetContent()}
+        {answerSheetContent()}
       </RBSheet>
     </>
   );
@@ -180,7 +221,6 @@ const styles = StyleSheet.create({
   answerButtonText: {
     padding: 17,
     fontFamily: "SpaceMono-Bold",
-    color: "white",
   },
 
   hintText: {
