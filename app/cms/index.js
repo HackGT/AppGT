@@ -5,32 +5,6 @@ const hackathonQuery = `
       name
       slackUrl
       isActive
-      events(orderBy: "startDate") {
-          id
-          name
-          url
-          startDay
-          startTime
-          startDate
-          endDay
-          endTime
-          endDate
-          description
-          tags {
-            id
-            name
-          }
-          type {
-              id
-              name
-              color
-          }
-          location {
-              id
-              name
-              capacity
-          }
-      }
       blocks {
         id
         name
