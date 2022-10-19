@@ -3,9 +3,9 @@ import React, { useState, useContext } from "react";
 import { HackathonContext } from "../state/hackathon";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { EVENT_TYPE_COLOR_MAP } from "../api/api";
 
 export default function FilterSelect(props) {
-  const { state } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
 
   const [showMenu, setShowMenu] = useState(false);
@@ -23,8 +23,6 @@ export default function FilterSelect(props) {
     }
   };
 
-  const filterList = [...state.eventTypes];
-
   if (showMenu) {
     return (
       <View style={styles.cancelContainer}>
@@ -39,10 +37,7 @@ export default function FilterSelect(props) {
             <Text style={[styles.exitTextStyle, dynamicStyles.text]}> x </Text>
           </TouchableOpacity>
         </View>
-        {filterList.map(function (item, index) {
-          const name = item.name ?? "unknown";
-          const color = item.color ?? "white";
-
+        {Object.entries(EVENT_TYPE_COLOR_MAP).map(([name, color], index) => {
           return (
             <View
               style={{
@@ -61,7 +56,7 @@ export default function FilterSelect(props) {
               }}
             >
               <TouchableOpacity
-                onPress={hideFilterMenu.bind(this, item)}
+                onPress={hideFilterMenu.bind(this, { name, color })}
                 style={{
                   backgroundColor: color,
                   borderRadius: 50,

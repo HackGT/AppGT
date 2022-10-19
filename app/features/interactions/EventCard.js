@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { Card } from "../../components/Card";
 
-export function EventSel(props) {
+export function EventCard(props) {
   const { dynamicStyles } = useContext(ThemeContext);
 
   return (

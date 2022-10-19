@@ -14,6 +14,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { request, PERMISSIONS } from "react-native-permissions";
 import Modal from "react-native-modal";
 
+import { Card } from "../../components/Card";
 import { logInteraction, getUserProfile } from "../../api/api";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { cancelNFC, initNfc, readNFC } from "../../NFCScanning/nfc";
@@ -252,14 +253,18 @@ export function ScanScreen(props) {
           onPress={scanNFC}
           disabled={isScanning}
         >
-          <Text
-            style={[
-              styles.scanButtonText,
-              { color: dynamicStyles.toggleText.color },
-            ]}
-          >
-            Press to Scan Badge
-          </Text>
+          <Card>
+            <Text
+              style={[
+                {
+                  color: dynamicStyles.toggleText.color,
+                },
+                styles.scanButtonText,
+              ]}
+            >
+              Scan Badge
+            </Text>
+          </Card>
         </TouchableOpacity>
       )}
     </View>
@@ -282,8 +287,10 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   scanButtonText: {
-    fontSize: 20,
     fontFamily: "SpaceMono-Bold",
+    fontSize: 20,
+    alignSelf: "center",
+    padding: 10,
   },
   infoContainer: {
     padding: 16,

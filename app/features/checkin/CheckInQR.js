@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect } from "react";
-import { View, Text, Alert, Dimensions } from "react-native";
+import { View, Text, Alert, Dimensions, StyleSheet } from "react-native";
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { request, PERMISSIONS } from "react-native-permissions";
 import { ThemeContext } from "../../contexts/ThemeContext";
@@ -88,7 +88,12 @@ export function CheckInQR(props) {
 
   return (
     <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
-      <View style={{ alignItems: "center", paddingTop: 40 }}>
+      <Text style={[styles.headerHelpText, dynamicStyles.secondaryText]}>
+        Use this page to check-in people to {CURRENT_HEXATHON.name}. You'll scan
+        their QR code from registration/mobile app and then tap the matching
+        event badge to write their data.
+      </Text>
+      <View style={{ alignItems: "center", marginTop: 50 }}>
         <Text
           style={{
             color: dynamicStyles.toggleText.color,
@@ -97,7 +102,7 @@ export function CheckInQR(props) {
             marginBottom: 15,
           }}
         >
-          {"Scan Participant QR Code"}
+          Scan User QR Code
         </Text>
         <QRCodeScanner
           ref={scanner}
@@ -116,3 +121,11 @@ export function CheckInQR(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  headerHelpText: {
+    marginHorizontal: 15,
+    fontFamily: "SpaceMono-Bold",
+    marginTop: 10,
+  },
+});

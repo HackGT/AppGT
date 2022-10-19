@@ -1,6 +1,5 @@
 const hackathonQuery = `
   allHackathons(where: { isUsedForMobileApp: true }) {
-      isUsedForMobileApp
       id
       name
       slackUrl
@@ -31,11 +30,6 @@ const hackathonQuery = `
       }
   }
   
-  allTypes {
-      id
-      name
-      color
-  }
 `;
 
 const getHackathonData = async (queryString) => {
@@ -63,14 +57,16 @@ const getHackathonData = async (queryString) => {
 
 const getServerTime = async () => {
   return fetch("http://worldtimeapi.org/api/timezone/America/New_York", {
-    method: "GET"
-  }).then((r) => {
-    return r.json()
-  }).catch((err) => {
-    console.error(err);
-    return false
+    method: "GET",
   })
-}
+    .then((r) => {
+      return r.json();
+    })
+    .catch((err) => {
+      console.error(err);
+      return false;
+    });
+};
 
 export const fetchHackathonData = getHackathonData.bind(this, hackathonQuery);
-export const fetchServerTime = getServerTime.bind(this)
+export const fetchServerTime = getServerTime.bind(this);

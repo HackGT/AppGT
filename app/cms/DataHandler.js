@@ -1,17 +1,21 @@
-import moment from "moment-timezone";
+import { DateTime } from "luxon";
 
 export const daysAvailable = ["friday", "saturday", "sunday"];
 
 export function turnToEst(date) {
-  return moment(date);
+  return DateTime.fromISO(date).setZone("America/New_York");
 }
 
 export function getDaysForEvent(events) {
   var days = [];
 
-  for (event of events) {
+  for (const event of events) {
     if (event && event.startDate) {
-      const day = turnToEst(event.startDate).format("dddd").toLowerCase();
+      const day = DateTime.fromISO(event.startDate, {
+        zone: "America/New_York",
+      })
+        .toFormat("EEEE")
+        .toLowerCase();
 
       if (days.indexOf(day) == -1) {
         days.push(day);
@@ -33,29 +37,26 @@ export function sortEventsByStartTime(events) {
   }
 
   return events.sort(function (a, b) {
-    return turnToEst(a.startDate) - turnToEst(b.startDate);
+    return Date.parse(a.startDate) - Date.parse(b.startDate);
   });
 }
 
 export function getEventsForDay(events, day) {
   if (day == null) {
-    day = moment().tz("America/New_York").format("dddd").toLowerCase();
+    day = DateTime.now().toFormat("EEEE").toLowerCase();
   }
 
   // converts event's start time to a day (saturday, sunday, etc) and sees if it matches the string
   return events.filter((event) => {
     if (event && event.startDate) {
-      return turnToEst(event.startDate).format("dddd").toLowerCase() == day;
+      return turnToEst(event.startDate).toFormat("EEEE").toLowerCase() == day;
     }
     return false;
   });
 }
 
 export function getCurrentDayIndex(events) {
-  const todayString = moment()
-    .tz("America/New_York")
-    .format("dddd")
-    .toLowerCase();
+  const todayString = DateTime.now().toFormat("EEEE").toLowerCase();
 
   return getDaysForEvent(events).indexOf(todayString);
 }
@@ -66,9 +67,11 @@ export function getTimeblocksForDay(events, day) {
   var lastStartTime = null;
 
   // go through all events for the current day, if there is a difference between the current event and last event, add a new time in between them
-  for (event of getEventsForDay(events, day)) {
+  for (const event of getEventsForDay(events, day)) {
     if (event && event.startDate) {
-      const startTimeString = event.startTime;
+      const startTimeString = turnToEst(event.startDate).toLocaleString(
+        DateTime.TIME_SIMPLE
+      );
 
       if (startTimeString != lastStartTime) {
         timeblocksEvents.push({ time: startTimeString, event: event });
@@ -94,22 +97,14 @@ export function getCurrentEventIndex(events, day) {
 }
 
 export function isEventHappeningNow(event) {
-  // time blocks put the event within {time: timeString, event: event}
-  if (event != null && event.event != null) {
-    event = event.event;
-  }
-
   if (event == null || event.startDate == null || event.endDate == null) {
     return false;
   }
 
-  const estStart = turnToEst(event.startDate);
-  const estEnd = turnToEst(event.endDate);
+  const currentDate = new Date();
 
   return (
-    estStart.format("dddd").toLowerCase() ==
-      moment().tz("America/New_York").format("dddd").toLowerCase() &&
-    moment() > estStart &&
-    moment() < estEnd
+    currentDate >= Date.parse(event.startDate) &&
+    currentDate <= Date.parse(event.endDate)
   );
 }

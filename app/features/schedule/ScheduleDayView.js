@@ -353,7 +353,8 @@ const styles = StyleSheet.create({
   },
 
   daysParent: {
-    marginBottom: 7,
+    marginTop: 2,
+    marginBottom: 12,
     justifyContent: "center",
     alignSelf: "center",
   },

@@ -79,8 +79,8 @@ export default function FontMarkdown(props) {
       fontFamily: `${props.fontFamily}-Bold`,
     },
     paragraph: {
-      marginTop: 10,
-      marginBottom: 10,
+      marginTop: 5,
+      marginBottom: 5,
       flexWrap: "wrap",
       flexDirection: "row",
       alignItems: "flex-start",
