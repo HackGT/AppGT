@@ -42,10 +42,7 @@ export function EventBottomSheet(props) {
         : "";
     const start = startTime;
     const end = endTime;
-    const eventType =
-      event != null && event.type != null
-        ? event.type
-        : { name: "none", color: "gray" };
+    const eventType = event.type ?? 'none'
 
     return (
       <ThemeContext.Consumer>

@@ -3,11 +3,13 @@ import { ScrollView, Text, Pressable, View, StyleSheet } from 'react-native';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { ScanScreen } from "./ScanScreen";
+import { getStartEndTime } from "../../util"
 
 export function InteractionScreen(props) {
   const selectedEvent = props.route.params.selectedEvent;
   const { dynamicStyles } = useContext(ThemeContext);
-  console.log('nav: ', props.navigation)
+  console.log('selevent: ', selectedEvent)
+  const { startTime, endTime } = getStartEndTime(selectedEvent.startDate, selectedEvent.endDate)
   return (
       <ScrollView style={dynamicStyles.backgroundColor}>
         <View style={styles.eventContainer}>
@@ -44,7 +46,7 @@ export function InteractionScreen(props) {
             selectedEvent.location[0].name != null
               ? selectedEvent.location[0].name + " • "
               : ""}
-            {selectedEvent.startTime + " - " + selectedEvent.endTime}
+            {startTime + " - " + endTime}
           </Text>
           <ScanScreen
             eventID={selectedEvent.id}

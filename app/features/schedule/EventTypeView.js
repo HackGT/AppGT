@@ -3,10 +3,24 @@ import { View, StyleSheet, Text } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
 export function EventTypeView(props) {
+
+  const eventTypeColorMap = {
+    'ceremony': '#b52c22',
+    'food': '#19458c',
+    'important': '#2CDACF',
+    'mini-challenge': '#C866F5',
+    'mini-event': '#FF8D28',
+    'speaker': '#FF586C',
+    'submission-expo': 'white',
+    'tech-talk': '#FFB6C1',
+    'workshop': '#786CEB'
+  }
+
   const radius = 6;
   const size = radius * 2;
-  const eventType = props.eventType ?? { name: "none", color: "gray" };
-  const color = eventType.color ?? "white";
+  // const eventType = props.eventType ?? { name: "none", color: "gray" };
+  const eventType = props.eventType;
+  const color = eventTypeColorMap[eventType] ?? "white";
 
   return (
     <View flexDirection="row">
@@ -20,7 +34,7 @@ export function EventTypeView(props) {
           fontFamily: "SpaceMono-Regular",
         }}
       >
-        {eventType.name}
+        {eventType}
       </Text>
     </View>
   );

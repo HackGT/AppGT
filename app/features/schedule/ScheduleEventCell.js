@@ -6,17 +6,16 @@ import { HackathonContext } from "../../state/hackathon";
 import { EventTypeView } from "./EventTypeView";
 import { Card } from "../../components/Card";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { getStartEndTime } from "../../util";
 
 export function ScheduleEventCell(props) {
   const { state, toggleStar } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
 
   const event = props.event;
-  const eventType =
-    event != null && event.type != null
-      ? event.type
-      : { name: "none", color: "gray" };
+  const eventType = event.type ?? 'none'
   const title = event.name;
+  const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
   const location =
     event != null &&
     event.location != null &&
@@ -24,8 +23,8 @@ export function ScheduleEventCell(props) {
     event.location[0].name != null
       ? event.location[0].name + " • "
       : "";
-  const start = event.startTime;
-  const end = event.endTime;
+  const start = startTime;
+  const end = endTime;
 
   const isStarred = state.starredIds.indexOf(event.id) != -1;
 
