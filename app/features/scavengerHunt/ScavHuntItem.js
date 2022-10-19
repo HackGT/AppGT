@@ -29,17 +29,20 @@ export function ScavHuntItem(props) {
   const item = props.route.params.item;
   const isComplete = state.completedQuestions.includes(item.id);
   
-  const initScannedCode = null
-  // completed hints are of format '{id}-{hint}'
+  let initScannedCode = null
+  // completed hints are of format '{id}-{hint}'\
+  console.log('init state: ', state)
   state.completedHints.forEach(h => {
-    const split = h.split('-')
-    if (split.length === 2) {
-      if (split[0] === item.id) {
-        initScannedCode = split[1];
+    const splitLoc = h.indexOf('-')
+    if (splitLoc !== -1) {
+      if (h.slice(0, splitLoc) === item.id) {
+        initScannedCode = h.slice(splitLoc + 1);
         return;
       }
     }
   })
+
+  console.log('initscannedcode',initScannedCode)
   const [scannedCode, setScannedCode] = useState(initScannedCode);
 
   const [answer, setAnswer] = useState(isComplete ? item.answer : "");
@@ -134,7 +137,7 @@ export function ScavHuntItem(props) {
       </Text>
       <View style={[styles.answerInputContainer, dynamicStyles.searchBackgroundColor]}>
         <TextInput
-          style={styles.answerInput}
+          style={[styles.answerInput, {color: 'white'}]}
           onChangeText={setAnswer}
           value={answer}
           placeholder={"Your Answer"}

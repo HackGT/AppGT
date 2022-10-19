@@ -19,30 +19,6 @@ export function ScavengerHuntTab(props) {
   const { dynamicStyles } = useContext(ThemeContext);
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
-  console.log('sdf', hackathon)
-  useEffect(() => {
-    AsyncStorage.getItem("completedQuestions", (error, result) => {
-      if (result) {
-        const r = JSON.parse(result);
-        r.forEach((id) => {
-          if (!state.completedQuestions.includes(id)) {
-            completeQuestion(id);
-          }
-        });
-      }
-    });
-    AsyncStorage.getItem("completedHints", (error, result) => {
-      if (result) {
-        const r = JSON.parse(result);
-        r.forEach((id) => {
-          if (!state.completedQuestions.includes(id)) {
-            completeHint(id);
-          }
-        });
-      }
-    });
-
-  }, []);
 
   var scavHunts = hackathon.scavengerHunts.filter(challenge => challenge.isQR );
   scavHunts.sort((item1, item2) => {
@@ -89,6 +65,7 @@ export function ScavengerHuntTab(props) {
     };
     console.log('item', item)
     const available = true
+    console.log(state)
     const isComplete = state.completedQuestions.includes(item.id);
     return (
       <TouchableOpacity
