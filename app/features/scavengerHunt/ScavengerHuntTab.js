@@ -44,7 +44,6 @@ export function ScavengerHuntTab(props) {
       () => {
         // The screen is focused
         fetchServerTime().then((timeData) => {
-          console.log("Got time: ", timeData);
           setCurrentDate(Date.parse(timeData.datetime));
         });
       },

@@ -44,19 +44,16 @@ export function LoginOnboarding(props) {
           const codeParam = params.find((param) => param.startsWith("idToken"));
           if (codeParam) {
             const idToken = codeParam.split("=")[1];
-            console.log("idToken: ", idToken);
             fetchAccessToken(idToken);
           }
         }
       }
-      console.log(JSON.stringify(result));
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   };
 
   const fetchAccessToken = async (idToken) => {
-    console.log("token: ", idToken);
     fetch(`${AUTH_URL + "/auth/status"}/`, {
       method: "GET",
       headers: {
@@ -67,7 +64,6 @@ export function LoginOnboarding(props) {
         return response.json();
       })
       .then((authJson) => {
-        console.log("auth: ", authJson);
         const customToken = authJson.customToken;
         signInWithCustomToken(auth, customToken);
       });

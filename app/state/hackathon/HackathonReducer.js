@@ -53,11 +53,8 @@ function toggleStarred(starredIds, event) {
         });
 
         // remove from starred state, then update storage
-        console.log('starred toggle: ', toggleEventId)
-        console.log('starred before: ', starredIds)
         const newStarred = starredIds.filter((id) => id !== toggleEventId);
         AsyncStorage.setItem("starredIds", JSON.stringify(newStarred));
-        console.log('starred after: ', starredIds)
         return newStarred;
     }
 };

@@ -17,7 +17,6 @@ const AuthProvider = ({ app, children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (fUser) => {
       if (fUser) {
         setLoading(true);
-        console.log("FIRUser:", fUser);
         setFirebaseUser(fUser);
         const token = await fUser.getIdToken();
         const { status, json } = await getUserProfile(token, fUser.uid);

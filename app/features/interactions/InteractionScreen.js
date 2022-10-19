@@ -8,7 +8,6 @@ import { getStartEndTime } from "../../util"
 export function InteractionScreen(props) {
   const selectedEvent = props.route.params.selectedEvent;
   const { dynamicStyles } = useContext(ThemeContext);
-  console.log('selevent: ', selectedEvent)
   const { startTime, endTime } = getStartEndTime(selectedEvent.startDate, selectedEvent.endDate)
   return (
       <ScrollView style={dynamicStyles.backgroundColor}>

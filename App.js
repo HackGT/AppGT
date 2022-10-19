@@ -150,44 +150,6 @@ function App(props) {
       }
     });
     setIsFetchingData(false)
-    console.log('SDLFKJL')
-    // AsyncStorage.getItem("localHackathonData", (error, result) => {
-    //   if (result) {
-    //     console.log("Hackathon found locally.");
-    //     const hackathon = JSON.parse(result);
-    //     if (hackathon != null) {
-    //       console.log('async hackathon: ', hackathon)
-    //       setHackathon(hackathon);
-    //       setIsFetchingData(false);
-    //     }
-    //   }
-
-    //   fetchHackathonData().then((data) => {
-    //     // no response back, just return
-    //     if (data == null || data.data == null) {
-    //       return;
-    //     }
-
-    //     const hackathons = data.data.allHackathons;
-    //     console.log('remote hackathons: ', hackathons)
-    //     const eventTypes = data.data.allTypes;
-    //     if (hackathons != null && hackathons.length != 0) {
-    //       console.log("Hackathon found remotely.");
-    //       var hackathon = hackathons[0];
-    //       hackathon.events = []
-
-    //       AsyncStorage.setItem("localHackathonData", JSON.stringify(hackathon));
-    //       AsyncStorage.setItem("localTypeData", JSON.stringify(eventTypes));
-
-    //       setEventTypes(eventTypes);
-
-    //       setHackathon(hackathon);
-    //       setIsFetchingData(false);
-    //     } else {
-    //       // if still loading, present error asking for retry
-    //     }
-    //   });
-    // });
   };
 
   useEffect(() => {
@@ -214,67 +176,6 @@ function App(props) {
     );
   }, [isStarSchedule]);
 
-  // useEffect(() => {
-  //   console.log('toggling starred ids', starredIds)
-  //   updateStorage()
-  // }, [starredIds])
-
-  // const updateStorage = () => {
-  //   AsyncStorage.setItem("starredIds", JSON.stringify(starredIds));
-  // }
-
-  // Not used anymore, but keeping just in case (look at HackathonReducer.js)
-  // const toggleIsStarSchedule = () => {
-  //   setIsStarSchedule(!isStarSchedule)
-  // };
-
-  // Not used anymore, but keeping just in case (look at HackathonReducer.js)
-  // const toggleStarred = (event) => {
-  //   const toggleEventId = event.id;
-
-  //   const isNowStarred = starredIds.indexOf(toggleEventId) == -1;
-
-  //   let eventIdNumber = toggleEventId.replace(/\D/g, "").substring(1, 5);
-  //   eventIdNumber = Number.parseInt(eventIdNumber);
-
-  //   if (isNowStarred) {
-  //     // schedule notification for 15 min before
-  //     PushNotification.localNotificationSchedule({
-  //       channelId: "hackgt-channel",
-  //       id: eventIdNumber + "", // map string into a unique id for cancellation
-  //       message: event.name + " is starting in 15 minutes! ",
-  //       date: new Date(turnToEst(event.startDate).toDate() - 15 * 60 * 1000), // schedule it for its time - 15 minutes
-  //     });
-
-  //     // add to starred state, then update storage
-  //     setStarredIds([...starredIds, toggleEventId]);
-
-  //     return true;
-  //   } else {
-  //     // cancel notification if previously starred
-  //     PushNotification.cancelLocalNotifications({
-  //       id: eventIdNumber + "",
-  //     });
-
-  //     // remove from starred state, then update storage
-  //     setStarredIds(starredIds.filter((id) => id !== toggleEventId));
-  //     return false;
-  //   }
-  // };
-
-  // groundtruth login
-  // const login = async () => {
-  //   try {
-  //     const result = await authorize(config);
-  //     console.log('Login result: ', result, result['accessToken'], result.accessToken)
-  //     setAccessToken(result.accessToken)
-  //     fetchUserDetails(result.accessToken);
-  //     AsyncStorage.setItem("accessToken", result.accessToken);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const Stack = createStackNavigator();
 
   const splashGrowModal = (
@@ -282,14 +183,12 @@ function App(props) {
       <SplashScreen grow={true} onGrowDone={() => setScheduleModal(true)} />
     </Modal>
   );
-    console.log('$%^&')
   return (
     <AuthProvider app={app}>
       <ThemeProvider>
         <AuthContext.Consumer>
           {({ loading, showLogin, user, firebaseUser }) => {
             // until app is done loading data, show the splash screen
-            console.log('asdf', loading, isFetchingData)
             if (loading || isFetchingData) {
               return (
                 <SplashScreen
@@ -308,19 +207,6 @@ function App(props) {
                 </>
               );
             }
-            // if (!hackathon) {
-            //   getHackathon(firebaseUser)
-            //   return (
-            //     <SplashScreen
-            //       grow={true}
-            //       onGrowDone={() => setScheduleModal(true)}
-            //     />
-            //   );
-            // }
-            // const showEventOnboard = pastEventOnboardID !== hackathon.id;
-            const showEventOnboard = false
-            // if logging in with a hexlabs email
-            // const showCheckin = /@hexlabs.org\s*$/.test(user.email)
             const showCheckin = user && user.roles.member;
             // once logged in and all data is loaded, present full app after grow animation
             return (
@@ -336,6 +222,8 @@ function App(props) {
                 <HackathonContext.Consumer>
                   {({isLoading}) => {
                     if (!isLoading) {
+                      // const showEventOnboard = pastEventOnboardID !== hackathon.id;
+                      const showEventOnboard = false;
                       return (
                         <>
                           {!scheduleModal && splashGrowModal}

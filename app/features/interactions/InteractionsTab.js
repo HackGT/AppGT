@@ -66,7 +66,6 @@ export function InteractionsTab(props) {
           : "";
 
       const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
-      console.log('APPLES: ', event.endDate, 'LSDKJFLDKSFJ', endTime)
       return <TouchableOpacity
         key={event.id}
         onPress={() => {
