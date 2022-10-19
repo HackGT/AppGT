@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { HackathonContext } from "../../state/hackathon";
 import { Card } from "../../components/Card";
 import { Linking } from "react-native";
@@ -139,6 +140,7 @@ export function InformationTab(props) {
           },
         ]}
         onPress={() => {
+          AsyncStorage.clear()
           auth.signOut();
         }}
       >

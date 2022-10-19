@@ -12,73 +12,29 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import { HackathonContext } from "../../state/hackathon";
 import { ScavHuntContext } from "../../state/scavHunt";
-import { fetchServerTime } from "../../cms";
-import moment from "moment-timezone";
-import QRCode from "react-native-qrcode-svg";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScavengerHuntTab(props) {
-  const { state, completeHint } = useContext(ScavHuntContext);
+  const { state, completeQuestion, completeHint } = useContext(ScavHuntContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
-  const [currentDate, setCurrentDate] = useState(
-    Date.parse("2000-01-01T20:30:00.000000-04:00")
-  );
-  useEffect(() => {
-    AsyncStorage.getItem("completedHints", (error, result) => {
-      if (result) {
-        const r = JSON.parse(result);
-        r.forEach((id) => {
-          if (!state.completedHints.includes(id)) {
-            completeHint(id);
-          }
-        });
-      }
-    });
-  }, []);
 
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener(
-      "focus",
-      () => {
-        // The screen is focused
-        fetchServerTime().then((timeData) => {
-          setCurrentDate(Date.parse(timeData.datetime));
-        });
-      },
-      [props.navigation]
-    );
-    return unsubscribe;
-  });
-
-  var scavHunts = hackathon.scavengerHunts;
+  var scavHunts = hackathon.scavengerHunts.filter(challenge => challenge.isQR );
   scavHunts.sort((item1, item2) => {
-    const d1 = Date.parse(item1.releaseDate);
-    const d2 = Date.parse(item2.releaseDate);
-    return d1 - d2;
+    return item1.index - item2.index;
   });
-  const crosswordPuzzleChallenges = scavHunts.filter((challenge) => {
-    !challenge.isQR;
-  });
-  console.log(scavHunts);
-  var crosswordPuzzleButton = null;
-
-  if (crosswordPuzzleChallenges.length == 0) {
-    const available = true;
-    const isComplete = false;
-    crosswordPuzzleButton = () => (
+  const crosswordPuzzleChallenges = hackathon.scavengerHunts.filter(challenge => !challenge.isQR );
+  const crosswordPuzzleButton = () => {
+    return crosswordPuzzleChallenges.length === 0 ? null :
       <TouchableOpacity
-        disabled={!available}
         style={[
           styles.joinEvent,
           {
-            borderColor: available ? dynamicStyles.tintColor.color : "white",
+            borderColor: dynamicStyles.tintColor.color,
             backgroundColor: isComplete
               ? "#A4D496"
-              : available
-              ? "white"
-              : "#E0E0E0",
+              : "white"
           },
         ]}
         onPress={() => {
@@ -88,25 +44,16 @@ export function ScavengerHuntTab(props) {
           });
         }}
       >
-        {available ? null : (
-          <FontAwesomeIcon
-            color={"gray"}
-            icon={faLock}
-            size={12}
-            style={{ position: "absolute", margin: 5 }}
-          />
-        )}
         <Text
           style={[
             dynamicStyles.text,
             styles.buttonHeaderText,
-            { color: available ? "black" : "gray" },
+            { color: "black" },
           ]}
         >
           {"Crossword Puzzle"}
         </Text>
       </TouchableOpacity>
-    );
   }
   const scavHuntButtons = scavHunts.map((challenge) => {
     if (!challenge.isQR) {
@@ -116,18 +63,10 @@ export function ScavengerHuntTab(props) {
       ...challenge,
       releaseDate: Date.parse(challenge.releaseDate),
     };
-    const available = new Date(item.releaseDate) < currentDate;
-    const isComplete = state.completedHints.includes(item.id);
-    console.log(
-      "Scav Hunt info: \nRelease date",
-      new Date(item.releaseDate),
-      "current date: ",
-      currentDate,
-      "available: ",
-      available,
-      "isComplete: ",
-      isComplete
-    );
+    console.log('item', item)
+    const available = true
+    console.log(state)
+    const isComplete = state.completedQuestions.includes(item.id);
     return (
       <TouchableOpacity
         disabled={!available}
@@ -166,14 +105,11 @@ export function ScavengerHuntTab(props) {
         >
           {item.title}
         </Text>
-        <Text style={[dynamicStyles.text, styles.dateText]}>
-          {"Available " + moment(item.releaseDate).format("MMM D [at] h:mm A")}
-        </Text>
       </TouchableOpacity>
     );
   });
 
-  const currPoints = state.completedHints.reduce((acc, curr) => {
+  const currPoints = state.completedQuestions.reduce((acc, curr) => {
     return acc + (curr.points ? curr.points : 0);
   }, 0);
   const totalPoints = scavHunts.reduce((acc, curr) => {
@@ -238,7 +174,7 @@ const styles = StyleSheet.create({
   },
 
   buttonHeaderText: {
-    paddingTop: 5,
+    padding: 10,
     textAlign: "center",
     fontFamily: "SpaceMono-Bold",
     fontSize: 16,

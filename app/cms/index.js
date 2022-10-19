@@ -1,32 +1,35 @@
 const hackathonQuery = `
   allHackathons(where: { isUsedForMobileApp: true }) {
-    id
-    name
-    slackUrl
-    isActive
-    blocks {
       id
       name
-      slug
-      content
-      usage
-    }
-    faqs {
-      id
-      question
-      answer
-      index
-    }
-    scavengerHunts {
-      id
-      title
-      hint
-      answer
-      points
-      releaseDate
-      isQR
-    }
+      slackUrl
+      isActive
+      blocks {
+        id
+        name
+        slug
+        content
+        usage
+      }
+      faqs {
+        id
+        question
+        answer
+        index
+      }
+      scavengerHunts {
+        id
+        title
+        hint
+        answer
+        points
+        releaseDate
+        isQR
+        code
+        question
+      }
   }
+  
 `;
 
 const getHackathonData = async (queryString) => {
