@@ -78,3 +78,24 @@ export const getRegistrationApplication = async (token, hexathonId, userId) => {
     };
   }
 };
+
+export const getEvents = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/events`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    const eventJson = await response.json();
+    return { status: response.status, eventJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting application" },
+    };
+  }
+}

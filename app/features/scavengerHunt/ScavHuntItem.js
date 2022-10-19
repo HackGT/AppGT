@@ -49,7 +49,7 @@ export function ScavHuntItem(props) {
       const token = await firebaseUser.getIdToken();
       const interactionResponse = await logInteraction(
         token,
-        "scavengerHunt",
+        "scavenger-hunt",
         firebaseUser.uid,
         item.id
       );

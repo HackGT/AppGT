@@ -12,9 +12,13 @@ import { EventSel } from "./EventSel";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
+import { DateTime } from "luxon"
+import { getEvents } from "../../api/api";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export function InteractionsTab(props) {
   const { dynamicStyles } = useContext(ThemeContext);
+  const { firebaseUser } = useContext(AuthContext)
   const [events, setEvents] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -23,34 +27,37 @@ export function InteractionsTab(props) {
   useEffect(() => {
     async function refreshEventState() {
       // const response = await fetch("https://keystone.dev.hack.gt/admin/api", {
-      const response = await fetch("https://cms.hack.gt/admin/api", {
-        method: "POST",
-        headers: {
-          "Content-Type": `application/json`,
-          Accept: `application/json`,
-        },
-        body: JSON.stringify({
-          query: `query {
-            allEvents  (orderBy: "name", where: { hackathon: { isUsedForMobileApp:true } }) {
-              name
-              endTime
-              startTime
-              startDate
-              url
-              tags {
-                  name
-              }
-              description
-              location {
-                  name
-              }
-              id
-            }
-          }`,
-        }),
-      });
-      const data = await response.json();
-      setEvents(data.data.allEvents);
+      // const response = await fetch("https://cms.hack.gt/admin/api", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": `application/json`,
+      //     Accept: `application/json`,
+      //   },
+      //   body: JSON.stringify({
+      //     query: `query {
+      //       allEvents  (orderBy: "name", where: { hackathon: { isUsedForMobileApp:true } }) {
+      //         name
+      //         endTime
+      //         startTime
+      //         startDate
+      //         url
+      //         tags {
+      //             name
+      //         }
+      //         description
+      //         location {
+      //             name
+      //         }
+      //         id
+      //       }
+      //     }`,
+      //   }),
+      // });
+      // const data = await response.json();
+      // setEvents(data.data.allEvents);
+      let token = await firebaseUser.getIdToken();
+      let {eventJson} = await getEvents(token);
+      setEvents(eventJson);
     }
 
     refreshEventState();
@@ -89,6 +96,15 @@ export function InteractionsTab(props) {
           event.location[0].name != null
           ? event.location[0].name + " • "
           : "";
+
+      const startTime = DateTime.fromISO(event.startDate, { zone: "America/New_York" }).toLocaleString(
+        DateTime.TIME_SIMPLE
+      );
+
+      const endTime = DateTime.fromISO(event.endDate, { zone: "America/New_York" }).toLocaleString(
+        DateTime.TIME_SIMPLE
+      );
+      console.log('APPLES: ', event.endDate, 'LSDKJFLDKSFJ', endTime)
       return <TouchableOpacity
         key={event.id}
         onPress={() => {
@@ -98,46 +114,14 @@ export function InteractionsTab(props) {
         <EventSel
           key={event.id}
           name={event.name}
-          startTime={event.startTime}
-          endTime={event.endTime}
+          startTime={startTime}
+          endTime={endTime}
           location={loc}
           type={eventType}
           dynamicStyles={dynamicStyles}
         />
       </TouchableOpacity>
     })
-
-    // shownEvents.forEach((event) => {
-    //   const eventType =
-    //     event != null && event.type != null
-    //       ? event.type
-    //       : { name: "none", color: "gray" };
-    //   const loc =
-    //     event != null &&
-    //     event.location != null &&
-    //     event.location[0] != null &&
-    //     event.location[0].name != null
-    //       ? event.location[0].name + " • "
-    //       : "";
-    //   formattedEvents.push(
-    //     <TouchableOpacity
-    //       key={event.id}
-    //       onPress={() => {
-    //         onPressEvent(event);
-    //       }}
-    //     >
-    //       <EventSel
-    //         key={event.id}
-    //         name={event.name}
-    //         startTime={event.startTime}
-    //         endTime={event.endTime}
-    //         location={loc}
-    //         type={eventType}
-    //         dynamicStyles={dynamicStyles}
-    //       />
-    //     </TouchableOpacity>
-    //   );
-    // });
 
     return (
       <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>

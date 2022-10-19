@@ -27,7 +27,7 @@ export function ScheduleTab(props) {
   const sheetRef = useRef(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventsHappeningNow, setEventsHappeningNow] = useState([]);
-
+  console.log('schedule state: ', state)
   useEffect(() => {
     console.log("REFRESHING");
     refreshEventState();

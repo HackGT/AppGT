@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { DateTime } from "luxon"
 import { EventTypeView } from "./EventTypeView";
 import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../../../assets/images/X";
@@ -25,6 +26,13 @@ export function EventBottomSheet(props) {
     const event = props.event;
     const title = event.name;
     const description = event.description;
+    const startTime = DateTime.fromISO(event.startDate, { zone: "America/New_York" }).toLocaleString(
+      DateTime.TIME_SIMPLE
+    );
+
+    const endTime = DateTime.fromISO(event.endTime, { zone: "America/New_York" }).toLocaleString(
+      DateTime.TIME_SIMPLE
+    );
     const location =
       event != null &&
       event.location != null &&
@@ -32,8 +40,8 @@ export function EventBottomSheet(props) {
       event.location[0].name != null
         ? event.location[0].name + " • "
         : "";
-    const start = event.startTime;
-    const end = event.endTime;
+    const start = startTime;
+    const end = endTime;
     const eventType =
       event != null && event.type != null
         ? event.type

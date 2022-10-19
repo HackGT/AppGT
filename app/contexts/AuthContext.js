@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { getAuth } from "firebase/auth";
-import { getUserProfile } from "../api/api";
+import { getUserProfile, getEvents } from "../api/api";
 
 const AuthContext = React.createContext();
 

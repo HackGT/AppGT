@@ -59,7 +59,7 @@ export function CheckInNFC(props) {
         source={source}
         style={{
           width: Dimensions.get("window").width - 160,
-          resizeMode: "contain",
+          resizeMode: "contain"
         }}
       />
     );
@@ -82,6 +82,8 @@ export function CheckInNFC(props) {
     }
     if (!success) {
       createAlert("There was an issue writing to the badge. Try again.");
+    } else {
+      props.navigation.goBack()
     }
   };
 
@@ -169,6 +171,7 @@ export function CheckInNFC(props) {
             justifyContent: "center",
             alignItems: "center",
             flex: 1,
+            zIndex: -10000
           }}
         >
           <TagImage branch={application.confirmationBranch.applicationGroup} />

@@ -1,4 +1,4 @@
-import { TOGGLE_STAR, TOGGLE_STAR_SCHEDULE } from './HackathonActionTypes'
+import { TOGGLE_STAR, TOGGLE_STAR_SCHEDULE, SET_EVENTS } from './HackathonActionTypes'
 import { turnToEst } from "../../cms/DataHandler";
 
 import AsyncStorage from "@react-native-community/async-storage"
@@ -14,9 +14,15 @@ export function hackathonReducer(state, action) {
             return { ...state, 'starredIds': toggleStarred(state.starredIds, action.value) }
         case TOGGLE_STAR_SCHEDULE :
             return { ...state, 'isStarSchedule': !state.isStarSchedule }
+        case SET_EVENTS:
+            return { ...state, 'events' : setEvents(action.value)}
         default:
             return state
     }
+}
+
+function setEvents(events) {
+    return events
 }
 
 function toggleStarred(starredIds, event) {
