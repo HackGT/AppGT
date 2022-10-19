@@ -11,6 +11,7 @@ import {
 import { logInteraction } from "../../api/api";
 import AsyncStorage from "@react-native-community/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
+import QRCodeScanner from "react-native-qrcode-scanner";
 import { ScavHuntContext } from "../../state/scavHunt";
 import { AuthContext } from "../../contexts/AuthContext";
 import { ThemeContext } from "../../contexts/ThemeContext";
@@ -24,6 +25,7 @@ export function ScavHuntItem(props) {
   const { dynamicStyles } = useContext(ThemeContext);
   const answerSheetRef = useRef();
   const qrSheetRef = useRef();
+  const scanner = useRef(null);
   const item = props.route.params.item;
   const isComplete = state.completedHints.includes(item.id);
 
@@ -42,7 +44,7 @@ export function ScavHuntItem(props) {
 
   const handleSubmitAnswer = async () => {
     setShowAnswerStatus(true);
-    if (answer === item.answer) {
+    if (answer.toLowerCase() === item.answer.toLowerCase()) {
       setIsAnswerCorrect(true);
       completeHint(item.id);
       console.log("itemID ", item.id);
@@ -68,10 +70,30 @@ export function ScavHuntItem(props) {
     }
   };
 
+  const onQRCodeScanned = async (e) => {
+    console.log(e.data,item.code)
+    setScannedCode(e.data)
+  }
+
   const qrSheetContent = () => {
-    <View>
-      <Text>TEST</Text>
-    </View>
+    return (
+      <View style={{alignItems: 'center'}}>
+        <Text style={[styles.answerButtonText, dynamicStyles.text]}>Scan QR Code</Text>
+        <QRCodeScanner
+          ref={scanner}
+          reactivate={false}
+          fadeIn={false}
+          showMarker
+          markerStyle={{ borderColor: "white", borderWidth: 2 }}
+          onRead={onQRCodeScanned}
+          cameraStyle={{
+            width: Dimensions.get("window").width,
+            overflow: "hidden",
+            alignSelf: 'center'
+          }}
+        />
+      </View>
+    )
   }
 
   const answerSheetContent = () => (
@@ -84,10 +106,10 @@ export function ScavHuntItem(props) {
       >
         <DismissModal />
       </TouchableOpacity>
-      <Text style={[styles.hintText, { paddingBottom: 15 }]}>
+      <Text style={[styles.hintText, dynamicStyles.text, { paddingBottom: 15 }]}>
         {"What's the answer?"}
       </Text>
-      <View style={styles.answerInputContainer}>
+      <View style={[styles.answerInputContainer, dynamicStyles.searchBackgroundColor]}>
         <TextInput
           style={styles.answerInput}
           onChangeText={setAnswer}
@@ -106,13 +128,13 @@ export function ScavHuntItem(props) {
         }
       </View>
       {isAnswerCorrect ? (
-        <Text style={[styles.completeText]}>{"Complete"}</Text>
+        <Text style={[styles.completeText, dynamicStyles.text]}>{"Complete"}</Text>
       ) : (
         <TouchableOpacity
           style={[styles.answerButton, { width: 200 }]}
           onPress={handleSubmitAnswer}
         >
-          <Text style={[styles.answerButtonText]}>{"Submit"}</Text>
+          <Text style={[styles.answerButtonText, dynamicStyles.text]}>{"Submit"}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -144,17 +166,18 @@ export function ScavHuntItem(props) {
           </View>
           <Text style={[styles.hintText, dynamicStyles.text]}>{item.hint}</Text>
           <TouchableOpacity
+            disabled={scannedCode === item.code}
             style={[styles.answerButton]}
             onPress={() => {
               qrSheetRef.current.open();
             }}
           >
             <Text style={[styles.answerButtonText, dynamicStyles.text]}>
-              {isComplete ? "Completed!" : "Scan Code"}
+              {scannedCode === item.code ? "Completed!" : "Scan Code"}
             </Text>
           </TouchableOpacity>
           { scannedCode !== item.code ? null :
-            <>
+            <View style={{paddingTop: 10}}>
               <Text style={[styles.hintText, dynamicStyles.text]}>{item.question}</Text>
               <TouchableOpacity
                 style={[styles.answerButton]}
@@ -166,13 +189,13 @@ export function ScavHuntItem(props) {
                   {isComplete ? "Completed!" : "Input Answer"}
                 </Text>
               </TouchableOpacity>
-            </>
+            </View>
           }
         </View>
       </View>
       <RBSheet
         ref={qrSheetRef}
-        height={400}
+        height={500}
         openDuration={250}
         closeDuration={250}
         closeOnDragDown
@@ -180,9 +203,10 @@ export function ScavHuntItem(props) {
           container: {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
+            backgroundColor: dynamicStyles.backgroundColor.backgroundColor
           },
           draggableIcon: {
-            backgroundColor: "white",
+            backgroundColor: dynamicStyles.text.color,
           },
         }}
       >
@@ -198,9 +222,10 @@ export function ScavHuntItem(props) {
           container: {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
+            backgroundColor: dynamicStyles.backgroundColor.backgroundColor
           },
           draggableIcon: {
-            backgroundColor: "white",
+            backgroundColor: dynamicStyles.text.color,
           },
         }}
       >
@@ -248,7 +273,6 @@ const styles = StyleSheet.create({
 
   sheetStyle: {
     flexDirection: "column",
-    backgroundColor: "white",
     alignItems: "center",
   },
 

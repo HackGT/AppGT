@@ -26,6 +26,8 @@ const hackathonQuery = `
         points
         releaseDate
         isQR
+        code
+        question
       }
   }
   

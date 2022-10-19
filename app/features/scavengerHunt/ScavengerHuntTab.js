@@ -81,6 +81,7 @@ export function ScavengerHuntTab(props) {
       ...challenge,
       releaseDate: Date.parse(challenge.releaseDate),
     };
+    console.log('item', item)
     const available = true
     const isComplete = state.completedHints.includes(item.id);
     return (
