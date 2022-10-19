@@ -16,6 +16,7 @@ import {
   faCalendar,
   faMapSigns,
   faClipboardCheck,
+  faIdBadge,
 } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import { authorize } from "react-native-app-auth";
@@ -259,7 +260,7 @@ function App(props) {
                                   } else if (route.name === "Interactions") {
                                     icon = faClipboardCheck;
                                   } else if (route.name === "CheckIn") {
-                                    icon = faClipboardCheck;
+                                    icon = faIdBadge;
                                   }
 
                                   return (
