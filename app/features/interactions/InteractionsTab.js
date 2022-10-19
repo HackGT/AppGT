@@ -12,7 +12,7 @@ import { EventSel } from "./EventSel";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
-import { DateTime } from "luxon"
+import { getStartEndTime } from "../../util";
 import { getEvents } from "../../api/api";
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -97,13 +97,7 @@ export function InteractionsTab(props) {
           ? event.location[0].name + " • "
           : "";
 
-      const startTime = DateTime.fromISO(event.startDate, { zone: "America/New_York" }).toLocaleString(
-        DateTime.TIME_SIMPLE
-      );
-
-      const endTime = DateTime.fromISO(event.endDate, { zone: "America/New_York" }).toLocaleString(
-        DateTime.TIME_SIMPLE
-      );
+      const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
       console.log('APPLES: ', event.endDate, 'LSDKJFLDKSFJ', endTime)
       return <TouchableOpacity
         key={event.id}

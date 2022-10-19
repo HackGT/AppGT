@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { DateTime } from "luxon"
 import { EventTypeView } from "./EventTypeView";
 import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../../../assets/images/X";
@@ -10,6 +9,7 @@ import { HackathonContext } from "../../state/hackathon";
 import FontMarkdown from "../../components/FontMarkdown";
 import { Linking } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { getStartEndTime } from "../../util";
 
 export function EventBottomSheet(props) {
   const { state, toggleStar } = useContext(HackathonContext);
@@ -26,13 +26,7 @@ export function EventBottomSheet(props) {
     const event = props.event;
     const title = event.name;
     const description = event.description;
-    const startTime = DateTime.fromISO(event.startDate, { zone: "America/New_York" }).toLocaleString(
-      DateTime.TIME_SIMPLE
-    );
-
-    const endTime = DateTime.fromISO(event.endTime, { zone: "America/New_York" }).toLocaleString(
-      DateTime.TIME_SIMPLE
-    );
+    const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
     const location =
       event != null &&
       event.location != null &&
