@@ -27,9 +27,7 @@ export function ScheduleTab(props) {
   const sheetRef = useRef(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventsHappeningNow, setEventsHappeningNow] = useState([]);
-  console.log('schedule state: ', state)
   useEffect(() => {
-    console.log("REFRESHING");
     refreshEventState();
 
     // update time changes whenever app opens
@@ -48,7 +46,6 @@ export function ScheduleTab(props) {
   const onPressEvent = (event) => {
     if (event) {
       setSelectedEvent(event);
-      console.log("REF", sheetRef);
       sheetRef.current.open();
     } else {
       setSelectedEvent(null);
@@ -68,7 +65,6 @@ export function ScheduleTab(props) {
           data={eventsHappeningNow}
           keyExtractor={(item, index) => (item && item.id ? item.id : index)}
           renderItem={({ item }) => {
-            console.log("ITEM: ", item);
             return (
               <TouchableOpacity
                 style={styles.cardHorizontalParent}

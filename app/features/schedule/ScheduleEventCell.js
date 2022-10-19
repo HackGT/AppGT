@@ -41,7 +41,6 @@ export function ScheduleEventCell(props) {
         <TouchableOpacity
           style={{ width: "10%" }}
           onPress={() => {
-            console.log("toggling star pressed", event.id);
             toggleStar(event);
           }}
         >
