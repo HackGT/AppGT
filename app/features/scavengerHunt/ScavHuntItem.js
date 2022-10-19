@@ -20,7 +20,7 @@ import CorrectAnswer from "../../../assets/images/CorrectAnswer.svg";
 import IncorrectAnswer from "../../../assets/images/IncorrectAnswer.svg";
 
 export function ScavHuntItem(props) {
-  const { state, completeQuestion } = useContext(ScavHuntContext);
+  const { state, completeQuestion, completeHint } = useContext(ScavHuntContext);
   const { firebaseUser } = useContext(AuthContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const answerSheetRef = useRef();
@@ -28,18 +28,23 @@ export function ScavHuntItem(props) {
   const scanner = useRef(null);
   const item = props.route.params.item;
   const isComplete = state.completedQuestions.includes(item.id);
-
-  const [scannedCode, setScannedCode] = useState(null);
+  
+  const initScannedCode = null
+  // completed hints are of format '{id}-{hint}'
+  state.completedHints.forEach(h => {
+    const split = h.split('-')
+    if (split.length === 2) {
+      if (split[0] === item.id) {
+        initScannedCode = split[1];
+        return;
+      }
+    }
+  })
+  const [scannedCode, setScannedCode] = useState(initScannedCode);
 
   const [answer, setAnswer] = useState(isComplete ? item.answer : "");
   const [showAnswerStatus, setShowAnswerStatus] = useState(isComplete);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(isComplete);
-
-  useEffect(() => {
-    if (scannedCode && scannedCode !== item.code) {
-      createAlert("Wrong QR code. Try again or visit the help desk for assistance!")
-    }
-  }, [scannedCode])
 
   const createAlert = (message) =>
     Alert.alert("Error", message, [
@@ -85,6 +90,12 @@ export function ScavHuntItem(props) {
     console.log(e.data,item.code)
     setScannedCode(e.data)
     qrSheetRef.current.close()
+    if (e.data === item.code) {
+      completeHint(item)
+    } else {
+      console.log('Wrong code!', e.data, item.code)
+      createAlert("Wrong QR code. Try again or visit the help desk for assistance!")
+    }
   }
 
   const qrSheetContent = () => {

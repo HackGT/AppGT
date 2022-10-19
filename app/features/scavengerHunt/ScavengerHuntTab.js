@@ -12,21 +12,26 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import { HackathonContext } from "../../state/hackathon";
 import { ScavHuntContext } from "../../state/scavHunt";
-import moment from "moment-timezone";
-import QRCode from "react-native-qrcode-svg";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
 export function ScavengerHuntTab(props) {
-  const { state, completeHint } = useContext(ScavHuntContext);
+  const { state, completeQuestion, completeHint } = useContext(ScavHuntContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
-  const [currentDate, setCurrentDate] = useState(
-    Date.parse("2000-01-01T20:30:00.000000-04:00")
-  );
   console.log('sdf', hackathon)
   useEffect(() => {
     AsyncStorage.getItem("completedQuestions", (error, result) => {
+      if (result) {
+        const r = JSON.parse(result);
+        r.forEach((id) => {
+          if (!state.completedQuestions.includes(id)) {
+            completeQuestion(id);
+          }
+        });
+      }
+    });
+    AsyncStorage.getItem("completedHints", (error, result) => {
       if (result) {
         const r = JSON.parse(result);
         r.forEach((id) => {
@@ -36,6 +41,7 @@ export function ScavengerHuntTab(props) {
         });
       }
     });
+
   }, []);
 
   var scavHunts = hackathon.scavengerHunts.filter(challenge => challenge.isQR );
