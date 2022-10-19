@@ -155,7 +155,7 @@ export function EventOnboarding(props) {
               subtitles={[
                 // "In case of emergencies, contact the Georgia Tech police department.",
                 // "GTPD: (404) 894-2500.",
-                "If you ever have any questions or concerns, please visit the help channel on slack or email hello@hack.gt.",
+                "If you ever have any questions or concerns, please visit the help channel on slack or email hello@hexlabs.org.",
               ]}
               // button={addGTPDToContacts}
             />
@@ -171,7 +171,7 @@ export function EventOnboarding(props) {
               }
               title="Happy Hacking"
               subtitles={[
-                "We’re looking forward to seeing the amazing things you’ll build!",
+                "We're looking forward to seeing the amazing things you'll build!",
               ]}
             />
           );
