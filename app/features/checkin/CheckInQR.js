@@ -90,8 +90,8 @@ export function CheckInQR(props) {
     <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
       <Text style={[styles.headerHelpText, dynamicStyles.secondaryText]}>
         Use this page to check-in people to {CURRENT_HEXATHON.name}. You'll scan
-        their QR code from registration and then tap the matching event badge to
-        write their data.
+        their QR code from registration/mobile app and then tap the matching
+        event badge to write their data.
       </Text>
       <View style={{ alignItems: "center", marginTop: 50 }}>
         <Text

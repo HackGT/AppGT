@@ -97,8 +97,8 @@ export function InteractionsTab(props) {
     <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
       <View style={styles.header}>
         <Text style={[styles.headerHelpText, dynamicStyles.secondaryText]}>
-          Use this page to scan each person's badge before every event. If
-          you're can't scan a badge, scan their QR code from registration
+          Use this page to scan each person's badge before every event. If you
+          can't scan a badge, scan their QR code from registration/mobile app
           instead.
         </Text>
         <View style={styles.searchBarWrapper}>
