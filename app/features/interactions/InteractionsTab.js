@@ -96,6 +96,9 @@ export function InteractionsTab(props) {
   return (
     <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
       <View style={styles.header}>
+        <Text style={[dynamicStyles.text, styles.headerText]}>
+          Event Scanning
+        </Text>
         <Text style={[styles.headerHelpText, dynamicStyles.secondaryText]}>
           Use this page to scan each person's badge before every event. If you
           can't scan a badge, scan their QR code from registration/mobile app
@@ -148,7 +151,14 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    marginVertical: 5,
+    marginTop: 10,
+    marginBottom: 5,
+  },
+
+  headerText: {
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 22,
+    marginHorizontal: 15,
   },
 
   headerHelpText: {

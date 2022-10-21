@@ -78,6 +78,7 @@ export function CheckInQR(props) {
 
   return (
     <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
+      <Text style={[dynamicStyles.text, styles.headerText]}>Check-In</Text>
       <Text style={[styles.headerHelpText, dynamicStyles.secondaryText]}>
         Use this page to check-in people to {CURRENT_HEXATHON.name}. You'll scan
         their QR code from registration/mobile app and then tap the matching
@@ -115,9 +116,15 @@ export function CheckInQR(props) {
 }
 
 const styles = StyleSheet.create({
+  headerText: {
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 22,
+    marginHorizontal: 15,
+    marginTop: 10,
+    marginBottom: 5,
+  },
   headerHelpText: {
     marginHorizontal: 15,
     fontFamily: "SpaceMono-Bold",
-    marginTop: 10,
   },
 });

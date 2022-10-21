@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   welcomeHeader: {
     fontFamily: "SpaceMono-Bold",
     fontSize: 22,
-    marginTop: 34,
+    marginTop: 10,
     marginBottom: 10,
   },
 
