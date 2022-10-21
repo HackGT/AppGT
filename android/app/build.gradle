@@ -143,8 +143,8 @@ android {
         applicationId "com.appgt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5146000
-        versionName '1.4.0'
+        versionCode 5146100
+        versionName '1.5.0'
         manifestPlaceholders = [
             appAuthRedirectScheme: 'gt.hack.live'
         ]
