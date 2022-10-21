@@ -25,12 +25,15 @@ export const EVENT_TYPE_COLOR_MAP = {
 };
 
 export const logInteraction = async (token, type, userId, identifier) => {
-  const body = {
+
+  let body = {
     userId: userId,
-    identifier: identifier,
     type: type,
     hexathon: CURRENT_HEXATHON.id,
   };
+  if (identifier) {
+    body.identifier = identifier;
+  }
   try {
     const response = await fetch(`${API_SERVICE_URLS.hexathons}/interactions`, {
       method: "POST",
@@ -45,6 +48,7 @@ export const logInteraction = async (token, type, userId, identifier) => {
     const json = await response.json();
     return { status: response.status, json };
   } catch (err) {
+    console.log(err)
     return {
       status: 500,
       json: { message: "Network error when logging interaction" },

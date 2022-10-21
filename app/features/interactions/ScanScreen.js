@@ -114,6 +114,7 @@ export function ScanScreen(props) {
     setStatus(interactionResponse.status);
 
     if (interactionResponse.status !== 200) {
+      console.log(interactionResponse)
       createAlert(interactionResponse.json.message);
       return false;
     }

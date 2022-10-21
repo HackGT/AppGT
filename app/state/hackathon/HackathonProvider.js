@@ -50,10 +50,13 @@ export default function HackathonProvider({
 
     const hackathons = data.data.allHackathons;
     if (hackathons != null && hackathons.length != 0) {
-      var hackathon = hackathons[0];
+      let hackathon = hackathons[0];
       const token = await fUser.getIdToken();
       const { eventJson } = await getEvents(token);
-      hackathon.events = eventJson;
+      // const testEvent = { description: 'test desc', startDate: "2022-10-21T00:00:00.000Z", endDate: "2022-11-20T02:00:00.000Z", hexathon: "62d9ed68d0a69b88c06bdfb2", id: "63516bdad676a93b24d46010", name: "test name", type: "ceremony", location: [{ name: 'Ferst Center', id: "63516bdad676a93b24d46011" }], tags: [] };
+      // hackathon.events = eventJson
+      // hackathon.events.push(testEvent)
+      hackathon.events = eventJson
       value.state.hackathon = hackathon;
       setIsLoading(false);
     } else {

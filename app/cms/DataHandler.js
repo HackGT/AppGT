@@ -63,7 +63,7 @@ export function getCurrentDayIndex(events) {
 
 // adds timeblocks between new start times for events
 export function getTimeblocksForDay(events, day) {
-  timeblocksEvents = [];
+  let timeblocksEvents = [];
   var lastStartTime = null;
 
   // go through all events for the current day, if there is a difference between the current event and last event, add a new time in between them
@@ -87,7 +87,7 @@ export function getTimeblocksForDay(events, day) {
 export function getCurrentEventIndex(events, day) {
   const timeblocks = getTimeblocksForDay(events, day);
 
-  for (i = 0; i < timeblocks.length; i++) {
+  for (let i = 0; i < timeblocks.length; i++) {
     if (isEventHappeningNow(timeblocks[i])) {
       return i;
     }
