@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   View,
@@ -18,12 +18,35 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { getAuth } from "firebase/auth";
 import { app } from "../../../firebase";
 import QRCode from "react-native-qrcode-svg";
+import { CURRENT_HEXATHON, getRegistrationApplication } from "../../api/api";
 
-export function InformationTab(props) {
+export function InformationTab() {
   const auth = getAuth(app);
   const { state } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const { firebaseUser } = useContext(AuthContext);
+  const [showQRCode, setShowQRCode] = useState(false);
+
+  useEffect(() => {
+    const getApplication = async () => {
+      try {
+        const token = await firebaseUser.getIdToken();
+        const { json: data } = await getRegistrationApplication(
+          token,
+          CURRENT_HEXATHON.id,
+          firebaseUser.uid
+        );
+
+        if (data?.applications[0].status === "CONFIRMED") {
+          setShowQRCode(true);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getApplication();
+  }, [firebaseUser]);
 
   const hackathon = state.hackathon;
 
@@ -40,6 +63,7 @@ export function InformationTab(props) {
       headerButtons = buttonJSON.map((button) => {
         return (
           <TouchableOpacity
+            key={button.title}
             style={[
               styles.headerButton,
               {
@@ -97,29 +121,33 @@ export function InformationTab(props) {
       </Text>
       <View style={styles.headerButtonContainer}>{headerButtons}</View>
 
-      <Text style={[dynamicStyles.text, styles.checkInText]}>
-        You can use this QR code or the one from HexLabs Registration to
-        check-in!
-      </Text>
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          marginVertical: 20,
-        }}
-      >
-        <QRCode
-          value={JSON.stringify({ uid: firebaseUser.uid })}
-          color={dynamicStyles.text.color}
-          size={200}
-          backgroundColor="clear"
-        />
-      </View>
+      {showQRCode && (
+        <>
+          <Text style={[dynamicStyles.text, styles.checkInText]}>
+            You can use this QR code or the one from HexLabs Registration to
+            check-in!
+          </Text>
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginVertical: 20,
+            }}
+          >
+            <QRCode
+              value={JSON.stringify({ uid: firebaseUser.uid })}
+              color={dynamicStyles.text.color}
+              size={200}
+              backgroundColor="clear"
+            />
+          </View>
+        </>
+      )}
 
       <Text style={[dynamicStyles.text, styles.headerText]}>FAQs</Text>
       <View style={styles.faqContainer}>
         {faqs.map((faq) => (
-          <View key={faq.name}>
+          <View key={faq.question}>
             <Text style={[dynamicStyles.text, styles.faqQuestion]}>
               {faq.question}
             </Text>
@@ -140,7 +168,7 @@ export function InformationTab(props) {
           },
         ]}
         onPress={() => {
-          AsyncStorage.clear()
+          AsyncStorage.clear();
           auth.signOut();
         }}
       >

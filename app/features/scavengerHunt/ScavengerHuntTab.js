@@ -20,21 +20,23 @@ export function ScavengerHuntTab(props) {
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
 
-  var scavHunts = hackathon.scavengerHunts.filter(challenge => challenge.isQR );
+  var scavHunts = hackathon.scavengerHunts.filter(
+    (challenge) => challenge.isQR
+  );
   scavHunts.sort((item1, item2) => {
     return item1.index - item2.index;
   });
-  const crosswordPuzzleChallenges = hackathon.scavengerHunts.filter(challenge => !challenge.isQR );
+  const crosswordPuzzleChallenges = hackathon.scavengerHunts.filter(
+    (challenge) => !challenge.isQR
+  );
   const crosswordPuzzleButton = () => {
-    return crosswordPuzzleChallenges.length === 0 ? null :
+    return crosswordPuzzleChallenges.length === 0 ? null : (
       <TouchableOpacity
         style={[
           styles.joinEvent,
           {
             borderColor: dynamicStyles.tintColor.color,
-            backgroundColor: isComplete
-              ? "#A4D496"
-              : "white"
+            backgroundColor: isComplete ? "#A4D496" : "white",
           },
         ]}
         onPress={() => {
@@ -54,7 +56,8 @@ export function ScavengerHuntTab(props) {
           {"Crossword Puzzle"}
         </Text>
       </TouchableOpacity>
-  }
+    );
+  };
   const scavHuntButtons = scavHunts.map((challenge) => {
     if (!challenge.isQR) {
       return null;
@@ -63,12 +66,13 @@ export function ScavengerHuntTab(props) {
       ...challenge,
       releaseDate: Date.parse(challenge.releaseDate),
     };
-    console.log('item', item)
-    const available = true
-    console.log(state)
+    console.log("item", item);
+    const available = true;
+    console.log(state);
     const isComplete = state.completedQuestions.includes(item.id);
     return (
       <TouchableOpacity
+        key={item.title}
         disabled={!available}
         style={[
           styles.joinEvent,

@@ -4,8 +4,7 @@ import QRCodeScanner from "react-native-qrcode-scanner";
 import { request, PERMISSIONS } from "react-native-permissions";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { getRegistrationApplication } from "../../api/api";
-import { CURRENT_HEXATHON } from "../../api/api";
+import { getRegistrationApplication, CURRENT_HEXATHON } from "../../api/api";
 import { useIsFocused } from "@react-navigation/native";
 
 export function CheckInQR(props) {
