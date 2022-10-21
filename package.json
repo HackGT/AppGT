@@ -26,7 +26,7 @@
     "firebase": "^9.9.4",
     "intl": "^1.2.5",
     "luxon": "^3.0.4",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.33",
     "ndef": "^0.2.0",
     "process": "^0.11.10",
