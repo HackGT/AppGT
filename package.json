@@ -27,7 +27,7 @@
     "intl": "^1.2.5",
     "luxon": "^3.0.4",
     "moment": "^2.29.1",
-    "moment-timezone": "^0.5.33",
+    "moment-timezone": "^0.5.35",
     "ndef": "^0.2.0",
     "process": "^0.11.10",
     "react": "16.13.1",
