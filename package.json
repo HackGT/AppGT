@@ -24,6 +24,7 @@
     "@react-navigation/stack": "^5.14.9",
     "Buffer": "^0.0.0",
     "firebase": "^9.9.4",
+    "intl": "^1.2.5",
     "luxon": "^3.0.4",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",

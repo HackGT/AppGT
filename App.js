@@ -41,6 +41,8 @@ import { ThemeProvider } from "./app/contexts/ThemeContext";
 import { AuthProvider, AuthContext } from "./app/contexts/AuthContext";
 import { app } from "./firebase";
 import { HackathonContext } from "./app/state/hackathon";
+import "intl";
+import "intl/locale-data/jsonp/en";
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
@@ -166,6 +168,15 @@ function App(props) {
       isStarSchedule == true ? "true" : "false"
     );
   }, [isStarSchedule]);
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      // See https://github.com/expo/expo/issues/6536 for this issue.
+      if (Intl.__disableRegExpRestore === "function") {
+        Intl.__disableRegExpRestore();
+      }
+    }
+  }, []);
 
   const Stack = createStackNavigator();
 
