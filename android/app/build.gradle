@@ -111,7 +111,15 @@ def enableProguardInReleaseBuilds = false
  * give correct results when using with locales other than en-US.  Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'org.webkit:android-jsc-intl:+'
+
+/**
+* Use the international variant of JavaScriptCore
+* This variant includes the ICU i18n library to make APIs like `Date.toLocaleString`
+* and `String.localeCompare` work when using with locales other than en-US.
+* Note that this variant is about 6MiB larger per architecture than the default.
+*/
+def useIntlJsc = true
 
 /**
  * Whether to enable the Hermes VM.
@@ -135,8 +143,8 @@ android {
         applicationId "com.appgt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5146000
-        versionName '1.4.0'
+        versionCode 5146100
+        versionName '1.5.0'
         manifestPlaceholders = [
             appAuthRedirectScheme: 'gt.hack.live'
         ]

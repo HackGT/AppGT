@@ -3,34 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>778802244385-dtbb0g7k2sd4d9i7eb45uggcdpt9do5h.apps.googleusercontent.com</string>
+	<string>676515457846-rpusnd2935sbgh3aih4hctcebrbiguus.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.778802244385-dtbb0g7k2sd4d9i7eb45uggcdpt9do5h</string>
+	<string>com.googleusercontent.apps.676515457846-rpusnd2935sbgh3aih4hctcebrbiguus</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAZn67y7u9yUWILzLI_cLB4gftDQJv4cqI</string>
+	<string>AIzaSyDBXu7_e2LQSNG2tAnW_XIk7wRGgfI7l0U</string>
 	<key>GCM_SENDER_ID</key>
-	<string>778802244385</string>
+	<string>676515457846</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>gt.hack.AppGT</string>
 	<key>PROJECT_ID</key>
-	<string>appgt-push</string>
+	<string>hexlabs-cloud</string>
 	<key>STORAGE_BUCKET</key>
-	<string>appgt-push.appspot.com</string>
+	<string>hexlabs-cloud.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:778802244385:ios:f881012286ad48b7df6c60</string>
-	<key>DATABASE_URL</key>
-	<string>https://appgt-push.firebaseio.com</string>
+	<string>1:676515457846:ios:f999aee861afaba13fa197</string>
 </dict>
 </plist>

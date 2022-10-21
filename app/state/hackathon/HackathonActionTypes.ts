@@ -1,0 +1,3 @@
+export const TOGGLE_STAR = "TOGGLE_STAR"
+export const TOGGLE_STAR_SCHEDULE = "TOGGLE_STAR_SCHEDULE"
+export const SET_EVENTS = "SET_EVENTS"
