@@ -61,12 +61,6 @@ export function ScanScreen(props) {
 
     setUid(json.uid);
     const success = await getProfileAndLogInteraction(json.uid);
-    // if (success) {
-    //   // Reactivates reading on success to make the proccess of scanning many people faster
-    //   setTimeout(() => {
-    //     scanNFC();
-    //   }, 1000);
-    // }
   };
 
   // QR
@@ -130,7 +124,6 @@ export function ScanScreen(props) {
       setModalVisible(true);
     }
     const { success, data } = await readNFC();
-    console.log('res: ', success, data)
     if (success) {
       await onNFCTagScanned(data);
     } else {
