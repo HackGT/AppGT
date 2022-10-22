@@ -33,6 +33,8 @@ export async function readNFC() {
   } catch (ex) {
     console.warn("NFC Reading Failed:", ex.message);
     success = false;
+    data = "Invalid badge, please visit help desk."
+    
   } finally {
     NfcManager.cancelTechnologyRequest();
   }

@@ -50,6 +50,8 @@ export function ScanScreen(props) {
     let json = {};
     try {
       json = JSON.parse(text);
+    } catch (error) {
+      console.log('NFC Scan error: ', error)
     } finally {
       if (!json.uid) {
         createAlert("Invalid badge");
@@ -130,6 +132,9 @@ export function ScanScreen(props) {
     const { success, data } = await readNFC();
     if (success) {
       await onNFCTagScanned(data);
+    } else {
+      createAlert(data)
+      setStatus(500)
     }
 
     if (Platform.OS === "android") {
