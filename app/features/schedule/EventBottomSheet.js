@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from "react-native";
 import { EventTypeView } from "./EventTypeView";
 import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../../../assets/images/X";
@@ -10,6 +10,8 @@ import FontMarkdown from "../../components/FontMarkdown";
 import { Linking } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { getStartEndTime } from "../../util";
+
+const SHEET_HEIGHT = 450;
 
 export function EventBottomSheet(props) {
   const { state, toggleStar } = useContext(HackathonContext);
@@ -88,8 +90,7 @@ export function EventBottomSheet(props) {
                   </Text>
                 </TouchableOpacity>
               )}
-
-              <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
+                <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
 
               <View style={styles.panelButtonCenterRoot}>
                 <TouchableOpacity
@@ -117,7 +118,7 @@ export function EventBottomSheet(props) {
       {({ dynamicStyles }) => (
         <RBSheet
           ref={props.reference}
-          height={450}
+          height={SHEET_HEIGHT}
           openDuration={250}
           closeDuration={250}
           closeOnDragDown

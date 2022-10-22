@@ -7,6 +7,7 @@ import {
   TextInput,
   Dimensions,
   Alert,
+  ScrollView
 } from "react-native";
 import { logInteraction } from "../../api/api";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -177,8 +178,8 @@ export function ScavHuntItem(props) {
   };
 
   return (
-    <>
-      <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
+    <ScrollView style={dynamicStyles.backgroundColor}>
+      <View style={{ flex: 1, paddingBottom: 10 }}>
         <View
           style={{
             flexDirection: "column",
@@ -257,7 +258,7 @@ export function ScavHuntItem(props) {
       >
         {answerSheetContent()}
       </RBSheet>
-    </>
+    </ScrollView>
   );
 }
 
