@@ -5,7 +5,7 @@ import { CheckInQR } from "./CheckInQR";
 import { CheckInNFC } from './CheckInNFC';
 import { CheckInStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
-import HackGTIcon from "../../../assets/images/HackGTIcon";
+import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function CheckInStackScreen({ navigation }) {
@@ -18,7 +18,7 @@ export default function CheckInStackScreen({ navigation }) {
                         <CheckInStack.Screen
                             options={{
                                 headerTitleAlign: "left",
-                                headerTitle: (props) => <HackGTIcon {...props} />,
+                                headerTitle: (props) => <HexlabsIcon {...props} />,
                                 headerStyle: dStyles.tabBarBackgroundColor,
                             }}
                             name="CheckInQR"
@@ -28,7 +28,7 @@ export default function CheckInStackScreen({ navigation }) {
                         <CheckInStack.Screen
                             options={{
                                 headerTitleAlign: "left",
-                                headerTitle: (props) => <HackGTIcon {...props} />,
+                                headerTitle: (props) => <HexlabsIcon {...props} />,
                                 headerStyle: dStyles.tabBarBackgroundColor,
                                 headerLeft: null,
                             }}

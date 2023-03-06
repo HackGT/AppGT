@@ -132,12 +132,17 @@ export function ScavengerHuntTab(props) {
           </Text>
         ) : null}
       </View>
-      <Text style={[dynamicStyles.text, styles.infoText]}>
-        {
-          "Scavenger Hunt is a fun way to earn points for completing challenges!"
-        }
-      </Text>
-
+      {hackathon.scavengerHunts.length === 0 ? (
+        <Text style={[dynamicStyles.text, styles.infoText]}>
+          {`Scavenger Hunt is not a part of ${hackathon.name}. Check back when we host our other hexathons!`}
+        </Text>
+      ) : (
+        <Text style={[dynamicStyles.text, styles.infoText]}>
+          {
+            "Scavenger Hunt is a fun way to earn points for completing challenges!"
+          }
+        </Text>
+      )}
       <View style={styles.headerButtons}>
         {scavHuntButtons}
         {crosswordPuzzleButton()}

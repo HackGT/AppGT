@@ -5,7 +5,7 @@ import { InteractionsTab } from "./InteractionsTab";
 import { InteractionScreen } from './InteractionScreen';
 import { InteractionsStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
-import HackGTIcon from "../../../assets/images/HackGTIcon";
+import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function InteractionsStackScreen({ navigation }) {
@@ -18,7 +18,7 @@ export default function InteractionsStackScreen({ navigation }) {
             <InteractionsStack.Screen
               options={{
                 headerTitleAlign: "left",
-                headerTitle: (props) => <HackGTIcon {...props} />,
+                headerTitle: (props) => <HexlabsIcon {...props} />,
                 headerStyle: dStyles.tabBarBackgroundColor,
               }}
               name="HackGT"
@@ -28,7 +28,7 @@ export default function InteractionsStackScreen({ navigation }) {
             <InteractionsStack.Screen
               options={{
                 headerTitleAlign: "left",
-                headerTitle: (props) => <HackGTIcon {...props} />,
+                headerTitle: (props) => <HexlabsIcon {...props} />,
                 headerStyle: dStyles.tabBarBackgroundColor,
                 headerLeft: null,
               }}

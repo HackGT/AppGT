@@ -6,7 +6,7 @@ import { ScavengerHuntStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import { ScavHuntProvider } from "../../state/scavHunt";
 import { ScavHuntItem } from "./ScavHuntItem";
-import HackGTIcon from "../../../assets/images/HackGTIcon";
+import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 
 export default function ScavengerHuntStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
@@ -16,7 +16,7 @@ export default function ScavengerHuntStackScreen({ navigation }) {
         <ScavengerHuntStack.Screen
           options={{
             headerTitleAlign: "left",
-            headerTitle: (props) => <HackGTIcon {...props} />,
+            headerTitle: (props) => <HexlabsIcon {...props} />,
             headerStyle: dStyles.tabBarBackgroundColor,
           }}
           name="HackGT"
@@ -26,7 +26,7 @@ export default function ScavengerHuntStackScreen({ navigation }) {
         <ScavengerHuntStack.Screen
           options={{
             headerTitleAlign: "left",
-            headerTitle: (props) => <HackGTIcon {...props} />,
+            headerTitle: (props) => <HexlabsIcon {...props} />,
             headerStyle: dStyles.tabBarBackgroundColor,
             headerLeft: null,
           }}
@@ -36,7 +36,7 @@ export default function ScavengerHuntStackScreen({ navigation }) {
         <ScavengerHuntStack.Screen
           options={{
             headerTitleAlign: "left",
-            headerTitle: (props) => <HackGTIcon {...props} />,
+            headerTitle: (props) => <HexlabsIcon {...props} />,
             headerStyle: dStyles.tabBarBackgroundColor,
             headerLeft: null,
           }}

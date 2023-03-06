@@ -5,7 +5,7 @@ import { InformationTab } from "./InformationTab";
 import { InformationStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 
-import HackGTIcon from "../../../assets/images/HackGTIcon";
+import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 
 export default function InformationStackScreen({ navigation }) {
   const dStyles = useDynamicStyleSheet(dynamicStyles);
@@ -14,7 +14,7 @@ export default function InformationStackScreen({ navigation }) {
       <InformationStack.Screen
         options={{
           headerTitleAlign: "left",
-          headerTitle: (props) => <HackGTIcon {...props} />,
+          headerTitle: (props) => <HexlabsIcon {...props} />,
           headerStyle: dStyles.tabBarBackgroundColor,
         }}
         name="HackGT"

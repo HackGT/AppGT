@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { Animated, Easing } from "react-native";
-import HackGTIcon from "../../assets/images/Logo";
+import HexlabsIcon from "../../assets/images/Logo";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 export default function SplashScreen(props) {
@@ -44,7 +44,7 @@ export default function SplashScreen(props) {
         dynamicStyles.backgroundColor,
       ]}
     >
-      <HackGTIcon width={256} height={256} />
+      <HexlabsIcon width={256} height={256} />
     </Animated.View>
   );
 }

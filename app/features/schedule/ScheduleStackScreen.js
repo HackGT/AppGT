@@ -12,7 +12,7 @@ import { dynamicStyles } from "../../theme";
 import SearchIcon from "../../../assets/images/Search";
 import StarOnIcon from "../../../assets/images/StarLargeOn";
 import StarOffIcon from "../../../assets/images/StarLargeOff";
-import HackGTIcon from "../../../assets/images/HackGTIcon";
+import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 
 export default function ScheduleStackScreen({ navigation }) {
   const { state, toggleIsStarSchedule } = useContext(HackathonContext);
@@ -22,7 +22,7 @@ export default function ScheduleStackScreen({ navigation }) {
       <ScheduleStack.Screen
         options={{
           headerTitleAlign: "left",
-          headerTitle: () => <HackGTIcon />,
+          headerTitle: () => <HexlabsIcon />,
           headerRight: () => (
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity onPress={toggleIsStarSchedule}>
