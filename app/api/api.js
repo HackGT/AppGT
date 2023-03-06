@@ -1,6 +1,6 @@
 export const CURRENT_HEXATHON = {
-  id: "62d9ed68d0a69b88c06bdfb2",
-  name: "HackGT 9",
+  id: "63ead0663a8811f05391f579",
+  name: "Horizons 2023",
 };
 
 export const API_SERVICE_URLS = {
