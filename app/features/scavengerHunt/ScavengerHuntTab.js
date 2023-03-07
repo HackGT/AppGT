@@ -134,7 +134,7 @@ export function ScavengerHuntTab(props) {
       </View>
       {hackathon.scavengerHunts.length === 0 ? (
         <Text style={[dynamicStyles.text, styles.infoText]}>
-          {`Scavenger Hunt is not a part of ${hackathon.name}. Check back when we host our other hexathons!`}
+          {`Scavenger Hunt is not a part of ${hackathon.name}. Check back when we host our next event!`}
         </Text>
       ) : (
         <Text style={[dynamicStyles.text, styles.infoText]}>
