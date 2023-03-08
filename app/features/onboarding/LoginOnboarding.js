@@ -6,6 +6,8 @@ import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { signInWithCustomToken } from "firebase/auth";
 import Logo from "../../../assets/images/Logo";
 import LogoText from "../../../assets/images/LogoText";
+import HexlabsIcon from "../../../assets/images/HexlabsIcon";
+
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUsers, faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { ContentInfo } from "./ContentInfo";
@@ -21,7 +23,7 @@ const AUTH_URL = "https://auth.api.hexlabs.org";
 export function LoginOnboarding(props) {
   const auth = getAuth(app);
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageCount, setPageCount] = useState(3);
+  const [pageCount, setPageCount] = useState(2);
 
   const login = async () => {
     try {
@@ -70,11 +72,8 @@ export function LoginOnboarding(props) {
   };
 
   const createScreens = (width) => {
-    const hackgtLogo = (
-      <View style={styles.firstScreenLogo}>
-        <Logo />
-        <LogoText style={styles.firstScreenLogoText} />
-      </View>
+    const hexlabsLogo = (
+      <HexlabsIcon width={256} height={256} />
     );
 
     return (
@@ -118,7 +117,7 @@ export function LoginOnboarding(props) {
             />
           );
 
-          const screens = [hackgtLogo, personalizeSchedule, joinVirtually];
+          const screens = [hexlabsLogo, personalizeSchedule];
 
           return screens.map((content, i) => (
             <View
