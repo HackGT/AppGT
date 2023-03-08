@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-// firebase 
+// firebase
 apply plugin: 'com.google.gms.google-services' // <- Add this line
 
 import com.android.build.OutputFile
@@ -143,14 +143,14 @@ android {
         applicationId "com.appgt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5146100
-        versionName '1.5.0'
+        versionCode 5146101
+        versionName '1.5.1'
         manifestPlaceholders = [
             appAuthRedirectScheme: 'gt.hack.live'
         ]
         missingDimensionStrategy 'react-native-camera', 'general'
     }
-    
+
     splits {
         abi {
             reset()
@@ -211,9 +211,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    
+
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
-    
+
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
