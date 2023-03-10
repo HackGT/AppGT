@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { HackathonContext } from "../../state/hackathon";
 import { Card } from "../../components/Card";
 import { Linking } from "react-native";
@@ -26,6 +27,16 @@ export function InformationTab() {
   const { dynamicStyles } = useContext(ThemeContext);
   const { firebaseUser } = useContext(AuthContext);
   const [showQRCode, setShowQRCode] = useState(false);
+
+  const profilePage = async () => {
+    try {
+      const result = await InAppBrowser.open("https://login.hexlabs.org/profile", {
+        ephemeralWebSession: true,
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     const getApplication = async () => {
@@ -163,16 +174,27 @@ export function InformationTab() {
         style={[
           styles.logOutButton,
           {
+            backgroundColor: "lightred",
             borderColor: dynamicStyles.tintColor.color,
             marginVertical: 20,
           },
         ]}
         onPress={() => {
-          AsyncStorage.clear();
-          auth.signOut();
+
         }}
       >
         <Text style={[dynamicStyles.text, styles.buttonText]}>{"Log Out"}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.DangerButton,
+          {
+            borderColor: dynamicStyles.tintColor.color,
+          },
+        ]}
+        onPress={() => profilePage()}
+      >
+        <Text style={[dynamicStyles.text, styles.buttonText]}>{"Delete Profile"}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -225,6 +247,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   logOutButton: {
+    margin: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    flex: 0.5,
+  },
+  DangerButton: {
+    backgroundColor: "#FFCCCB",
     margin: 15,
     borderRadius: 10,
     borderWidth: 1,
