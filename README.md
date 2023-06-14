@@ -7,7 +7,7 @@ AppGT is the offical app for HackGT on the App Store and Google Play Store. The 
 First, make sure to read React Native's offical [Environment Setup](https://reactnative.dev/docs/environment-setup). Follow the "React Native CLI Quickstart" and select macOS, Windows, Linux and specify either iOS or Android. Following it exactly is extremely important in getting the project to run without any errors.
 
 - Clone project and cd into AppGT
-- Run `npm install` to install the dependencies 
+- Run `npm install` to install the dependencies (use Node 14)
 
 ### Running iOS
 
