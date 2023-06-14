@@ -1,6 +1,11 @@
+import remoteConfig from '@react-native-firebase/remote-config';
+
+const hexathon = remoteConfig().getValue('hexathon').asString();
+const hexathonName = remoteConfig().getValue('hexathonName').asString();
+
 export const CURRENT_HEXATHON = {
-  id: "63ead0663a8811f05391f579",
-  name: "Horizons 2023",
+  id: hexathon,
+  name: hexathonName,
 };
 
 export const API_SERVICE_URLS = {

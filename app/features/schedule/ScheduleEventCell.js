@@ -71,7 +71,7 @@ export function ScheduleEventCell(props) {
         <EventTypeView eventType={eventType} />
         {event.tags &&
           event.tags.map((tag) => (
-            <Text style={[dynamicStyles.secondaryText, styles.tagFont]}>
+            <Text key={tag.name} style={[dynamicStyles.secondaryText, styles.tagFont]}>
               {tag.name}
             </Text>
           ))}

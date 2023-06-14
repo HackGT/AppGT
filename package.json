@@ -19,6 +19,7 @@
     "@react-native-firebase/app": "^11.5.0",
     "@react-native-firebase/iid": "^11.5.0",
     "@react-native-firebase/messaging": "^11.5.0",
+    "@react-native-firebase/remote-config": "^11.5.0",
     "@react-navigation/bottom-tabs": "^5.11.15",
     "@react-navigation/native": "^5.9.8",
     "@react-navigation/stack": "^5.14.9",
