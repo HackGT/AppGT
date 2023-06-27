@@ -44,6 +44,7 @@ import { HackathonContext } from "./app/state/hackathon";
 import "intl";
 import "intl/locale-data/jsonp/en";
 import remoteConfig from "@react-native-firebase/remote-config";
+import { DEFAULT_HEXATHON } from "./app/api/api";
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
@@ -188,8 +189,8 @@ function App(props) {
         .then(() =>
           remoteConfig()
             .setDefaults({
-              hexathon: "62d9ed68d0a69b88c06bdfb2",
-              hexathonName: "HackGT 9",
+              hexathon: DEFAULT_HEXATHON.id,
+              hexathonName: DEFAULT_HEXATHON.name,
             })
             .then(() => remoteConfig().fetchAndActivate())
             .then((fetchedRemotely) => {
