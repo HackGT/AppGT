@@ -1,7 +1,20 @@
-export const CURRENT_HEXATHON = {
+import remoteConfig from "@react-native-firebase/remote-config";
+
+export const DEFAULT_HEXATHON = {
   id: "63ead0663a8811f05391f579",
   name: "Horizons 2023",
 };
+
+export const CURRENT_HEXATHON = DEFAULT_HEXATHON;
+
+remoteConfig()
+  .fetchAndActivate()
+  .then(() => {
+    const hexathon = remoteConfig().getValue("hexathon").asString();
+    const hexathonName = remoteConfig().getValue("hexathonName").asString();
+    CURRENT_HEXATHON.id = hexathon;
+    CURRENT_HEXATHON.name = hexathonName;
+  });
 
 export const API_SERVICE_URLS = {
   registration: "https://registration.api.hexlabs.org",
@@ -25,7 +38,6 @@ export const EVENT_TYPE_COLOR_MAP = {
 };
 
 export const logInteraction = async (token, type, userId, identifier) => {
-
   let body = {
     userId: userId,
     type: type,
@@ -48,7 +60,7 @@ export const logInteraction = async (token, type, userId, identifier) => {
     const json = await response.json();
     return { status: response.status, json };
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return {
       status: 500,
       json: { message: "Network error when logging interaction" },

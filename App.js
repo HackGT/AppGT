@@ -43,6 +43,8 @@ import { app } from "./firebase";
 import { HackathonContext } from "./app/state/hackathon";
 import "intl";
 import "intl/locale-data/jsonp/en";
+import remoteConfig from "@react-native-firebase/remote-config";
+import { DEFAULT_HEXATHON } from "./app/api/api";
 
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
@@ -178,6 +180,39 @@ function App(props) {
     }
   }, []);
 
+  useEffect(() => {
+    try {
+      remoteConfig()
+        .setConfigSettings({
+          isDeveloperModeEnabled: __DEV__,
+        })
+        .then(() =>
+          remoteConfig()
+            .setDefaults({
+              hexathon: DEFAULT_HEXATHON.id,
+              hexathonName: DEFAULT_HEXATHON.name,
+            })
+            .then(() => remoteConfig().fetchAndActivate())
+            .then((fetchedRemotely) => {
+              if (fetchedRemotely) {
+                console.log(
+                  "Configs were retrieved from the backend and activated."
+                );
+              } else {
+                console.log(
+                  "No configs were fetched from the backend, and the local configs were already activated"
+                );
+              }
+              return remoteConfig().fetch();
+            })
+        );
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  const hexathon = remoteConfig().getValue("hexathon").asString();
+
   const Stack = createStackNavigator();
 
   const splashGrowModal = (
@@ -214,7 +249,7 @@ function App(props) {
             return (
               <HackathonProvider
                 initialValue={{
-                  hackathon: hackathon,
+                  hackathon: hexathon,
                   starredIds: starredIds,
                   isStarSchedule: isStarSchedule,
                 }}
