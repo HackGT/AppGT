@@ -61,60 +61,63 @@ export function InformationTab() {
 
   const hackathon = state.hackathon;
 
-  // create button blocks for "Join Slack", "View Event site", etc
-  const buttonBlock = hackathon.blocks.find(
-    (e) => e.slug && e.slug === "info-button-links"
-  );
+  // // create button blocks for "Join Slack", "View Event site", etc
+  // const buttonBlock = hackathon.blocks.find(
+  //   (e) => e.slug && e.slug === "info-button-links"
+  // );
 
   let headerButtons = [];
 
-  if (buttonBlock && buttonBlock.content) {
-    const buttonJSON = JSON.parse(buttonBlock.content);
-    if (buttonJSON) {
-      headerButtons = buttonJSON.map((button) => {
-        return (
-          <TouchableOpacity
-            key={button.title}
-            style={[
-              styles.headerButton,
-              {
-                borderColor: dynamicStyles.tintColor.color,
-              },
-            ]}
-            onPress={() => {
-              Linking.openURL(button.url).catch((err) => {
-                if (err) {
-                  if (button.backupURL) {
-                    Linking.openURL(button.backupURL).catch((err) =>
-                      Alert.alert(
-                        "Redirect Error",
-                        "The link you selected cannot be opened."
-                      )
-                    );
-                  } else {
-                    Alert.alert(
-                      "Redirect Error",
-                      "The link you selected cannot be opened."
-                    );
-                  }
-                }
-              });
-            }}
-          >
-            <Text style={[dynamicStyles.text, styles.buttonText]}>
-              {button.title}
-            </Text>
-          </TouchableOpacity>
-        );
-      });
-    }
-  }
+  // if (buttonBlock && buttonBlock.content) {
+  //   const buttonJSON = JSON.parse(buttonBlock.content);
+  //   if (buttonJSON) {
+  //     headerButtons = buttonJSON.map((button) => {
+  //       return (
+  //         <TouchableOpacity
+  //           key={button.title}
+  //           style={[
+  //             styles.headerButton,
+  //             {
+  //               borderColor: dynamicStyles.tintColor.color,
+  //             },
+  //           ]}
+  //           onPress={() => {
+  //             Linking.openURL(button.url).catch((err) => {
+  //               if (err) {
+  //                 if (button.backupURL) {
+  //                   Linking.openURL(button.backupURL).catch((err) =>
+  //                     Alert.alert(
+  //                       "Redirect Error",
+  //                       "The link you selected cannot be opened."
+  //                     )
+  //                   );
+  //                 } else {
+  //                   Alert.alert(
+  //                     "Redirect Error",
+  //                     "The link you selected cannot be opened."
+  //                   );
+  //                 }
+  //               }
+  //             });
+  //           }}
+  //         >
+  //           <Text style={[dynamicStyles.text, styles.buttonText]}>
+  //             {button.title}
+  //           </Text>
+  //         </TouchableOpacity>
+  //       );
+  //     });
+  //   }
+  // }
 
-  let faqs = [...hackathon.faqs];
-  // sort faq based on priority so important questions come first
-  faqs.sort(function (a, b) {
-    return parseFloat(a.index) - parseFloat(b.index);
-  });
+  // let faqs = [...hackathon.faqs];
+  let faqs = hackathon.blocks.find(
+    (e) => e.slug && e.slug === "faq"
+  );
+  // // sort faq based on priority so important questions come first
+  // faqs.sort(function (a, b) {
+  //   return parseFloat(a.index) - parseFloat(b.index);
+  // });
 
   // for (i in faqs) {
   //   faqList.push(
@@ -157,7 +160,7 @@ export function InformationTab() {
 
       <Text style={[dynamicStyles.text, styles.headerText]}>FAQs</Text>
       <View style={styles.faqContainer}>
-        {faqs.map((faq) => (
+        {faqs && faqs.map((faq) => (
           <View key={faq.question}>
             <Text style={[dynamicStyles.text, styles.faqQuestion]}>
               {faq.question}

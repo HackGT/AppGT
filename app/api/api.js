@@ -68,6 +68,24 @@ export const logInteraction = async (token, type, userId, identifier) => {
   }
 };
 
+export const getHexathon = async (token) => {
+  try {
+    const response = await fetch(`${API_SERVICE_URLS.hexathons}/hexathons/${CURRENT_HEXATHON.id}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    const json = await response.json();
+    return { status: response.status, json };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting hexathons" },
+    };
+  }
+};
+
 export const getUserProfile = async (token, uid) => {
   try {
     const response = await fetch(`${API_SERVICE_URLS.users}/users/${uid}`, {
@@ -123,6 +141,27 @@ export const getEvents = async (token) => {
       return Date.parse(a.startDate) - Date.parse(b.startDate);
     });
     return { status: response.status, eventJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting application" },
+    };
+  }
+};
+
+export const getBlocks = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    const blockJson = await response.json();
+    return { status: response.status, blockJson };
   } catch (err) {
     return {
       status: 500,
