@@ -160,12 +160,34 @@ export const getBlocks = async (token) => {
         },
       }
     );
-    const blockJson = await response.json();
+    let blockJson = await response.json();
+    blockJson = blockJson.filter((block) => block.slug.includes("[mobile]"))
     return { status: response.status, blockJson };
   } catch (err) {
     return {
       status: 500,
       json: { message: "Network error when getting application" },
+    };
+  }
+};
+
+export const getScavengerHunt = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}&slug=[mobile]scavenger-hunt`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    const scavengerHuntJson = await response.json();
+    return { status: response.status, scavengerHuntJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting app }" },
     };
   }
 };

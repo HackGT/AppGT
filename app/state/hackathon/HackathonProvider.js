@@ -7,7 +7,7 @@ import {
 } from "./HackathonActionTypes";
 import HackathonContext from "./HackathonContext";
 import { fetchHackathonData } from "../../cms";
-import { getEvents, getHexathon, getBlocks } from "../../api/api";
+import { getEvents, getHexathon, getBlocks, getScavengerHunt } from "../../api/api";
 
 export default function HackathonProvider({
   initialValue,
@@ -45,15 +45,17 @@ export default function HackathonProvider({
     // const hackathons = data.data.allHackathons;
 
     const token = await fUser.getIdToken();
-    const hexathon = getHexathon(token);
+    const raw = await getHexathon(token);
+    const hexathon = raw.json;
+
     if (hexathon) {
       const { eventJson } = await getEvents(token);
       const { blockJson } = await getBlocks(token);
+      const { scavengerHuntJson } = await getScavengerHunt(token);
 
-      hexathon.events = eventJson
-      hexathon.blocks = blockJson
-      
-      // console.log(hexathon.blocks);
+      hexathon.events = (eventJson ? eventJson : [])
+      hexathon.blocks = (blockJson ? blockJson : [])
+      hexathon.scavengerHunt = (scavengerHuntJson ? scavengerHuntJson : [])
 
       value.state.hackathon = hexathon;
       setIsLoading(false);

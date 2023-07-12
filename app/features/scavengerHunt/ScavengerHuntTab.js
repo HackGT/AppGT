@@ -20,13 +20,13 @@ export function ScavengerHuntTab(props) {
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
 
-  var scavHunts = hackathon.scavengerHunts.filter(
+  var scavHunts = hackathon.scavengerHunt.filter(
     (challenge) => challenge.isQR
   );
   scavHunts.sort((item1, item2) => {
     return item1.index - item2.index;
   });
-  const crosswordPuzzleChallenges = hackathon.scavengerHunts.filter(
+  const crosswordPuzzleChallenges = hackathon.scavengerHunt.filter(
     (challenge) => !challenge.isQR
   );
   const crosswordPuzzleButton = () => {
@@ -132,7 +132,7 @@ export function ScavengerHuntTab(props) {
           </Text>
         ) : null}
       </View>
-      {hackathon.scavengerHunts.length === 0 ? (
+      {hackathon.scavengerHunt.length === 0 ? (
         <Text style={[dynamicStyles.text, styles.infoText]}>
           {`Scavenger Hunt is not a part of ${hackathon.name}. Check back when we host our next event!`}
         </Text>

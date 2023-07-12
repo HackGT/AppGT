@@ -13,26 +13,18 @@ import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
 import { getStartEndTime } from "../../util";
-import { getEvents } from "../../api/api";
 import { AuthContext } from "../../contexts/AuthContext";
+import { HackathonContext } from "../../state/hackathon";
 
 export function InteractionsTab(props) {
   const { dynamicStyles } = useContext(ThemeContext);
-  const { firebaseUser } = useContext(AuthContext);
-  const [events, setEvents] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState(null);
 
-  useEffect(() => {
-    async function refreshEventState() {
-      let token = await firebaseUser.getIdToken();
-      let { eventJson } = await getEvents(token);
-      setEvents(eventJson);
-    }
-
-    refreshEventState();
-  }, []);
+  const hackathonContext = useContext(HackathonContext);
+  const hackathon = hackathonContext.state.hackathon;
+  const events = hackathon.events;
 
   const searchEvents = (value) => {
     var newEvents = events.filter((e) => e.name.includes(searchText));
