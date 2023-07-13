@@ -68,6 +68,24 @@ export const logInteraction = async (token, type, userId, identifier) => {
   }
 };
 
+export const getHexathon = async (token) => {
+  try {
+    const response = await fetch(`${API_SERVICE_URLS.hexathons}/hexathons/${CURRENT_HEXATHON.id}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    const json = await response.json();
+    return { status: response.status, json };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting hexathons" },
+    };
+  }
+};
+
 export const getUserProfile = async (token, uid) => {
   try {
     const response = await fetch(`${API_SERVICE_URLS.users}/users/${uid}`, {
@@ -127,6 +145,49 @@ export const getEvents = async (token) => {
     return {
       status: 500,
       json: { message: "Network error when getting application" },
+    };
+  }
+};
+
+export const getBlocks = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    let blockJson = await response.json();
+    blockJson = blockJson.filter((block) => block.slug.includes("[mobile]"))
+    return { status: response.status, blockJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting application" },
+    };
+  }
+};
+
+export const getScavengerHunt = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}&slug=[mobile]scavenger-hunt`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    const scavengerHuntJson = await response.json();
+    return { status: response.status, scavengerHuntJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting app }" },
     };
   }
 };

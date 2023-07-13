@@ -7,7 +7,7 @@ import {
 } from "./HackathonActionTypes";
 import HackathonContext from "./HackathonContext";
 import { fetchHackathonData } from "../../cms";
-import { getEvents } from "../../api/api";
+import { getEvents, getHexathon, getBlocks, getScavengerHunt } from "../../api/api";
 
 export default function HackathonProvider({
   initialValue,
@@ -42,22 +42,22 @@ export default function HackathonProvider({
   }, []);
 
   const getHackathon = async (fUser) => {
-    const data = await fetchHackathonData();
-    // no response back, just return
-    if (data == null || data.data == null) {
-      return;
-    }
+    // const hackathons = data.data.allHackathons;
 
-    const hackathons = data.data.allHackathons;
-    if (hackathons != null && hackathons.length != 0) {
-      let hackathon = hackathons[0];
-      const token = await fUser.getIdToken();
+    const token = await fUser.getIdToken();
+    const raw = await getHexathon(token);
+    const hexathon = raw.json;
+
+    if (hexathon) {
       const { eventJson } = await getEvents(token);
-      // const testEvent = { description: 'test desc', startDate: "2022-10-21T00:00:00.000Z", endDate: "2022-11-20T02:00:00.000Z", hexathon: "62d9ed68d0a69b88c06bdfb2", id: "63516bdad676a93b24d46010", name: "test name", type: "ceremony", location: [{ name: 'Ferst Center', id: "63516bdad676a93b24d46011" }], tags: [] };
-      // hackathon.events = eventJson
-      // hackathon.events.push(testEvent)
-      hackathon.events = eventJson
-      value.state.hackathon = hackathon;
+      const { blockJson } = await getBlocks(token);
+      const { scavengerHuntJson } = await getScavengerHunt(token);
+
+      hexathon.events = (eventJson ? eventJson : [])
+      hexathon.blocks = (blockJson ? blockJson : [])
+      hexathon.scavengerHunt = (scavengerHuntJson ? scavengerHuntJson : [])
+
+      value.state.hackathon = hexathon;
       setIsLoading(false);
     } else {
       // if still loading, present error asking for retry
