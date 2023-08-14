@@ -1,9 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
-import { WebView } from "react-native-webview";
-import UserAgent from "react-native-user-agent";
-import { fetchHackathonData } from "./app/cms";
-import { StatusBar, Modal, SafeAreaView, Platform, View } from "react-native";
+import { StatusBar, Modal, Platform } from "react-native";
 import { LoginOnboarding } from "./app/features/onboarding/LoginOnboarding";
 import SplashScreen from "./app/components/SplashScreen";
 import { EventOnboarding } from "./app/features/onboarding/EventOnboarding";
@@ -11,6 +8,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import messaging from "@react-native-firebase/messaging"
 import {
   faInfoCircle,
   faCalendar,
@@ -19,7 +17,6 @@ import {
   faIdBadge,
 } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
-import { authorize } from "react-native-app-auth";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
 import {
@@ -28,7 +25,6 @@ import {
 } from "react-native-dark-mode";
 import { dynamicStyles } from "./app/theme";
 import firebase from "@react-native-firebase/app";
-import messaging from "@react-native-firebase/messaging";
 import {
   ScheduleStackScreen,
   InformationStackScreen,
@@ -149,7 +145,7 @@ function App(props) {
 
   useEffect(() => {
     // setup firebase notification support
-    firebase.messaging().subscribeToTopic("all");
+    messaging().subscribeToTopic("all");
     // alert(firebase.messaging().getToken());
 
     PushNotification.createChannel(
@@ -316,10 +312,10 @@ function App(props) {
                                   children={() => (
                                     <EventOnboarding
                                       onDone={() => {
-                                        setPastEventOnboardID(hackathon.id);
+                                        setPastEventOnboardID(hexathon);
                                         AsyncStorage.setItem(
                                           "pastEventOnboardID",
-                                          hackathon.id
+                                          hexathon
                                         );
                                       }}
                                     ></EventOnboarding>
