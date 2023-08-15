@@ -183,7 +183,7 @@ export function InformationTab() {
           },
         ]}
         onPress={() => {
-
+          auth.signOut();
         }}
       >
         <Text style={[dynamicStyles.text, styles.buttonText]}>{"Log Out"}</Text>
