@@ -7,7 +7,12 @@ import {
 } from "./HackathonActionTypes";
 import HackathonContext from "./HackathonContext";
 import { fetchHackathonData } from "../../cms";
-import { getEvents, getHexathon, getBlocks, getScavengerHunt } from "../../api/api";
+import {
+  getEvents,
+  getHexathon,
+  getBlocks,
+  getScavengerHunt,
+} from "../../api/api";
 
 export default function HackathonProvider({
   initialValue,
@@ -53,9 +58,9 @@ export default function HackathonProvider({
       const { blockJson } = await getBlocks(token);
       const { scavengerHuntJson } = await getScavengerHunt(token);
 
-      hexathon.events = (eventJson ? eventJson : [])
-      hexathon.blocks = (blockJson ? blockJson : [])
-      hexathon.scavengerHunt = (scavengerHuntJson ? scavengerHuntJson : [])
+      hexathon.events = eventJson ? eventJson : [];
+      hexathon.blocks = blockJson ? blockJson : [];
+      hexathon.scavengerHunt = scavengerHuntJson ? scavengerHuntJson : [];
 
       value.state.hackathon = hexathon;
       setIsLoading(false);

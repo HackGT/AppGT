@@ -26,7 +26,7 @@ import { Card } from "../../components/Card";
 export function CheckInNFC(props) {
   const { application } = props.route.params;
   const { dynamicStyles } = useContext(ThemeContext);
-  const { firebaseUser } = useContext(AuthContext)
+  const { firebaseUser } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(async () => {
@@ -87,12 +87,17 @@ export function CheckInNFC(props) {
     if (!success) {
       createAlert("There was an issue writing to the badge. Try again.");
     } else {
-      
-      const token = await firebaseUser.getIdToken()
-      const interactionResponse = await logInteraction(token, 'check-in', application.userId)
+      const token = await firebaseUser.getIdToken();
+      const interactionResponse = await logInteraction(
+        token,
+        "check-in",
+        application.userId
+      );
       if (interactionResponse.status !== 200) {
-        console.log(interactionResponse)
-        createAlert('There was an issue logging the checkin interaction. However, badge was successfully written to.')
+        console.log(interactionResponse);
+        createAlert(
+          "There was an issue logging the checkin interaction. However, badge was successfully written to."
+        );
       } else {
         props.navigation.goBack();
       }

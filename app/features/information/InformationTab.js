@@ -6,13 +6,10 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { HackathonContext } from "../../state/hackathon";
 import { Card } from "../../components/Card";
-import { Linking } from "react-native";
 import FontMarkdown from "../../components/FontMarkdown";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -30,13 +27,16 @@ export function InformationTab() {
 
   const profilePage = async () => {
     try {
-      const result = await InAppBrowser.open("https://login.hexlabs.org/profile", {
-        ephemeralWebSession: true,
-      });
+      const result = await InAppBrowser.open(
+        "https://login.hexlabs.org/profile",
+        {
+          ephemeralWebSession: true,
+        }
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     const getApplication = async () => {
@@ -160,17 +160,18 @@ export function InformationTab() {
 
       <Text style={[dynamicStyles.text, styles.headerText]}>FAQs</Text>
       <View style={styles.faqContainer}>
-        {faqs && faqs.map((faq) => (
-          <View key={faq.question}>
-            <Text style={[dynamicStyles.text, styles.faqQuestion]}>
-              {faq.question}
-            </Text>
+        {faqs &&
+          faqs.map((faq) => (
+            <View key={faq.question}>
+              <Text style={[dynamicStyles.text, styles.faqQuestion]}>
+                {faq.question}
+              </Text>
 
-            <Card>
-              <FontMarkdown fontFamily="SpaceMono">{faq.answer}</FontMarkdown>
-            </Card>
-          </View>
-        ))}
+              <Card>
+                <FontMarkdown fontFamily="SpaceMono">{faq.answer}</FontMarkdown>
+              </Card>
+            </View>
+          ))}
       </View>
 
       <TouchableOpacity
@@ -197,7 +198,9 @@ export function InformationTab() {
         ]}
         onPress={() => profilePage()}
       >
-        <Text style={[dynamicStyles.text, styles.buttonText]}>{"Delete Profile"}</Text>
+        <Text style={[dynamicStyles.text, styles.buttonText]}>
+          {"Delete Profile"}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

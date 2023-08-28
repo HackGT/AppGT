@@ -20,9 +20,7 @@ export function ScavengerHuntTab(props) {
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
 
-  var scavHunts = hackathon.scavengerHunt.filter(
-    (challenge) => challenge.isQR
-  );
+  var scavHunts = hackathon.scavengerHunt.filter((challenge) => challenge.isQR);
   scavHunts.sort((item1, item2) => {
     return item1.index - item2.index;
   });

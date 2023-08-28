@@ -70,12 +70,15 @@ export const logInteraction = async (token, type, userId, identifier) => {
 
 export const getHexathon = async (token) => {
   try {
-    const response = await fetch(`${API_SERVICE_URLS.hexathons}/hexathons/${CURRENT_HEXATHON.id}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/hexathons/${CURRENT_HEXATHON.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     const json = await response.json();
     return { status: response.status, json };
   } catch (err) {
@@ -161,7 +164,7 @@ export const getBlocks = async (token) => {
       }
     );
     let blockJson = await response.json();
-    blockJson = blockJson.filter((block) => block.display == "mobile")
+    blockJson = blockJson.filter((block) => block.display == "mobile");
     return { status: response.status, blockJson };
   } catch (err) {
     return {

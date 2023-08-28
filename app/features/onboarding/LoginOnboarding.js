@@ -51,7 +51,7 @@ export function LoginOnboarding(props) {
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -72,9 +72,7 @@ export function LoginOnboarding(props) {
   };
 
   const createScreens = (width) => {
-    const hexlabsLogo = (
-      <HexlabsIcon width={256} height={256} />
-    );
+    const hexlabsLogo = <HexlabsIcon width={256} height={256} />;
 
     return (
       <ThemeContext.Consumer>

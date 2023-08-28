@@ -13,9 +13,12 @@ export function ScheduleEventCell(props) {
   const { dynamicStyles } = useContext(ThemeContext);
 
   const event = props.event;
-  const eventType = event.type ?? 'none'
+  const eventType = event.type ?? "none";
   const title = event.name;
-  const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
+  const { startTime, endTime } = getStartEndTime(
+    event.startDate,
+    event.endDate
+  );
   const location =
     event != null &&
     event.location != null &&
@@ -71,7 +74,10 @@ export function ScheduleEventCell(props) {
         <EventTypeView eventType={eventType} />
         {event.tags &&
           event.tags.map((tag) => (
-            <Text key={tag.name} style={[dynamicStyles.secondaryText, styles.tagFont]}>
+            <Text
+              key={tag.name}
+              style={[dynamicStyles.secondaryText, styles.tagFont]}
+            >
               {tag.name}
             </Text>
           ))}

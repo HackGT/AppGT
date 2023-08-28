@@ -51,7 +51,7 @@ export function ScanScreen(props) {
     try {
       json = JSON.parse(text);
     } catch (error) {
-      console.log('NFC Scan error: ', error)
+      console.log("NFC Scan error: ", error);
     } finally {
       if (!json.uid) {
         createAlert("Invalid badge");
@@ -110,7 +110,7 @@ export function ScanScreen(props) {
     setStatus(interactionResponse.status);
 
     if (interactionResponse.status !== 200) {
-      console.log(interactionResponse)
+      console.log(interactionResponse);
       createAlert(interactionResponse.json.message);
       return false;
     }
@@ -127,8 +127,8 @@ export function ScanScreen(props) {
     if (success) {
       await onNFCTagScanned(data);
     } else {
-      createAlert(data)
-      setStatus(500)
+      createAlert(data);
+      setStatus(500);
     }
 
     if (Platform.OS === "android") {

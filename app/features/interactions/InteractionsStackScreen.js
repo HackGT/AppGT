@@ -2,7 +2,7 @@ import React from "react";
 import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { InteractionsTab } from "./InteractionsTab";
-import { InteractionScreen } from './InteractionScreen';
+import { InteractionScreen } from "./InteractionScreen";
 import { InteractionsStack } from "../../navigation";
 import { dynamicStyles } from "../../theme";
 import HexlabsIcon from "../../../assets/images/HexlabsIcon";

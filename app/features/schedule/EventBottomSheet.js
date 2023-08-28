@@ -1,5 +1,11 @@
 import React, { useEffect, useContext, useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { EventTypeView } from "./EventTypeView";
 import RBSheet from "react-native-raw-bottom-sheet";
 import X from "../../../assets/images/X";
@@ -27,7 +33,10 @@ export function EventBottomSheet(props) {
     const event = props.event;
     const title = event.name;
     const description = event.description;
-    const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate)
+    const { startTime, endTime } = getStartEndTime(
+      event.startDate,
+      event.endDate
+    );
     const location =
       event != null &&
       event.location != null &&
@@ -37,7 +46,7 @@ export function EventBottomSheet(props) {
         : "";
     const start = startTime;
     const end = endTime;
-    const eventType = event.type ?? 'none'
+    const eventType = event.type ?? "none";
 
     return (
       <ThemeContext.Consumer>
@@ -90,7 +99,7 @@ export function EventBottomSheet(props) {
                   </Text>
                 </TouchableOpacity>
               )}
-                <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
+              <FontMarkdown fontFamily="SpaceMono">{description}</FontMarkdown>
 
               <View style={styles.panelButtonCenterRoot}>
                 <TouchableOpacity

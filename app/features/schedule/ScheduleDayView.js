@@ -249,9 +249,7 @@ export function ScheduleDayView(props) {
           bottom: props.paddingHeight + 30,
         }}
         onPress={() => {
-          if (
-            currentScheduleRef != null
-          ) {
+          if (currentScheduleRef != null) {
             currentScheduleRef.current.scrollToIndex({
               index: props.initialEventIndex,
               animated: true,

@@ -10,4 +10,4 @@ export const ScheduleStack = createStackNavigator();
 export const InformationStack = createStackNavigator();
 export const ScavengerHuntStack = createStackNavigator();
 export const InteractionsStack = createStackNavigator();
-export const CheckInStack = createStackNavigator()
+export const CheckInStack = createStackNavigator();

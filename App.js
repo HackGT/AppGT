@@ -8,7 +8,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import messaging from "@react-native-firebase/messaging"
+import messaging from "@react-native-firebase/messaging";
 import {
   faInfoCircle,
   faCalendar,
