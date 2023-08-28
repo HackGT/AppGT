@@ -112,7 +112,7 @@ export function InformationTab() {
 
   // let faqs = [...hackathon.faqs];
   let faqs = hackathon.blocks.find(
-    (e) => e.slug && e.slug === "faq"
+    (e) => e.slug && e.display == "mobile" && e.slug === "faq"
   );
   // // sort faq based on priority so important questions come first
   // faqs.sort(function (a, b) {

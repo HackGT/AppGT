@@ -161,7 +161,7 @@ export const getBlocks = async (token) => {
       }
     );
     let blockJson = await response.json();
-    blockJson = blockJson.filter((block) => block.slug.includes("[mobile]"))
+    blockJson = blockJson.filter((block) => block.display == "mobile")
     return { status: response.status, blockJson };
   } catch (err) {
     return {
@@ -174,7 +174,7 @@ export const getBlocks = async (token) => {
 export const getScavengerHunt = async (token) => {
   try {
     const response = await fetch(
-      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}&slug=[mobile]scavenger-hunt`,
+      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}&slug=scavenger-hunt&display=mobile`,
       {
         method: "GET",
         headers: {
