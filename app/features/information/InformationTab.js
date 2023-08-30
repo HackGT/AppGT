@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
   DangerButton: {
-    backgroundColor: "#FFCCCB",
+    backgroundColor: "#CB4848",
     margin: 15,
     borderRadius: 10,
     borderWidth: 1,
