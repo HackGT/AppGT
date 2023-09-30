@@ -139,7 +139,6 @@ function App(props) {
 
     AsyncStorage.getItem("isStarSchedule", (error, result) => {
       result && setIsStarSchedule(result === true ? true : false);
-      console.log(isStarSchedule);
     });
 
     setIsFetchingData(false);
