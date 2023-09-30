@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
+  Linking,
   Text,
   TouchableOpacity,
   ScrollView,
@@ -12,103 +13,62 @@ import { HackathonContext } from "../../state/hackathon";
 import { Card } from "../../components/Card";
 import FontMarkdown from "../../components/FontMarkdown";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { AuthContext } from "../../contexts/AuthContext";
-import { getAuth } from "firebase/auth";
-import { app } from "../../../firebase";
-import QRCode from "react-native-qrcode-svg";
 import { CURRENT_HEXATHON, getRegistrationApplication } from "../../api/api";
 
 export function InformationTab() {
-  const auth = getAuth(app);
   const { state } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
-  const { firebaseUser } = useContext(AuthContext);
-  const [showQRCode, setShowQRCode] = useState(false);
-
-  const profilePage = async () => {
-    try {
-      const result = await InAppBrowser.open(
-        "https://login.hexlabs.org/profile",
-        {
-          ephemeralWebSession: true,
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const getApplication = async () => {
-      try {
-        const token = await firebaseUser.getIdToken();
-        const { json: data } = await getRegistrationApplication(
-          token,
-          CURRENT_HEXATHON.id,
-          firebaseUser.uid
-        );
-
-        if (data?.applications[0].status === "CONFIRMED") {
-          setShowQRCode(true);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    getApplication();
-  }, [firebaseUser]);
 
   const hackathon = state.hackathon;
 
   // // create button blocks for "Join Slack", "View Event site", etc
-  // const buttonBlock = hackathon.blocks.find(
-  //   (e) => e.slug && e.slug === "info-button-links"
-  // );
+  const buttonBlock = hackathon.blocks.find(
+    (e) => e.display == "mobile" && e.slug && e.slug === "info-button-links"
+  );
 
   let headerButtons = [];
 
-  // if (buttonBlock && buttonBlock.content) {
-  //   const buttonJSON = JSON.parse(buttonBlock.content);
-  //   if (buttonJSON) {
-  //     headerButtons = buttonJSON.map((button) => {
-  //       return (
-  //         <TouchableOpacity
-  //           key={button.title}
-  //           style={[
-  //             styles.headerButton,
-  //             {
-  //               borderColor: dynamicStyles.tintColor.color,
-  //             },
-  //           ]}
-  //           onPress={() => {
-  //             Linking.openURL(button.url).catch((err) => {
-  //               if (err) {
-  //                 if (button.backupURL) {
-  //                   Linking.openURL(button.backupURL).catch((err) =>
-  //                     Alert.alert(
-  //                       "Redirect Error",
-  //                       "The link you selected cannot be opened."
-  //                     )
-  //                   );
-  //                 } else {
-  //                   Alert.alert(
-  //                     "Redirect Error",
-  //                     "The link you selected cannot be opened."
-  //                   );
-  //                 }
-  //               }
-  //             });
-  //           }}
-  //         >
-  //           <Text style={[dynamicStyles.text, styles.buttonText]}>
-  //             {button.title}
-  //           </Text>
-  //         </TouchableOpacity>
-  //       );
-  //     });
-  //   }
-  // }
+  if (buttonBlock && buttonBlock.content) {
+    const buttonJSON = JSON.parse(buttonBlock.content);
+    if (buttonJSON) {
+      headerButtons = buttonJSON.map((button) => {
+        return (
+          <TouchableOpacity
+            key={button.title}
+            style={[
+              styles.headerButton,
+              {
+                borderColor: dynamicStyles.tintColor.color,
+              },
+            ]}
+            onPress={() => {
+              Linking.openURL(button.url).catch((err) => {
+                if (err) {
+                  if (button.backupURL) {
+                    Linking.openURL(button.backupURL).catch((err) =>
+                      Alert.alert(
+                        "Redirect Error",
+                        "The link you selected cannot be opened."
+                      )
+                    );
+                  } else {
+                    Alert.alert(
+                      "Redirect Error",
+                      "The link you selected cannot be opened."
+                    );
+                  }
+                }
+              });
+            }}
+          >
+            <Text style={[dynamicStyles.text, styles.buttonText]}>
+              {button.title}
+            </Text>
+          </TouchableOpacity>
+        );
+      });
+    }
+  }
 
   // let faqs = [...hackathon.faqs];
   let faqs = hackathon.blocks.find(
@@ -133,30 +93,14 @@ export function InformationTab() {
       <Text style={[dynamicStyles.text, styles.headerText]}>
         {"Welcome to " + hackathon.name}
       </Text>
+      <Text style={[dynamicStyles.text, styles.checkInText]}>
+        {
+          hackathon.blocks.find(
+            (e) => e.slug && e.display == "mobile" && e.slug === "info-welcome"
+          )?.content || ""
+        }
+      </Text>
       <View style={styles.headerButtonContainer}>{headerButtons}</View>
-
-      {showQRCode && (
-        <>
-          <Text style={[dynamicStyles.text, styles.checkInText]}>
-            You can use this QR code or the one from HexLabs Registration to
-            check-in!
-          </Text>
-          <View
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginVertical: 20,
-            }}
-          >
-            <QRCode
-              value={JSON.stringify({ uid: firebaseUser.uid })}
-              color={dynamicStyles.text.color}
-              size={200}
-              backgroundColor="clear"
-            />
-          </View>
-        </>
-      )}
 
       <Text style={[dynamicStyles.text, styles.headerText]}>FAQs</Text>
       <View style={styles.faqContainer}>
@@ -173,35 +117,6 @@ export function InformationTab() {
             </View>
           ))}
       </View>
-
-      <TouchableOpacity
-        style={[
-          styles.logOutButton,
-          {
-            backgroundColor: "lightred",
-            borderColor: dynamicStyles.tintColor.color,
-            marginVertical: 20,
-          },
-        ]}
-        onPress={() => {
-          auth.signOut();
-        }}
-      >
-        <Text style={[dynamicStyles.text, styles.buttonText]}>{"Log Out"}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.DangerButton,
-          {
-            borderColor: dynamicStyles.tintColor.color,
-          },
-        ]}
-        onPress={() => profilePage()}
-      >
-        <Text style={[dynamicStyles.text, styles.buttonText]}>
-          {"Delete Profile"}
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }

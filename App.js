@@ -15,6 +15,7 @@ import {
   faMapSigns,
   faClipboardCheck,
   faIdBadge,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-community/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
@@ -31,6 +32,7 @@ import {
   ScavengerHuntStackScreen,
   InteractionsStackScreen,
   CheckInStackScreen,
+  ProfileStackScreen,
 } from "./app/navigation";
 import { HackathonProvider } from "./app/state/hackathon";
 import { ThemeProvider } from "./app/contexts/ThemeContext";
@@ -294,6 +296,8 @@ function App(props) {
                                     icon = faClipboardCheck;
                                   } else if (route.name === "CheckIn") {
                                     icon = faIdBadge;
+                                  } else if (route.name === "Profile") {
+                                    icon = faUserCircle;
                                   }
 
                                   return (
@@ -352,6 +356,10 @@ function App(props) {
                                   component={CheckInStackScreen}
                                 />
                               )}
+                              <Stack.Screen
+                                name="Profile"
+                                component={ProfileStackScreen}
+                              />
                             </Tab.Navigator>
                           </NavigationContainer>
                         </>
