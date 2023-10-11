@@ -27,7 +27,7 @@ export const API_SERVICE_URLS = {
 
 export const EVENT_TYPE_COLOR_MAP = {
   ceremony: "#b52c22",
-  food: "#19458c",
+  food: "#2e66bf",
   important: "#2CDACF",
   "mini-challenge": "#C866F5",
   "mini-event": "#FF8D28",
