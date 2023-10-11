@@ -32,7 +32,6 @@ export function ScavHuntItem(props) {
 
   let initScannedCode = null;
   // completed hints are of format '{id}-{hint}'\
-  console.log("init state: ", state);
   state.completedHints.forEach((h) => {
     const splitLoc = h.indexOf("-");
     if (splitLoc !== -1) {
@@ -43,7 +42,6 @@ export function ScavHuntItem(props) {
     }
   });
 
-  console.log("initscannedcode", initScannedCode);
   const [scannedCode, setScannedCode] = useState(initScannedCode);
 
   const [answer, setAnswer] = useState(isComplete ? item.answer : "");
@@ -67,7 +65,6 @@ export function ScavHuntItem(props) {
     if (answer.toLowerCase() === item.answer.toLowerCase()) {
       setIsAnswerCorrect(true);
       completeQuestion(item.id);
-      console.log("itemID ", item.id);
       AsyncStorage.setItem(
         "completedQuestions",
         JSON.stringify(state.completedQuestions.concat([item.id]))
@@ -91,13 +88,11 @@ export function ScavHuntItem(props) {
   };
 
   const onQRCodeScanned = async (e) => {
-    console.log(e.data, item.code);
     setScannedCode(e.data);
     qrSheetRef.current.close();
     if (e.data === item.code) {
       completeHint(item);
     } else {
-      console.log("Wrong code!", e.data, item.code);
       createAlert(
         "Wrong QR code. Try again or visit the help desk for assistance!"
       );
@@ -209,18 +204,20 @@ export function ScavHuntItem(props) {
             {completed()}
           </View>
           <Text style={[styles.hintText, dynamicStyles.text]}>{item.hint}</Text>
-          <TouchableOpacity
-            disabled={scannedCode === item.code}
-            style={[styles.answerButton]}
-            onPress={() => {
-              qrSheetRef.current.open();
-            }}
-          >
-            <Text style={[styles.answerButtonText, dynamicStyles.text]}>
-              {scannedCode === item.code ? "Completed!" : "Scan Code"}
-            </Text>
-          </TouchableOpacity>
-          {scannedCode !== item.code ? null : (
+          {item.isQR && (
+            <TouchableOpacity
+              disabled={scannedCode === item.code}
+              style={[styles.answerButton]}
+              onPress={() => {
+                qrSheetRef.current.open();
+              }}
+            >
+              <Text style={[styles.answerButtonText, dynamicStyles.text]}>
+                {scannedCode === item.code ? "Completed!" : "Scan Code"}
+              </Text>
+            </TouchableOpacity>
+          )}
+          {!item.isQR && (
             <View style={{ paddingTop: 10 }}>
               <Text style={[styles.hintText, dynamicStyles.text]}>
                 {item.question}
@@ -230,6 +227,7 @@ export function ScavHuntItem(props) {
                 onPress={() => {
                   answerSheetRef.current.open();
                 }}
+                disabled={isComplete}
               >
                 <Text style={[styles.answerButtonText, dynamicStyles.text]}>
                   {isComplete ? "Completed!" : "Input Answer"}
