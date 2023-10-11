@@ -27,35 +27,35 @@ export function ScavengerHuntTab(props) {
   const crosswordPuzzleChallenges = hackathon.scavengerHunt.filter(
     (challenge) => !challenge.isQR
   );
-  const crosswordPuzzleButton = () => {
-    return crosswordPuzzleChallenges.length === 0 ? null : (
-      <TouchableOpacity
-        style={[
-          styles.joinEvent,
-          {
-            borderColor: dynamicStyles.tintColor.color,
-            backgroundColor: isComplete ? "#A4D496" : "white",
-          },
-        ]}
-        onPress={() => {
-          props.navigation.navigate("ScavHuntCrossword", {
-            challenges: crosswordPuzzleChallenges,
-            hackathonName: hackathon.name,
-          });
-        }}
-      >
-        <Text
-          style={[
-            dynamicStyles.text,
-            styles.buttonHeaderText,
-            { color: "black" },
-          ]}
-        >
-          {"Crossword Puzzle"}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+  // const crosswordPuzzleButton = () => {
+  //   return crosswordPuzzleChallenges.length === 0 ? null : (
+  //     <TouchableOpacity
+  //       style={[
+  //         styles.joinEvent,
+  //         {
+  //           borderColor: dynamicStyles.tintColor.color,
+  //           backgroundColor: isComplete ? "#A4D496" : "white",
+  //         },
+  //       ]}
+  //       onPress={() => {
+  //         props.navigation.navigate("ScavHuntCrossword", {
+  //           challenges: crosswordPuzzleChallenges,
+  //           hackathonName: hackathon.name,
+  //         });
+  //       }}
+  //     >
+  //       <Text
+  //         style={[
+  //           dynamicStyles.text,
+  //           styles.buttonHeaderText,
+  //           { color: "black" },
+  //         ]}
+  //       >
+  //         {"Crossword Puzzle"}
+  //       </Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
   const scavHuntButtons = scavHunts.map((challenge) => {
     if (!challenge.isQR) {
       return null;
@@ -143,7 +143,7 @@ export function ScavengerHuntTab(props) {
       )}
       <View style={styles.headerButtons}>
         {scavHuntButtons}
-        {crosswordPuzzleButton()}
+        {/* {crosswordPuzzleButton()} */}
       </View>
     </ScrollView>
   );

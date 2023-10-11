@@ -84,7 +84,7 @@ export function ScanScreen(props) {
         if (scanner && scanner.current) {
           scanner.current.reactivate();
         }
-      }, 2000);
+      }, 4000);
     }
   };
 

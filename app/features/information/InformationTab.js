@@ -23,7 +23,7 @@ export function InformationTab() {
 
   // // create button blocks for "Join Slack", "View Event site", etc
   const buttonBlock = hackathon.blocks.find(
-    (e) => e.display == "mobile" && e.slug && e.slug === "info-button-links"
+    (e) => e.slug && e.slug === "info-button-links"
   );
 
   let headerButtons = [];
@@ -70,23 +70,7 @@ export function InformationTab() {
     }
   }
 
-  // let faqs = [...hackathon.faqs];
-  let faqs = hackathon.blocks.find(
-    (e) => e.slug && e.display == "mobile" && e.slug === "faq"
-  );
-  // // sort faq based on priority so important questions come first
-  // faqs.sort(function (a, b) {
-  //   return parseFloat(a.index) - parseFloat(b.index);
-  // });
-
-  // for (i in faqs) {
-  //   faqList.push(
-  //     <FontMarkdown fontFamily="SpaceMono">
-  //       **{faqCopy[i].question}**
-  //     </FontMarkdown>,
-  //     <FontMarkdown fontFamily="SpaceMono">{faqCopy[i].answer}</FontMarkdown>
-  //   );
-  // }
+  let faqs = hackathon.blocks.find((e) => e.slug && e.slug === "faq");
 
   return (
     <ScrollView style={[dynamicStyles.backgroundColor]}>
@@ -94,28 +78,18 @@ export function InformationTab() {
         {"Welcome to " + hackathon.name}
       </Text>
       <Text style={[dynamicStyles.text, styles.checkInText]}>
-        {
-          hackathon.blocks.find(
-            (e) => e.slug && e.display == "mobile" && e.slug === "info-welcome"
-          )?.content || ""
-        }
+        {hackathon.blocks.find((e) => e.slug && e.slug === "info-welcome")
+          ?.content || ""}
       </Text>
       <View style={styles.headerButtonContainer}>{headerButtons}</View>
 
       <Text style={[dynamicStyles.text, styles.headerText]}>FAQs</Text>
       <View style={styles.faqContainer}>
-        {faqs &&
-          faqs.map((faq) => (
-            <View key={faq.question}>
-              <Text style={[dynamicStyles.text, styles.faqQuestion]}>
-                {faq.question}
-              </Text>
-
-              <Card>
-                <FontMarkdown fontFamily="SpaceMono">{faq.answer}</FontMarkdown>
-              </Card>
-            </View>
-          ))}
+        <View>
+          <Card>
+            <FontMarkdown fontFamily="SpaceMono">{faqs.content}</FontMarkdown>
+          </Card>
+        </View>
       </View>
     </ScrollView>
   );

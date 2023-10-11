@@ -164,7 +164,7 @@ export const getBlocks = async (token) => {
       }
     );
     let blockJson = await response.json();
-    blockJson = blockJson.filter((block) => block.display == "mobile");
+    blockJson = blockJson.filter((block) => block.display == "MOBILE");
     return { status: response.status, blockJson };
   } catch (err) {
     return {
@@ -177,7 +177,7 @@ export const getBlocks = async (token) => {
 export const getScavengerHunt = async (token) => {
   try {
     const response = await fetch(
-      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}&slug=scavenger-hunt&display=mobile`,
+      `${API_SERVICE_URLS.hexathons}/blocks?hexathon=${CURRENT_HEXATHON.id}`,
       {
         method: "GET",
         headers: {
@@ -185,7 +185,11 @@ export const getScavengerHunt = async (token) => {
         },
       }
     );
-    const scavengerHuntJson = await response.json();
+    let blockJson = await response.json();
+    blockJson = blockJson.filter((block) => block.display == "MOBILE");
+
+    let scavengerHuntJson = blockJson.find((block) => block.slug === "scavenger-hunt").content;
+    scavengerHuntJson = eval(scavengerHuntJson);
     return { status: response.status, scavengerHuntJson };
   } catch (err) {
     return {
