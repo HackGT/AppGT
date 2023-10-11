@@ -12,6 +12,7 @@ export function InteractionScreen(props) {
     selectedEvent.startDate,
     selectedEvent.endDate
   );
+
   return (
     <ScrollView style={dynamicStyles.backgroundColor}>
       <View style={styles.eventContainer}>

@@ -188,7 +188,9 @@ export const getScavengerHunt = async (token) => {
     let blockJson = await response.json();
     blockJson = blockJson.filter((block) => block.display == "MOBILE");
 
-    let scavengerHuntJson = blockJson.find((block) => block.slug === "scavenger-hunt").content;
+    let scavengerHuntJson = blockJson.find(
+      (block) => block.slug === "scavenger-hunt"
+    ).content;
     scavengerHuntJson = eval(scavengerHuntJson);
     return { status: response.status, scavengerHuntJson };
   } catch (err) {

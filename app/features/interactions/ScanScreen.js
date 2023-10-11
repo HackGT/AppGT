@@ -54,7 +54,9 @@ export function ScanScreen(props) {
       console.log("NFC Scan error: ", error);
     } finally {
       if (!json.uid) {
-        createAlert("Invalid badge. Please see help desk to register your badge.");
+        createAlert(
+          "Invalid badge. Please see help desk to register your badge."
+        );
         return;
       }
     }

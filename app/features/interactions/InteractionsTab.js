@@ -36,16 +36,7 @@ export function InteractionsTab(props) {
     props.navigation.navigate("InteractionScreen", {
       selectedEvent: event,
     });
-    // if (event) {
-    //   setSelectedEvent(event);
-    // } else {
-    //   setSelectedEvent(null);
-    // }
   };
-
-  // there are no events getting properly populated
-  // var formattedEvents = [];
-  // var shownEvents = searchText.length != 0 ? searchResults : events;
 
   const formattedEvents = !events
     ? []
