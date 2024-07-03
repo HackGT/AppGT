@@ -32,6 +32,7 @@ export function ScheduleTab(props) {
 
     // update time changes whenever app opens
     AppState.addEventListener("change", (state) => {
+      console.log("bbbb")
       if (state == "active") {
         refreshEventState();
       }

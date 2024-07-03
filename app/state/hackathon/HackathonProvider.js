@@ -14,6 +14,8 @@ import {
   getScavengerHunt,
 } from "../../api/api";
 
+const STATE_REFRESH_TIME = 5 * 60 * 1000
+
 export default function HackathonProvider({
   initialValue,
   firebaseUser,
@@ -44,6 +46,15 @@ export default function HackathonProvider({
 
   useEffect(() => {
     getHackathon(firebaseUser);
+
+    const interval = setInterval(() => {
+      if (firebaseUser) {
+        // don't set isLoading to true or else it'll be bad visually
+        getHackathon(firebaseUser);
+      }
+    }, STATE_REFRESH_TIME);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getHackathon = async (fUser) => {
