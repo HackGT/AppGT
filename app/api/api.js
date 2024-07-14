@@ -7,14 +7,14 @@ export const DEFAULT_HEXATHON = {
 
 export const CURRENT_HEXATHON = DEFAULT_HEXATHON;
 
-remoteConfig()
-  .fetchAndActivate()
-  .then(() => {
-    const hexathon = remoteConfig().getValue("hexathon").asString();
-    const hexathonName = remoteConfig().getValue("hexathonName").asString();
-    CURRENT_HEXATHON.id = hexathon;
-    CURRENT_HEXATHON.name = hexathonName;
-  });
+// remoteConfig()
+//   .fetchAndActivate()
+//   .then(() => {
+//     const hexathon = remoteConfig().getValue("hexathon").asString();
+//     const hexathonName = remoteConfig().getValue("hexathonName").asString();
+//     CURRENT_HEXATHON.id = hexathon;
+//     CURRENT_HEXATHON.name = hexathonName;
+//   });
 
 export const API_SERVICE_URLS = {
   registration: "https://registration.api.hexlabs.org",
@@ -92,6 +92,24 @@ export const getHexathon = async (token) => {
 export const getUserProfile = async (token, uid) => {
   try {
     const response = await fetch(`${API_SERVICE_URLS.users}/users/${uid}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    const json = await response.json();
+    return { status: response.status, json };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting user profile" },
+    };
+  }
+};
+
+export const getHexathonUser = async (token, hexathonId, uid) => {
+  try {
+    const response = await fetch(`${API_SERVICE_URLS.hexathons}/hexathon-users/${hexathonId}/users/${uid}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + token,
