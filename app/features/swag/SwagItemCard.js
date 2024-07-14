@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { Card } from "../../components/Card";
 
-export function EventCard(props) {
+export function SwagItemCard(props) {
   const { dynamicStyles } = useContext(ThemeContext);
 
   return (
@@ -18,7 +18,13 @@ export function EventCard(props) {
             {props.name}
           </Text>
         </View>
-
+        <Text
+            numberOfLines={props.truncateText ? 1 : null}
+            ellipsizeMode={"tail"}
+            style={[styles.flexWrap, dynamicStyles.italicText, styles.titleFont]}
+          >
+            {props.cost} points
+          </Text>
         <Text
           numberOfLines={props.truncateText ? 1 : null}
           ellipsizeMode={"tail"}
@@ -28,8 +34,7 @@ export function EventCard(props) {
             styles.subtitleFont,
           ]}
         >
-          {props.location}
-          {props.startTime} - {props.endTime}
+          {props.description}
         </Text>
       </Card>
     </View>

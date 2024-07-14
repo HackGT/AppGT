@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { EventCard } from "./EventCard";
+import { SwagItemCard } from "./SwagItemCard";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
@@ -24,52 +24,50 @@ export function SwagTab(props) {
 
   const hackathonContext = useContext(HackathonContext);
   const hackathon = hackathonContext.state.hackathon;
-  const events = hackathon.events;
+  const swagItems = hackathon.swag;
 
-  const searchEvents = (value) => {
-    var newEvents = events.filter((e) => e.name.includes(searchText));
-    setSearchResults(newEvents);
+  const searchSwagItems = (value) => {
+    var newSwagItems = swagItems.filter((s) => s.name.includes(searchText));
+    setSearchResults(newSwagItems);
     setSearchText(value);
   };
 
-  const onPressEvent = (event) => {
+  const onPressSwagItem = (swagItem) => {
     props.navigation.navigate("InteractionScreen", {
-      selectedEvent: event,
+      selectedEvent: swagItem,
     });
   };
 
-  const formattedEvents = !events
+  const formattedSwagItems = !swagItems
     ? []
-    : events
-        .filter((e) => e.name.includes(searchText))
-        .map((event) => {
-          const eventType = event.type ?? "none";
-          const loc =
-            event != null &&
-            event.location != null &&
-            event.location[0] != null &&
-            event.location[0].name != null
-              ? event.location[0].name + " • "
-              : "";
+    : swagItems
+        .filter((s) => s.name.includes(searchText))
+        .map((item) => {
+          // const eventType = event.type ?? "none";
+          // const loc =
+          //   event != null &&
+          //   event.location != null &&
+          //   event.location[0] != null &&
+          //   event.location[0].name != null
+          //     ? event.location[0].name + " • "
+          //     : "";
 
-          const { startTime, endTime } = getStartEndTime(
-            event.startDate,
-            event.endDate
-          );
+          // const { startTime, endTime } = getStartEndTime(
+          //   event.startDate,
+          //   event.endDate
+          // );
           return (
             <TouchableOpacity
-              key={event.id}
+              key={item.id}
               onPress={() => {
-                onPressEvent(event);
+                onPressSwagItem(item);
               }}
             >
-              <EventCard
-                key={event.id}
-                name={event.name}
-                startTime={startTime}
-                endTime={endTime}
-                location={loc}
-                type={eventType}
+              <SwagItemCard
+                key={item.id}
+                name={item.name}
+                cost={item.points}
+                description={item.description}
                 dynamicStyles={dynamicStyles}
               />
             </TouchableOpacity>
@@ -80,12 +78,10 @@ export function SwagTab(props) {
     <View style={[dynamicStyles.backgroundColor, { flex: 1 }]}>
       <View style={styles.header}>
         <Text style={[dynamicStyles.text, styles.headerText]}>
-          Swag Scanning
+          Swag Checkout
         </Text>
         <Text style={[styles.headerHelpText, dynamicStyles.secondaryText]}>
-          Use this page to scan each person's badge before every event. If you
-          can't scan a badge, scan their QR code from registration/mobile app
-          instead.
+          Use this page to checkout participant's swag items. Click on the desired swag item and then scan their badge or scan their QR code from the profile tab.
         </Text>
         <View style={styles.searchBarWrapper}>
           <SearchBar
@@ -109,14 +105,14 @@ export function SwagTab(props) {
             lightTheme
             round
             placeholder="Search..."
-            onChangeText={(value) => searchEvents(value)}
+            onChangeText={(value) => searchSwagItems(value)}
             value={searchText}
           />
         </View>
       </View>
 
       <ScrollView>
-        <View style={styles.eventCardContainer}>{formattedEvents}</View>
+        <View style={styles.swagCardContainer}>{formattedSwagItems}</View>
       </ScrollView>
     </View>
   );
@@ -166,7 +162,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  eventCardContainer: {
+  swagCardContainer: {
     marginHorizontal: 15,
     flex: 1,
     paddingTop: 5,

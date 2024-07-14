@@ -218,3 +218,27 @@ export const getScavengerHunt = async (token) => {
     };
   }
 };
+
+export const getSwagItems = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/swag-items?hexathon=${CURRENT_HEXATHON.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    const swagJson = await response.json();
+    swagJson.sort((a, b) => {
+      return b.points - a.points;
+    });
+    return { status: response.status, swagJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting application" },
+    };
+  }
+};

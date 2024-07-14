@@ -12,6 +12,11 @@ export const dynamicStyles = new DynamicStyleSheet({
     color: new DynamicValue("#3F3F3F", "white"),
   },
 
+  italicText: {
+    color: new DynamicValue("#3F3F3F", "white"),
+    fontStyle: "italic",
+  },
+
   toggleText: {
     color: new DynamicValue("black", "white"),
   },
