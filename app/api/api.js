@@ -68,6 +68,33 @@ export const logInteraction = async (token, type, userId, identifier) => {
   }
 };
 
+export const checkoutSwagItem = async (token, userId, swagItemId) => {
+  let body = {
+    swagItemId: swagItemId,
+    quantity: 1,
+  };
+  try {
+    const response = await fetch(`${API_SERVICE_URLS.hexathons}/${CURRENT_HEXATHON.id}/users/${userId}/actions/purchase-swag-item`, {
+      method: "POST",
+      headers: {
+        "Content-Type": `application/json`,
+        Accept: `application/json`,
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const json = await response.json();
+    return { status: response.status, json };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: 500,
+      json: { message: "Network error when logging interaction" },
+    };
+  }
+};
+
 export const getHexathon = async (token) => {
   try {
     const response = await fetch(

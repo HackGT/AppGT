@@ -62,7 +62,7 @@ export function ScanScreen(props) {
     }
 
     setUid(json.uid);
-    const success = await getProfileAndLogInteraction(json.uid);
+    const success = await getAndCheckoutSwag(json.uid);
   };
 
   // QR
