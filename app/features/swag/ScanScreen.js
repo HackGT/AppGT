@@ -15,7 +15,7 @@ import { request, PERMISSIONS } from "react-native-permissions";
 import Modal from "react-native-modal";
 
 import { Card } from "../../components/Card";
-import { logInteraction, getUserProfile } from "../../api/api";
+import { checkoutSwagItem, getUserProfile } from "../../api/api";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { cancelNFC, initNfc, readNFC } from "../../NFCScanning/nfc";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -45,7 +45,7 @@ export function ScanScreen(props) {
     await initNfc();
   }, []);
 
-  // NFC
+//   // NFC
   const onNFCTagScanned = async (text) => {
     let json = {};
     try {
@@ -62,7 +62,7 @@ export function ScanScreen(props) {
     }
 
     setUid(json.uid);
-    const success = await getAndCheckoutSwag(json.uid);
+    const success = await getProfileAndCheckoutSwag(json.uid);
   };
 
   // QR
@@ -79,7 +79,7 @@ export function ScanScreen(props) {
     }
 
     setUid(json.uid);
-    const success = await getProfileAndLogInteraction(json.uid);
+    const success = await getProfileAndCheckoutSwag(json.uid);
     if (success) {
       // Reactivates reading on success to make the proccess of scanning many people faster
       setTimeout(() => {
@@ -90,7 +90,7 @@ export function ScanScreen(props) {
     }
   };
 
-  const getProfileAndLogInteraction = async (uid) => {
+  const getProfileAndCheckoutSwag = async (uid) => {
     const token = await firebaseUser.getIdToken();
     const userProfileResponse = await getUserProfile(token, uid);
     if (userProfileResponse.status !== 200) {
@@ -103,17 +103,16 @@ export function ScanScreen(props) {
     setlName(userProfileResponse.json.name.last);
     setEmail(userProfileResponse.json.email);
 
-    const interactionResponse = await logInteraction(
+    const checkoutResponse = await checkoutSwagItem(
       token,
-      "event",
       uid,
-      props.eventID
+      props.swagID
     );
-    setStatus(interactionResponse.status);
+    setStatus(checkoutResponse.status);
 
-    if (interactionResponse.status !== 200) {
-      console.log(interactionResponse);
-      createAlert(interactionResponse.json.message);
+    if (checkoutResponse.status !== 200) {
+      console.log(checkoutResponse);
+      createAlert(chekoutResponse.json.message);
       return false;
     }
 

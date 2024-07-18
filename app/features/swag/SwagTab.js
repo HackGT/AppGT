@@ -18,7 +18,7 @@ import { HackathonContext } from "../../state/hackathon";
 
 export function SwagTab(props) {
   const { dynamicStyles } = useContext(ThemeContext);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedSwagItem, setSelectedSwagItem] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState(null);
 
@@ -33,8 +33,8 @@ export function SwagTab(props) {
   };
 
   const onPressSwagItem = (swagItem) => {
-    props.navigation.navigate("InteractionScreen", {
-      selectedEvent: swagItem,
+    props.navigation.navigate("SwagScreen", {
+      selectedSwagItem: swagItem,
     });
   };
 
@@ -43,19 +43,6 @@ export function SwagTab(props) {
     : swagItems
         .filter((s) => s.name.includes(searchText))
         .map((item) => {
-          // const eventType = event.type ?? "none";
-          // const loc =
-          //   event != null &&
-          //   event.location != null &&
-          //   event.location[0] != null &&
-          //   event.location[0].name != null
-          //     ? event.location[0].name + " • "
-          //     : "";
-
-          // const { startTime, endTime } = getStartEndTime(
-          //   event.startDate,
-          //   event.endDate
-          // );
           return (
             <TouchableOpacity
               key={item.id}

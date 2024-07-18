@@ -6,16 +6,12 @@ import { ScanScreen } from "./ScanScreen";
 import { getStartEndTime } from "../../util";
 
 export function SwagScreen(props) {
-  const selectedEvent = props.route.params.selectedEvent;
+  const selectedSwagItem = props.route.params.selectedSwagItem;
   const { dynamicStyles } = useContext(ThemeContext);
-  const { startTime, endTime } = getStartEndTime(
-    selectedEvent.startDate,
-    selectedEvent.endDate
-  );
 
   return (
     <ScrollView style={dynamicStyles.backgroundColor}>
-      <View style={styles.eventContainer}>
+      <View style={styles.swagContainer}>
         <Pressable
           style={styles.backButton}
           onPress={() => {
@@ -28,7 +24,7 @@ export function SwagScreen(props) {
         </Pressable>
 
         <Text style={[styles.title, dynamicStyles.text]}>
-          {selectedEvent.name}
+          {selectedSwagItem.name}
         </Text>
         <Text
           numberOfLines={props.truncateText ? 1 : null}
@@ -43,32 +39,17 @@ export function SwagScreen(props) {
             },
           ]}
         >
-          {selectedEvent != null &&
+          {console.log("selected swag item: ", selectedSwagItem)}
+          {/* {selectedEvent != null &&
           selectedEvent.location != null &&
           selectedEvent.location[0] != null &&
           selectedEvent.location[0].name != null
             ? selectedEvent.location[0].name + " • "
-            : ""}
-          {startTime + " - " + endTime}
+            : ""} */}
         </Text>
         <ScanScreen
-          eventID={selectedEvent.id}
-          startTime={selectedEvent.startTime}
-          endTime={selectedEvent.endTime}
-          location={
-            selectedEvent != null &&
-            selectedEvent.location != null &&
-            selectedEvent.location[0] != null &&
-            selectedEvent.location[0].name != null
-              ? selectedEvent.location[0].name + " • "
-              : ""
-          }
-          type={
-            selectedEvent != null && selectedEvent.type != null
-              ? selectedEvent.type
-              : { name: "none", color: "gray" }
-          }
-          description={selectedEvent.description}
+          swagID={selectedSwagItem.id}
+          // description={selectedEvent.description}
         />
       </View>
     </ScrollView>
@@ -103,7 +84,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  eventContainer: {
+  swagContainer: {
     marginHorizontal: 15,
     flex: 1,
   },
