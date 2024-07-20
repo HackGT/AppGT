@@ -90,7 +90,7 @@ export const checkoutSwagItem = async (token, userId, swagItemId) => {
     console.log(err);
     return {
       status: 500,
-      json: { message: "Network error when logging interaction" },
+      json: { message: "Network error when checking out swag" },
     };
   }
 };
