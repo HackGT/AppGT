@@ -12,7 +12,6 @@ import { SwagItemCard } from "./SwagItemCard";
 import { ScanScreen } from "./ScanScreen";
 import SearchIcon from "../../../assets/images/Search";
 import { SearchBar } from "react-native-elements";
-import { getStartEndTime } from "../../util";
 import { AuthContext } from "../../contexts/AuthContext";
 import { HackathonContext } from "../../state/hackathon";
 
