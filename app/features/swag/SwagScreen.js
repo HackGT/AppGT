@@ -39,17 +39,10 @@ export function SwagScreen(props) {
             },
           ]}
         >
-          {console.log("selected swag item: ", selectedSwagItem)}
-          {/* {selectedEvent != null &&
-          selectedEvent.location != null &&
-          selectedEvent.location[0] != null &&
-          selectedEvent.location[0].name != null
-            ? selectedEvent.location[0].name + " • "
-            : ""} */}
+          Cost: {selectedSwagItem.points} points
         </Text>
         <ScanScreen
           swagID={selectedSwagItem.id}
-          // description={selectedEvent.description}
         />
       </View>
     </ScrollView>
