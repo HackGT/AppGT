@@ -4,6 +4,7 @@ export { default as ScheduleStackScreen } from "../features/schedule/ScheduleSta
 export { default as InformationStackScreen } from "../features/information/InformationStackScreen";
 export { default as ScavengerHuntStackScreen } from "../features/scavengerHunt/ScavengerHuntStackScreen";
 export { default as InteractionsStackScreen } from "../features/interactions/InteractionsStackScreen";
+export { default as SwagStackScreen } from "../features/swag/SwagStackScreen";
 export { default as CheckInStackScreen } from "../features/checkin/CheckInStackScreen";
 export { default as ProfileStackScreen } from "../features/profile/ProfileStackScreen";
 
@@ -11,5 +12,6 @@ export const ScheduleStack = createStackNavigator();
 export const InformationStack = createStackNavigator();
 export const ScavengerHuntStack = createStackNavigator();
 export const InteractionsStack = createStackNavigator();
+export const SwagStack = createStackNavigator();
 export const CheckInStack = createStackNavigator();
 export const ProfileStack = createStackNavigator();

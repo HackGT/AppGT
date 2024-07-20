@@ -68,6 +68,33 @@ export const logInteraction = async (token, type, userId, identifier) => {
   }
 };
 
+export const checkoutSwagItem = async (token, userId, swagItemId) => {
+  let body = {
+    swagItemId: swagItemId,
+    quantity: 1,
+  };
+  try {
+    const response = await fetch(`${API_SERVICE_URLS.hexathons}/${CURRENT_HEXATHON.id}/users/${userId}/actions/purchase-swag-item`, {
+      method: "POST",
+      headers: {
+        "Content-Type": `application/json`,
+        Accept: `application/json`,
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const json = await response.json();
+    return { status: response.status, json };
+  } catch (err) {
+    console.log(err);
+    return {
+      status: 500,
+      json: { message: "Network error when checking out swag" },
+    };
+  }
+};
+
 export const getHexathon = async (token) => {
   try {
     const response = await fetch(
@@ -103,6 +130,24 @@ export const getUserProfile = async (token, uid) => {
     return {
       status: 500,
       json: { message: "Network error when getting user profile" },
+    };
+  }
+};
+
+export const getHexathonUser = async (token, hexathonId, uid) => {
+  try {
+    const response = await fetch(`${API_SERVICE_URLS.hexathons}/hexathon-users/${hexathonId}/users/${uid}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    const json = await response.json();
+    return { status: response.status, json };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting hexathon user information" },
     };
   }
 };
@@ -197,6 +242,30 @@ export const getScavengerHunt = async (token) => {
     return {
       status: 500,
       json: { message: "Network error when getting app }" },
+    };
+  }
+};
+
+export const getSwagItems = async (token) => {
+  try {
+    const response = await fetch(
+      `${API_SERVICE_URLS.hexathons}/swag-items?hexathon=${CURRENT_HEXATHON.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    const swagJson = await response.json();
+    swagJson.sort((a, b) => {
+      return b.points - a.points;
+    });
+    return { status: response.status, swagJson };
+  } catch (err) {
+    return {
+      status: 500,
+      json: { message: "Network error when getting swag items" },
     };
   }
 };

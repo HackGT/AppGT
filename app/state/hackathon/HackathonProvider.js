@@ -12,6 +12,7 @@ import {
   getHexathon,
   getBlocks,
   getScavengerHunt,
+  getSwagItems,
 } from "../../api/api";
 
 const STATE_REFRESH_TIME = 5 * 60 * 1000
@@ -68,10 +69,12 @@ export default function HackathonProvider({
       const { eventJson } = await getEvents(token);
       const { blockJson } = await getBlocks(token);
       const { scavengerHuntJson } = await getScavengerHunt(token);
+      const { swagJson } = await getSwagItems(token);
 
       hexathon.events = eventJson ? eventJson : [];
       hexathon.blocks = blockJson ? blockJson : [];
       hexathon.scavengerHunt = scavengerHuntJson ? scavengerHuntJson : [];
+      hexathon.swag = swagJson ? swagJson : [];
 
       value.state.hackathon = hexathon;
       setIsLoading(false);
