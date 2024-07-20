@@ -39,7 +39,7 @@ export function SwagScreen(props) {
             },
           ]}
         >
-          Cost: {selectedSwagItem.points} points
+          {selectedSwagItem.points} points
         </Text>
         <ScanScreen
           swagID={selectedSwagItem.id}
