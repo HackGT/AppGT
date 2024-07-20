@@ -7,14 +7,14 @@ export const DEFAULT_HEXATHON = {
 
 export const CURRENT_HEXATHON = DEFAULT_HEXATHON;
 
-// remoteConfig()
-//   .fetchAndActivate()
-//   .then(() => {
-//     const hexathon = remoteConfig().getValue("hexathon").asString();
-//     const hexathonName = remoteConfig().getValue("hexathonName").asString();
-//     CURRENT_HEXATHON.id = hexathon;
-//     CURRENT_HEXATHON.name = hexathonName;
-//   });
+remoteConfig()
+  .fetchAndActivate()
+  .then(() => {
+    const hexathon = remoteConfig().getValue("hexathon").asString();
+    const hexathonName = remoteConfig().getValue("hexathonName").asString();
+    CURRENT_HEXATHON.id = hexathon;
+    CURRENT_HEXATHON.name = hexathonName;
+  });
 
 export const API_SERVICE_URLS = {
   registration: "https://registration.api.hexlabs.org",
