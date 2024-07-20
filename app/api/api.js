@@ -265,7 +265,7 @@ export const getSwagItems = async (token) => {
   } catch (err) {
     return {
       status: 500,
-      json: { message: "Network error when getting application" },
+      json: { message: "Network error when getting swag items" },
     };
   }
 };
