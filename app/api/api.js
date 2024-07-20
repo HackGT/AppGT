@@ -147,7 +147,7 @@ export const getHexathonUser = async (token, hexathonId, uid) => {
   } catch (err) {
     return {
       status: 500,
-      json: { message: "Network error when getting user profile" },
+      json: { message: "Network error when getting hexathon user information" },
     };
   }
 };
