@@ -14,6 +14,7 @@ import {
   faCalendar,
   faMapSigns,
   faClipboardCheck,
+  faShoppingBag,
   faIdBadge,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -31,6 +32,7 @@ import {
   InformationStackScreen,
   ScavengerHuntStackScreen,
   InteractionsStackScreen,
+  SwagStackScreen,
   CheckInStackScreen,
   ProfileStackScreen,
 } from "./app/navigation";
@@ -293,6 +295,8 @@ function App(props) {
                                     icon = faMapSigns;
                                   } else if (route.name === "Interactions") {
                                     icon = faClipboardCheck;
+                                  } else if (route.name === "Swag") {
+                                    icon = faShoppingBag;
                                   } else if (route.name === "CheckIn") {
                                     icon = faIdBadge;
                                   } else if (route.name === "Profile") {
@@ -347,6 +351,12 @@ function App(props) {
                                 <Stack.Screen
                                   name="Interactions"
                                   component={InteractionsStackScreen}
+                                />
+                              )}
+                              {!showCheckin ? null: (
+                                <Stack.Screen
+                                  name="Swag"
+                                  component={SwagStackScreen}
                                 />
                               )}
                               {!showCheckin ? null : (

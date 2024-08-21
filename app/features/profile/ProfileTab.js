@@ -16,13 +16,14 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { getAuth } from "firebase/auth";
 import { app } from "../../../firebase";
 import QRCode from "react-native-qrcode-svg";
-import { CURRENT_HEXATHON, getRegistrationApplication } from "../../api/api";
+import { CURRENT_HEXATHON, getHexathonUser, getRegistrationApplication } from "../../api/api";
 
 export function ProfileTab() {
   const auth = getAuth(app);
   const { state } = useContext(HackathonContext);
   const { dynamicStyles } = useContext(ThemeContext);
   const { firebaseUser, user } = useContext(AuthContext);
+  const [points, setPoints] = useState(0);
   const [showQRCode, setShowQRCode] = useState(false);
 
   const profilePage = async () => {
@@ -47,7 +48,6 @@ export function ProfileTab() {
           CURRENT_HEXATHON.id,
           firebaseUser.uid
         );
-
         if (data?.applications[0].status === "CONFIRMED") {
           setShowQRCode(true);
         }
@@ -58,6 +58,25 @@ export function ProfileTab() {
 
     getApplication();
   }, [firebaseUser]);
+
+  useEffect(() => {
+    const getPoints = async () => {
+      try {
+        const token = await firebaseUser.getIdToken();
+        const { json: data } = await getHexathonUser(
+          token,
+          CURRENT_HEXATHON.id,
+          firebaseUser.uid
+        );
+        setPoints(data.points.currentTotal);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getPoints();
+  }, [firebaseUser]);
+
 
   const hackathon = state.hackathon;
 
@@ -95,6 +114,7 @@ export function ProfileTab() {
       <Text style={[dynamicStyles.text, styles.profileContent]}>Name: {`${user.name.first}${user.name.middle + " " || ""}${user.name.last}`}</Text>
       <Text style={[dynamicStyles.text, styles.profileContent]}>{`Email: ${user.email}`}</Text>
       <Text style={[dynamicStyles.text, styles.profileContent]}>{`Phone Number: ${phoneNumber}`}</Text>
+      <Text style={[dynamicStyles.text, styles.profileContent]}>{`Swag Points: ${points}`}</Text>
 
       <View>
         <TouchableOpacity
