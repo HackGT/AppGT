@@ -27,7 +27,7 @@ export function InteractionsTab(props) {
   const events = hackathon.events;
 
   const searchEvents = (value) => {
-    var newEvents = events.filter((e) => e.name.includes(searchText));
+    var newEvents = events.filter((e) => e.name.toLowerCase().includes(searchText.toLowerCase()));
     setSearchResults(newEvents);
     setSearchText(value);
   };
@@ -41,7 +41,7 @@ export function InteractionsTab(props) {
   const formattedEvents = !events
     ? []
     : events
-        .filter((e) => e.name.includes(searchText))
+        .filter((e) => e.name.toLowerCase().includes(searchText.toLowerCase()))
         .map((event) => {
           const eventType = event.type ?? "none";
           const loc =
