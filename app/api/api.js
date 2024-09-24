@@ -1,8 +1,8 @@
 import remoteConfig from "@react-native-firebase/remote-config";
 
 export const DEFAULT_HEXATHON = {
-  id: "647fee51768e521dc8ef88e0",
-  name: "HackGT X",
+  id: "6695c14ed8fb7680e9e3955c",
+  name: "HackGT 11",
 };
 
 export const CURRENT_HEXATHON = DEFAULT_HEXATHON;
