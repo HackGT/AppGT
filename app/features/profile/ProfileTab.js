@@ -111,7 +111,7 @@ export function ProfileTab() {
         </>
       )}
 
-      <Text style={[dynamicStyles.text, styles.profileContent]}>Name: {`${user.name.first}${user.name.middle + " " || ""}${user.name.last}`}</Text>
+      <Text style={[dynamicStyles.text, styles.profileContent]}>Name: {`${user.name.first}${" " + user.name.middle + " " || " "}${user.name.last}`}</Text>
       <Text style={[dynamicStyles.text, styles.profileContent]}>{`Email: ${user.email}`}</Text>
       <Text style={[dynamicStyles.text, styles.profileContent]}>{`Phone Number: ${phoneNumber}`}</Text>
       <Text style={[dynamicStyles.text, styles.profileContent]}>{`Swag Points: ${points}`}</Text>

@@ -343,10 +343,6 @@ function App(props) {
                                 name="Information"
                                 component={InformationStackScreen}
                               />
-                              <Stack.Screen
-                                name="ScavengerHunt"
-                                component={ScavengerHuntStackScreen}
-                              />
                               {!showCheckin ? null : (
                                 <Stack.Screen
                                   name="Interactions"
