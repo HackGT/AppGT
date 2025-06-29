@@ -51,3 +51,8 @@ You may run into one or multiple issues while trying to run this app for the fir
   ```
 - Answer the questions as prompted & type 'y' when prompted `[no]:`
 - Hit enter & rebuild project
+
+**"Unable to find method 'org.gradle.api.artifacts.Dependency org.gradle.api.artifacts.dsl.DependencyHandler.module(java.lang.Object)'"**
+- For this error, it depends on your Gradle version
+  - The current version that is supported is 6.7.1, which means that your Android Studio needs to also support 6.7.1
+- Install a version of Android Studio that is compatible with this version of Gradle
