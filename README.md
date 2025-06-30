@@ -29,3 +29,30 @@ or
 
 - Open the android folder in Android Studio
 - Click the `Run` in the top right
+
+## Setup Issues
+
+You may run into one or multiple issues while trying to run this app for the first time. This is not an extensive list of issues, but in case you do run into some of these, we hope this will help.
+
+### Android Setup Issues
+
+**"Installed Build Tools revision 31.0.0 is corrupted"**
+- Go to <button><a href="https://stackoverflow.com/questions/68387270/android-studio-error-installed-build-tools-revision-31-0-0-is-corrupted?page=1&tab=scoredesc#tab-top">this</a></button> link
+- Scroll down to the checked answer
+- Follow instructions based on your PC's OS
+- Reload your IDE, and re-run the Android app
+
+**“Execution failed for task ‘:app:validateSigningDebug’”**
+
+- Navigate through terminal to `AppGT/android/app`
+- Run this line in the terminal:
+  ```
+  keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
+  ```
+- Answer the questions as prompted & type 'y' when prompted `[no]:`
+- Hit enter & rebuild project
+
+**"Unable to find method 'org.gradle.api.artifacts.Dependency org.gradle.api.artifacts.dsl.DependencyHandler.module(java.lang.Object)'"**
+- For this error, it depends on your Gradle version
+  - The current version that is supported is 6.7.1, which means that your Android Studio needs to also support 6.7.1
+- Install a version of Android Studio that is compatible with this version of Gradle
