@@ -27,6 +27,11 @@ export function LoginOnboarding(props) {
 
   const login = async () => {
     try {
+      // This screen only shows when signed out OR when the profile fetch
+      // failed after a Firebase sign-in. In the second case the SDK would not
+      // re-fire onAuthStateChanged for the same uid, so sign out first.
+      if (auth.currentUser) await auth.signOut();
+
       const scheme = "hexlabs";
       const path = "";
       const deepLink =
@@ -46,7 +51,7 @@ export function LoginOnboarding(props) {
           const codeParam = params.find((param) => param.startsWith("idToken"));
           if (codeParam) {
             const idToken = codeParam.split("=")[1];
-            fetchAccessToken(idToken);
+            await fetchAccessToken(idToken);
           }
         }
       }
@@ -56,19 +61,27 @@ export function LoginOnboarding(props) {
   };
 
   const fetchAccessToken = async (idToken) => {
-    fetch(`${AUTH_URL + "/auth/status"}/`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + idToken,
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((authJson) => {
-        const customToken = authJson.customToken;
-        signInWithCustomToken(auth, customToken);
+    try {
+      const response = await fetch(`${AUTH_URL + "/auth/status"}/`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + idToken,
+        },
       });
+      const authJson = await response.json();
+
+      if (!authJson.customToken) {
+        console.error(
+          "Auth status response did not contain a customToken:",
+          authJson
+        );
+        return;
+      }
+
+      await signInWithCustomToken(auth, authJson.customToken);
+    } catch (error) {
+      console.error("Failed to exchange idToken for a Firebase session:", error);
+    }
   };
 
   const createScreens = (width) => {
@@ -136,9 +149,11 @@ export function LoginOnboarding(props) {
     const size = radius * 2;
     const bubbles = Array.from(new Array(pageCount).keys()).map((i) => {
       return (
-        <ThemeContext.Consumer>
+        // The key belongs on the element returned by map(), not on the inner
+        // Svg, or React cannot track these across renders.
+        <ThemeContext.Consumer key={i}>
           {({ dynamicStyles }) => (
-            <Svg key={i} height={size + 14} width={size + 14}>
+            <Svg height={size + 14} width={size + 14}>
               <Circle
                 cx={radius}
                 cy={radius}

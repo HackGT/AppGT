@@ -1,0 +1,34 @@
+diff --git a/node_modules/react-native/scripts/find-node.sh b/node_modules/react-native/scripts/find-node.sh
+index c111e70..fd76d1a 100755
+--- a/node_modules/react-native/scripts/find-node.sh
++++ b/node_modules/react-native/scripts/find-node.sh
+@@ -15,6 +15,13 @@ elif [[ -x "$(command -v brew)" && -s "$(brew --prefix nvm)/nvm.sh" ]]; then
+   . "$(brew --prefix nvm)/nvm.sh"
+ fi
+ 
++# Sourcing nvm.sh only activates nvm's default version, which is not
++# necessarily the one this project needs. RN 0.64 requires Node 16, pinned in
++# the repo's .nvmrc, so select it explicitly and fall back to the default.
++if command -v nvm >/dev/null 2>&1; then
++  nvm use >/dev/null 2>&1 || nvm use default >/dev/null 2>&1 || true
++fi
++
+ # Set up the nodenv node version manager if present
+ if [[ -x "$HOME/.nodenv/bin/nodenv" ]]; then
+   eval "$("$HOME/.nodenv/bin/nodenv" init -)"
+diff --git a/node_modules/react-native/scripts/ios-configure-glog.sh b/node_modules/react-native/scripts/ios-configure-glog.sh
+index 9642c53..b2be80a 100755
+--- a/node_modules/react-native/scripts/ios-configure-glog.sh
++++ b/node_modules/react-native/scripts/ios-configure-glog.sh
+@@ -14,9 +14,9 @@ if [ -z "$CURRENT_ARCH" ] || [ "$CURRENT_ARCH" == "undefined_arch" ]; then
+     # it's better to rely on platform name as fallback because architecture differs between simulator and device
+ 
+     if [[ "$PLATFORM_NAME" == *"simulator"* ]]; then
+-        CURRENT_ARCH="x86_64"
++        CURRENT_ARCH="arm64"
+     else
+-        CURRENT_ARCH="armv7"
++        CURRENT_ARCH="arm64"
+     fi
+ fi
+ 

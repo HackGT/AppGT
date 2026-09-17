@@ -14,6 +14,11 @@ remoteConfig()
     const hexathonName = remoteConfig().getValue("hexathonName").asString();
     CURRENT_HEXATHON.id = hexathon;
     CURRENT_HEXATHON.name = hexathonName;
+  })
+  .catch((err) => {
+    // Remote Config only overrides DEFAULT_HEXATHON; if the fetch fails we keep
+    // the defaults rather than leaving the rejection unhandled.
+    console.warn("Remote Config fetch failed, using default hexathon:", err);
   });
 
 export const API_SERVICE_URLS = {

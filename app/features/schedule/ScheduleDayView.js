@@ -31,23 +31,18 @@ export function ScheduleDayView(props) {
   const tabListRef = useRef(null);
   const currentScheduleRef = useRef(null);
 
+  // The day pager opens on today via initialScrollIndex below; here we only
+  // scroll today's list down to the event happening now.
   useEffect(() => {
-    if (props.events.count > 0) {
-      tabListRef.current.scrollToIndex({
-        index: dayIndex,
+    if (
+      props.events.length > 0 &&
+      props.initialEventIndex > 0 &&
+      currentScheduleRef.current != null
+    ) {
+      currentScheduleRef.current.scrollToIndex({
+        index: props.initialEventIndex,
         animated: false,
       });
-      if (props.initialEventIndex > 0) {
-        if (
-          currentScheduleRef != null &&
-          props.days[dayIndex] == currentDayString
-        ) {
-          currentScheduleRef.current.scrollToIndex({
-            index: props.initialEventIndex,
-            animated: false,
-          });
-        }
-      }
     }
   }, []);
 
@@ -60,7 +55,14 @@ export function ScheduleDayView(props) {
 
         return (
           <FlatList
-            ref={currentScheduleRef}
+            // Every day renders its own list; only the initial day's list may
+            // own this ref, since the mount scroll and back-to-top button
+            // both target that day.
+            ref={
+              currentDayString == props.days[initDayIndex]
+                ? currentScheduleRef
+                : null
+            }
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               paddingBottom: props.paddingHeight,
@@ -284,6 +286,14 @@ export function ScheduleDayView(props) {
             horizontal
             showsHorizontalScrollIndicator={false}
             pagingEnabled={true}
+            // Open on the same day the tab bar highlights. Every page is one
+            // screen wide, so the layout is known without measuring.
+            initialScrollIndex={initDayIndex}
+            getItemLayout={(data, index) => ({
+              length: width,
+              offset: width * index,
+              index,
+            })}
             keyExtractor={(item) => item}
             onMomentumScrollEnd={(scrollData) => {
               setDayIndex(

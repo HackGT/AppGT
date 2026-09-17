@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '10.0'
+platform :ios, '15.0'
 # Changes marked with 'c1' are due to error & solution found here: https://github.com/facebook/react-native/issues/31440
 target 'AppGT' do
     # Pods for AppGT
@@ -59,4 +59,43 @@ target 'AppGT' do
   # end
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
+end
+
+# Xcode 26 refuses deployment targets below 15.0. Many of these pods were
+# published against iOS 9-11, so override every pod target after generation.
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      # Pods default to building for every arch; the simulator slice must be
+      # arm64 on Apple Silicon.
+      config.build_settings.delete('ARCHS')
+
+      # These pods are 2021-era sources being compiled by a 2026 clang, which
+      # has added warnings their authors never saw. Several of them build with
+      # -Werror, so a brand-new warning becomes a hard build failure in code we
+      # do not own and cannot fix upstream. Demote those back to warnings.
+      %w[OTHER_CFLAGS OTHER_CPLUSPLUSFLAGS].each do |key|
+        flags = config.build_settings[key]
+        next if flags.nil?
+        flags = flags.split(' ') if flags.is_a?(String)
+        config.build_settings[key] = flags.reject { |f| f == '-Werror' }
+      end
+      config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+    end
+
+    # CocoaPods applies a podspec's `compiler_flags` to each source file rather
+    # than to the target, so Yoga's -Werror lives in per-file COMPILER_FLAGS and
+    # is invisible to the target-level settings above. Strip it there too.
+    next unless target.respond_to?(:source_build_phase)
+    target.source_build_phase.files.each do |file|
+      settings = file.settings
+      next if settings.nil?
+      flags = settings['COMPILER_FLAGS']
+      next if flags.nil? || !flags.include?('-Werror')
+      file.settings = settings.merge(
+        'COMPILER_FLAGS' => flags.split(' ').reject { |f| f == '-Werror' }.join(' '),
+      )
+    end
+  end
 end

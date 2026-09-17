@@ -15,16 +15,31 @@ const AuthProvider = ({ app, children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (fUser) => {
-      if (fUser) {
-        setLoading(true);
-        setFirebaseUser(fUser);
-        const token = await fUser.getIdToken();
-        const { status, json } = await getUserProfile(token, fUser.uid);
-        setUser(json);
-        setShowLogin(false);
-        setLoading(false);
-      } else {
+      // Nothing awaits this callback, so a throw here would otherwise become an
+      // unhandled rejection and leave `loading` stuck at true forever.
+      try {
+        if (fUser) {
+          setLoading(true);
+          setFirebaseUser(fUser);
+          const token = await fUser.getIdToken();
+          const { status, json } = await getUserProfile(token, fUser.uid);
+          // getUserProfile never throws; it returns error bodies. A real
+          // profile always carries roles (users API merges them in), so
+          // anything else must not reach App.js (user.roles.member).
+          if (status !== 200 || !json?.roles) {
+            throw new Error(
+              `profile fetch failed: ${status} ${json?.type ?? ""} ${json?.message ?? ""}`
+            );
+          }
+          setUser(json);
+          setShowLogin(false);
+        } else {
+          setShowLogin(true);
+        }
+      } catch (error) {
+        console.error("Failed to load the signed-in user's profile:", error);
         setShowLogin(true);
+      } finally {
         setLoading(false);
       }
     });

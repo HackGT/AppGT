@@ -87,7 +87,7 @@ export function InformationTab() {
       <View style={styles.faqContainer}>
         <View>
           <Card>
-            <FontMarkdown fontFamily="SpaceMono">{faqs.content}</FontMarkdown>
+            <FontMarkdown fontFamily="SpaceMono">{faqs?.content || ""}</FontMarkdown>
           </Card>
         </View>
       </View>
