@@ -1,62 +1,36 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native-permissions/scripts/setup'
 
-platform :ios, '10.0'
-# Changes marked with 'c1' are due to error & solution found here: https://github.com/facebook/react-native/issues/31440
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+setup_permissions([
+  'Camera',
+])
+
 target 'AppGT' do
-    # Pods for AppGT
-    pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
-    # c1 replace 
-    # pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
-    pod 'FBReactNativeSpec', :path => "../node_modules/react-native/React/FBReactNativeSpec"
-    pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
-    pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
-    pod 'React', :path => '../node_modules/react-native/'
-    pod 'React-Core', :path => '../node_modules/react-native/'
-    pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
-    pod 'React-Core/DevSupport', :path => '../node_modules/react-native/'
-    pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
-    pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
-    pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
-    pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
-    pod 'React-RCTLinking', :path => '../node_modules/react-native/Libraries/LinkingIOS'
-    pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
-    pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
-    pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
-    pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
-    pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
-  
-    pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
-    pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
-    pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
-    pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-    pod 'React-callinvoker', :path => "../node_modules/react-native/ReactCommon/callinvoker"
-    pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
-    pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
-  
-    pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
-    pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
-    # pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-    pod 'RCT-Folly', :podspec => '../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec'
-    pod 'React-perflogger', :path => '../node_modules/react-native/ReactCommon/reactperflogger'
-    pod 'React-runtimeexecutor', :path => '../node_modules/react-native/ReactCommon/runtimeexecutor'
-    
-    permissions_path = '../node_modules/react-native-permissions/ios'
-    pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  config = use_native_modules!
 
-    use_native_modules!
-  # config = use_native_modules!
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
 
-  # use_react_native!(:path => config["reactNativePath"])
+  # Firebase Swift pods need modular headers
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseABTesting', :modular_headers => true
+  pod 'FirebaseInstallations', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseRemoteConfig', :modular_headers => true
 
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
-  # use_flipper!
-  # post_install do |installer|
-  #   flipper_post_install(installer)
-  # end
-  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
-
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+  end
 end

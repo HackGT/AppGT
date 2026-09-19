@@ -18,7 +18,7 @@ import {
   faIdBadge,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
 import {

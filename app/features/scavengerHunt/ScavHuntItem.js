@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { logInteraction } from "../../api/api";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { ScavHuntContext } from "../../state/scavHunt";
