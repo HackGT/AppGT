@@ -65,7 +65,11 @@ export default function HackathonProvider({
     const raw = await getHexathon(token);
     const hexathon = raw.json;
 
-    if (hexathon) {
+    // A missing/misconfigured hexathon ID (e.g. CURRENT_HEXATHON pointing at a
+    // record that doesn't exist yet) returns a 400 error body, not null -- it
+    // has no `name`, so accepting it here used to render "Welcome to undefined"
+    // instead of retrying.
+    if (raw.status === 200 && hexathon) {
       const { eventJson } = await getEvents(token);
       const { blockJson } = await getBlocks(token);
       const { scavengerHuntJson } = await getScavengerHunt(token);
@@ -79,7 +83,13 @@ export default function HackathonProvider({
       value.state.hackathon = hexathon;
       setIsLoading(false);
     } else {
-      // if still loading, present error asking for retry
+      // Leave isLoading true (splash screen stays up) instead of showing a
+      // broken hexathon; the 5-minute refresh interval retries automatically.
+      console.warn(
+        "getHexathon failed, will retry:",
+        raw.status,
+        hexathon?.message
+      );
     }
   };
 
