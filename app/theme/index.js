@@ -1,89 +1,97 @@
-import { DynamicStyleSheet, DynamicValue } from "react-native-dark-mode";
+import { StyleSheet, useColorScheme } from "react-native";
 
-export const dynamicStyles = new DynamicStyleSheet({
-  backgroundColor: {
-    backgroundColor: new DynamicValue("white", "#0F0F0F"),
-  },
-  secondaryBackgroundColor: {
-    backgroundColor: new DynamicValue("#F2F2F2", "#35383D"),
-  },
+const makeStyles = (dark) =>
+  StyleSheet.create({
+    backgroundColor: {
+      backgroundColor: dark ? "#0F0F0F" : "white",
+    },
+    secondaryBackgroundColor: {
+      backgroundColor: dark ? "#35383D" : "#F2F2F2",
+    },
 
-  text: {
-    color: new DynamicValue("#3F3F3F", "white"),
-  },
+    text: {
+      color: dark ? "white" : "#3F3F3F",
+    },
 
-  italicText: {
-    color: new DynamicValue("#3F3F3F", "white"),
-    fontStyle: "italic",
-  },
+    italicText: {
+      color: dark ? "white" : "#3F3F3F",
+      fontStyle: "italic",
+    },
 
-  toggleText: {
-    color: new DynamicValue("black", "white"),
-  },
+    toggleText: {
+      color: dark ? "white" : "black",
+    },
 
-  trackBarBackground: {
-    color: new DynamicValue("#d3d3d3", "#4a5568"),
-  },
+    trackBarBackground: {
+      color: dark ? "#4a5568" : "#d3d3d3",
+    },
 
-  toggleThumbBackgroundColor: {
-    color: new DynamicValue("white", "black"),
-  },
+    toggleThumbBackgroundColor: {
+      color: dark ? "black" : "white",
+    },
 
-  filterText: {
-    color: new DynamicValue("white", "#0F0F0F"),
-    fontSize: 15,
-    paddingRight: 5,
-  },
+    filterText: {
+      color: dark ? "#0F0F0F" : "white",
+      fontSize: 15,
+      paddingRight: 5,
+    },
 
-  borderColor: {
-    borderColor: new DynamicValue("#3F3F3F", "white"),
-  },
+    borderColor: {
+      borderColor: dark ? "white" : "#3F3F3F",
+    },
 
-  secondaryText: {
-    color: new DynamicValue("#4F4F4F", "#C2C2C2"),
-  },
+    secondaryText: {
+      color: dark ? "#C2C2C2" : "#4F4F4F",
+    },
 
-  tintColor: {
-    color: new DynamicValue("#41D1FF", "#2C8DDB"),
-  },
-  tintBackgroundColor: {
-    backgroundColor: new DynamicValue("#41D1FF", "#2C8DDB"),
-  },
+    tintColor: {
+      color: dark ? "#2C8DDB" : "#41D1FF",
+    },
+    tintBackgroundColor: {
+      backgroundColor: dark ? "#2C8DDB" : "#41D1FF",
+    },
 
-  secondaryTintColor: {
-    color: new DynamicValue("#2C8DDB", "#2C8DDB"),
-  },
-  secondaryTintBackgroundColor: {
-    backgroundColor: new DynamicValue("#41D1FF", "#2C8DDB"),
-  },
+    secondaryTintColor: {
+      color: "#2C8DDB",
+    },
+    secondaryTintBackgroundColor: {
+      backgroundColor: dark ? "#2C8DDB" : "#41D1FF",
+    },
 
-  primaryButtonBackground: {
-    backgroundColor: new DynamicValue("#666666", "#35383D"),
-  },
+    primaryButtonBackground: {
+      backgroundColor: dark ? "#35383D" : "#666666",
+    },
 
-  tritaryBackgroundColor: {
-    backgroundColor: new DynamicValue("white", "#1A1919"),
-  },
+    tritaryBackgroundColor: {
+      backgroundColor: dark ? "#1A1919" : "white",
+    },
 
-  tabBarBackgroundColor: {
-    backgroundColor: new DynamicValue("white", "#171717"),
-    shadowColor: new DynamicValue("#D3D3D3", "#666666"),
-    borderTopColor: new DynamicValue("#D3D3D3", "#666666"),
-  },
+    tabBarBackgroundColor: {
+      backgroundColor: dark ? "#171717" : "white",
+      shadowColor: dark ? "#666666" : "#D3D3D3",
+      borderTopColor: dark ? "#666666" : "#D3D3D3",
+    },
 
-  searchBorderTopColor: {
-    borderTopColor: new DynamicValue("white", "#0F0F0F"),
-  },
+    searchBorderTopColor: {
+      borderTopColor: dark ? "#0F0F0F" : "white",
+    },
 
-  searchBorderBottomColor: {
-    borderBottomColor: new DynamicValue("white", "#0F0F0F"),
-  },
+    searchBorderBottomColor: {
+      borderBottomColor: dark ? "#0F0F0F" : "white",
+    },
 
-  searchBackgroundColor: {
-    backgroundColor: new DynamicValue("#F2F2F2", "#1A1919"),
-  },
+    searchBackgroundColor: {
+      backgroundColor: dark ? "#1A1919" : "#F2F2F2",
+    },
 
-  searchDividerColor: {
-    borderBottomColor: new DynamicValue("#C3C3C3", "#35383D"),
-  },
-});
+    searchDividerColor: {
+      borderBottomColor: dark ? "#35383D" : "#C3C3C3",
+    },
+  });
+
+export const lightStyles = makeStyles(false);
+export const darkStyles = makeStyles(true);
+
+export function useTheme() {
+  return useColorScheme() === "dark" ? darkStyles : lightStyles;
+}

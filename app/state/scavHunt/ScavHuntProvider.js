@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initialValue, scavHuntReducer } from "./ScavHuntReducer";
 import {
   COMPLETE_HINT,

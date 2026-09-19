@@ -1,14 +1,13 @@
 import React from "react";
-import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { ProfileTab } from "./ProfileTab";
 import { ProfileStack } from "../../navigation";
-import { dynamicStyles } from "../../theme";
+import { useTheme } from "../../theme";
 
 import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 
 export default function InformationStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useTheme();
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen

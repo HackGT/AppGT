@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useEffect } from "react";
 import { View, Text, Alert, Dimensions, StyleSheet } from "react-native";
-import QRCodeScanner from "react-native-qrcode-scanner";
+import { QRScanner } from "../../components/QRScanner";
 import { request, PERMISSIONS } from "react-native-permissions";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -96,14 +96,10 @@ export function CheckInQR(props) {
           Scan User QR Code
         </Text>
         {isFocused && (
-          <QRCodeScanner
+          <QRScanner
             ref={scanner}
-            reactivate={false}
-            fadeIn={false}
-            showMarker
-            markerStyle={{ borderColor: "white", borderWidth: 2 }}
             onRead={onQRScan}
-            cameraStyle={{
+            style={{
               width: Dimensions.get("window").width - 30,
               alignSelf: "center",
               overflow: "hidden",

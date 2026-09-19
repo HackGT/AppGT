@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { View } from "react-native";
-import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { ScheduleSearch } from "./ScheduleSearch";
 import { ScheduleTab } from "./ScheduleTab";
 import { HackathonContext } from "../../state/hackathon";
 import { ScheduleStack } from "../../navigation";
-import { dynamicStyles } from "../../theme";
+import { useTheme } from "../../theme";
 
 import SearchIcon from "../../../assets/images/Search";
 import StarOnIcon from "../../../assets/images/StarLargeOn";
@@ -16,7 +15,7 @@ import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 
 export default function ScheduleStackScreen({ navigation }) {
   const { state, toggleIsStarSchedule } = useContext(HackathonContext);
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useTheme();
   return (
     <ScheduleStack.Navigator>
       <ScheduleStack.Screen

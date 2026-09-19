@@ -5,7 +5,7 @@ import {
 } from "./HackathonActionTypes";
 import { turnToEst } from "../../cms/DataHandler";
 
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotification from "react-native-push-notification";
 
 export const initialValue = {};

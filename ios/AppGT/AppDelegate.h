@@ -1,11 +1,9 @@
-#import <React/RCTBridgeDelegate.h>
+#import <RCTAppDelegate.h>
 #import <UIKit/UIKit.h>
 #import "RNAppAuthAuthorizationFlowManager.h"
 #import <UserNotifications/UNUserNotificationCenter.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate, RNAppAuthAuthorizationFlowManager, UNUserNotificationCenterDelegate>
-
-@property (nonatomic, strong) UIWindow *window;
+@interface AppDelegate : RCTAppDelegate <RNAppAuthAuthorizationFlowManager, UNUserNotificationCenterDelegate>
 
 @property(nonatomic, weak)id<RNAppAuthAuthorizationFlowManagerDelegate>authorizationFlowManagerDelegate;
 

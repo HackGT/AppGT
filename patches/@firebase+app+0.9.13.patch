@@ -1,0 +1,72 @@
+diff --git a/node_modules/@firebase/app/dist/esm/index.esm2017.js b/node_modules/@firebase/app/dist/esm/index.esm2017.js
+index e01ddf9..cd87909 100644
+--- a/node_modules/@firebase/app/dist/esm/index.esm2017.js
++++ b/node_modules/@firebase/app/dist/esm/index.esm2017.js
+@@ -720,6 +720,9 @@ class HeartbeatServiceImpl {
+         if (this._heartbeatsCache === null) {
+             this._heartbeatsCache = await this._heartbeatsCachePromise;
+         }
++        if (!this._heartbeatsCache || !this._heartbeatsCache.heartbeats) {
++            return;
++        }
+         // Do not store a heartbeat if one is already stored for this day
+         // or if a header has already been sent today.
+         if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
+@@ -750,7 +753,8 @@ class HeartbeatServiceImpl {
+             await this._heartbeatsCachePromise;
+         }
+         // If it's still null or the array is empty, there is no data to send.
+-        if (this._heartbeatsCache === null ||
++        if (!this._heartbeatsCache ||
++            !this._heartbeatsCache.heartbeats ||
+             this._heartbeatsCache.heartbeats.length === 0) {
+             return '';
+         }
+diff --git a/node_modules/@firebase/app/dist/esm/index.esm5.js b/node_modules/@firebase/app/dist/esm/index.esm5.js
+index 9c505c8..abf94b2 100644
+--- a/node_modules/@firebase/app/dist/esm/index.esm5.js
++++ b/node_modules/@firebase/app/dist/esm/index.esm5.js
+@@ -823,6 +823,9 @@ var HeartbeatServiceImpl = /** @class */ (function () {
+                         _a._heartbeatsCache = _b.sent();
+                         _b.label = 2;
+                     case 2:
++        if (!this._heartbeatsCache || !this._heartbeatsCache.heartbeats) {
++            return;
++        }
+                         // Do not store a heartbeat if one is already stored for this day
+                         // or if a header has already been sent today.
+                         if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
+@@ -864,7 +867,8 @@ var HeartbeatServiceImpl = /** @class */ (function () {
+                         _b.label = 2;
+                     case 2:
+                         // If it's still null or the array is empty, there is no data to send.
+-                        if (this._heartbeatsCache === null ||
++                        if (!this._heartbeatsCache ||
++                            !this._heartbeatsCache.heartbeats ||
+                             this._heartbeatsCache.heartbeats.length === 0) {
+                             return [2 /*return*/, ''];
+                         }
+diff --git a/node_modules/@firebase/app/dist/index.cjs.js b/node_modules/@firebase/app/dist/index.cjs.js
+index bbae9ef..e0457c7 100644
+--- a/node_modules/@firebase/app/dist/index.cjs.js
++++ b/node_modules/@firebase/app/dist/index.cjs.js
+@@ -826,6 +826,9 @@ var HeartbeatServiceImpl = /** @class */ (function () {
+                         _a._heartbeatsCache = _b.sent();
+                         _b.label = 2;
+                     case 2:
++        if (!this._heartbeatsCache || !this._heartbeatsCache.heartbeats) {
++            return;
++        }
+                         // Do not store a heartbeat if one is already stored for this day
+                         // or if a header has already been sent today.
+                         if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
+@@ -867,7 +870,8 @@ var HeartbeatServiceImpl = /** @class */ (function () {
+                         _b.label = 2;
+                     case 2:
+                         // If it's still null or the array is empty, there is no data to send.
+-                        if (this._heartbeatsCache === null ||
++                        if (!this._heartbeatsCache ||
++                            !this._heartbeatsCache.heartbeats ||
+                             this._heartbeatsCache.heartbeats.length === 0) {
+                             return [2 /*return*/, ''];
+                         }

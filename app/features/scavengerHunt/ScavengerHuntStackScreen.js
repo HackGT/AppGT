@@ -1,15 +1,14 @@
 import React from "react";
-import { useDynamicStyleSheet } from "react-native-dark-mode";
 import { ScavHuntCrossword } from "./ScavHuntCrossword";
 import { ScavengerHuntTab } from "./ScavengerHuntTab";
 import { ScavengerHuntStack } from "../../navigation";
-import { dynamicStyles } from "../../theme";
+import { useTheme } from "../../theme";
 import { ScavHuntProvider } from "../../state/scavHunt";
 import { ScavHuntItem } from "./ScavHuntItem";
 import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 
 export default function ScavengerHuntStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useTheme();
   return (
     <ScavHuntProvider>
       <ScavengerHuntStack.Navigator>
