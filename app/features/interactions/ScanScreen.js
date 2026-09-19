@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Toggle from "react-native-toggle-element";
-import QRCodeScanner from "react-native-qrcode-scanner";
+import { QRScanner } from "../../components/QRScanner";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { request, PERMISSIONS } from "react-native-permissions";
 import Modal from "react-native-modal";
@@ -240,14 +240,10 @@ export function ScanScreen(props) {
       </View>
       {toggleValue ? (
         isFocused && (
-          <QRCodeScanner
+          <QRScanner
             ref={scanner}
-            reactivate={false}
-            fadeIn={false}
-            showMarker
-            markerStyle={{ borderColor: "white", borderWidth: 2 }}
             onRead={onQRCodeScanned}
-            cameraStyle={{
+            style={{
               width: Dimensions.get("window").width - 30,
               overflow: "hidden",
             }}

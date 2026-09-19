@@ -12,7 +12,7 @@ import {
 import { logInteraction } from "../../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RBSheet from "react-native-raw-bottom-sheet";
-import QRCodeScanner from "react-native-qrcode-scanner";
+import { QRScanner } from "../../components/QRScanner";
 import { ScavHuntContext } from "../../state/scavHunt";
 import { AuthContext } from "../../contexts/AuthContext";
 import { ThemeContext } from "../../contexts/ThemeContext";
@@ -105,14 +105,10 @@ export function ScavHuntItem(props) {
         <Text style={[styles.answerButtonText, dynamicStyles.text]}>
           Scan QR Code
         </Text>
-        <QRCodeScanner
+        <QRScanner
           ref={scanner}
-          reactivate={false}
-          fadeIn={false}
-          showMarker
-          markerStyle={{ borderColor: "white", borderWidth: 2 }}
           onRead={onQRCodeScanned}
-          cameraStyle={{
+          style={{
             width: Dimensions.get("window").width,
             overflow: "hidden",
             alignSelf: "center",
