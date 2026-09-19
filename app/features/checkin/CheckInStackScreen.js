@@ -1,15 +1,14 @@
 import React from "react";
-import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { CheckInQR } from "./CheckInQR";
 import { CheckInNFC } from "./CheckInNFC";
 import { CheckInStack } from "../../navigation";
-import { dynamicStyles } from "../../theme";
+import { useTheme } from "../../theme";
 import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function CheckInStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useTheme();
   return (
     <AuthContext.Consumer>
       {({ user }) => {

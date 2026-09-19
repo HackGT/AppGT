@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useState, useEffect } from "react";
-import { StatusBar, Modal, Platform } from "react-native";
+import { StatusBar, Modal, Platform, useColorScheme } from "react-native";
 import { LoginOnboarding } from "./app/features/onboarding/LoginOnboarding";
 import SplashScreen from "./app/components/SplashScreen";
 import { EventOnboarding } from "./app/features/onboarding/EventOnboarding";
@@ -21,11 +21,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
-import {
-  useDarkModeContext,
-  useDynamicStyleSheet,
-} from "react-native-dark-mode";
-import { dynamicStyles } from "./app/theme";
+import { useTheme } from "./app/theme";
 import firebase from "@react-native-firebase/app";
 import {
   ScheduleStackScreen,
@@ -113,8 +109,8 @@ PushNotification.configure({
 const Tab = createBottomTabNavigator();
 
 function App(props) {
-  const theme = useDarkModeContext();
-  const styles = useDynamicStyleSheet(dynamicStyles);
+  const theme = useColorScheme() === "dark" ? "dark" : "light";
+  const styles = useTheme();
 
   // event data
   const [hackathon, setHackathon] = useState(null);

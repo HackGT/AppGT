@@ -1,18 +1,15 @@
 import React, { useMemo } from "react";
-import {
-  useDarkModeContext,
-  useDynamicStyleSheet,
-} from "react-native-dark-mode";
-import { dynamicStyles } from "../theme";
+import { useColorScheme } from "react-native";
+import { lightStyles, useTheme } from "../theme";
 
 const ThemeContext = React.createContext({
   theme: "light",
-  dynamicStyles: dynamicStyles,
+  dynamicStyles: lightStyles,
 });
 
 const ThemeProvider = ({ children }) => {
-  const mode = useDarkModeContext();
-  const styles = useDynamicStyleSheet(dynamicStyles);
+  const mode = useColorScheme() === "dark" ? "dark" : "light";
+  const styles = useTheme();
 
   const value = useMemo(
     () => ({

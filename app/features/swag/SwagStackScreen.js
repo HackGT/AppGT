@@ -1,15 +1,14 @@
 import React from "react";
-import { useDynamicStyleSheet } from "react-native-dark-mode";
 
 import { SwagTab } from "./SwagTab";
 import { SwagScreen } from "./SwagScreen";
 import { SwagStack } from "../../navigation";
-import { dynamicStyles } from "../../theme";
+import { useTheme } from "../../theme";
 import HexlabsIcon from "../../../assets/images/HexlabsIcon";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function SwagStackScreen({ navigation }) {
-  const dStyles = useDynamicStyleSheet(dynamicStyles);
+  const dStyles = useTheme();
   return (
     <AuthContext.Consumer>
       {({ user }) => {
