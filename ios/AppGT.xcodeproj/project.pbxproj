@@ -14,6 +14,7 @@
 		5AC61C1B28E6714100979926 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5AC61C1A28E6714100979926 /* GoogleService-Info.plist */; };
 		6E5BF9A2B1984A6C830C5225 /* SpaceMono-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A3A684B78764B4697769AFB /* SpaceMono-BoldItalic.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		98EFC21C2ABD7E21AFB8C37F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9221C9592FDC3752452D196C /* PrivacyInfo.xcprivacy */; };
 		B165A0C4392CCC2276A5AD4C /* libPods-AppGT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6354C7CB3996DC0B202548C7 /* libPods-AppGT.a */; };
 		E77A6C132BA844D7BE262146 /* SpaceMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FAF25C873A84C4A89ACDCE5 /* SpaceMono-Italic.ttf */; };
 		EA24588DC54D4379981A8D85 /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD42DC4177E14C7BA96A715A /* SpaceMono-Regular.ttf */; };
@@ -45,6 +46,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AppGT/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		849390934EE3D2EBB3D66AAA /* Pods-AppGT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT.release.xcconfig"; path = "Target Support Files/Pods-AppGT/Pods-AppGT.release.xcconfig"; sourceTree = "<group>"; };
 		8AC968937C45C7F32519AD0E /* libPods-AppGT-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9221C9592FDC3752452D196C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = AppGT/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		9B3C89A6BB33734F4B16F554 /* HackGTRelease.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = HackGTRelease.entitlements; path = AppGT/HackGTRelease.entitlements; sourceTree = "<group>"; };
 		AE79C99C2DE101CDAD0F4C9D /* Pods-AppGT-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppGT-tvOS.release.xcconfig"; path = "Target Support Files/Pods-AppGT-tvOS/Pods-AppGT-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C41B6EFD871933B079458B1A /* libPods-AppGT-AppGTTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppGT-AppGTTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -92,6 +95,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				9221C9592FDC3752452D196C /* PrivacyInfo.xcprivacy */,
+				9B3C89A6BB33734F4B16F554 /* HackGTRelease.entitlements */,
 			);
 			name = AppGT;
 			sourceTree = "<group>";
@@ -237,6 +242,7 @@
 				E77A6C132BA844D7BE262146 /* SpaceMono-Italic.ttf in Resources */,
 				EA24588DC54D4379981A8D85 /* SpaceMono-Regular.ttf in Resources */,
 				5AC61C1B28E6714100979926 /* GoogleService-Info.plist in Resources */,
+				98EFC21C2ABD7E21AFB8C37F /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,7 +455,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/AppGT/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.7.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -469,13 +475,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = AppGT/HackGT.entitlements;
+				CODE_SIGN_ENTITLEMENTS = AppGT/HackGTRelease.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R38UDSH2CH;
 				INFOPLIST_FILE = "$(SRCROOT)/AppGT/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.7.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

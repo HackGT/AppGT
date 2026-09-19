@@ -42,6 +42,7 @@ import "intl/locale-data/jsonp/en";
 import remoteConfig from "@react-native-firebase/remote-config";
 import { DEFAULT_HEXATHON } from "./app/api/api";
 
+
 // old groundtruth auth
 // const authUrl = "https://login.hack.gt";
 const loginUrl = "https://login.hexlabs.org";
@@ -58,14 +59,10 @@ const config = {
 
 PushNotification.configure({
   // (optional) Called when Token is generated (iOS and Android)
-  onRegister: function (token) {
-    console.log("TOKEN:", token);
-  },
+  onRegister: function (token) {},
 
   // (required) Called when a remote is received or opened, or local notification is opened
   onNotification: function (notification) {
-    console.log("NOTIFICATION:", notification);
-
     // process the notification
     // (required) Called when a remote is received or opened, or local notification is opened
     notification.finish(PushNotificationIOS.FetchResult.NoData);
@@ -73,9 +70,6 @@ PushNotification.configure({
 
   // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
   onAction: function (notification) {
-    console.log("ACTION:", notification.action);
-    console.log("NOTIFICATION:", notification);
-
     // process the action
   },
 
@@ -128,23 +122,29 @@ function App(props) {
     AsyncStorage.getItem(
       "starredIds",
       (error, result) => result && setStarredIds(JSON.parse(result))
-    );
+    ).catch((err) => console.warn("getItem starredIds failed:", err));
 
     AsyncStorage.getItem(
       "pastEventOnboardID",
       (error, result) => result && setPastEventOnboardID(result)
+    ).catch((err) =>
+      console.warn("getItem pastEventOnboardID failed:", err)
     );
 
     AsyncStorage.getItem("isStarSchedule", (error, result) => {
       result && setIsStarSchedule(result === true ? true : false);
-    });
+    }).catch((err) =>
+      console.warn("getItem isStarSchedule failed:", err)
+    );
 
     setIsFetchingData(false);
   };
 
   useEffect(() => {
     // setup firebase notification support
-    messaging().subscribeToTopic("all");
+    messaging()
+      .subscribeToTopic("all")
+      .catch((err) => console.warn("subscribeToTopic failed:", err));
     // alert(firebase.messaging().getToken());
 
     PushNotification.createChannel(
@@ -163,7 +163,7 @@ function App(props) {
     AsyncStorage.setItem(
       "isStarSchedule",
       isStarSchedule == true ? "true" : "false"
-    );
+    ).catch((err) => console.warn("setItem isStarSchedule failed:", err));
   }, [isStarSchedule]);
 
   useEffect(() => {
@@ -200,7 +200,13 @@ function App(props) {
               }
               return remoteConfig().fetch();
             })
-        );
+        )
+        // The surrounding try/catch only guards the synchronous call, so a
+        // rejection in this chain escapes it and surfaces as an "Unhandled
+        // Promise Rejection" warning at startup.
+        .catch((err) => {
+          console.warn("Remote Config setup failed:", err);
+        });
     } catch (err) {
       console.log(err);
     }

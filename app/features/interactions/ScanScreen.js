@@ -36,13 +36,21 @@ export function ScanScreen(props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    request(PERMISSIONS.IOS.CAMERA).then((result) => {
-      console.log(result);
-    });
+    request(PERMISSIONS.IOS.CAMERA)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.warn("Camera permission request failed:", err);
+      });
   }, []);
 
-  useEffect(async () => {
-    await initNfc();
+  useEffect(() => {
+    // An async effect callback returns a promise React never handles, so a
+    // failure here would surface as an unhandled rejection.
+    initNfc().catch((err) => {
+      console.warn("NFC init failed:", err);
+    });
   }, []);
 
   // NFC
