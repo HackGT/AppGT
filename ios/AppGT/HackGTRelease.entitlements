@@ -7,12 +7,17 @@
 	  the production APNs servers, so aps-environment must be "production" here;
 	  a development value yields a sandbox token and every push is dropped.
 	  Debug builds keep AppGT/HackGT.entitlements with aps-environment=development.
+
+	  Do not add "NDEF" back to the NFC formats array below. Older Xcode versions
+	  inserted it automatically, but Apple deprecated it in favour of "TAG" and
+	  App Store Connect now rejects the upload with "Invalid entitlement for core
+	  nfc framework ... NDEF is disallowed". Reading and writing NDEF messages
+	  still works with TAG alone.
 	-->
 	<key>aps-environment</key>
 	<string>production</string>
 	<key>com.apple.developer.nfc.readersession.formats</key>
 	<array>
-		<string>NDEF</string>
 		<string>TAG</string>
 	</array>
 </dict>
