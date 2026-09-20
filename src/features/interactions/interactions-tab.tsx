@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
@@ -36,7 +37,7 @@ export function InteractionsTab() {
       const location = event?.location?.[0]?.name ? event.location[0].name + ' • ' : '';
       const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate);
       return (
-        <TouchableOpacity key={event.id} onPress={() => onPressEvent(event)}>
+        <TouchableOpacity key={event.id} onPress={() => onPressEvent(event)} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <EventCard
             name={event.name}
             startTime={startTime}

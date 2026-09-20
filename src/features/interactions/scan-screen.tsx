@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,28 @@ interface ScanScreenProps {
   description?: string;
 }
 
+function QRSection({ onQRScanned, qrScanned }: { onQRScanned: (e: { data: string }) => void; qrScanned: boolean }) {
+  const theme = useTheme();
+  const [permission, requestPermission] = useCameraPermissions();
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Text style={[styles.scanLabel, { color: theme.text }]}>Scan User QR Code</Text>
+      {permission?.granted ? (
+        <CameraView
+          style={styles.camera}
+          facing="back"
+          onBarcodeScanned={qrScanned ? undefined : onQRScanned}
+          barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
+        />
+      ) : (
+        <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+          <Text style={{ color: theme.text, fontFamily: 'SpaceMono-Bold' }}>Grant Camera Permission</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+}
+
 export function ScanScreen({ eventID }: ScanScreenProps) {
   const theme = useTheme();
   const { firebaseUser } = useContext(AuthContext);
@@ -38,7 +60,7 @@ export function ScanScreen({ eventID }: ScanScreenProps) {
   const [isScanning, setIsScanning] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [qrScanned, setQrScanned] = useState(false);
-  const [permission, requestPermission] = useCameraPermissions();
+  const qrScanningRef = useRef(false);
 
   useEffect(() => {
     initNfc();
@@ -70,18 +92,19 @@ export function ScanScreen({ eventID }: ScanScreenProps) {
   };
 
   const onQRScanned = async ({ data }: { data: string }) => {
-    if (qrScanned) return;
+    if (qrScanningRef.current) return;
+    qrScanningRef.current = true;
     setQrScanned(true);
     let json: any = {};
     try { json = JSON.parse(data); } catch {}
     if (!json.uid) {
       createAlert('Invalid QR Code');
-      setTimeout(() => setQrScanned(false), 3000);
+      setTimeout(() => { qrScanningRef.current = false; setQrScanned(false); }, 3000);
       return;
     }
     setUid(json.uid);
     await getProfileAndLogInteraction(json.uid);
-    setTimeout(() => setQrScanned(false), 3000);
+    setTimeout(() => { qrScanningRef.current = false; setQrScanned(false); }, 3000);
   };
 
   const scanNFC = async () => {
@@ -139,27 +162,9 @@ export function ScanScreen({ eventID }: ScanScreenProps) {
       </View>
 
       {useQR ? (
-        <View style={{ alignItems: 'center' }}>
-          <Text style={[styles.scanLabel, { color: theme.text }]}>
-            Scan User QR Code
-          </Text>
-          {permission?.granted ? (
-            <CameraView
-              style={styles.camera}
-              facing="back"
-              onBarcodeScanned={qrScanned ? undefined : onQRScanned}
-              barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
-            />
-          ) : (
-            <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission}>
-              <Text style={{ color: theme.text, fontFamily: 'SpaceMono-Bold' }}>
-                Grant Camera Permission
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        <QRSection onQRScanned={onQRScanned} qrScanned={qrScanned} />
       ) : (
-        <TouchableOpacity style={styles.scanButton} onPress={scanNFC} disabled={isScanning}>
+        <TouchableOpacity style={styles.scanButton} onPress={scanNFC} disabled={isScanning} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <Card>
             <Text style={[styles.scanButtonText, { color: theme.text }]}>Scan Badge</Text>
           </Card>

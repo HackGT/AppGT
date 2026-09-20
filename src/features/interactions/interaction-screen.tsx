@@ -21,7 +21,7 @@ export function InteractionScreen({ selectedEvent }: InteractionScreenProps) {
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.background }}>
     <ScrollView style={{ backgroundColor: theme.background }}>
       <View style={styles.eventContainer}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Pressable style={styles.backButton} onPress={() => router.back()} android_ripple={null}>
           <Text style={[styles.backButtontext, { color: theme.text }]}>{'< Back'}</Text>
         </Pressable>
 
