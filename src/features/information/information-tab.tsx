@@ -1,5 +1,5 @@
 import { type ReactElement, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert, Platform } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
@@ -29,6 +29,8 @@ export function InformationTab() {
           <TouchableOpacity
             key={button.title}
             style={[styles.headerButton, { borderColor: theme.tintColor as string }]}
+            activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+            needsOffscreenAlphaCompositing={true}
             onPress={() => {
               Linking.openURL(button.url).catch(() => {
                 if (button.backupURL) {
