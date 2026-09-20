@@ -1,5 +1,6 @@
 import { Redirect, Tabs } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Pressable } from 'react-native';
 import { useAuth } from '@/contexts/auth-context';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -20,6 +21,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: theme.tintColor as string,
         tabBarInactiveTintColor: theme.textSecondary as string,
         tabBarStyle: { backgroundColor: theme.tabBarBackground as string },
+        tabBarButton: (props) => <Pressable {...props} android_ripple={null} />,
       }}
     >
       <Tabs.Screen

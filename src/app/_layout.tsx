@@ -38,6 +38,7 @@ function RootNavigator() {
       <Stack.Screen name="check-in-nfc" options={SCREEN_OPTIONS} />
       <Stack.Screen name="swag-screen" options={SCREEN_OPTIONS} />
       <Stack.Screen name="scav-hunt-item" options={SCREEN_OPTIONS} />
+      <Stack.Screen name="redirect" options={SCREEN_OPTIONS} />
     </Stack>
   );
 
