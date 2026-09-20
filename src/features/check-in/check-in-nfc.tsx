@@ -9,6 +9,7 @@ import {
   Modal,
   Dimensions,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -89,7 +90,7 @@ export function CheckInNFC({ application }: CheckInNFCProps) {
         <Text style={[styles.infoText, { color: theme.text }]}>
           {'Application Group: ' + application.confirmationBranch?.applicationGroup}
         </Text>
-        <TouchableOpacity onPress={onPressScan} style={styles.writeToBadgeButton}>
+        <TouchableOpacity onPress={onPressScan} style={styles.writeToBadgeButton} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <Card>
             <Text style={[styles.writeToBadgeButtonText, { color: theme.text }]}>
               Write to Badge

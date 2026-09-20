@@ -1,7 +1,8 @@
-import { useContext, useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, StyleSheet } from 'react-native';
+import { useContext, useState, useRef } from 'react';
+import { View, Text, Alert, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 import { useTheme } from '@/hooks/use-theme';
 import { AuthContext } from '@/contexts/auth-context';
 import { getRegistrationApplication, CURRENT_HEXATHON } from '@/api/api';
@@ -13,15 +14,30 @@ export function CheckInQR() {
   const router = useRouter();
   const { firebaseUser } = useContext(AuthContext);
   const [scanned, setScanned] = useState(false);
+  const scanningRef = useRef(false);
+  const [isFocused, setIsFocused] = useState(true);
   const [permission, requestPermission] = useCameraPermissions();
 
-  const resetAfterCooldown = () => setTimeout(() => setScanned(false), COOLDOWN_MS);
+  useFocusEffect(useCallback(() => {
+    setIsFocused(true);
+    return () => {
+      setIsFocused(false);
+      scanningRef.current = false;
+      setScanned(false);
+    };
+  }, []));
+
+  const resetAfterCooldown = () => setTimeout(() => {
+    scanningRef.current = false;
+    setScanned(false);
+  }, COOLDOWN_MS);
 
   const createAlert = (message: string) =>
     Alert.alert('Error', message, [{ text: 'OK' }]);
 
   const onQRScanned = async ({ data }: { data: string }) => {
-    if (scanned) return;
+    if (scanningRef.current) return;
+    scanningRef.current = true;
     setScanned(true);
 
     let json: any = {};
@@ -73,14 +89,14 @@ export function CheckInQR() {
           Scan User QR Code
         </Text>
         {permission?.granted ? (
-          <CameraView
+          isFocused && <CameraView
             style={styles.camera}
             facing="back"
             onBarcodeScanned={scanned ? undefined : onQRScanned}
             barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
           />
         ) : (
-          <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission}>
+          <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
             <Text style={{ color: theme.text, fontFamily: 'SpaceMono-Bold' }}>
               Grant Camera Permission
             </Text>
