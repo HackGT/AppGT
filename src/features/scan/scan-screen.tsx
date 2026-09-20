@@ -8,8 +8,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   Platform,
+  Linking,
 } from "react-native";
-import * as WebBrowser from "expo-web-browser";
 import { useTheme } from "@/hooks/use-theme";
 import { Card } from "@/components/card";
 import { initNfc, cancelNFC, readNFC } from "@/lib/nfc";
@@ -17,7 +17,7 @@ import { CheckoutRadio, type CheckoutType } from "./checkout-radio";
 import { Touchable } from "@/components/touchable";
 
 // Debug flag: shows a uid field that bypasses NFC scanning when filled in.
-const SHOW_DEBUG_UID_INPUT = false;
+const SHOW_DEBUG_UID_INPUT = true;
 
 export function ScanScreen() {
   const theme = useTheme();
@@ -39,7 +39,7 @@ export function ScanScreen() {
   const scanNFC = async () => {
     const overrideUid = SHOW_DEBUG_UID_INPUT ? debugUid.trim() : "";
     if (overrideUid) {
-      await WebBrowser.openBrowserAsync(checkoutScanUrl(overrideUid, mode));
+      await Linking.openURL(checkoutScanUrl(overrideUid, mode));
       return;
     }
     setIsScanning(true);
@@ -62,7 +62,7 @@ export function ScanScreen() {
       );
       return;
     }
-    await WebBrowser.openBrowserAsync(checkoutScanUrl(json.uid, mode));
+    await Linking.openURL(checkoutScanUrl(json.uid, mode));
   };
 
   return (
