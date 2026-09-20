@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { EVENT_TYPE_COLOR_MAP } from '@/api/api';
 
@@ -35,6 +35,8 @@ export default function FilterSelect({ onSelectFilter, onFilterMenuChange }: Fil
             setShowMenu(false);
             onFilterMenuChange(false);
           }}
+          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+          needsOffscreenAlphaCompositing={true}
         >
           <Text style={[styles.exitTextStyle, { color: theme.text }]}> x </Text>
         </TouchableOpacity>
@@ -44,6 +46,8 @@ export default function FilterSelect({ onSelectFilter, onFilterMenuChange }: Fil
               key={name}
               onPress={() => hideFilterMenu({ name, color })}
               style={[styles.tag, { backgroundColor: color, marginLeft: 8 }]}
+              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+              needsOffscreenAlphaCompositing={true}
             >
               <Text style={styles.filterText}> {name} </Text>
             </TouchableOpacity>
@@ -62,10 +66,12 @@ export default function FilterSelect({ onSelectFilter, onFilterMenuChange }: Fil
             setShowMenu(true);
             onFilterMenuChange(true);
           }}
+          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+          needsOffscreenAlphaCompositing={true}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.filterText}> {filterType.name} </Text>
-            <TouchableOpacity onPress={() => hideFilterMenu({ name: 'clear' })}>
+            <TouchableOpacity onPress={() => hideFilterMenu({ name: 'clear' })} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
               <Text style={[styles.filterText, { paddingRight: 4 }]}>x</Text>
             </TouchableOpacity>
           </View>
@@ -82,6 +88,8 @@ export default function FilterSelect({ onSelectFilter, onFilterMenuChange }: Fil
           setShowMenu(true);
           onFilterMenuChange(true);
         }}
+        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+        needsOffscreenAlphaCompositing={true}
       >
         <Text style={[styles.filterTextStyle, { color: theme.text }]}> Filter </Text>
       </TouchableOpacity>

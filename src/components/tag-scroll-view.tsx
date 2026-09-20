@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, ScrollView, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 
 interface TagScrollViewProps {
@@ -36,6 +36,8 @@ export default function TagScrollView({
                 styles.tagStyle,
                 { backgroundColor: isHighlighted ? theme.tintColor : theme.backgroundElement },
               ]}
+              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+              needsOffscreenAlphaCompositing={true}
             >
               <Text
                 style={[
