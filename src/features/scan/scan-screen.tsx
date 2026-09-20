@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Pressable,
+  TouchableOpacity,
+  TextInput,
   Alert,
   Modal,
   ActivityIndicator,
@@ -10,16 +11,20 @@ import {
   Platform,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { useTheme } from "@/hooks/use-theme";
+import { Card } from "@/components/card";
 import { initNfc, cancelNFC, readNFC } from "@/lib/nfc";
 import { CheckoutRadio, type CheckoutType } from "./checkout-radio";
+
+// Debug flag: shows a uid field that bypasses NFC scanning when filled in.
+const SHOW_DEBUG_UID_INPUT = false;
 
 export function ScanScreen() {
   const theme = useTheme();
   const [mode, setMode] = useState<CheckoutType>("swag");
   const [isScanning, setIsScanning] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [debugUid, setDebugUid] = useState("");
 
   useEffect(() => {
     initNfc();
@@ -32,6 +37,11 @@ export function ScanScreen() {
     Alert.alert("Error", message, [{ text: "OK" }]);
 
   const scanNFC = async () => {
+    const overrideUid = SHOW_DEBUG_UID_INPUT ? debugUid.trim() : "";
+    if (overrideUid) {
+      await WebBrowser.openBrowserAsync(checkoutScanUrl(overrideUid, mode));
+      return;
+    }
     setIsScanning(true);
     if (Platform.OS === "android") setModalVisible(true);
     const { success, data } = await readNFC();
@@ -85,31 +95,36 @@ export function ScanScreen() {
       <Text style={[styles.title, { color: theme.text }]}>Checkout</Text>
       <CheckoutRadio value={mode} onChange={setMode} disabled={isScanning} />
 
-      <View style={styles.scanArea}>
-        <Pressable
-          onPress={scanNFC}
-          disabled={isScanning}
-          accessibilityRole="button"
-          accessibilityLabel={`Scan badge for ${mode} checkout`}
-          style={({ pressed }) => [
-            styles.scanButton,
+      {SHOW_DEBUG_UID_INPUT && (
+        <TextInput
+          value={debugUid}
+          onChangeText={setDebugUid}
+          placeholder="Debug: enter uid to skip scanning"
+          placeholderTextColor={theme.textSecondary}
+          autoCapitalize="none"
+          autoCorrect={false}
+          style={[
+            styles.debugInput,
             {
-              backgroundColor: theme.tintColor,
-              opacity: isScanning || pressed ? 0.7 : 1,
+              color: theme.text,
+              borderColor: theme.borderColor,
+              backgroundColor: theme.backgroundElement,
             },
           ]}
-        >
-          <FontAwesome5
-            name="wifi"
-            size={56}
-            color="#fff"
-            style={styles.icon}
-          />
-          <Text style={styles.scanText}>
-            {isScanning ? "Scanning..." : "Scan Badge"}
-          </Text>
-        </Pressable>
-      </View>
+        />
+      )}
+
+      <TouchableOpacity
+        style={styles.scanButton}
+        onPress={scanNFC}
+        disabled={isScanning}
+        accessibilityRole="button"
+        accessibilityLabel={`Scan badge for ${mode} checkout`}
+      >
+        <Card>
+          <Text style={[styles.scanButtonText, { color: theme.text }]}>Scan Badge</Text>
+        </Card>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -122,16 +137,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginVertical: 15,
   },
-  scanArea: { flex: 1, alignItems: "center", justifyContent: "center" },
-  scanButton: {
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    alignItems: "center",
-    justifyContent: "center",
+  debugInput: {
+    marginHorizontal: 15,
+    marginTop: 20,
+    padding: 12,
+    borderWidth: 1.3,
+    borderRadius: 12,
+    fontFamily: "SpaceMono-Regular",
   },
-  icon: { transform: [{ rotate: "90deg" }], marginBottom: 12 },
-  scanText: { fontFamily: "SpaceMono-Bold", fontSize: 20, color: "#fff" },
+  scanButton: { alignSelf: "center", marginTop: 20 },
+  scanButtonText: {
+    fontFamily: "SpaceMono-Bold",
+    fontSize: 20,
+    alignSelf: "center",
+    padding: 10,
+  },
   modalBackdrop: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",

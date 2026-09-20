@@ -13,6 +13,8 @@ import { EventCard } from './event-card';
 import { getStartEndTime } from '@/lib/util';
 import { SearchBar } from '@/components/search-bar';
 
+const CHECK_IN_EVENT_ID = '68c049a6a2c57dfa55eb80d3';
+
 export function InteractionsTab() {
   const theme = useTheme();
   const router = useRouter();
@@ -23,6 +25,10 @@ export function InteractionsTab() {
   const events = hackathon?.events ?? [];
 
   const onPressEvent = (event: any) => {
+    if (event.id === CHECK_IN_EVENT_ID) {
+      router.navigate('/check-in' as any);
+      return;
+    }
     router.push({
       pathname: '/interaction-screen' as any,
       params: { selectedEvent: JSON.stringify(event) },

@@ -4,8 +4,8 @@ import { useTheme } from '@/hooks/use-theme';
 export type CheckoutType = 'hardware' | 'swag';
 
 const OPTIONS: { value: CheckoutType; label: string }[] = [
-  { value: 'hardware', label: 'Hardware' },
   { value: 'swag', label: 'Swag' },
+  { value: 'hardware', label: 'Hardware' },
 ];
 
 interface CheckoutRadioProps {
