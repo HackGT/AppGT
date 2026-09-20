@@ -26,7 +26,7 @@ export function SwagTab(props) {
   const swagItems = hackathon.swag;
 
   const searchSwagItems = (value) => {
-    var newSwagItems = swagItems.filter((s) => s.name.includes(searchText));
+    var newSwagItems = swagItems.filter((s) => s.name.toLowerCase().includes(searchText.toLowerCase()));
     setSearchResults(newSwagItems);
     setSearchText(value);
   };
@@ -40,7 +40,7 @@ export function SwagTab(props) {
   const formattedSwagItems = !swagItems
     ? []
     : swagItems
-        .filter((s) => s.name.includes(searchText))
+        .filter((s) => s.name.toLowerCase().includes(searchText.toLowerCase()))
         .map((item) => {
           return (
             <TouchableOpacity
