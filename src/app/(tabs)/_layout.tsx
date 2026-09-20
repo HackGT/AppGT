@@ -61,6 +61,14 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="scan"
+        options={{
+          title: 'Scan',
+          href: showCheckin ? undefined : null,
+          tabBarIcon: ({ color }) => <FontAwesome5 name="wifi" size={22} color={color} style={{ transform: [{ rotate: '90deg' }] }} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
