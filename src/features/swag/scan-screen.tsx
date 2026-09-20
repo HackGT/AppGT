@@ -146,7 +146,7 @@ export function ScanScreen({ swagID }: ScanScreenProps) {
               barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
             />
           ) : (
-            <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission}>
+            <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
               <Text style={{ color: theme.text, fontFamily: 'SpaceMono-Bold' }}>
                 Grant Camera Permission
               </Text>
@@ -154,7 +154,7 @@ export function ScanScreen({ swagID }: ScanScreenProps) {
           )}
         </View>
       ) : (
-        <TouchableOpacity style={styles.scanButton} onPress={scanNFC} disabled={isScanning}>
+        <TouchableOpacity style={styles.scanButton} onPress={scanNFC} disabled={isScanning} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <Card>
             <Text style={[styles.scanButtonText, { color: theme.text }]}>Scan Badge</Text>
           </Card>

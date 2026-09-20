@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { SearchBar } from '@/components/search-bar';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
@@ -25,7 +25,7 @@ export function SwagTab() {
   const formattedSwagItems = swagItems
     .filter((s: any) => s.name.toLowerCase().includes(searchText.toLowerCase()))
     .map((item: any) => (
-      <TouchableOpacity key={item.id} onPress={() => onPressSwagItem(item)}>
+      <TouchableOpacity key={item.id} onPress={() => onPressSwagItem(item)} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
         <SwagItemCard name={item.name} cost={item.points} description={item.description} />
       </TouchableOpacity>
     ));
