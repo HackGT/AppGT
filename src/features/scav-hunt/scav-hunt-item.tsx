@@ -10,6 +10,7 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { logInteraction } from '@/api/api';
@@ -94,6 +95,8 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
       <TouchableOpacity
         style={{ alignSelf: 'flex-end', marginRight: 16, marginBottom: 8 }}
         onPress={() => setAnswerSheetVisible(false)}
+        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+        needsOffscreenAlphaCompositing={true}
       >
         <Text style={{ color: theme.text, fontSize: 20 }}>✕</Text>
       </TouchableOpacity>
@@ -122,7 +125,7 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
       {isAnswerCorrect ? (
         <Text style={[styles.completeText, { color: theme.text }]}>Complete</Text>
       ) : (
-        <TouchableOpacity style={[styles.answerButton, { width: 200 }]} onPress={handleSubmitAnswer}>
+        <TouchableOpacity style={[styles.answerButton, { width: 200 }]} onPress={handleSubmitAnswer} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <Text style={[styles.answerButtonText, { color: theme.text }]}>Submit</Text>
         </TouchableOpacity>
       )}
@@ -144,6 +147,8 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
               disabled={scannedCode === item.code}
               style={styles.answerButton}
               onPress={() => setQrSheetVisible(true)}
+              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+              needsOffscreenAlphaCompositing={true}
             >
               <Text style={[styles.answerButtonText, { color: theme.text }]}>
                 {scannedCode === item.code ? 'Completed!' : 'Scan Code'}
@@ -158,6 +163,8 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
                 style={styles.answerButton}
                 onPress={() => setAnswerSheetVisible(true)}
                 disabled={isComplete}
+                activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+                needsOffscreenAlphaCompositing={true}
               >
                 <Text style={[styles.answerButtonText, { color: theme.text }]}>
                   {isComplete ? 'Completed!' : 'Input Answer'}
@@ -170,7 +177,7 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
 
       {/* QR Sheet */}
       <Modal visible={qrSheetVisible} transparent animationType="slide" onRequestClose={() => setQrSheetVisible(false)}>
-        <Pressable style={{ flex: 1 }} onPress={() => setQrSheetVisible(false)} />
+        <Pressable style={{ flex: 1 }} onPress={() => setQrSheetVisible(false)} android_ripple={null} />
         <View style={[styles.bottomSheet, { backgroundColor: theme.background }]}>
           {qrSheetContent()}
         </View>
@@ -178,7 +185,7 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
 
       {/* Answer Sheet */}
       <Modal visible={answerSheetVisible} transparent animationType="slide" onRequestClose={() => setAnswerSheetVisible(false)}>
-        <Pressable style={{ flex: 1 }} onPress={() => setAnswerSheetVisible(false)} />
+        <Pressable style={{ flex: 1 }} onPress={() => setAnswerSheetVisible(false)} android_ripple={null} />
         <View style={[styles.bottomSheet, { backgroundColor: theme.background }]}>
           {answerSheetContent()}
         </View>

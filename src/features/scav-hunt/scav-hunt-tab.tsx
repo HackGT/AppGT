@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
@@ -45,6 +45,8 @@ export function ScavHuntTab() {
             backgroundColor: isComplete ? '#A4D496' : theme.background,
           },
         ]}
+        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+        needsOffscreenAlphaCompositing={true}
         onPress={() => {
           router.push({
             pathname: '/scav-hunt-item' as any,
