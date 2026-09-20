@@ -12,8 +12,11 @@
       "bundleIdentifier": "com.albertlying.AppGT2",
       "deploymentTarget": "17.0",
       "entitlements": {
-        "com.apple.developer.nfc.readersession.formats": ["TAG"]
-      }
+        "com.apple.developer.nfc.readersession.formats": [
+          "TAG"
+        ]
+      },
+      "appleTeamId": "8B3884J679"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +26,12 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.albertlying.AppGT2"
+      "package": "com.albertlying.AppGT2",
+      "permissions": [
+        "android.permission.NFC",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "output": "static",
@@ -39,10 +47,13 @@
           "imageWidth": 76
         }
       ],
-      ["react-native-nfc-manager", {
-        "nfcPermission": "Used to read and write NFC badges for event check-in.",
-        "includeNdefEntitlement": false
-      }],
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "Used to read and write NFC badges for event check-in.",
+          "includeNdefEntitlement": false
+        }
+      ],
       [
         "expo-camera",
         {
