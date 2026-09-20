@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Platform } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import * as WebBrowser from 'expo-web-browser';
 import { useTheme } from '@/hooks/use-theme';
@@ -103,12 +103,16 @@ export function ProfileTab() {
         <TouchableOpacity
           style={[styles.logOutButton, { borderColor: theme.tintColor }]}
           onPress={signOut}
+          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+          needsOffscreenAlphaCompositing={true}
         >
           <Text style={[styles.buttonText, { color: theme.text }]}>Log Out</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.dangerButton, { borderColor: theme.tintColor }]}
           onPress={profilePage}
+          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+          needsOffscreenAlphaCompositing={true}
         >
           <Text style={[styles.buttonText, { color: theme.text }]}>Delete Profile</Text>
         </TouchableOpacity>
