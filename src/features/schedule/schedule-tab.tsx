@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, FlatList, AppState, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, AppState, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { ScheduleEventCell } from './schedule-event-cell';
@@ -84,6 +84,8 @@ export function ScheduleTab() {
             <TouchableOpacity
               style={styles.cardHorizontalParent}
               onPress={() => onPressEvent(item)}
+              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+              needsOffscreenAlphaCompositing={true}
             >
               <ScheduleEventCell event={item} highlighted truncateText />
             </TouchableOpacity>

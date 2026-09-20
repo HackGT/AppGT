@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { Card } from '@/components/card';
@@ -34,7 +34,7 @@ export function ScheduleEventCell({ event, highlighted, truncateText }: Schedule
         >
           {title}
         </Text>
-        <TouchableOpacity style={{ width: '10%' }} onPress={() => toggleStar(event)}>
+        <TouchableOpacity style={{ width: '10%' }} onPress={() => toggleStar(event)} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <Text style={{ color: isStarred ? theme.tintColor : theme.textSecondary, fontSize: 18 }}>
             {isStarred ? '★' : '☆'}
           </Text>

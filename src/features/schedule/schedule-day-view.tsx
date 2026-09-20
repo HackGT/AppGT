@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Dimensions, Platform } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { ScheduleEventCell } from './schedule-event-cell';
 import { getTimeblocksForDay, isEventHappeningNow } from '@/lib/util';
@@ -64,7 +64,7 @@ export function ScheduleDayView({
               <View style={[styles.lineParent, { backgroundColor: theme.background as string }]}>
                 <View style={{ width: 1.5, flex: 1, backgroundColor: highlightColor }} />
               </View>
-              <TouchableOpacity style={styles.cardParent} onPress={() => onSelectEvent(item)}>
+              <TouchableOpacity style={styles.cardParent} onPress={() => onSelectEvent(item)} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
                 <ScheduleEventCell event={item} highlighted={highlighted} />
               </TouchableOpacity>
             </View>
@@ -88,6 +88,8 @@ export function ScheduleDayView({
               onPress={() => {
                 setDayIndex(i);
               }}
+              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+              needsOffscreenAlphaCompositing={true}
             >
               <Text
                 style={{
@@ -125,6 +127,8 @@ export function ScheduleDayView({
       <TouchableOpacity
         style={{ position: 'absolute', right: 0, bottom: paddingHeight + 30 }}
         onPress={() => scrollRef.current?.scrollTo({ y: initialEventIndex * 80, animated: true })}
+        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+        needsOffscreenAlphaCompositing={true}
       >
         <Text style={{ color: theme.tintColor, fontSize: 24, paddingRight: 8 }}>⬆</Text>
       </TouchableOpacity>

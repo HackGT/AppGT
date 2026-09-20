@@ -8,6 +8,7 @@ import {
   Pressable,
   StyleSheet,
   Linking,
+  Platform,
 } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
@@ -41,14 +42,14 @@ export function EventBottomSheet({ visible, event, onClose }: EventBottomSheetPr
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={onClose} android_ripple={null} />
       <View
         style={[
           styles.sheet,
           { backgroundColor: theme.backgroundElement },
         ]}
       >
-        <TouchableOpacity style={styles.panelClose} onPress={onClose}>
+        <TouchableOpacity style={styles.panelClose} onPress={onClose} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
           <Text style={{ color: theme.textSecondary, fontSize: 20 }}>✕</Text>
         </TouchableOpacity>
 
@@ -73,6 +74,8 @@ export function EventBottomSheet({ visible, event, onClose }: EventBottomSheetPr
             <TouchableOpacity
               style={[styles.joinEvent, { backgroundColor: theme.backgroundElement }]}
               onPress={() => Linking.openURL(event.url)}
+              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+              needsOffscreenAlphaCompositing={true}
             >
               <Text style={[styles.buttonText, { color: theme.text }]}>Join</Text>
             </TouchableOpacity>
@@ -88,6 +91,8 @@ export function EventBottomSheet({ visible, event, onClose }: EventBottomSheetPr
               setAddStarButton(!addStarButton);
               toggleStar(event);
             }}
+            activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
+            needsOffscreenAlphaCompositing={true}
           >
             <Text style={{ fontSize: 16, fontFamily: 'SpaceMono-Bold', color: addStarButton ? theme.textSecondary as string : theme.tintColor as string }}>
               {addStarButton ? '☆  Add to Schedule' : '★  Remove from Schedule'}
