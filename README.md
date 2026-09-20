@@ -1,58 +1,56 @@
-# AppGT
+# Welcome to your Expo app 👋
 
-AppGT is the offical app for HackGT on the App Store and Google Play Store. The goal of this app is to simplify every hackathon participant's experience with a simple interface by centralizing essential information. This allows important links, a custom schedule, and relevant notifications to be quickly access throughout events.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Setup
+## Get started
 
-First, make sure to read React Native's offical [Environment Setup](https://reactnative.dev/docs/environment-setup). Follow the "React Native CLI Quickstart" and select macOS, Windows, Linux and specify either iOS or Android. Following it exactly is extremely important in getting the project to run without any errors.
+1. Install dependencies
 
-- Clone project and cd into AppGT
-- Run `npm install` to install the dependencies (use Node 14)
+   ```bash
+   npm install
+   ```
 
-### Running iOS
+2. Start the app
 
-- `cd ios` and `pod install` to install iOS dependencies
-- Run `npx react-native run-ios`
+   ```bash
+   npx expo start
+   ```
 
-or try to run with Xcode if the above doesn't work
+In the output, you'll find options to open the app in a
 
-- `cd ios` and `pod install` to install iOS dependencies
-- Open `ios/AppGT.xcworkspace` in Xcode
-- Add your development account and click `Run` in the top left
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-### Running Android
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-- Open an Android emulator
-- Run `npx react-native run-android`
+## Get a fresh project
 
-or
+When you're ready, run:
 
-- Open the android folder in Android Studio
-- Click the `Run` in the top right
+```bash
+npm run reset-project
+```
 
-## Setup Issues
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-You may run into one or multiple issues while trying to run this app for the first time. This is not an extensive list of issues, but in case you do run into some of these, we hope this will help.
+### Other setup steps
 
-### Android Setup Issues
+- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
+- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
+- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
 
-**"Installed Build Tools revision 31.0.0 is corrupted"**
-- Go to <button><a href="https://stackoverflow.com/questions/68387270/android-studio-error-installed-build-tools-revision-31-0-0-is-corrupted?page=1&tab=scoredesc#tab-top">this</a></button> link
-- Scroll down to the checked answer
-- Follow instructions based on your PC's OS
-- Reload your IDE, and re-run the Android app
+## Learn more
 
-**“Execution failed for task ‘:app:validateSigningDebug’”**
+To learn more about developing your project with Expo, look at the following resources:
 
-- Navigate through terminal to `AppGT/android/app`
-- Run this line in the terminal:
-  ```
-  keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
-  ```
-- Answer the questions as prompted & type 'y' when prompted `[no]:`
-- Hit enter & rebuild project
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-**"Unable to find method 'org.gradle.api.artifacts.Dependency org.gradle.api.artifacts.dsl.DependencyHandler.module(java.lang.Object)'"**
-- For this error, it depends on your Gradle version
-  - The current version that is supported is 6.7.1, which means that your Android Studio needs to also support 6.7.1
-- Install a version of Android Studio that is compatible with this version of Gradle
+## Join the community
+
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
