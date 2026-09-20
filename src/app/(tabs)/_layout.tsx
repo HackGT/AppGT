@@ -47,10 +47,19 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="scan"
+        options={{
+          title: 'Scan',
+          href: showCheckin ? undefined : null,
+          tabBarIcon: ({ color }) => <FontAwesome5 name="shopping-bag" size={22} color={color} />,
+        }}
+      />
+      {/* Swag tab is hidden: checkout now lives in the Scan tab. Remove with its files once verified. */}
+      <Tabs.Screen
         name="swag"
         options={{
           title: 'Swag',
-          href: showCheckin ? undefined : null,
+          href: null,
           tabBarIcon: ({ color }) => <FontAwesome5 name="shopping-bag" size={22} color={color} />,
         }}
       />
