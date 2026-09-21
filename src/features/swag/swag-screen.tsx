@@ -1,7 +1,7 @@
 import { ScrollView, Text, Pressable, View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
+import { useTopInset } from '@/hooks/use-top-inset';
 import { ScanScreen } from './scan-screen';
 
 interface SwagScreenProps {
@@ -11,34 +11,39 @@ interface SwagScreenProps {
 export function SwagScreen({ selectedSwagItem }: SwagScreenProps) {
   const theme = useTheme();
   const router = useRouter();
+  const topInset = useTopInset();
 
   return (
-    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.background }}>
-    <ScrollView style={{ backgroundColor: theme.background }}>
-      <View style={styles.swagContainer}>
-        <Pressable style={styles.backButton} onPress={() => router.back()} android_ripple={null}>
-          <Text style={[styles.backButtontext, { color: theme.text }]}>{'< Back'}</Text>
+    <View style={{ flex: 1, backgroundColor: theme.background, paddingTop: topInset }}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
+        <Pressable onPress={() => router.back()} android_ripple={null}>
+          <Text style={[styles.backButtonText, { color: theme.text }]}>{'< Back'}</Text>
         </Pressable>
-
-        <Text style={[styles.title, { color: theme.text }]}>{selectedSwagItem.name}</Text>
-        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          {selectedSwagItem.points} points
-        </Text>
-        <ScanScreen swagID={selectedSwagItem.id} />
       </View>
-    </ScrollView>
-    </SafeAreaView>
+      <ScrollView style={{ backgroundColor: theme.background }}>
+        <View style={styles.container}>
+          <Text style={[styles.title, { color: theme.text }]}>{selectedSwagItem.name}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+            {selectedSwagItem.points} points
+          </Text>
+          <ScanScreen swagID={selectedSwagItem.id} />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    alignItems: 'flex-start',
+  header: {
+    height: 59,
+    paddingTop: 5,
+    paddingBottom: 14,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
   },
-  backButtontext: {
+  backButtonText: {
     fontFamily: 'SpaceMono-Bold',
     fontSize: 17,
-    marginTop: 10,
   },
   title: {
     fontFamily: 'SpaceMono-Bold',
@@ -52,7 +57,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
   },
-  swagContainer: {
+  container: {
     marginHorizontal: 15,
     flex: 1,
   },

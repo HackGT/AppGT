@@ -3,12 +3,11 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 import { SearchBar } from '@/components/search-bar';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useTopInset } from '@/hooks/use-top-inset';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { ScheduleEventCell } from '@/features/schedule/schedule-event-cell';
@@ -16,11 +15,13 @@ import { EventBottomSheet } from '@/features/schedule/event-bottom-sheet';
 import FilterSelect from '@/components/filter-select';
 import TagScrollView from '@/components/tag-scroll-view';
 import { getEventsForDay, getDaysForEvent } from '@/lib/util';
+import { Touchable } from '@/components/touchable';
 
 export default function ScheduleSearchPage() {
   const theme = useTheme();
   const router = useRouter();
   const { state } = useContext(HackathonContext);
+  const topInset = useTopInset();
   const hackathon = state.hackathon;
 
   const [searchText, setSearchText] = useState('');
@@ -42,9 +43,9 @@ export default function ScheduleSearchPage() {
 
   if (!hackathon) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ flex: 1, backgroundColor: theme.background, paddingTop: topInset }}>
         <Text style={{ color: theme.text }}>Loading...</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -108,7 +109,7 @@ export default function ScheduleSearchPage() {
   }
 
   return (
-    <SafeAreaView style={[{ flex: 1, backgroundColor: theme.background }]}>
+    <View style={{ flex: 1, backgroundColor: theme.background, paddingTop: topInset }}>
       <View style={styles.searchHeader}>
         <SearchBar
           style={{ flex: 1, marginHorizontal: 0, marginVertical: 0 }}
@@ -117,13 +118,13 @@ export default function ScheduleSearchPage() {
           onChangeText={setSearchText}
           editable={!filterMenuOpen}
         />
-        <TouchableOpacity
+        <Touchable
           disabled={filterMenuOpen}
           style={styles.cancelButton}
           onPress={() => router.back()}
         >
           <Text style={{ color: theme.textSecondary, fontSize: 16 }}>✕</Text>
-        </TouchableOpacity>
+        </Touchable>
       </View>
 
       <View style={{ backgroundColor: theme.background }}>
@@ -139,13 +140,13 @@ export default function ScheduleSearchPage() {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={[styles.trendingTopics, { color: theme.text }]}>Trending Topics</Text>
             {highlightedTags.length > 0 && (
-              <TouchableOpacity
+              <Touchable
                 disabled={filterMenuOpen}
                 onPress={() => setHighlightedTags([])}
                 style={[styles.clearButton, { borderColor: theme.text }]}
               >
                 <Text style={{ color: theme.text, paddingHorizontal: 7 }}>clear</Text>
-              </TouchableOpacity>
+              </Touchable>
             )}
           </View>
         )}
@@ -188,13 +189,13 @@ export default function ScheduleSearchPage() {
               );
             }
             return (
-              <TouchableOpacity
+              <Touchable
                 disabled={filterMenuOpen}
                 style={styles.flatListItem}
                 onPress={() => onPressEvent(item)}
               >
                 <ScheduleEventCell event={item} />
-              </TouchableOpacity>
+              </Touchable>
             );
           }}
         />
@@ -205,7 +206,7 @@ export default function ScheduleSearchPage() {
         event={selectedEvent}
         onClose={() => setSheetVisible(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

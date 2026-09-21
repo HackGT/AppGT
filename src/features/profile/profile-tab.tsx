@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import * as WebBrowser from 'expo-web-browser';
 import { useTheme } from '@/hooks/use-theme';
 import { AuthContext } from '@/contexts/auth-context';
 import { CURRENT_HEXATHON, getHexathonUser, getRegistrationApplication } from '@/api/api';
+import { Touchable } from '@/components/touchable';
 
 export function ProfileTab() {
   const theme = useTheme();
@@ -100,22 +101,18 @@ export function ProfileTab() {
       </Text>
 
       <View>
-        <TouchableOpacity
+        <Touchable
           style={[styles.logOutButton, { borderColor: theme.tintColor }]}
           onPress={signOut}
-          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-          needsOffscreenAlphaCompositing={true}
         >
           <Text style={[styles.buttonText, { color: theme.text }]}>Log Out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Touchable>
+        <Touchable
           style={[styles.dangerButton, { borderColor: theme.tintColor }]}
           onPress={profilePage}
-          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-          needsOffscreenAlphaCompositing={true}
         >
           <Text style={[styles.buttonText, { color: theme.text }]}>Delete Profile</Text>
-        </TouchableOpacity>
+        </Touchable>
       </View>
     </ScrollView>
   );

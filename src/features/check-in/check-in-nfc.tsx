@@ -3,13 +3,11 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   Alert,
   ActivityIndicator,
   Modal,
   Dimensions,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -18,6 +16,7 @@ import { AuthContext } from '@/contexts/auth-context';
 import { logInteraction } from '@/api/api';
 import { Card } from '@/components/card';
 import { initNfc, writeNFC } from '@/lib/nfc';
+import { Touchable } from '@/components/touchable';
 
 const BADGE_IMAGES: Record<string, any> = {
   PARTICIPANT: require('@/assets/images/badges/BadgeParticipant.png'),
@@ -90,13 +89,13 @@ export function CheckInNFC({ application }: CheckInNFCProps) {
         <Text style={[styles.infoText, { color: theme.text }]}>
           {'Application Group: ' + application.confirmationBranch?.applicationGroup}
         </Text>
-        <TouchableOpacity onPress={onPressScan} style={styles.writeToBadgeButton} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+        <Touchable onPress={onPressScan} style={styles.writeToBadgeButton}>
           <Card>
             <Text style={[styles.writeToBadgeButtonText, { color: theme.text }]}>
               Write to Badge
             </Text>
           </Card>
-        </TouchableOpacity>
+        </Touchable>
         <View style={styles.badgeImageWrapper}>
           {BADGE_IMAGES[application.confirmationBranch?.applicationGroup] && (
             <Image

@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 5,
     paddingBottom: 14,
+    height: 59,
     overflow: 'visible',
   },
   right: {

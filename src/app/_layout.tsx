@@ -2,7 +2,10 @@ import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { StatusBar } from 'react-native';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Colors } from '@/constants/theme';
 
 import { AuthProvider, useAuth } from '@/contexts/auth-context';
 import { HackathonProvider } from '@/contexts/hackathon-context';
@@ -10,7 +13,7 @@ import { ScavHuntProvider } from '@/contexts/scav-hunt-context';
 
 SplashScreen.preventAutoHideAsync();
 
-const SCREEN_OPTIONS = { headerShown: false } as const;
+const SCREEN_OPTIONS = { headerShown: false, animation: 'none' } as const;
 
 function RootNavigator() {
   const { loading, firebaseUser } = useAuth();
@@ -55,9 +58,21 @@ function RootNavigator() {
   );
 }
 
+function ThemedStatusBar() {
+  const scheme = useColorScheme();
+  const isDark = scheme === 'dark';
+  return (
+    <StatusBar
+      barStyle={isDark ? 'light-content' : 'dark-content'}
+      backgroundColor={isDark ? Colors.dark.background : Colors.light.background}
+    />
+  );
+}
+
 export default function RootLayout() {
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <ThemedStatusBar />
       <AuthProvider>
         <RootNavigator />
       </AuthProvider>

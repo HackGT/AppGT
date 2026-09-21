@@ -1,9 +1,10 @@
 import { type ReactElement, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Linking, Alert } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { Card } from '@/components/card';
+import { Touchable } from '@/components/touchable';
 
 export function InformationTab() {
   const { state } = useContext(HackathonContext);
@@ -26,11 +27,9 @@ export function InformationTab() {
       const buttonJSON = JSON.parse(buttonBlock.content);
       if (buttonJSON) {
         headerButtons = buttonJSON.map((button: any) => (
-          <TouchableOpacity
+          <Touchable
             key={button.title}
             style={[styles.headerButton, { borderColor: theme.tintColor as string }]}
-            activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-            needsOffscreenAlphaCompositing={true}
             onPress={() => {
               Linking.openURL(button.url).catch(() => {
                 if (button.backupURL) {
@@ -44,7 +43,7 @@ export function InformationTab() {
             }}
           >
             <Text style={[styles.buttonText, { color: theme.text }]}>{button.title}</Text>
-          </TouchableOpacity>
+          </Touchable>
         ));
       }
     } catch {

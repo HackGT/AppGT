@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { View, ScrollView, Dimensions, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useTopInset } from '@/hooks/use-top-inset';
 import HexlabsIcon from '@/assets/images/HexlabsIcon.svg';
 import { useTheme } from '@/hooks/use-theme';
 import { useAuthLogin } from '@/contexts/auth-context';
@@ -15,6 +16,8 @@ export function LoginOnboarding() {
   const login = useAuthLogin();
   const [pageIndex, setPageIndex] = useState(0);
   const screenWidth = Dimensions.get('window').width;
+  const topInset = useTopInset();
+  const { bottom: bottomInset } = useSafeAreaInsets();
 
   const screens = [
     <View
@@ -77,7 +80,7 @@ export function LoginOnboarding() {
   };
 
   return (
-    <SafeAreaView style={[styles.rootView, { backgroundColor: theme.background }]}>
+    <View style={[styles.rootView, { backgroundColor: theme.background, paddingTop: topInset, paddingBottom: bottomInset }]}>
       <ScrollView
         style={{ flex: 0.8, backgroundColor: theme.background }}
         horizontal
@@ -94,7 +97,7 @@ export function LoginOnboarding() {
         {indexIndicator()}
         <GradientButton text="Get Started" onPress={login} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

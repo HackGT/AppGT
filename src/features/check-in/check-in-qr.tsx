@@ -1,11 +1,12 @@
 import { useContext, useState, useRef } from 'react';
-import { View, Text, Alert, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, Alert, StyleSheet } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import { useTheme } from '@/hooks/use-theme';
 import { AuthContext } from '@/contexts/auth-context';
 import { getRegistrationApplication, CURRENT_HEXATHON } from '@/api/api';
+import { Touchable } from '@/components/touchable';
 
 const COOLDOWN_MS = 3000;
 
@@ -96,11 +97,11 @@ export function CheckInQR() {
             barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
           />
         ) : (
-          <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+          <Touchable style={styles.permissionBtn} onPress={requestPermission}>
             <Text style={{ color: theme.text, fontFamily: 'SpaceMono-Bold' }}>
               Grant Camera Permission
             </Text>
-          </TouchableOpacity>
+          </Touchable>
         )}
       </View>
     </View>

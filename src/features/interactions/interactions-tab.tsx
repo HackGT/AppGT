@@ -3,9 +3,7 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
@@ -13,6 +11,7 @@ import { HackathonContext } from '@/contexts/hackathon-context';
 import { EventCard } from './event-card';
 import { getStartEndTime } from '@/lib/util';
 import { SearchBar } from '@/components/search-bar';
+import { Touchable } from '@/components/touchable';
 
 const CHECK_IN_EVENT_ID = '68c049a6a2c57dfa55eb80d3';
 
@@ -43,7 +42,7 @@ export function InteractionsTab() {
       const location = event?.location?.[0]?.name ? event.location[0].name + ' • ' : '';
       const { startTime, endTime } = getStartEndTime(event.startDate, event.endDate);
       return (
-        <TouchableOpacity key={event.id} onPress={() => onPressEvent(event)} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+        <Touchable key={event.id} onPress={() => onPressEvent(event)} style={{ borderRadius: 12 }}>
           <EventCard
             name={event.name}
             startTime={startTime}
@@ -51,7 +50,7 @@ export function InteractionsTab() {
             location={location}
             type={eventType}
           />
-        </TouchableOpacity>
+        </Touchable>
       );
     });
 
