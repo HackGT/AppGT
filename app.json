@@ -1,32 +1,39 @@
 {
   "expo": {
-    "name": "AppGT2",
-    "slug": "AppGT2",
-    "version": "1.0.0",
+    "name": "HexLabs",
+    "slug": "AppGT",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "appgt2",
+    "icon": "./assets/images/Logo.png",
+    "scheme": "appgt",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/images/icon.png",
-      "bundleIdentifier": "com.albertlying.AppGT2",
+      "icon": "./assets/images/Logo.png",
+      "bundleIdentifier": "gt.hack.AppGT",
+      "buildNumber": "3",
       "deploymentTarget": "17.0",
       "entitlements": {
         "com.apple.developer.nfc.readersession.formats": [
           "TAG"
         ]
       },
-      "appleTeamId": "8B3884J679"
+      "appleTeamId": "8B3884J679",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Used to scan QR codes for event check-in.",
+        "NSMicrophoneUsageDescription": "Required by the camera framework but not actively used.",
+        "NFCReaderUsageDescription": "Used to read and write NFC badges for event check-in."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/images/Logo.png"
       },
+      "compileSdkVersion": 35,
       "predictiveBackGestureEnabled": false,
-      "package": "com.albertlying.AppGT2",
+      "androidStatusBar": { "translucent": false, "backgroundColor": "#ffffff" },
+      "versionCode": 3,
+      "package": "com.appgt",
       "permissions": [
         "android.permission.NFC",
         "android.permission.CAMERA",
@@ -42,9 +49,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/images/Logo.png",
+          "imageWidth": 200
         }
       ],
       [
@@ -57,7 +64,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow AppGT2 to access your camera to scan QR codes."
+          "cameraPermission": "Allow HexLabs to access your camera to scan QR codes."
         }
       ]
     ],
