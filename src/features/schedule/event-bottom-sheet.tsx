@@ -2,18 +2,17 @@ import { useContext, useState, useEffect } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   Modal,
   Pressable,
   StyleSheet,
   Linking,
-  Platform,
 } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { EventTypeView } from './event-type-view';
 import { getStartEndTime } from '@/lib/util';
+import { Touchable } from '@/components/touchable';
 
 interface EventBottomSheetProps {
   visible: boolean;
@@ -49,9 +48,9 @@ export function EventBottomSheet({ visible, event, onClose }: EventBottomSheetPr
           { backgroundColor: theme.backgroundElement },
         ]}
       >
-        <TouchableOpacity style={styles.panelClose} onPress={onClose} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+        <Touchable style={styles.panelClose} onPress={onClose}>
           <Text style={{ color: theme.textSecondary, fontSize: 20 }}>✕</Text>
-        </TouchableOpacity>
+        </Touchable>
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={[styles.panelTitleText, { color: theme.text }]}>{title}</Text>
@@ -71,33 +70,29 @@ export function EventBottomSheet({ visible, event, onClose }: EventBottomSheetPr
           </View>
 
           {event.url ? (
-            <TouchableOpacity
+            <Touchable
               style={[styles.joinEvent, { backgroundColor: theme.backgroundElement }]}
               onPress={() => Linking.openURL(event.url)}
-              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-              needsOffscreenAlphaCompositing={true}
             >
               <Text style={[styles.buttonText, { color: theme.text }]}>Join</Text>
-            </TouchableOpacity>
+            </Touchable>
           ) : null}
 
           {description ? (
             <Text style={[styles.descriptionText, { color: theme.text }]}>{description}</Text>
           ) : null}
 
-          <TouchableOpacity
+          <Touchable
             style={styles.starButton}
             onPress={() => {
               setAddStarButton(!addStarButton);
               toggleStar(event);
             }}
-            activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-            needsOffscreenAlphaCompositing={true}
           >
             <Text style={{ fontSize: 16, fontFamily: 'SpaceMono-Bold', color: addStarButton ? theme.textSecondary as string : theme.tintColor as string }}>
               {addStarButton ? '☆  Add to Schedule' : '★  Remove from Schedule'}
             </Text>
-          </TouchableOpacity>
+          </Touchable>
         </ScrollView>
       </View>
     </Modal>

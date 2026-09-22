@@ -1,5 +1,6 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
+import { Touchable } from '@/components/touchable';
 
 export type CheckoutType = 'hardware' | 'swag';
 
@@ -22,7 +23,7 @@ export function CheckoutRadio({ value, onChange, disabled }: CheckoutRadioProps)
       {OPTIONS.map((option) => {
         const selected = option.value === value;
         return (
-          <Pressable
+          <Touchable
             key={option.value}
             accessibilityRole="radio"
             accessibilityState={{ selected, disabled }}
@@ -40,7 +41,7 @@ export function CheckoutRadio({ value, onChange, disabled }: CheckoutRadioProps)
               {selected && <View style={[styles.inner, { backgroundColor: theme.tintColor }]} />}
             </View>
             <Text style={[styles.label, { color: theme.text }]}>{option.label}</Text>
-          </Pressable>
+          </Touchable>
         );
       })}
     </View>

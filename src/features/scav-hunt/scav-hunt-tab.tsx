@@ -1,9 +1,10 @@
 import { useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { ScavHuntContext } from '@/contexts/scav-hunt-context';
+import { Touchable } from '@/components/touchable';
 
 export function ScavHuntTab() {
   const { state: scavState } = useContext(ScavHuntContext);
@@ -36,7 +37,7 @@ export function ScavHuntTab() {
     const isComplete = scavState.completedQuestions.includes(item.id);
 
     return (
-      <TouchableOpacity
+      <Touchable
         key={item.title}
         style={[
           styles.joinEvent,
@@ -45,8 +46,6 @@ export function ScavHuntTab() {
             backgroundColor: isComplete ? '#A4D496' : theme.background,
           },
         ]}
-        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-        needsOffscreenAlphaCompositing={true}
         onPress={() => {
           router.push({
             pathname: '/scav-hunt-item' as any,
@@ -57,7 +56,7 @@ export function ScavHuntTab() {
         <Text style={[styles.buttonHeaderText, { color: theme.text }]}>
           {item.title}
         </Text>
-      </TouchableOpacity>
+      </Touchable>
     );
   });
 

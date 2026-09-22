@@ -28,16 +28,11 @@ export function Card({ children, highlighted, height }: CardProps) {
     shadowRadius: 1.5,
   };
 
-  return (
-    <View style={styles.cardParent}>
-      <View style={cardStyle}>{children}</View>
-    </View>
-  );
+  return <View style={[cardStyle, styles.card]}>{children}</View>;
 }
 
 const styles = StyleSheet.create({
-  cardParent: {
+  card: {
     width: '100%',
-    borderRadius: 8,
   },
 });

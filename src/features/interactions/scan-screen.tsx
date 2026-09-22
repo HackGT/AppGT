@@ -2,7 +2,6 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   Switch,
   Alert,
   Modal,
@@ -16,6 +15,7 @@ import { AuthContext } from '@/contexts/auth-context';
 import { Card } from '@/components/card';
 import { logInteraction, getUserProfile } from '@/api/api';
 import { initNfc, cancelNFC, readNFC } from '@/lib/nfc';
+import { Touchable } from '@/components/touchable';
 
 interface ScanScreenProps {
   eventID: string;
@@ -40,9 +40,9 @@ function QRSection({ onQRScanned, qrScanned }: { onQRScanned: (e: { data: string
           barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
         />
       ) : (
-        <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+        <Touchable style={styles.permissionBtn} onPress={requestPermission}>
           <Text style={{ color: theme.text, fontFamily: 'SpaceMono-Bold' }}>Grant Camera Permission</Text>
-        </TouchableOpacity>
+        </Touchable>
       )}
     </View>
   );
@@ -164,11 +164,11 @@ export function ScanScreen({ eventID }: ScanScreenProps) {
       {useQR ? (
         <QRSection onQRScanned={onQRScanned} qrScanned={qrScanned} />
       ) : (
-        <TouchableOpacity style={styles.scanButton} onPress={scanNFC} disabled={isScanning} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+        <Touchable style={styles.scanButton} onPress={scanNFC} disabled={isScanning}>
           <Card>
             <Text style={[styles.scanButtonText, { color: theme.text }]}>Scan Badge</Text>
           </Card>
-        </TouchableOpacity>
+        </Touchable>
       )}
     </View>
   );

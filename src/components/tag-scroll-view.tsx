@@ -1,5 +1,6 @@
-import { Text, ScrollView, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { Text, ScrollView, View, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
+import { Touchable } from '@/components/touchable';
 
 interface TagScrollViewProps {
   tags: string[];
@@ -28,7 +29,7 @@ export default function TagScrollView({
         {tags.map((value, i) => {
           const isHighlighted = highlightedTags?.includes(value);
           return (
-            <TouchableOpacity
+            <Touchable
               key={i}
               onPress={() => onPress && onPress(value)}
               disabled={disabled}
@@ -36,8 +37,6 @@ export default function TagScrollView({
                 styles.tagStyle,
                 { backgroundColor: isHighlighted ? theme.tintColor : theme.backgroundElement },
               ]}
-              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-              needsOffscreenAlphaCompositing={true}
             >
               <Text
                 style={[
@@ -48,7 +47,7 @@ export default function TagScrollView({
                 {' '}
                 {value}{' '}
               </Text>
-            </TouchableOpacity>
+            </Touchable>
           );
         })}
       </ScrollView>

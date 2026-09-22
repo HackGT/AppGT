@@ -2,7 +2,6 @@ import { useState, useContext } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   TextInput,
   Dimensions,
   Alert,
@@ -10,13 +9,13 @@ import {
   Modal,
   Pressable,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { logInteraction } from '@/api/api';
 import { ScavHuntContext } from '@/contexts/scav-hunt-context';
 import { AuthContext } from '@/contexts/auth-context';
 import { useTheme } from '@/hooks/use-theme';
+import { Touchable } from '@/components/touchable';
 
 // Memory storage stub
 const storage: Record<string, string> = {};
@@ -92,14 +91,12 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
 
   const answerSheetContent = () => (
     <View style={styles.sheetStyle}>
-      <TouchableOpacity
+      <Touchable
         style={{ alignSelf: 'flex-end', marginRight: 16, marginBottom: 8 }}
         onPress={() => setAnswerSheetVisible(false)}
-        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-        needsOffscreenAlphaCompositing={true}
       >
         <Text style={{ color: theme.text, fontSize: 20 }}>✕</Text>
-      </TouchableOpacity>
+      </Touchable>
       <Text style={[styles.hintText, { color: theme.text, paddingBottom: 15 }]}>
         {"What's the answer?"}
       </Text>
@@ -125,9 +122,9 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
       {isAnswerCorrect ? (
         <Text style={[styles.completeText, { color: theme.text }]}>Complete</Text>
       ) : (
-        <TouchableOpacity style={[styles.answerButton, { width: 200 }]} onPress={handleSubmitAnswer} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+        <Touchable style={[styles.answerButton, { width: 200 }]} onPress={handleSubmitAnswer}>
           <Text style={[styles.answerButtonText, { color: theme.text }]}>Submit</Text>
-        </TouchableOpacity>
+        </Touchable>
       )}
     </View>
   );
@@ -143,33 +140,29 @@ export function ScavHuntItem({ item, hackathonName }: ScavHuntItemProps) {
           <Text style={[styles.hintText, { color: theme.text }]}>{item.hint}</Text>
 
           {item.isQR && (
-            <TouchableOpacity
+            <Touchable
               disabled={scannedCode === item.code}
               style={styles.answerButton}
               onPress={() => setQrSheetVisible(true)}
-              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-              needsOffscreenAlphaCompositing={true}
             >
               <Text style={[styles.answerButtonText, { color: theme.text }]}>
                 {scannedCode === item.code ? 'Completed!' : 'Scan Code'}
               </Text>
-            </TouchableOpacity>
+            </Touchable>
           )}
 
           {!item.isQR && (
             <View style={{ paddingTop: 10 }}>
               <Text style={[styles.hintText, { color: theme.text }]}>{item.question}</Text>
-              <TouchableOpacity
+              <Touchable
                 style={styles.answerButton}
                 onPress={() => setAnswerSheetVisible(true)}
                 disabled={isComplete}
-                activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-                needsOffscreenAlphaCompositing={true}
               >
                 <Text style={[styles.answerButtonText, { color: theme.text }]}>
                   {isComplete ? 'Completed!' : 'Input Answer'}
                 </Text>
-              </TouchableOpacity>
+              </Touchable>
             </View>
           )}
         </View>

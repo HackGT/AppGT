@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   TextInput,
   Alert,
   Modal,
@@ -15,6 +14,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { Card } from "@/components/card";
 import { initNfc, cancelNFC, readNFC } from "@/lib/nfc";
 import { CheckoutRadio, type CheckoutType } from "./checkout-radio";
+import { Touchable } from "@/components/touchable";
 
 // Debug flag: shows a uid field that bypasses NFC scanning when filled in.
 const SHOW_DEBUG_UID_INPUT = false;
@@ -114,7 +114,7 @@ export function ScanScreen() {
         />
       )}
 
-      <TouchableOpacity
+      <Touchable
         style={styles.scanButton}
         onPress={scanNFC}
         disabled={isScanning}
@@ -124,7 +124,7 @@ export function ScanScreen() {
         <Card>
           <Text style={[styles.scanButtonText, { color: theme.text }]}>Scan Badge</Text>
         </Card>
-      </TouchableOpacity>
+      </Touchable>
     </View>
   );
 }
@@ -135,7 +135,8 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceMono-Bold",
     fontSize: 22,
     marginHorizontal: 15,
-    marginVertical: 15,
+    marginTop: 10,
+    marginBottom: 15,
   },
   debugInput: {
     marginHorizontal: 15,

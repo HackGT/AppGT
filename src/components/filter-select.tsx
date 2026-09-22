@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { EVENT_TYPE_COLOR_MAP } from '@/api/api';
+import { Touchable } from '@/components/touchable';
 
 interface FilterItem {
   name: string;
@@ -29,28 +30,24 @@ export default function FilterSelect({ onSelectFilter, onFilterMenuChange }: Fil
   if (showMenu) {
     return (
       <View style={styles.cancelContainer}>
-        <TouchableOpacity
+        <Touchable
           style={[styles.exitStyle, { backgroundColor: theme.backgroundElement }]}
           onPress={() => {
             setShowMenu(false);
             onFilterMenuChange(false);
           }}
-          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-          needsOffscreenAlphaCompositing={true}
         >
           <Text style={[styles.exitTextStyle, { color: theme.text }]}> x </Text>
-        </TouchableOpacity>
+        </Touchable>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginLeft: 8 }}>
           {Object.entries(EVENT_TYPE_COLOR_MAP).map(([name, color]) => (
-            <TouchableOpacity
+            <Touchable
               key={name}
               onPress={() => hideFilterMenu({ name, color })}
               style={[styles.tag, { backgroundColor: color, marginLeft: 8 }]}
-              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-              needsOffscreenAlphaCompositing={true}
             >
               <Text style={styles.filterText}> {name} </Text>
-            </TouchableOpacity>
+            </Touchable>
           ))}
         </ScrollView>
       </View>
@@ -60,39 +57,35 @@ export default function FilterSelect({ onSelectFilter, onFilterMenuChange }: Fil
   if (filterType) {
     return (
       <View style={styles.exitContainer}>
-        <TouchableOpacity
+        <Touchable
           style={[styles.tag, { backgroundColor: filterType.color }]}
           onPress={() => {
             setShowMenu(true);
             onFilterMenuChange(true);
           }}
-          activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-          needsOffscreenAlphaCompositing={true}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.filterText}> {filterType.name} </Text>
-            <TouchableOpacity onPress={() => hideFilterMenu({ name: 'clear' })} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+            <Touchable onPress={() => hideFilterMenu({ name: 'clear' })}>
               <Text style={[styles.filterText, { paddingRight: 4 }]}>x</Text>
-            </TouchableOpacity>
+            </Touchable>
           </View>
-        </TouchableOpacity>
+        </Touchable>
       </View>
     );
   }
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity
+      <Touchable
         style={[styles.filterStyle, { backgroundColor: theme.backgroundElement }]}
         onPress={() => {
           setShowMenu(true);
           onFilterMenuChange(true);
         }}
-        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-        needsOffscreenAlphaCompositing={true}
       >
         <Text style={[styles.filterTextStyle, { color: theme.text }]}> Filter </Text>
-      </TouchableOpacity>
+      </Touchable>
     </View>
   );
 }

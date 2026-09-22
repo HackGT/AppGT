@@ -1,5 +1,6 @@
-import { TouchableOpacity, Text, StyleSheet, View, Platform } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
+import { Touchable } from '@/components/touchable';
 
 interface GradientButtonProps {
   text: string;
@@ -9,11 +10,11 @@ interface GradientButtonProps {
 export function GradientButton({ text, onPress }: GradientButtonProps) {
   const theme = useTheme();
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+    <Touchable style={styles.button} onPress={onPress}>
       <View style={[styles.gradient, { backgroundColor: theme.tintColor }]}>
         <Text style={styles.text}>{text}</Text>
       </View>
-    </TouchableOpacity>
+    </Touchable>
   );
 }
 

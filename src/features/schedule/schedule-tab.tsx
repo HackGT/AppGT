@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, FlatList, AppState, StyleSheet, Platform } from 'react-native';
+import { View, Text, FlatList, AppState, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { HackathonContext } from '@/contexts/hackathon-context';
 import { ScheduleEventCell } from './schedule-event-cell';
@@ -11,16 +11,18 @@ import {
   getCurrentDayIndex,
   getCurrentEventIndex,
 } from '@/lib/util';
+import { Touchable } from '@/components/touchable';
 
 export function ScheduleTab() {
   const { state } = useContext(HackathonContext);
   const theme = useTheme();
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [sheetVisible, setSheetVisible] = useState(false);
-  const [eventsHappeningNow, setEventsHappeningNow] = useState<any[]>([]);
+  const [eventsHappeningNow, setEventsHappeningNow] = useState<any[]>(() =>
+    getEventsHappeningNow(state.hackathon?.events ?? [])
+  );
 
   useEffect(() => {
-    refreshEventState();
     const sub = AppState.addEventListener('change', (appState) => {
       if (appState === 'active') refreshEventState();
     });
@@ -81,14 +83,12 @@ export function ScheduleTab() {
           data={eventsHappeningNow}
           keyExtractor={(item, index) => item?.id ?? String(index)}
           renderItem={({ item }) => (
-            <TouchableOpacity
+            <Touchable
               style={styles.cardHorizontalParent}
               onPress={() => onPressEvent(item)}
-              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-              needsOffscreenAlphaCompositing={true}
             >
               <ScheduleEventCell event={item} highlighted truncateText />
-            </TouchableOpacity>
+            </Touchable>
           )}
         />
       </View>
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     left: 5,
     marginRight: 8,
     marginTop: 15,
+    borderRadius: 12,
   },
   underBackground: {
     flex: 1,

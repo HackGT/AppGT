@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { useTheme } from '@/hooks/use-theme';
 import { ScheduleEventCell } from './schedule-event-cell';
 import { getTimeblocksForDay, isEventHappeningNow } from '@/lib/util';
+import { Touchable } from '@/components/touchable';
 
 interface ScheduleDayViewProps {
   events: any[];
@@ -64,9 +65,9 @@ export function ScheduleDayView({
               <View style={[styles.lineParent, { backgroundColor: theme.background as string }]}>
                 <View style={{ width: 1.5, flex: 1, backgroundColor: highlightColor }} />
               </View>
-              <TouchableOpacity style={styles.cardParent} onPress={() => onSelectEvent(item)} activeOpacity={Platform.OS === 'android' ? 1 : 0.2} needsOffscreenAlphaCompositing={true}>
+              <Touchable style={styles.cardParent} onPress={() => onSelectEvent(item)}>
                 <ScheduleEventCell event={item} highlighted={highlighted} />
-              </TouchableOpacity>
+              </Touchable>
             </View>
           );
         })}
@@ -83,13 +84,11 @@ export function ScheduleDayView({
           const underlineWidth = (width * 0.9) / days.length;
 
           return (
-            <TouchableOpacity
+            <Touchable
               key={i}
               onPress={() => {
                 setDayIndex(i);
               }}
-              activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-              needsOffscreenAlphaCompositing={true}
             >
               <Text
                 style={{
@@ -113,7 +112,7 @@ export function ScheduleDayView({
                   marginBottom: 8,
                 }}
               />
-            </TouchableOpacity>
+            </Touchable>
           );
         })}
       </View>
@@ -124,14 +123,12 @@ export function ScheduleDayView({
     const shouldShow = dayIndex === initialDayIndex && initialEventIndex !== -1;
     if (!shouldShow) return null;
     return (
-      <TouchableOpacity
+      <Touchable
         style={{ position: 'absolute', right: 0, bottom: paddingHeight + 30 }}
         onPress={() => scrollRef.current?.scrollTo({ y: initialEventIndex * 80, animated: true })}
-        activeOpacity={Platform.OS === 'android' ? 1 : 0.2}
-        needsOffscreenAlphaCompositing={true}
       >
         <Text style={{ color: theme.tintColor, fontSize: 24, paddingRight: 8 }}>⬆</Text>
-      </TouchableOpacity>
+      </Touchable>
     );
   };
 
@@ -148,7 +145,7 @@ const styles = StyleSheet.create({
   cardParent: {
     padding: 8,
     flex: 1,
-    borderRadius: 8,
+    borderRadius: 12,
   },
   circleParent: {
     width: 36,
