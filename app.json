@@ -23,7 +23,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.albertlying.AppGT2"
+      "package": "com.appgt"
     },
     "web": {
       "output": "static",
