@@ -43,6 +43,7 @@ export interface UserProfile {
 export interface AuthContextValue {
   firebaseUser: FirebaseUser | null;
   loading: boolean;
+  isAuthenticating: boolean;
   showLogin: boolean;
   user: UserProfile | null;
   signOut: () => Promise<void>;
@@ -63,6 +64,7 @@ function decodeJwtUid(token: string): string {
 const AuthContext = createContext<AuthContextValue>({
   firebaseUser: null,
   loading: true,
+  isAuthenticating: false,
   showLogin: true,
   user: null,
   signOut: async () => {},
@@ -75,6 +77,7 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [user, setUser] = useState<UserProfile | null>(null);
 
@@ -117,6 +120,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const redirectUrl = Linking.createURL('redirect');
       const browserUrl = `${LOGIN_URL}/?redirect=${encodeURIComponent(redirectUrl)}`;
 
+      // Set before opening browser so the /redirect deep link sees it immediately
+      setIsAuthenticating(true);
+
       const result = await WebBrowser.openAuthSessionAsync(browserUrl, redirectUrl, {
         preferEphemeralSession: true,
       });
@@ -130,11 +136,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (codeParam) {
             const idToken = codeParam.split('=')[1];
             await fetchAccessToken(idToken);
+            return;
           }
         }
       }
+      // Browser was dismissed or failed without a token
+      setIsAuthenticating(false);
     } catch (error) {
       console.log('Login error:', error);
+      setIsAuthenticating(false);
     }
   };
 
@@ -175,7 +185,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         getIdToken: async () => token,
       };
 
-      setLoading(true);
       const { status, json } = await getUserProfile(token, uid);
       if (status === 200 && json?.roles) {
         await memoryStorage.setItem('authToken', token);
@@ -191,6 +200,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('fetchAccessToken failed:', error);
       setShowLogin(true);
     } finally {
+      setIsAuthenticating(false);
       setLoading(false);
     }
   };
@@ -204,8 +214,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const value = useMemo(
-    () => ({ firebaseUser, loading, showLogin, user, signOut, login }),
-    [firebaseUser, loading, showLogin, user]
+    () => ({ firebaseUser, loading, isAuthenticating, showLogin, user, signOut, login }),
+    [firebaseUser, loading, isAuthenticating, showLogin, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
