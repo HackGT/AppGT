@@ -8,8 +8,9 @@ import {
   useState,
   useMemo,
 } from 'react';
-import { getHexathon, getEvents, getBlocks, getScavengerHunt, getSwagItems } from '@/api/api';
+import { getHexathon, getEvents, getBlocks, getScavengerHunt, getSwagItems, CURRENT_HEXATHON } from '@/api/api';
 import { FirebaseUser } from './auth-context';
+import { HackathonErrorScreen, HackathonLoadingScreen } from '@/components/hackathon-error-screen';
 
 // Module-level memory storage (replaces AsyncStorage)
 const storage: Record<string, string> = {};
@@ -67,6 +68,8 @@ function hackathonReducer(state: HackathonState, action: HackathonAction): Hacka
 export interface HackathonContextValue {
   state: HackathonState;
   isLoading: boolean;
+  error: string | null;
+  retry: () => void;
   toggleStar: (event: any) => void;
   toggleIsStarSchedule: () => void;
   setEvents: (events: any[]) => void;
@@ -75,6 +78,8 @@ export interface HackathonContextValue {
 const HackathonContext = createContext<HackathonContextValue>({
   state: { hackathon: null, starredIds: [], isStarSchedule: false },
   isLoading: true,
+  error: null,
+  retry: () => {},
   toggleStar: () => {},
   toggleIsStarSchedule: () => {},
   setEvents: () => {},
@@ -101,6 +106,7 @@ export function HackathonProvider({ children, firebaseUser, initialValue }: Hack
 
   const [state, dispatch] = useReducer(hackathonReducer, init);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   // Use a ref-like mutable object so the interval callback always sees fresh hackathon data
   const hackathonRef = useRef<any>(null);
 
@@ -109,12 +115,15 @@ export function HackathonProvider({ children, firebaseUser, initialValue }: Hack
   const setEvents = (events: any[]) => dispatch({ type: SET_EVENTS, value: events });
 
   const loadHackathon = async (fUser: FirebaseUser) => {
+    setError(null);
+    setIsLoading(true);
     try {
       const token = await fUser.getIdToken();
       const raw = await getHexathon(token);
-      const hexathon = raw.json;
+      const hexathon = raw.json.currentHexathon;
 
       if (raw.status === 200 && hexathon) {
+        CURRENT_HEXATHON.id = hexathon.id;
         const { eventJson } = await getEvents(token);
         const { blockJson } = await getBlocks(token);
         const { scavengerHuntJson } = await getScavengerHunt(token);
@@ -132,12 +141,16 @@ export function HackathonProvider({ children, firebaseUser, initialValue }: Hack
         state.hackathon = hexathon;
         setIsLoading(false);
       } else {
-        console.warn('getHexathon failed, will retry:', raw.status, hexathon?.message);
+        setError(raw.json?.message ?? `Request failed with status ${raw.status}`);
+        setIsLoading(false);
       }
     } catch (err) {
-      console.warn('loadHackathon error:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      setIsLoading(false);
     }
   };
+
+  const retry = () => loadHackathon(firebaseUser);
 
   useEffect(() => {
     // Load starred IDs from storage
@@ -159,9 +172,12 @@ export function HackathonProvider({ children, firebaseUser, initialValue }: Hack
   }, []);
 
   const value = useMemo(
-    () => ({ state, isLoading, toggleStar, toggleIsStarSchedule, setEvents }),
-    [state, isLoading]
+    () => ({ state, isLoading, error, retry, toggleStar, toggleIsStarSchedule, setEvents }),
+    [state, isLoading, error]
   );
+
+  if (isLoading) return <HackathonLoadingScreen />;
+  if (error) return <HackathonErrorScreen onRetry={retry} errorMessage={error} />;
 
   return <HackathonContext.Provider value={value}>{children}</HackathonContext.Provider>;
 }
