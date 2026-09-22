@@ -1,9 +1,7 @@
-export const DEFAULT_HEXATHON = {
-  id: "683f9a9ab75ad31cd0f2ec67",
-  name: "HackGT 13",
+export const CURRENT_HEXATHON = {
+  id: "",
+  name: "",
 };
-
-export const CURRENT_HEXATHON = { ...DEFAULT_HEXATHON };
 
 export const API_SERVICE_URLS = {
   registration: "https://registration.api.hexlabs.org",
@@ -94,9 +92,11 @@ export const checkoutSwagItem = async (
 export const getHexathon = async (token: string) => {
   try {
     const response = await fetch(
-      `${API_SERVICE_URLS.hexathons}/hexathons/${CURRENT_HEXATHON.id}`,
-      { method: "GET", headers: { Authorization: "Bearer " + token } },
-    );
+      `${API_SERVICE_URLS.hexathons}/appconfig?appname=appgt`, {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token },
+    });
+
     const json = await response.json();
     return { status: response.status, json };
   } catch (err) {
