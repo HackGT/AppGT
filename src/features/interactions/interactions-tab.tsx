@@ -13,7 +13,10 @@ import { getStartEndTime } from '@/lib/util';
 import { SearchBar } from '@/components/search-bar';
 import { Touchable } from '@/components/touchable';
 
-const CHECK_IN_EVENT_ID = '68c049a6a2c57dfa55eb80d3';
+const CHECK_IN_EVENT_NAME = 'check in';
+
+const isCheckInEvent = (event: any) =>
+  event.name?.trim().toLowerCase() === CHECK_IN_EVENT_NAME;
 
 export function InteractionsTab() {
   const theme = useTheme();
@@ -25,7 +28,7 @@ export function InteractionsTab() {
   const events = hackathon?.events ?? [];
 
   const onPressEvent = (event: any) => {
-    if (event.id === CHECK_IN_EVENT_ID) {
+    if (isCheckInEvent(event)) {
       router.navigate('/check-in' as any);
       return;
     }
