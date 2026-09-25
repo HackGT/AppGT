@@ -13,10 +13,13 @@ import { getStartEndTime } from '@/lib/util';
 import { SearchBar } from '@/components/search-bar';
 import { Touchable } from '@/components/touchable';
 
-const CHECK_IN_EVENT_NAME = 'check in';
+const CHECK_IN_EVENT_NAME = 'checkin';
+
+// Lowercases and strips spaces/hyphens so "Check In", "Check-in" and "checkin" compare equal.
+const normalizeEventName = (name: string) => name.toLowerCase().replace(/[\s-]/g, '');
 
 const isCheckInEvent = (event: any) =>
-  event.name?.trim().toLowerCase() === CHECK_IN_EVENT_NAME;
+  normalizeEventName(event.name ?? '') === CHECK_IN_EVENT_NAME;
 
 export function InteractionsTab() {
   const theme = useTheme();
