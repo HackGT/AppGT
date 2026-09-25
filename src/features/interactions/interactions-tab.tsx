@@ -13,7 +13,13 @@ import { getStartEndTime } from '@/lib/util';
 import { SearchBar } from '@/components/search-bar';
 import { Touchable } from '@/components/touchable';
 
-const CHECK_IN_EVENT_ID = '68c049a6a2c57dfa55eb80d3';
+const CHECK_IN_EVENT_NAME = 'checkin';
+
+// Lowercases and strips spaces/hyphens so "Check In", "Check-in" and "checkin" compare equal.
+const normalizeEventName = (name: string) => name.toLowerCase().replace(/[\s-]/g, '');
+
+const isCheckInEvent = (event: any) =>
+  normalizeEventName(event.name ?? '') === CHECK_IN_EVENT_NAME;
 
 export function InteractionsTab() {
   const theme = useTheme();
@@ -25,7 +31,7 @@ export function InteractionsTab() {
   const events = hackathon?.events ?? [];
 
   const onPressEvent = (event: any) => {
-    if (event.id === CHECK_IN_EVENT_ID) {
+    if (isCheckInEvent(event)) {
       router.navigate('/check-in' as any);
       return;
     }
